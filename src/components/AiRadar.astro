@@ -1,0 +1,50 @@
+---
+const stats = [
+  { value: '777', label: 'signals' },
+  { value: '17', label: 'areas' },
+  { value: '354', label: 'discoveries' },
+  { value: '251', label: 'releases' },
+];
+
+const topAreas = [
+  'Coding agents (211)',
+  'MCP integration (143)',
+  'Context engineering (116)',
+  'Agent sandboxing (85)',
+  'Observability (48)',
+  'Governance (37)',
+];
+---
+<section id="radar" class="section border-t border-white/5">
+  <div class="container">
+    <div class="rounded-2xl p-8 sm:p-12 relative overflow-hidden" style="background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(6,147,227,0.08), rgba(155,81,224,0.08)); border: 1px solid rgba(255,255,255,0.08);">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-2 h-2 rounded-full bg-emerald pulse-dot"></span>
+        <span class="text-xs font-semibold uppercase tracking-wider text-emerald">Live</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white" style="font-family: var(--font-heading);">AI Engineering Radar</h2>
+      </div>
+      <p class="text-white/50 mb-8 max-w-2xl">
+        Tracking the AI engineering ecosystem in real-time. Signals automatically discovered and classified by maturity level (L1-L5), mapped to relevant technical areas.
+      </p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+        {stats.map(stat => (
+          <div class="rounded-xl bg-white/[0.05] p-4 text-center">
+            <div class="text-2xl sm:text-3xl font-bold text-white" style="font-family: var(--font-heading);">{stat.value}</div>
+            <div class="text-xs text-white/40 uppercase tracking-wider mt-1">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+      <div class="mb-8">
+        <span class="text-xs text-white/30 uppercase tracking-wider block mb-3">Top tracked areas</span>
+        <div class="flex flex-wrap gap-2">
+          {topAreas.map(area => (
+            <span class="text-xs text-white/50 bg-white/[0.04] border border-white/5 rounded-full px-3 py-1">{area}</span>
+          ))}
+        </div>
+      </div>
+      <a href="https://visdom-ai-maturity-matrix.pages.dev/dashboard" target="_blank" rel="noopener" class="btn-pill btn-primary">
+        Open AI-Radar Dashboard &rarr;
+      </a>
+    </div>
+  </div>
+</section>
