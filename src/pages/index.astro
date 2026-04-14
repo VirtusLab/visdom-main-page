@@ -1,12 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Pillars from '../components/Pillars.astro';
 import '../styles/global.css';
 ---
 <Layout title="VisDom - The Agent-Ready SDLC Platform">
+  <Nav />
   <main>
-    <div class="container section">
-      <h1 class="section-title">VisDom</h1>
-      <p class="section-subtitle">Scaffold working. Building sections next.</p>
-    </div>
+    <Hero />
+    <Pillars />
   </main>
 </Layout>
