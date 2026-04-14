@@ -1,0 +1,75 @@
+---
+interface CTA {
+  label: string;
+  href: string;
+  external?: boolean;
+}
+
+interface Props {
+  title: string;
+  subtitle: string;
+  problem: string;
+  capabilities: string[];
+  tags: { label: string; color: 'emerald' | 'blue' | 'purple' | 'amber' }[];
+  ctas: CTA[];
+  metric?: { lines: string[] };
+}
+
+const { title, subtitle, problem, capabilities, tags, ctas, metric } = Astro.props;
+
+const tagColors = {
+  emerald: 'bg-emerald/10 text-emerald border-emerald/20',
+  blue: 'bg-blue/10 text-blue border-blue/20',
+  purple: 'bg-purple/10 text-purple border-purple/20',
+  amber: 'bg-amber/10 text-amber border-amber/20',
+};
+---
+<div class="glass-card p-8">
+  <div class="flex flex-wrap gap-2 mb-4">
+    {tags.map(tag => (
+      <span class:list={['tag border', tagColors[tag.color]]}>
+        {tag.label}
+      </span>
+    ))}
+  </div>
+
+  <h4 class="text-xl font-bold text-white mb-1" style="font-family: var(--font-heading);">
+    {title}
+  </h4>
+  <p class="text-sm text-white/40 mb-4">{subtitle}</p>
+
+  <blockquote class="text-sm text-white/60 italic border-l-2 border-emerald/30 pl-4 mb-5">
+    {problem}
+  </blockquote>
+
+  <ul class="space-y-2 mb-5">
+    {capabilities.map(cap => (
+      <li class="flex items-start gap-2 text-sm text-white/70">
+        <span class="text-emerald mt-0.5 shrink-0">&#x25B8;</span>
+        {cap}
+      </li>
+    ))}
+  </ul>
+
+  {metric && (
+    <div class="rounded-lg bg-white/[0.02] border border-white/5 p-4 mb-5">
+      {metric.lines.map(line => (
+        <p class="text-sm text-white/50">{line}</p>
+      ))}
+    </div>
+  )}
+
+  <slot />
+
+  <div class="flex flex-wrap gap-3 mt-5">
+    {ctas.map(cta => (
+      <a
+        href={cta.href}
+        class="btn-pill btn-outline text-xs !py-1.5 !px-4"
+        {...(cta.external ? { target: '_blank', rel: 'noopener' } : {})}
+      >
+        {cta.label} &rarr;
+      </a>
+    ))}
+  </div>
+</div>
