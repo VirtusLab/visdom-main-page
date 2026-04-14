@@ -1,0 +1,119 @@
+---
+import SeriesCard from './SeriesCard.astro';
+
+const BASE = 'https://virtuslab.com';
+
+const series = [
+  {
+    title: 'VISDOM - Agent-Ready SDLC',
+    color: '#10b981',
+    stats: '10+ articles',
+    description:
+      'Exploring the intersection of AI agents and modern software delivery. How to build infrastructure that lets machines ship code safely at machine speed.',
+    featured: {
+      title: 'AI in the SDLC: Faster or Just Busier?',
+      date: 'Apr 10, 2026',
+      href: `${BASE}/blog/ai/ai-in-the-sdlc-faster-or-just-busier/`,
+    },
+    articles: [
+      {
+        title: 'Cognitive Debt: The code nobody understands',
+        date: 'Apr 10',
+        href: `${BASE}/blog/ai/ai-in-the-sdlc-faster-or-just-busier/`,
+      },
+      {
+        title: 'Your README Is a Lie',
+        date: 'Apr 7',
+        href: `${BASE}/blog/ai/the-hard-truth/`,
+      },
+      {
+        title: 'The Ferrari Engine in a Fiat 500',
+        date: 'Mar 31',
+        href: `${BASE}/blog/ai/the-fallacy/`,
+      },
+    ],
+    ctaLabel: 'Read the VISDOM series',
+    ctaHref: `${BASE}/blog/ai/ai-in-the-sdlc-faster-or-just-busier/`,
+  },
+  {
+    title: 'GitHub All-Stars',
+    color: '#0693e3',
+    stats: '16 editions',
+    description:
+      'A curated showcase of the most interesting open-source AI projects on GitHub. Each edition highlights tools that are pushing the boundaries of what agents can do.',
+    featured: {
+      title: '#16: Project N.O.M.A.D. - Civilization in a Docker Container',
+      date: 'Mar 25, 2026',
+      href: `${BASE}/blog/ai/project-nomad/`,
+    },
+    articles: [
+      {
+        title: '#15: jCodeMunch MCP - Agent stops reading',
+        date: 'Mar 11',
+        href: `${BASE}/blog/ai/code-munch-mcp-your-agent-starts-navigating/`,
+      },
+      {
+        title: '#14: NanoClaw - Your Personal AI Butler',
+        date: 'Feb 25',
+        href: `${BASE}/blog/ai/nano-claw-your-personal-ai-butler/`,
+      },
+      {
+        title: '#13: Matchlock - Agent\'s Bulletproof Cage',
+        date: 'Feb 11',
+        href: `${BASE}/blog/ai/matchlock-your-agents-bulletproof-cage/`,
+      },
+    ],
+    ctaLabel: 'Browse All-Stars',
+    ctaHref: `${BASE}/blog/ai/project-nomad/`,
+  },
+  {
+    title: 'AI-Insight',
+    color: '#9b51e0',
+    stats: '13+ articles',
+    description:
+      'Deep dives into the AI landscape - models, techniques, and practical engineering wisdom. From RAG optimization to understanding how the tools you use actually work.',
+    featured: {
+      title: 'Interview with Krzysztof Grajek, lead engineer behind TraceVault',
+      date: 'Apr 13, 2026',
+      href: `${BASE}/blog/ai/interview-with-krzysztof-grajek-lead-engineer-behind-trace-vault/`,
+    },
+    articles: [
+      {
+        title: 'How to improve your RAG: Move Beyond Flat Vector Stores',
+        date: 'Feb 16',
+        href: `${BASE}/blog/ai/how-to-improve-your-rag/`,
+      },
+      {
+        title: 'Best generative AI models at the beginning of 2026',
+        date: 'Jan 27',
+        href: `${BASE}/blog/ai/best-gen-ai-beginning-2026/`,
+      },
+      {
+        title: 'Understanding How Claude Code Works',
+        date: 'Nov 12',
+        href: `${BASE}/blog/ai/how-claude-code-works/`,
+      },
+    ],
+    ctaLabel: 'Read AI-Insights',
+    ctaHref: `${BASE}/blog/ai/interview-with-krzysztof-grajek-lead-engineer-behind-trace-vault/`,
+  },
+];
+---
+<section class="section" id="insights">
+  <div class="container">
+    <div class="text-center mb-16 fade-up">
+      <h2 class="section-title">Thought Leadership</h2>
+      <p class="section-subtitle mx-auto">
+        Insights from the frontier of AI-driven software engineering.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {series.map(s => (
+        <div class="fade-up">
+          <SeriesCard {...s} />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
