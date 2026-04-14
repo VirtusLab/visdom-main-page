@@ -1,56 +1,20 @@
----
-const stats = [
-  { value: '88%', label: 'of teams using AI coding tools' },
-  { value: '6%', label: 'report measurable productivity gains' },
-  { value: '45%', label: 'of AI-generated code has OWASP vulns' },
-];
----
-<section class="pt-32 pb-20">
-  <div class="container">
-    <!-- Badge -->
-    <div class="flex items-center gap-2 mb-8 fade-up">
-      <span class="tag bg-emerald/10 text-emerald border border-emerald/20">
-        <span class="inline-block w-2 h-2 rounded-full bg-emerald pulse-dot mr-2"></span>
-        Agent-Ready SDLC Platform
-      </span>
+<section class="pt-40 pb-24">
+  <div class="container max-w-3xl">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-light border border-emerald/20 text-emerald text-xs font-medium mb-8">
+      AI-Native SDLC Platform
     </div>
 
-    <!-- Headline -->
-    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight max-w-4xl mb-6 fade-up" style="font-family: var(--font-heading);">
-      Your AI agents are only as good as your
-      <span class="bg-gradient-to-r from-emerald via-blue to-purple bg-clip-text text-transparent">
-        engineering infrastructure
-      </span>
+    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-text mb-8 leading-tight" style="font-family: var(--font-heading);">
+      Your AI agents are only as good as your engineering infrastructure
     </h1>
 
-    <!-- Subtitle -->
-    <p class="text-lg md:text-xl text-white/50 max-w-2xl mb-10 fade-up">
-      Most organizations are adopting AI without changing their underlying infrastructure.
-      The result? Agents that hallucinate, pipelines that break, and security gaps that widen.
+    <p class="text-lg text-text-secondary mb-12 leading-relaxed max-w-2xl">
+      VisDom transforms your software delivery lifecycle into an agent-operable production system. From assessment to autonomous delivery.
     </p>
 
-    <!-- CTAs -->
-    <div class="flex flex-wrap gap-4 mb-16 fade-up">
-      <a href="#solutions" class="btn-pill btn-primary">
-        Explore Solutions
-      </a>
-      <a href="https://visdom-ai-maturity-matrix.pages.dev/assessment" target="_blank" rel="noopener" class="btn-pill btn-outline">
-        Take the Assessment
-      </a>
-    </div>
-
-    <!-- Stats strip -->
-    <div class="glass-card p-6 md:p-8 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 fade-up">
-      {stats.map(stat => (
-        <div class="text-center md:text-left">
-          <div class="text-3xl md:text-4xl font-bold text-white mb-1" style="font-family: var(--font-heading);">
-            {stat.value}
-          </div>
-          <div class="text-sm text-white/40">
-            {stat.label}
-          </div>
-        </div>
-      ))}
+    <div class="flex flex-wrap gap-4">
+      <a href="#platform" class="btn-pill btn-primary">Explore the Platform</a>
+      <a href="https://visdom-ai-maturity-matrix.pages.dev/assessment" target="_blank" rel="noopener" class="btn-pill btn-outline">Take the Assessment</a>
     </div>
   </div>
 </section>

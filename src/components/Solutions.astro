@@ -1,267 +1,196 @@
 ---
-import SolutionCard from './SolutionCard.astro';
 import Terminal from './Terminal.astro';
-
-const phases = [
-  { number: 1, label: 'Assess', color: 'var(--color-phase-assess)', description: 'Measure readiness' },
-  { number: 2, label: 'Enable', color: 'var(--color-phase-enable)', description: 'Build foundations' },
-  { number: 3, label: 'Build', color: 'var(--color-phase-build)', description: 'Ship with agents' },
-  { number: 4, label: 'Validate', color: 'var(--color-phase-validate)', description: 'Ensure quality' },
-];
 ---
-<section class="section" id="solutions">
+<section id="platform" class="section">
   <div class="container">
-    <!-- Section Header -->
-    <div class="text-center mb-16 fade-up">
-      <span class="inline-block text-xs font-semibold tracking-widest uppercase text-emerald mb-4">Our Solutions</span>
-      <h2 class="section-title">From Assessment to Autonomous Delivery</h2>
-    </div>
+    <p class="section-label">Platform Components</p>
+    <h2 class="section-title">Everything your agents need to ship with confidence</h2>
+    <p class="section-subtitle mb-24">
+      Each component works standalone. Together, they form an Agent-Ready SDLC.
+    </p>
 
-    <!-- Journey Timeline (hidden on mobile) -->
-    <div class="hidden md:block mb-20 fade-up">
-      <div class="relative flex justify-between items-start max-w-3xl mx-auto">
-        <!-- Gradient connecting line -->
-        <div class="absolute top-4 left-[12.5%] right-[12.5%] h-px"
-             style="background: linear-gradient(to right, var(--color-phase-assess), var(--color-phase-enable), var(--color-phase-build), var(--color-phase-validate));">
-        </div>
-        {phases.map(phase => (
-          <div class="relative flex flex-col items-center text-center" style="width: 25%;">
-            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold relative z-10"
-                 style={`background: color-mix(in srgb, ${phase.color} 22%, transparent); border: 2px solid ${phase.color}; color: ${phase.color};`}>
-              {phase.number}
-            </div>
-            <span class="text-xs font-semibold mt-2 uppercase tracking-wider" style={`color: ${phase.color};`}>
-              {phase.label}
-            </span>
-            <span class="text-[11px] text-white/40 mt-1">{phase.description}</span>
+    {/* Component Grid - clean, spacious */}
+    <div class="space-y-24">
+
+      {/* 01 - Maturity Matrix */}
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">01</span>
+          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">Maturity Matrix</h3>
+          <p class="text-text-secondary leading-relaxed mb-6">
+            60 practices across 4 perspectives and 5 maturity levels. Know exactly where your organization stands on AI readiness - and what to improve next.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="tag bg-blue/10 text-blue border border-blue/20">Interactive Assessment</span>
+            <span class="tag bg-emerald/10 text-emerald border border-emerald/20">Workshop Mode</span>
           </div>
-        ))}
+          <div class="flex gap-3">
+            <a href="https://visdom-ai-maturity-matrix.pages.dev/assessment" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">Try the Assessment</a>
+            <a href="https://visdom-ai-maturity-matrix.pages.dev/matrix/development" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Explore Matrix</a>
+          </div>
+        </div>
+        <div class="surface-card p-8 flex items-center justify-center">
+          <div class="flex items-center gap-2">
+            {['Ad-hoc', 'Guided', 'Systematic', 'Optimized', 'Autonomous'].map((level, i) => (
+              <div class="flex items-center gap-2">
+                <div class="text-center px-3 py-2 rounded-lg" style={`background: ${['#f4f4f5','#ccfbf1','#d1fae5','#dcfce7','#bbf7d0'][i]}`}>
+                  <div class="text-xs font-bold" style={`color: ${['#71717a','#0d9488','#059669','#16a34a','#22c55e'][i]}`}>L{i+1}</div>
+                  <div class="text-[10px]" style={`color: ${['#71717a','#0d9488','#059669','#16a34a','#22c55e'][i]}; opacity: 0.7`}>{level}</div>
+                </div>
+                {i < 4 && <div class="w-4 h-px bg-border"></div>}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- Phase 1: ASSESS -->
-    <div class="mb-16 fade-up">
-      <div class="flex items-center gap-3 mb-6">
-        <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full"
-              style="color: var(--color-phase-assess); background: color-mix(in srgb, var(--color-phase-assess) 12%, transparent); border: 1px solid color-mix(in srgb, var(--color-phase-assess) 25%, transparent);">
-          Phase 1 &mdash; Assess
-        </span>
-      </div>
-      <div class="max-w-2xl">
-        <SolutionCard
-          title="VisDom Maturity Matrix"
-          subtitle="Where does your org stand on the AI-readiness curve?"
-          problem="Most teams can't objectively measure their AI readiness &mdash; they guess, overspend, or stall."
-          tags={[
-            { label: 'Interactive Tool', color: 'blue' },
-            { label: 'Self-Assessment', color: 'emerald' },
-          ]}
-          capabilities={[
-            '60 practices across 4 perspectives and 5 maturity levels',
-            'Self-assessment mode + facilitated workshop format',
-          ]}
-          metric={{ lines: [
-            '5 maturity levels · 4 perspectives · 60 practices',
-            'Benchmark your team in under 30 minutes',
-          ]}}
-          ctas={[
-            { label: 'Take the Assessment', href: 'https://visdom-ai-maturity-matrix.pages.dev/', external: true },
-            { label: 'View the Matrix', href: 'https://visdom-ai-maturity-matrix.pages.dev/', external: true },
-          ]}
-        />
-      </div>
-    </div>
-
-    <!-- Phase 2: ENABLE -->
-    <div class="mb-16 fade-up">
-      <div class="flex items-center gap-3 mb-6">
-        <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full"
-              style="color: var(--color-phase-enable); background: color-mix(in srgb, var(--color-phase-enable) 12%, transparent); border: 1px solid color-mix(in srgb, var(--color-phase-enable) 25%, transparent);">
-          Phase 2 &mdash; Enable
-        </span>
-      </div>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SolutionCard
-          title="Context Fabric"
-          subtitle="Agent-consumable context for your entire stack"
-          problem="AI agents hallucinate because they lack structured context about your codebase, architecture, and business rules."
-          tags={[
-            { label: 'Infrastructure', color: 'purple' },
-            { label: 'Agent-Ready', color: 'emerald' },
-          ]}
-          capabilities={[
-            'Structured context from documentation, architecture, and tribal knowledge',
-            'Automated documentation harvesting and normalization',
-            '16+ configuration sources unified into a single context layer',
-            'CLAUDE.md export for instant Anthropic agent onboarding',
-          ]}
-          ctas={[
-            { label: 'View on GitHub', href: 'https://github.com/VirtusLab/context-fabric', external: true },
-          ]}
-        >
+      {/* 02 - Context Fabric */}
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="order-2 lg:order-1">
           <Terminal title="context-fabric">
-<span class="text-white/40">$</span> <span class="text-emerald">vidia</span> init
-<span class="text-white/40">&#9656; Scanning 16 config sources...</span>
-<span class="text-white/40">&#9656; Generating CLAUDE.md...</span>
-<span class="text-emerald">&#10003;</span> Context Fabric initialized</Terminal>
-        </SolutionCard>
-
-        <SolutionCard
-          title="Machine-Speed CI"
-          subtitle="High-frequency iteration loops for agent-driven dev"
-          problem="Your 45-minute CI pipeline is the bottleneck. AI agents can write code in seconds but wait forever for feedback."
-          tags={[
-            { label: 'Infrastructure', color: 'purple' },
-            { label: 'Performance', color: 'amber' },
-          ]}
-          capabilities={[
-            'High-frequency feedback loops for agent-driven development',
-            'Bazel, Gradle, and Maven build optimization',
-            'Monorepo-scale caching and parallelization',
-            'Full CI re-architecture for sub-minute cycles',
-          ]}
-          metric={{ lines: [
-            '88% average build time decrease',
-            '43% PR merge time reduction',
-          ]}}
-          ctas={[
-            { label: 'Read the Case Study', href: '/blog/machine-speed-ci', external: false },
-          ]}
-        />
-      </div>
-    </div>
-
-    <!-- Phase 3: BUILD -->
-    <div class="mb-16 fade-up">
-      <div class="flex items-center gap-3 mb-6">
-        <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full"
-              style="color: var(--color-phase-build); background: color-mix(in srgb, var(--color-phase-build) 12%, transparent); border: 1px solid color-mix(in srgb, var(--color-phase-build) 25%, transparent);">
-          Phase 3 &mdash; Build
-        </span>
-      </div>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Left: ViDIA full card -->
-        <SolutionCard
-          title="ViDIA"
-          subtitle="Codebase intelligence for AI agents and humans"
-          problem="Your agents need deep codebase intelligence &mdash; who owns what, what breaks when you change this, and where the dragons live."
-          tags={[
-            { label: 'Open Source', color: 'blue' },
-            { label: 'MCP-Compatible', color: 'emerald' },
-            { label: 'CLI', color: 'purple' },
-          ]}
-          capabilities={[
-            'Expert discovery &mdash; find who knows any file or module best',
-            'Blast radius analysis for every change',
-            'PR indexing and historical pattern detection',
-            '16+ language detectors for polyglot codebases',
-            'SHA256 snapshot integrity verification',
-            'MCP Server for direct agent integration',
-          ]}
-          ctas={[
-            { label: 'View on GitHub', href: 'https://github.com/VirtusLab/vidia', external: true },
-          ]}
-        >
-          <Terminal title="vidia">
-<span class="text-white/40">$</span> <span class="text-emerald">vidia</span> expert src/auth/
-<span class="text-white/40">&#9656; Analyzing git history...</span>
-<span class="text-amber">@sarah</span>  <span class="text-white/40">87% ownership  142 commits</span>
-<span class="text-amber">@mike</span>   <span class="text-white/40">9% ownership   18 commits</span></Terminal>
-        </SolutionCard>
-
-        <!-- Right: 2 smaller cards stacked -->
-        <div class="flex flex-col gap-6">
-          <SolutionCard
-            title="Agent Skills Library"
-            subtitle="Pre-built skills for coding agents"
-            problem="Writing CLAUDE.md from scratch for every project is tedious, error-prone, and inconsistent across teams."
-            tags={[
-              { label: 'Open Source', color: 'blue' },
-              { label: 'Anthropic Spec', color: 'emerald' },
-            ]}
-            capabilities={[
-              'Follows Anthropic agent skills specification',
-              'Java ecosystem skills with IDE-agnostic design',
-              'Community-maintained and extensible',
-            ]}
-            ctas={[
-              { label: 'View on GitHub', href: 'https://github.com/VirtusLab/agent-skills-library', external: true },
-            ]}
-          />
-
-          <SolutionCard
-            title="Reference Architectures"
-            subtitle="Production-ready blueprints for agentic systems"
-            problem="Building agentic systems from scratch means repeating the same architectural mistakes everyone else already made."
-            tags={[
-              { label: 'Blueprint', color: 'amber' },
-              { label: 'Open Source', color: 'blue' },
-            ]}
-            capabilities={[
-              'Insurance industry C4 architecture with full documentation',
-              'Human-in-the-loop patterns for safe agent autonomy',
-              '4 reference implementations across different domains',
-            ]}
-            ctas={[
-              { label: 'View on GitHub', href: 'https://github.com/VirtusLab/reference-architectures', external: true },
-            ]}
-          />
+{`$ vidia init
+Scanning repository...
+Detected: pyproject.toml, .pre-commit-config.yaml,
+          GitHub Actions, Docker Compose, ArchUnit
+Found 23 rules across 6 categories.
+Exported to CLAUDE.md `}<span class="text-emerald">&#x2713;</span>
+          </Terminal>
+        </div>
+        <div class="order-1 lg:order-2">
+          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">02</span>
+          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">Context Fabric</h3>
+          <p class="text-text-secondary leading-relaxed mb-6">
+            Structured, agent-consumable context built across repositories and teams. Your agents stop hallucinating when they can actually see your codebase.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="tag bg-purple/10 text-purple border border-purple/20">Infrastructure</span>
+            <span class="tag bg-emerald/10 text-emerald border border-emerald/20">16+ Config Detectors</span>
+          </div>
+          <a href="https://github.com/VirtusLab" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">View on GitHub &rarr;</a>
         </div>
       </div>
-    </div>
 
-    <!-- Phase 4: VALIDATE -->
-    <div class="fade-up">
-      <div class="flex items-center gap-3 mb-6">
-        <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full"
-              style="color: var(--color-phase-validate); background: color-mix(in srgb, var(--color-phase-validate) 12%, transparent); border: 1px solid color-mix(in srgb, var(--color-phase-validate) 25%, transparent);">
-          Phase 4 &mdash; Validate
-        </span>
-      </div>
-      <div class="max-w-2xl">
-        <SolutionCard
-          title="VisDom Code Review"
-          subtitle="Multi-layer automated review at machine speed"
-          problem="OWASP vulnerabilities slip through and senior engineers spend 40% of their time on code reviews instead of building."
-          tags={[
-            { label: 'Framework', color: 'amber' },
-            { label: 'Process', color: 'purple' },
-            { label: 'Multi-Layer', color: 'emerald' },
-          ]}
-          capabilities={[
-            'L0 &mdash; Instant static analysis (< 30s)',
-            'L1 &mdash; AI-assisted pattern review (< 2min)',
-            'L2 &mdash; Deep semantic analysis (< 5min)',
-            'L3 &mdash; Architectural impact assessment (< 10min)',
-          ]}
-          metric={{ lines: [
-            'Average cost: $0.05 per PR',
-            '4 review layers · Fully automated · PR-level reporting',
-          ]}}
-          ctas={[
-            { label: 'View Framework Docs', href: '/docs/code-review', external: false },
-            { label: 'Before & After Scenarios', href: '/docs/code-review/scenarios', external: false },
-          ]}
-        >
-          <!-- Visual pipeline of layer badges -->
-          <div class="flex flex-wrap items-center gap-2 mb-2">
-            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold"
-                  style="background: rgba(59,130,246,0.15); color: #3b82f6; border: 1px solid rgba(59,130,246,0.25);">L0</span>
-            <span class="text-white/30">&rarr;</span>
-            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold"
-                  style="background: rgba(139,92,246,0.15); color: #8b5cf6; border: 1px solid rgba(139,92,246,0.25);">L1</span>
-            <span class="text-white/30">&rarr;</span>
-            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold"
-                  style="background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.25);">L2</span>
-            <span class="text-white/30">&rarr;</span>
-            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold"
-                  style="background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25);">L3</span>
-            <span class="text-white/30">&rarr;</span>
-            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold"
-                  style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.15);">PR Comment</span>
+      {/* 03 - Machine-Speed CI */}
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">03</span>
+          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">Machine-Speed CI</h3>
+          <p class="text-text-secondary leading-relaxed mb-6">
+            Your CI takes 45 minutes. An AI agent iterates 50x per hour. We re-architect your pipeline to match agent speed.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="tag bg-purple/10 text-purple border border-purple/20">Bazel</span>
+            <span class="tag bg-purple/10 text-purple border border-purple/20">Gradle</span>
+            <span class="tag bg-amber/10 text-amber border border-amber/20">Performance</span>
           </div>
-        </SolutionCard>
+          <a href="https://virtuslab.com/blog/ai/the-fallacy/" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Read: "The Ferrari Engine in a Fiat 500" &rarr;</a>
+        </div>
+        <div class="surface-card p-8">
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-sm mb-1"><span class="text-text-secondary">Build time</span><span class="font-semibold text-emerald">-88%</span></div>
+              <div class="h-2 bg-surface-light rounded-full overflow-hidden"><div class="h-full bg-emerald rounded-full" style="width: 88%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1"><span class="text-text-secondary">PR merge time</span><span class="font-semibold text-emerald">-43%</span></div>
+              <div class="h-2 bg-surface-light rounded-full overflow-hidden"><div class="h-full bg-emerald rounded-full" style="width: 43%"></div></div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* 04 - ViDIA */}
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="order-2 lg:order-1">
+          <Terminal title="vidia">
+{`$ vidia expert src/auth/login.py
+Expert: @jkowalski (score: 0.87)
+Last touch: 3 days ago
+Bus factor: 1 ⚠
+Blast radius: 12 files`}
+          </Terminal>
+        </div>
+        <div class="order-1 lg:order-2">
+          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">04</span>
+          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">ViDIA <span class="text-base font-normal text-text-muted">Developer Intelligence Agent</span></h3>
+          <p class="text-text-secondary leading-relaxed mb-6">
+            Who knows this code? What breaks if I change it? Why was it built this way? Deterministic intelligence for AI agents via MCP.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="tag bg-blue/10 text-blue border border-blue/20">Open Source</span>
+            <span class="tag bg-emerald/10 text-emerald border border-emerald/20">MCP Server</span>
+            <span class="tag bg-purple/10 text-purple border border-purple/20">CLI</span>
+          </div>
+          <div class="flex gap-3">
+            <a href="https://github.com/VirtusLab/visdom-developer-intelligence" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">View on GitHub</a>
+            <a href="https://github.com/VirtusLab/visdom-developer-intelligence" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Docs</a>
+          </div>
+        </div>
+      </div>
+
+      {/* 05 - Code Review */}
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">05</span>
+          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">Code Review <span class="text-base font-normal text-text-muted">Multi-Layer Pipeline</span></h3>
+          <p class="text-text-secondary leading-relaxed mb-6">
+            45% of AI-generated code contains OWASP vulnerabilities. Four layers of review, from deterministic gates to AI deep analysis. $0.05 per low-risk PR.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="tag bg-amber/10 text-amber border border-amber/20">Framework</span>
+            <span class="tag bg-purple/10 text-purple border border-purple/20">Process</span>
+          </div>
+          <div class="flex gap-3">
+            <a href="https://virtuslab.github.io/visdom-code-review/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">Read the Framework</a>
+            <a href="https://virtuslab.github.io/visdom-code-review/before-after/" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Before/After</a>
+          </div>
+        </div>
+        <div class="surface-card p-8">
+          <div class="space-y-3">
+            {[
+              { layer: 'L0', name: 'Context', time: '<10s', color: '#6b7280' },
+              { layer: 'L1', name: 'Deterministic', time: '<60s', color: '#3b82f6' },
+              { layer: 'L2', name: 'AI Quick Scan', time: '<2min', color: '#f59e0b' },
+              { layer: 'L3', name: 'AI Deep Review', time: '<10min', color: '#9b51e0' },
+            ].map(l => (
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white" style={`background: ${l.color}`}>{l.layer}</span>
+                <span class="text-sm text-text flex-1">{l.name}</span>
+                <span class="text-xs text-text-muted font-mono">{l.time}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 06 - Agent Skills + Reference Architectures (compact row) */}
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="card p-8">
+          <span class="text-3xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">06</span>
+          <h3 class="text-xl font-bold text-text mt-2 mb-3" style="font-family: var(--font-heading);">Agent Skills Library</h3>
+          <p class="text-sm text-text-secondary leading-relaxed mb-4">
+            Battle-tested skills following the Anthropic Agent Skills spec. IDE-agnostic, community-maintained.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="tag bg-blue/10 text-blue border border-blue/20">Open Source</span>
+            <span class="tag bg-emerald/10 text-emerald border border-emerald/20">Anthropic Spec</span>
+          </div>
+          <a href="https://github.com/VirtusLab/agent-skills" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Browse on GitHub &rarr;</a>
+        </div>
+        <div class="card p-8">
+          <span class="text-3xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">07</span>
+          <h3 class="text-xl font-bold text-text mt-2 mb-3" style="font-family: var(--font-heading);">Reference Architectures</h3>
+          <p class="text-sm text-text-secondary leading-relaxed mb-4">
+            Full C4 blueprints for agentic systems. Insurance underwriting with human-in-the-loop, 4 reference implementations.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="tag bg-amber/10 text-amber border border-amber/20">Blueprint</span>
+            <span class="tag bg-blue/10 text-blue border border-blue/20">Open Source</span>
+          </div>
+          <a href="https://github.com/VirtusLab/ai-insurance-reference-architecture" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Explore Architecture &rarr;</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>

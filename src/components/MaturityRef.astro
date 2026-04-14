@@ -1,21 +1,17 @@
 ---
 const levels = [
-  { id: 'L1', name: 'Ad-hoc', bg: 'rgba(113,113,122,0.2)', text: '#a1a1aa' },
-  { id: 'L2', name: 'Guided', bg: 'rgba(13,148,136,0.2)', text: '#2dd4bf' },
-  { id: 'L3', name: 'Systematic', bg: 'rgba(16,185,129,0.2)', text: '#34d399' },
-  { id: 'L4', name: 'Optimized', bg: 'rgba(34,197,94,0.2)', text: '#4ade80' },
-  { id: 'L5', name: 'Autonomous', bg: 'rgba(74,222,128,0.2)', text: '#86efac' },
+  { id: 'L1', name: 'Ad-hoc', bg: '#f4f4f5', text: '#71717a' },
+  { id: 'L2', name: 'Guided', bg: '#ccfbf1', text: '#0d9488' },
+  { id: 'L3', name: 'Systematic', bg: '#d1fae5', text: '#059669' },
+  { id: 'L4', name: 'Optimized', bg: '#dcfce7', text: '#16a34a' },
+  { id: 'L5', name: 'Autonomous', bg: '#bbf7d0', text: '#22c55e' },
 ];
-
 const perspectives = ['Development', 'Delivery', 'Organization', 'Infrastructure'];
 ---
-<section class="py-20 relative" style="border-top: 1px solid rgba(16,185,129,0.15); background: linear-gradient(180deg, rgba(16,185,129,0.05) 0%, rgba(16,185,129,0.01) 100%);">
+<section class="py-24" style="border-top: 1px solid #d1fae5; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%);">
   <div class="container text-center">
     <h2 class="section-title mx-auto">Where does your organization stand?</h2>
-    <p class="text-white/50 mt-4 mb-12 max-w-xl mx-auto">
-      The VisDom Maturity Matrix maps 60 practices across 4 perspectives and 5 maturity levels - from Ad-hoc to Autonomous.
-    </p>
-
+    <p class="text-text-secondary mt-4 mb-12 max-w-xl mx-auto">The VisDom Maturity Matrix maps 60 practices across 4 perspectives and 5 maturity levels.</p>
     <div class="flex items-center justify-center gap-0 mb-10 overflow-x-auto pb-2">
       {levels.map((level, i) => (
         <div class="flex items-center">
@@ -23,26 +19,18 @@ const perspectives = ['Development', 'Delivery', 'Organization', 'Infrastructure
             <span class="text-xs font-bold" style={`color: ${level.text};`}>{level.id}</span>
             <span class="text-[11px] mt-0.5" style={`color: ${level.text}; opacity: 0.7;`}>{level.name}</span>
           </div>
-          {i < levels.length - 1 && (
-            <div class="w-6 sm:w-10 h-0.5" style={`background: linear-gradient(90deg, ${level.text}, ${levels[i + 1].text});`}></div>
-          )}
+          {i < levels.length - 1 && <div class="w-6 sm:w-10 h-0.5" style={`background: linear-gradient(90deg, ${level.text}, ${levels[i+1].text});`}></div>}
         </div>
       ))}
     </div>
-
     <div class="flex flex-wrap justify-center gap-3 mb-10">
       {perspectives.map(p => (
-        <span class="text-sm text-white/40 bg-white/[0.03] border border-white/5 rounded-full px-4 py-1.5">{p}</span>
+        <span class="text-sm text-text-secondary bg-surface border border-border-light rounded-full px-4 py-1.5">{p}</span>
       ))}
     </div>
-
     <div class="flex flex-wrap justify-center gap-4">
-      <a href="https://visdom-ai-maturity-matrix.pages.dev/assessment" target="_blank" rel="noopener" class="btn-pill btn-primary">
-        Take the Self-Assessment
-      </a>
-      <a href="https://visdom-ai-maturity-matrix.pages.dev/matrix/development" target="_blank" rel="noopener" class="btn-pill btn-outline">
-        Explore the Full Matrix
-      </a>
+      <a href="https://visdom-ai-maturity-matrix.pages.dev/assessment" target="_blank" rel="noopener" class="btn-pill btn-primary">Take the Self-Assessment</a>
+      <a href="https://visdom-ai-maturity-matrix.pages.dev/matrix/development" target="_blank" rel="noopener" class="btn-pill btn-outline">Explore the Full Matrix</a>
     </div>
   </div>
 </section>
