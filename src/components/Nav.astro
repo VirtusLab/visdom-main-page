@@ -11,6 +11,7 @@ const links = [
     <a href="/" class="flex items-center gap-2 text-white font-bold text-lg" style="font-family: var(--font-heading);">
       <span class="text-emerald">V</span>isDom
     </a>
+
     <div class="hidden md:flex items-center gap-8">
       {links.map(link => (
         <a href={link.href} class="text-sm text-white/50 hover:text-white transition-colors"
@@ -20,5 +21,34 @@ const links = [
       ))}
       <a href="#contact" class="btn-pill btn-primary text-sm !py-2 !px-5">Get in Touch</a>
     </div>
+
+    <button id="mobile-toggle" class="md:hidden text-white/60 hover:text-white p-2" aria-label="Toggle menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 12h18M3 6h18M3 18h18" />
+      </svg>
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="hidden md:hidden border-t border-white/5 pb-4">
+    <div class="container flex flex-col gap-3 pt-3">
+      {links.map(link => (
+        <a href={link.href} class="text-sm text-white/50 hover:text-white transition-colors py-2"
+          {...(link.external ? { target: '_blank', rel: 'noopener' } : {})}>
+          {link.label}
+        </a>
+      ))}
+      <a href="#contact" class="btn-pill btn-primary text-sm !py-2 !px-5 self-start mt-2">Get in Touch</a>
+    </div>
   </div>
 </nav>
+
+<script>
+  const toggle = document.getElementById('mobile-toggle');
+  const menu = document.getElementById('mobile-menu');
+  toggle?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+  });
+  menu?.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', () => menu?.classList.add('hidden'));
+  });
+</script>
