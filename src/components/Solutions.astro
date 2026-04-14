@@ -128,35 +128,39 @@ Blast radius: 12 files`}
         </div>
       </div>
 
-      {/* 05 - Code Review */}
+      {/* 05 - TraceVault */}
       <div class="grid lg:grid-cols-2 gap-16 items-center">
         <div>
           <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">05</span>
-          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">Code Review <span class="text-base font-normal text-text-muted">Multi-Layer Pipeline</span></h3>
+          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">TraceVault <span class="text-base font-normal text-text-muted">Flight Recorder for AI Development</span></h3>
           <p class="text-text-secondary leading-relaxed mb-6">
-            45% of AI-generated code contains OWASP vulnerabilities. Four layers of review, from deterministic gates to AI deep analysis. $0.05 per low-risk PR.
+            You can't govern what you can't see. TraceVault captures every AI agent interaction - session traces, token usage, tool calls - with cryptographic audit trails and policy enforcement.
           </p>
           <div class="flex flex-wrap gap-2 mb-6">
-            <span class="tag bg-amber/10 text-amber border border-amber/20">Framework</span>
-            <span class="tag bg-purple/10 text-purple border border-purple/20">Process</span>
+            <span class="tag bg-blue/10 text-blue border border-blue/20">Open Source</span>
+            <span class="tag bg-amber/10 text-amber border border-amber/20">Governance</span>
+            <span class="tag bg-purple/10 text-purple border border-purple/20">Compliance</span>
           </div>
           <div class="flex gap-3">
-            <a href="https://virtuslab.github.io/visdom-code-review/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">Read the Framework</a>
-            <a href="https://virtuslab.github.io/visdom-code-review/before-after/" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Before/After</a>
+            <a href="https://tracevault.dev/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">tracevault.dev</a>
+            <a href="https://github.com/softwaremill/tracevault" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">GitHub</a>
           </div>
         </div>
         <div class="surface-card p-8">
-          <div class="space-y-3">
+          <div class="space-y-4">
             {[
-              { layer: 'L0', name: 'Context', time: '<10s', color: '#6b7280' },
-              { layer: 'L1', name: 'Deterministic', time: '<60s', color: '#3b82f6' },
-              { layer: 'L2', name: 'AI Quick Scan', time: '<2min', color: '#f59e0b' },
-              { layer: 'L3', name: 'AI Deep Review', time: '<10min', color: '#9b51e0' },
-            ].map(l => (
-              <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white" style={`background: ${l.color}`}>{l.layer}</span>
-                <span class="text-sm text-text flex-1">{l.name}</span>
-                <span class="text-xs text-text-muted font-mono">{l.time}</span>
+              { icon: '&#x25C9;', name: 'Capture', desc: 'Session traces, token usage, tool calls, secret redaction' },
+              { icon: '&#x25C9;', name: 'Enforce', desc: 'Model allowlists, path protection, token budgets' },
+              { icon: '&#x25C9;', name: 'Audit', desc: 'Ed25519 signatures, hash-chained records, SOX/PCI-DSS' },
+              { icon: '&#x25C9;', name: 'Analyze', desc: 'Cost tracking, model distribution, adoption patterns' },
+              { icon: '&#x25C9;', name: 'Code', desc: 'Line-by-line AI attribution via tree-sitter' },
+            ].map(p => (
+              <div class="flex items-start gap-3">
+                <span class="text-emerald mt-0.5 text-sm" set:html={p.icon}></span>
+                <div>
+                  <span class="text-sm font-semibold text-text">{p.name}</span>
+                  <span class="text-xs text-text-muted ml-2">{p.desc}</span>
+                </div>
               </div>
             ))}
           </div>
