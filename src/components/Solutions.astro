@@ -4,21 +4,22 @@ import Terminal from './Terminal.astro';
 <section id="platform" class="section">
   <div class="container">
     <p class="section-label">Platform Components</p>
-    <h2 class="section-title">Everything your agents need to ship with confidence</h2>
+    <h2 class="section-title">Six building blocks of an Agent-Ready SDLC</h2>
     <p class="section-subtitle mb-24">
-      Each component works standalone. Together, they form an Agent-Ready SDLC.
+      Each component works standalone. Together, they form the infrastructure your AI agents need to ship with confidence.
     </p>
 
-    {/* Component Grid - clean, spacious */}
-    <div class="space-y-24">
+    <div class="space-y-32">
 
-      {/* 01 - Maturity Matrix */}
+      {/* 00 - Visdom Maturity Matrix */}
       <div class="grid lg:grid-cols-2 gap-16 items-center">
         <div>
-          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">01</span>
-          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">Maturity Matrix</h3>
+          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">00</span>
+          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">
+            Visdom Maturity Matrix
+          </h3>
           <p class="text-text-secondary leading-relaxed mb-6">
-            60 practices across 4 perspectives and 5 maturity levels. Know exactly where your organization stands on AI readiness - and what to improve next.
+            60 practices across 4 perspectives and 5 maturity levels. Know exactly where your organization stands on AI readiness — and what to improve next.
           </p>
           <div class="flex flex-wrap gap-2 mb-6">
             <span class="tag bg-blue/10 text-blue border border-blue/20">Interactive Assessment</span>
@@ -44,66 +45,18 @@ import Terminal from './Terminal.astro';
         </div>
       </div>
 
-      {/* 02 - Context Fabric */}
+      {/* 01 - Visdom Context Fabric */}
       <div class="grid lg:grid-cols-2 gap-16 items-center">
         <div class="order-2 lg:order-1">
-          <Terminal title="context-fabric">
+          <Terminal title="vidia">
 {`$ vidia init
 Scanning repository...
 Detected: pyproject.toml, .pre-commit-config.yaml,
           GitHub Actions, Docker Compose, ArchUnit
 Found 23 rules across 6 categories.
-Exported to CLAUDE.md `}<span class="text-emerald">&#x2713;</span>
-          </Terminal>
-        </div>
-        <div class="order-1 lg:order-2">
-          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">02</span>
-          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">Context Fabric</h3>
-          <p class="text-text-secondary leading-relaxed mb-6">
-            Structured, agent-consumable context built across repositories and teams. Your agents stop hallucinating when they can actually see your codebase.
-          </p>
-          <div class="flex flex-wrap gap-2 mb-6">
-            <span class="tag bg-purple/10 text-purple border border-purple/20">Infrastructure</span>
-            <span class="tag bg-emerald/10 text-emerald border border-emerald/20">16+ Config Detectors</span>
-          </div>
-          <a href="https://github.com/VirtusLab" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">View on GitHub &rarr;</a>
-        </div>
-      </div>
+Exported to CLAUDE.md `}<span class="text-emerald">&#x2713;</span>{`
 
-      {/* 03 - Machine-Speed CI */}
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div>
-          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">03</span>
-          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">Machine-Speed CI</h3>
-          <p class="text-text-secondary leading-relaxed mb-6">
-            Your CI takes 45 minutes. An AI agent iterates 50x per hour. We re-architect your pipeline to match agent speed.
-          </p>
-          <div class="flex flex-wrap gap-2 mb-6">
-            <span class="tag bg-purple/10 text-purple border border-purple/20">Bazel</span>
-            <span class="tag bg-purple/10 text-purple border border-purple/20">Gradle</span>
-            <span class="tag bg-amber/10 text-amber border border-amber/20">Performance</span>
-          </div>
-          <a href="https://virtuslab.com/blog/ai/the-fallacy/" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Read: "The Ferrari Engine in a Fiat 500" &rarr;</a>
-        </div>
-        <div class="surface-card p-8">
-          <div class="space-y-4">
-            <div>
-              <div class="flex justify-between text-sm mb-1"><span class="text-text-secondary">Build time</span><span class="font-semibold text-emerald">-88%</span></div>
-              <div class="h-2 bg-surface-light rounded-full overflow-hidden"><div class="h-full bg-emerald rounded-full" style="width: 88%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between text-sm mb-1"><span class="text-text-secondary">PR merge time</span><span class="font-semibold text-emerald">-43%</span></div>
-              <div class="h-2 bg-surface-light rounded-full overflow-hidden"><div class="h-full bg-emerald rounded-full" style="width: 43%"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 04 - ViDIA */}
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div class="order-2 lg:order-1">
-          <Terminal title="vidia">
-{`$ vidia expert src/auth/login.py
+$ vidia expert src/auth/login.py
 Expert: @jkowalski (score: 0.87)
 Last touch: 3 days ago
 Bus factor: 1 ⚠
@@ -111,10 +64,15 @@ Blast radius: 12 files`}
           </Terminal>
         </div>
         <div class="order-1 lg:order-2">
-          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">04</span>
-          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">ViDIA <span class="text-base font-normal text-text-muted">Developer Intelligence Agent</span></h3>
+          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">01</span>
+          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">
+            Visdom Context Fabric
+          </h3>
           <p class="text-text-secondary leading-relaxed mb-6">
-            Who knows this code? What breaks if I change it? Why was it built this way? Deterministic intelligence for AI agents via MCP.
+            Structured, agent-consumable context built across repositories and teams. Who knows this code? What breaks if I change it? Your agents stop hallucinating when they can actually see your codebase.
+          </p>
+          <p class="text-sm text-text-muted mb-6">
+            Powered by <span class="font-semibold text-text">Visdom Developer Intelligence</span> — deterministic code expertise, blast radius analysis, and ownership graphs via MCP.
           </p>
           <div class="flex flex-wrap gap-2 mb-6">
             <span class="tag bg-blue/10 text-blue border border-blue/20">Open Source</span>
@@ -123,18 +81,85 @@ Blast radius: 12 files`}
           </div>
           <div class="flex gap-3">
             <a href="https://github.com/VirtusLab/visdom-developer-intelligence" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">View on GitHub</a>
-            <a href="https://github.com/VirtusLab/visdom-developer-intelligence" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Docs</a>
+            <a href="https://github.com/VirtusLab/visdom-developer-intelligence" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Documentation</a>
           </div>
         </div>
       </div>
 
-      {/* 05 - TraceVault */}
+      {/* 02 - Visdom Code Review (VCR) */}
       <div class="grid lg:grid-cols-2 gap-16 items-center">
         <div>
-          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">05</span>
-          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">TraceVault <span class="text-base font-normal text-text-muted">Flight Recorder for AI Development</span></h3>
+          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">02</span>
+          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">
+            Visdom Code Review
+            <span class="text-base font-normal text-text-muted">VCR</span>
+          </h3>
           <p class="text-text-secondary leading-relaxed mb-6">
-            You can't govern what you can't see. TraceVault captures every AI agent interaction - session traces, token usage, tool calls - with cryptographic audit trails and policy enforcement.
+            Code review that understands your architecture. VCR catches boundary violations, security issues, and performance regressions before they hit production — with context-aware analysis that goes beyond linting.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="tag bg-purple/10 text-purple border border-purple/20">Architecture</span>
+            <span class="tag bg-amber/10 text-amber border border-amber/20">Security</span>
+            <span class="tag bg-blue/10 text-blue border border-blue/20">Performance</span>
+          </div>
+          <a href="#contact" class="btn-pill btn-outline text-sm">Learn More &rarr;</a>
+        </div>
+        <div class="order-2 lg:order-1">
+          <Terminal title="vcr">
+{`$ vcr analyze --pr 142
+Scanning diff... 23 files changed
+
+◉ Architecture  3 findings
+  ├─ Service boundary violation in OrderService
+  ├─ Missing retry policy on external call
+  └─ Circular dependency introduced
+
+◉ Security      1 finding
+  └─ Unvalidated input in /api/webhook
+
+◉ Performance   2 findings
+  ├─ N+1 query in UserRepository.findAll()
+  └─ Missing index on orders.status
+
+Summary: 6 findings across 3 categories
+`}<span class="text-emerald">Review ready ✓</span>
+          </Terminal>
+        </div>
+      </div>
+
+      {/* 03 - Visdom Tracing */}
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="order-2 lg:order-1">
+          <div class="surface-card p-8">
+            <div class="space-y-4">
+              {[
+                { label: 'Capture', desc: 'Session traces, token usage, tool calls, secret redaction', color: 'emerald' },
+                { label: 'Enforce', desc: 'Model allowlists, path protection, token budgets', color: 'blue' },
+                { label: 'Audit', desc: 'Ed25519 signatures, hash-chained records, SOX/PCI-DSS', color: 'purple' },
+                { label: 'Analyze', desc: 'Cost tracking, model distribution, adoption patterns', color: 'amber' },
+                { label: 'Attribute', desc: 'Line-by-line AI code attribution via tree-sitter', color: 'emerald' },
+              ].map(item => (
+                <div class="flex items-start gap-3">
+                  <span class={`w-1.5 h-1.5 rounded-full bg-${item.color} mt-2 shrink-0`}></span>
+                  <div>
+                    <span class="text-sm font-semibold text-text">{item.label}</span>
+                    <span class="text-xs text-text-muted ml-2">{item.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div class="order-1 lg:order-2">
+          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">03</span>
+          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">
+            Visdom Tracing
+          </h3>
+          <p class="text-text-secondary leading-relaxed mb-6">
+            You can't govern what you can't see. Full observability into every AI agent interaction — session traces, token usage, tool calls, model decisions — with cryptographic audit trails for compliance.
+          </p>
+          <p class="text-sm text-text-muted mb-6">
+            Built on <span class="font-semibold text-text">TraceVault</span> — a flight recorder for AI development with governance and audit capabilities.
           </p>
           <div class="flex flex-wrap gap-2 mb-6">
             <span class="tag bg-blue/10 text-blue border border-blue/20">Open Source</span>
@@ -146,52 +171,94 @@ Blast radius: 12 files`}
             <a href="https://github.com/softwaremill/tracevault" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">GitHub</a>
           </div>
         </div>
-        <div class="surface-card p-8">
-          <div class="space-y-4">
-            {[
-              { icon: '&#x25C9;', name: 'Capture', desc: 'Session traces, token usage, tool calls, secret redaction' },
-              { icon: '&#x25C9;', name: 'Enforce', desc: 'Model allowlists, path protection, token budgets' },
-              { icon: '&#x25C9;', name: 'Audit', desc: 'Ed25519 signatures, hash-chained records, SOX/PCI-DSS' },
-              { icon: '&#x25C9;', name: 'Analyze', desc: 'Cost tracking, model distribution, adoption patterns' },
-              { icon: '&#x25C9;', name: 'Code', desc: 'Line-by-line AI attribution via tree-sitter' },
-            ].map(p => (
-              <div class="flex items-start gap-3">
-                <span class="text-emerald mt-0.5 text-sm" set:html={p.icon}></span>
-                <div>
-                  <span class="text-sm font-semibold text-text">{p.name}</span>
-                  <span class="text-xs text-text-muted ml-2">{p.desc}</span>
-                </div>
-              </div>
-            ))}
+      </div>
+
+      {/* 04 - Visdom Sandboxing */}
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">04</span>
+          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">
+            Visdom Sandboxing
+          </h3>
+          <p class="text-text-secondary leading-relaxed mb-6">
+            AI agents need room to experiment without breaking things. Ephemeral, fully isolated environments where agents can execute code, run tests, and iterate freely — with zero risk to production.
+          </p>
+          <p class="text-sm text-text-muted mb-6">
+            Powered by <span class="font-semibold text-text">Sandcat</span> — lightweight, disposable execution environments built for agentic workflows.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="tag bg-emerald/10 text-emerald border border-emerald/20">Isolation</span>
+            <span class="tag bg-blue/10 text-blue border border-blue/20">Ephemeral Environments</span>
+            <span class="tag bg-purple/10 text-purple border border-purple/20">Zero Side Effects</span>
           </div>
+          <a href="#contact" class="btn-pill btn-outline text-sm">Learn More &rarr;</a>
+        </div>
+        <div>
+          <Terminal title="sandcat">
+{`$ sandcat create --from main
+Creating isolated environment...
+  ├─ Cloning repository        ✓
+  ├─ Provisioning services     ✓
+  ├─ Seeding test data         ✓
+  └─ Agent access configured   ✓
+
+Sandbox ready: sb-a1b2c3
+Agent can now safely execute, test,
+and iterate without side effects.
+`}<span class="text-emerald">Environment live ✓</span>
+          </Terminal>
         </div>
       </div>
 
-      {/* 06 - Agent Skills + Reference Architectures (compact row) */}
-      <div class="grid md:grid-cols-2 gap-8">
-        <div class="card p-8">
-          <span class="text-3xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">06</span>
-          <h3 class="text-xl font-bold text-text mt-2 mb-3" style="font-family: var(--font-heading);">Agent Skills Library</h3>
-          <p class="text-sm text-text-secondary leading-relaxed mb-4">
-            Battle-tested skills following the Anthropic Agent Skills spec. IDE-agnostic, community-maintained.
-          </p>
-          <div class="flex flex-wrap gap-2 mb-4">
-            <span class="tag bg-blue/10 text-blue border border-blue/20">Open Source</span>
-            <span class="tag bg-emerald/10 text-emerald border border-emerald/20">Anthropic Spec</span>
+      {/* 05 - Visdom Machine CI */}
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="order-2 lg:order-1">
+          <div class="surface-card p-8">
+            <div class="space-y-5">
+              <div>
+                <div class="flex justify-between text-sm mb-2">
+                  <span class="text-text-secondary">Build time reduction</span>
+                  <span class="font-semibold text-emerald">-88%</span>
+                </div>
+                <div class="h-2 bg-surface-light rounded-full overflow-hidden">
+                  <div class="h-full bg-emerald rounded-full" style="width: 88%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm mb-2">
+                  <span class="text-text-secondary">PR merge time</span>
+                  <span class="font-semibold text-emerald">-43%</span>
+                </div>
+                <div class="h-2 bg-surface-light rounded-full overflow-hidden">
+                  <div class="h-full bg-emerald rounded-full" style="width: 43%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm mb-2">
+                  <span class="text-text-secondary">Agent iteration speed</span>
+                  <span class="font-semibold text-emerald">50x/hr</span>
+                </div>
+                <div class="h-2 bg-surface-light rounded-full overflow-hidden">
+                  <div class="h-full bg-emerald rounded-full" style="width: 95%"></div>
+                </div>
+              </div>
+            </div>
           </div>
-          <a href="https://github.com/VirtusLab/agent-skills" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Browse on GitHub &rarr;</a>
         </div>
-        <div class="card p-8">
-          <span class="text-3xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">07</span>
-          <h3 class="text-xl font-bold text-text mt-2 mb-3" style="font-family: var(--font-heading);">Reference Architectures</h3>
-          <p class="text-sm text-text-secondary leading-relaxed mb-4">
-            Full C4 blueprints for agentic systems. Insurance underwriting with human-in-the-loop, 4 reference implementations.
+        <div class="order-1 lg:order-2">
+          <span class="text-5xl font-extrabold text-surface-light" style="font-family: var(--font-heading);">05</span>
+          <h3 class="text-2xl font-bold text-text mt-2 mb-4" style="font-family: var(--font-heading);">
+            Visdom Machine CI
+          </h3>
+          <p class="text-text-secondary leading-relaxed mb-6">
+            Your CI takes 45 minutes. An AI agent iterates 50x per hour. We re-architect your pipeline to match agent speed — so the feedback loop never becomes the bottleneck.
           </p>
-          <div class="flex flex-wrap gap-2 mb-4">
-            <span class="tag bg-amber/10 text-amber border border-amber/20">Blueprint</span>
-            <span class="tag bg-blue/10 text-blue border border-blue/20">Open Source</span>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="tag bg-purple/10 text-purple border border-purple/20">Bazel</span>
+            <span class="tag bg-purple/10 text-purple border border-purple/20">Gradle</span>
+            <span class="tag bg-amber/10 text-amber border border-amber/20">Performance</span>
           </div>
-          <a href="https://github.com/VirtusLab/ai-insurance-reference-architecture" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Explore Architecture &rarr;</a>
+          <a href="https://virtuslab.com/blog/ai/the-fallacy/" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Read: "The Ferrari Engine in a Fiat 500" &rarr;</a>
         </div>
       </div>
 
