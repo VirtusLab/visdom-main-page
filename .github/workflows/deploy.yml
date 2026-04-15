@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  packages: read
   pages: write
   id-token: write
 
@@ -23,10 +24,13 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          registry-url: https://npm.pkg.github.com
       - run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: npm run build
         env:
-          SITE: https://arturskowronski.github.io
+          SITE: https://virtuslab.github.io
           BASE: /visdom-main-page
       - uses: actions/upload-pages-artifact@v3
         with:
