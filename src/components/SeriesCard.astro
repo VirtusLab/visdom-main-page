@@ -1,27 +1,28 @@
 ---
+import { SeriesCard as SeriesCardReact } from '@virtuslab/visdom-ui';
+
 interface Article { title: string; date: string; href: string; }
-interface Props { title: string; color: string; description: string; stats: string; featured: Article; articles: Article[]; ctaLabel: string; ctaHref: string; }
+interface Props {
+  title: string;
+  color: string;
+  description: string;
+  stats: string;
+  featured: Article;
+  articles: Article[];
+  ctaLabel: string;
+  ctaHref: string;
+}
+
 const { title, color, description, stats, featured, articles, ctaLabel, ctaHref } = Astro.props;
 ---
-<div class="card p-8 relative overflow-hidden flex flex-col">
-  <div class="absolute top-0 left-0 right-0 h-[3px]" style={`background: ${color};`}></div>
-  <div class="flex items-center justify-between mb-4">
-    <h3 class="text-lg font-bold text-text" style="font-family: var(--font-heading);">{title}</h3>
-    <span class="text-xs text-text-muted">{stats}</span>
-  </div>
-  <p class="text-sm text-text-secondary leading-relaxed mb-6">{description}</p>
-  <a href={featured.href} target="_blank" rel="noopener" class="block rounded-lg bg-surface border border-border-light p-4 mb-4 hover:border-emerald/30 transition-colors group">
-    <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-2 block">Latest</span>
-    <span class="text-sm font-medium text-text group-hover:text-emerald transition-colors block mb-1">{featured.title}</span>
-    <span class="text-xs text-text-muted">{featured.date}</span>
-  </a>
-  <div class="flex-1 space-y-0">
-    {articles.map(article => (
-      <a href={article.href} target="_blank" rel="noopener" class="flex justify-between items-baseline py-2.5 border-b border-border-light text-sm text-text-secondary hover:text-emerald transition-colors">
-        <span class="truncate pr-4">{article.title}</span>
-        <span class="text-xs text-text-muted whitespace-nowrap">{article.date}</span>
-      </a>
-    ))}
-  </div>
-  <a href={ctaHref} target="_blank" rel="noopener" class="btn-pill btn-outline text-xs !py-1.5 !px-4 mt-6 self-start">{ctaLabel} &rarr;</a>
-</div>
+<SeriesCardReact
+  title={title}
+  color={color}
+  description={description}
+  stats={stats}
+  featured={featured}
+  articles={articles}
+  ctaLabel={ctaLabel}
+  ctaHref={ctaHref}
+  client:load
+/>

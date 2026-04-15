@@ -1,22 +1,15 @@
+---
+import { Pillars as PillarsReact } from '@virtuslab/visdom-ui';
+
+const pillars = [
+  { value: '88%', label: 'build time decrease' },
+  { value: '43%', label: 'PR merge time reduction' },
+  { value: '160+', label: 'open-source repositories' },
+  { value: '15+', label: 'years in JVM ecosystem' },
+];
+---
 <section class="pb-8">
   <div class="container">
-    <div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-4 py-8 border-y border-border-light">
-      <div class="text-center">
-        <span class="text-2xl font-bold text-text" style="font-family: var(--font-heading);">88%</span>
-        <span class="text-sm text-text-muted ml-2">build time decrease</span>
-      </div>
-      <div class="text-center">
-        <span class="text-2xl font-bold text-text" style="font-family: var(--font-heading);">43%</span>
-        <span class="text-sm text-text-muted ml-2">PR merge time reduction</span>
-      </div>
-      <div class="text-center">
-        <span class="text-2xl font-bold text-text" style="font-family: var(--font-heading);">160+</span>
-        <span class="text-sm text-text-muted ml-2">open-source repositories</span>
-      </div>
-      <div class="text-center">
-        <span class="text-2xl font-bold text-text" style="font-family: var(--font-heading);">15+</span>
-        <span class="text-sm text-text-muted ml-2">years in JVM ecosystem</span>
-      </div>
-    </div>
+    <PillarsReact pillars={pillars} client:load />
   </div>
 </section>
