@@ -1,45 +1,17 @@
 ---
+import { Nav as NavReact } from '@virtuslab/visdom-ui';
+
 const links = [
   { label: 'Platform', href: '#platform' },
   { label: 'Insights', href: '#insights' },
   { label: 'AI Radar', href: '#radar' },
   { label: 'Matrix', href: 'https://visdom-ai-maturity-matrix.pages.dev', external: true },
 ];
+
+const cta = { label: 'Get in Touch', href: '#contact' };
 ---
-<nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-border-light">
-  <div class="container flex items-center justify-between h-16">
-    <a href="/" class="flex items-center gap-2.5" style="font-family: var(--font-heading);">
-      <span class="text-lg font-bold text-text"><span class="text-emerald">Vis</span>Dom</span>
-      <span class="text-xs text-text-muted font-normal">by VirtusLab</span>
-    </a>
-    <div class="hidden md:flex items-center gap-8">
-      {links.map(link => (
-        <a href={link.href} class="text-sm text-text-secondary hover:text-text transition-colors"
-          {...(link.external ? { target: '_blank', rel: 'noopener' } : {})}>
-          {link.label}
-        </a>
-      ))}
-      <a href="#contact" class="btn-pill btn-primary text-sm !py-2 !px-5">Get in Touch</a>
-    </div>
-    <button id="mobile-toggle" class="md:hidden text-text-secondary hover:text-text p-2" aria-label="Toggle menu">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-    </button>
-  </div>
-  <div id="mobile-menu" class="hidden md:hidden border-t border-border-light pb-4 bg-white">
-    <div class="container flex flex-col gap-3 pt-3">
-      {links.map(link => (
-        <a href={link.href} class="text-sm text-text-secondary hover:text-text py-2"
-          {...(link.external ? { target: '_blank', rel: 'noopener' } : {})}>
-          {link.label}
-        </a>
-      ))}
-      <a href="#contact" class="btn-pill btn-primary text-sm !py-2 !px-5 self-start mt-2">Get in Touch</a>
-    </div>
-  </div>
-</nav>
-<script>
-  const toggle = document.getElementById('mobile-toggle');
-  const menu = document.getElementById('mobile-menu');
-  toggle?.addEventListener('click', () => menu?.classList.toggle('hidden'));
-  menu?.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', () => menu?.classList.add('hidden')));
-</script>
+<NavReact
+  links={links}
+  cta={cta}
+  client:load
+/>

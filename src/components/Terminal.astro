@@ -1,13 +1,12 @@
 ---
-interface Props { title?: string; }
+import { Terminal as TerminalReact } from '@virtuslab/visdom-ui';
+
+interface Props {
+  title?: string;
+}
+
 const { title = 'Terminal' } = Astro.props;
 ---
-<div class="terminal">
-  <div class="flex items-center gap-1.5 mb-3 pb-3 border-b border-white/10">
-    <span class="w-2.5 h-2.5 rounded-full bg-red-500/60"></span>
-    <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/60"></span>
-    <span class="w-2.5 h-2.5 rounded-full bg-green-500/60"></span>
-    <span class="ml-2 text-xs text-white/40">{title}</span>
-  </div>
-  <pre class="text-white/80"><slot /></pre>
-</div>
+<TerminalReact title={title} client:load>
+  <slot />
+</TerminalReact>

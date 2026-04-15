@@ -1,4 +1,6 @@
 ---
+import { Footer as FooterReact } from '@virtuslab/visdom-ui';
+
 const links = [
   { label: 'VirtusLab', href: 'https://virtuslab.com' },
   { label: 'GitHub', href: 'https://github.com/VirtusLab' },
@@ -6,19 +8,4 @@ const links = [
   { label: 'Contact', href: 'https://virtuslab.com/contact' },
 ];
 ---
-<footer class="py-16 border-t border-border-light">
-  <div class="container flex flex-col sm:flex-row items-center justify-between gap-6">
-    <div class="flex items-center gap-2 text-sm text-text-muted">
-      <span class="font-bold text-text-secondary" style="font-family: var(--font-heading);">
-        <span class="text-emerald">Vis</span>Dom
-      </span>
-      <span>&middot;</span>
-      <span>Powered by VirtusLab</span>
-    </div>
-    <div class="flex items-center gap-8">
-      {links.map(link => (
-        <a href={link.href} target="_blank" rel="noopener" class="text-sm text-text-muted hover:text-text transition-colors">{link.label}</a>
-      ))}
-    </div>
-  </div>
-</footer>
+<FooterReact links={links} client:load />

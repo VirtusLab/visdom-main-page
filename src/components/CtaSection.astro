@@ -1,24 +1,37 @@
+---
+import { CtaCard } from '@virtuslab/visdom-ui';
+---
 <section id="contact" class="section">
   <div class="container text-center">
     <p class="section-label">Get Started</p>
     <h2 class="section-title mx-auto">Ready to make your SDLC agent-ready?</h2>
     <p class="section-subtitle mx-auto mb-16">Start where it makes sense.</p>
     <div class="grid sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
-      <a href="https://github.com/VirtusLab/visdom-developer-intelligence" target="_blank" rel="noopener" class="card p-8 text-center group">
-        <div class="text-3xl mb-4">&#x2699;</div>
-        <div class="text-base font-semibold text-text mb-2" style="font-family: var(--font-heading);">Try ViDIA</div>
-        <div class="text-sm text-text-muted">Open source. Start in 5 minutes.</div>
-      </a>
-      <a href="https://visdom-ai-maturity-matrix.pages.dev/assessment" target="_blank" rel="noopener" class="card p-8 text-center group">
-        <div class="text-3xl mb-4">&#x1F4CA;</div>
-        <div class="text-base font-semibold text-text mb-2" style="font-family: var(--font-heading);">Take the Assessment</div>
-        <div class="text-sm text-text-muted">60 practices. Know where you stand.</div>
-      </a>
-      <a href="https://virtuslab.com/contact" target="_blank" rel="noopener" class="card p-8 text-center group border-emerald/30 hover:border-emerald">
-        <div class="text-3xl mb-4">&#x1F4AC;</div>
-        <div class="text-base font-semibold text-emerald mb-2" style="font-family: var(--font-heading);">Talk to Engineers</div>
-        <div class="text-sm text-text-muted">Not sales. Engineers who built this.</div>
-      </a>
+      <CtaCard
+        icon="&#x2699;"
+        title="Try ViDIA"
+        description="Open source. Start in 5 minutes."
+        href="https://github.com/VirtusLab/visdom-developer-intelligence"
+        external
+        client:load
+      />
+      <CtaCard
+        icon="&#x1F4CA;"
+        title="Take the Assessment"
+        description="60 practices. Know where you stand."
+        href="https://visdom-ai-maturity-matrix.pages.dev/assessment"
+        external
+        client:load
+      />
+      <CtaCard
+        icon="&#x1F4AC;"
+        title="Talk to Engineers"
+        description="Not sales. Engineers who built this."
+        href="https://virtuslab.com/contact"
+        external
+        highlighted
+        client:load
+      />
     </div>
   </div>
 </section>
