@@ -2,16 +2,22 @@
 ---
 <section class="hero">
   <div class="container">
-    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+    {/* Big product name */}
+    <div class="hero-brand fade-up">
+      <div class="hero-brand-line">
+        <span class="hero-brand-vl">VirtusLab</span>
+        <span class="hero-brand-name"><span class="hero-brand-vis">Vis</span>Dom</span>
+        <span class="hero-brand-version">2.0</span>
+      </div>
+      <div class="hero-brand-tagline">AI-Native SDLC Platform</div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mt-12 lg:mt-16">
 
       {/* Left — text */}
       <div class="fade-up">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-light border border-emerald/20 text-emerald text-xs font-semibold tracking-wide mb-8">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald pulse-dot"></span>
-          AI-Native SDLC Platform
-        </div>
-
-        <h1 class="text-4xl sm:text-5xl lg:text-[3.25rem] font-extrabold tracking-tight text-text mb-6 leading-[1.1]">
+        <h1 class="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold tracking-tight text-text mb-6 leading-[1.15]">
           Your AI agents are only as good as your engineering infrastructure
         </h1>
 
@@ -45,12 +51,12 @@
           {/* Platform blocks */}
           <div class="hv-grid">
             {[
-              { num: '00', name: 'Maturity Matrix', color: '#3b82f6', icon: '◈' },
-              { num: '01', name: 'Context Fabric', color: '#10b981', icon: '◉' },
-              { num: '02', name: 'Code Review', color: '#9b51e0', icon: '◎' },
-              { num: '03', name: 'Tracing', color: '#f59e0b', icon: '◉' },
-              { num: '04', name: 'Sandboxing', color: '#0693e3', icon: '◈' },
-              { num: '05', name: 'Machine CI', color: '#10b981', icon: '◎' },
+              { num: '00', name: 'Maturity Matrix', color: '#3b82f6' },
+              { num: '01', name: 'Context Fabric', color: '#10b981' },
+              { num: '02', name: 'Code Review', color: '#9b51e0' },
+              { num: '03', name: 'Tracing', color: '#f59e0b' },
+              { num: '04', name: 'Sandboxing', color: '#0693e3' },
+              { num: '05', name: 'Machine CI', color: '#10b981' },
             ].map((block, i) => (
               <div class="hv-block" style={`--block-color: ${block.color}; animation-delay: ${0.1 + i * 0.08}s`}>
                 <div class="flex items-center gap-2">
@@ -88,7 +94,7 @@
 
 <style>
   .hero {
-    padding-top: 10rem;
+    padding-top: 8rem;
     padding-bottom: 6rem;
     position: relative;
     overflow: hidden;
@@ -103,6 +109,65 @@
     height: 120%;
     background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.04) 0%, transparent 70%);
     pointer-events: none;
+  }
+
+  /* ── Big product brand ── */
+  .hero-brand {
+    text-align: center;
+  }
+
+  .hero-brand-line {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .hero-brand-vl {
+    font-family: var(--font-heading);
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .hero-brand-name {
+    font-family: var(--font-heading);
+    font-size: clamp(3.5rem, 10vw, 6rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--color-text);
+  }
+
+  .hero-brand-vis {
+    background: linear-gradient(135deg, var(--color-emerald) 0%, var(--color-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-brand-version {
+    font-family: var(--font-mono);
+    font-size: clamp(0.875rem, 2vw, 1.125rem);
+    font-weight: 600;
+    color: var(--color-emerald);
+    background: var(--color-emerald-light);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    padding: 2px 10px;
+    border-radius: 9999px;
+    align-self: center;
+  }
+
+  .hero-brand-tagline {
+    font-family: var(--font-heading);
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 8px;
   }
 
   /* ── Hero visual card ── */
@@ -202,9 +267,6 @@
   @media (max-width: 1024px) {
     .hero-visual {
       transform: none;
-    }
-    .hv-grid {
-      grid-template-columns: repeat(3, 1fr);
     }
   }
 
