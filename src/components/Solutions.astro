@@ -5,7 +5,7 @@ import Terminal from './Terminal.astro';
   <div class="container">
     <div class="fade-up">
       <p class="section-label">Platform Components</p>
-      <h2 class="section-title">Six building blocks of an Agent-Native CI</h2>
+      <h2 class="section-title">Seven building blocks of an Agent-Native CI</h2>
       <p class="section-subtitle mb-24">
         Each component works standalone. Together, they close the gap between what your agents can write and what your auditors, reviewers, and CI will actually accept.
       </p>
@@ -87,8 +87,8 @@ Blast radius: 12 files`}
               <span class="tag bg-purple/10 text-purple border border-purple/20">CLI</span>
             </div>
             <div class="flex gap-3">
-              <a href="https://github.com/VirtusLab/visdom-developer-intelligence" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">View on GitHub</a>
-              <a href="https://github.com/VirtusLab/visdom-developer-intelligence" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Documentation</a>
+              <a href="https://virtuslab.github.io/visdom-developer-intelligence/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">Documentation</a>
+              <a href="https://github.com/VirtusLab/visdom-developer-intelligence" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">View on GitHub</a>
             </div>
           </div>
         </div>
@@ -140,7 +140,53 @@ Summary: 6 findings across 3 categories
         </div>
       </div>
 
-      {/* 03 - Visdom Governance */}
+      {/* 03 - Visdom Testing */}
+      <div class="platform-block fade-up">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="component-number">03</div>
+            <h3 class="text-2xl font-bold text-text mt-1 mb-4">
+              Visdom Testing
+            </h3>
+            <p class="text-text-secondary leading-relaxed mb-6">
+              When AI writes both the code and the tests, line coverage stops meaning anything. Architecture gates, property-based, and mutation testing catch the computation bugs hiding behind 90% green CI — and the architectural drift your team already voted against.
+            </p>
+            <p class="text-sm text-text-muted mb-6">
+              Powered by <span class="font-semibold text-text">Visdom Testing</span> — adaptive test shape (Pyramid, Trophy, Honeycomb, Diamond) tuned to your architecture, with ArchUnit gates that stop AI from drifting.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-6">
+              <span class="tag bg-blue/10 text-blue border border-blue/20">ArchUnit</span>
+              <span class="tag bg-purple/10 text-purple border border-purple/20">Property-Based</span>
+              <span class="tag bg-amber/10 text-amber border border-amber/20">Mutation Testing</span>
+            </div>
+            <div class="flex gap-3">
+              <a href="https://virtuslab.github.io/visdom-testing/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">Read the Reference</a>
+              <a href="https://virtuslab.github.io/visdom-testing/before-after/" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Before / After</a>
+            </div>
+          </div>
+          <div>
+            <Terminal title="visdom-testing">
+{`$ visdom test --strategy diamond
+Layer 0: Architecture (ArchUnit)
+  ├─ Layer boundaries          0/10 violations ✓
+  ├─ Field injection           0/10 ✓
+  └─ Forbidden APIs            0/10 ✓
+
+Layer 1: Property-based (jqwik)
+  ├─ 12 properties, 10k cases each
+  └─ Rounding bug found in VAT.apply()
+
+Layer 2: Mutation (PIT)
+  ├─ Mutation score            73%
+  └─ 2/2 computation bugs caught
+
+`}<span class="text-emerald">Tests trusted ✓</span>
+            </Terminal>
+          </div>
+        </div>
+      </div>
+
+      {/* 04 - Visdom Governance */}
       <div class="platform-block fade-up">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <div class="order-2 lg:order-1">
@@ -165,7 +211,7 @@ Summary: 6 findings across 3 categories
             </div>
           </div>
           <div class="order-1 lg:order-2">
-            <div class="component-number">03</div>
+            <div class="component-number">04</div>
             <h3 class="text-2xl font-bold text-text mt-1 mb-4">
               Visdom Governance
             </h3>
@@ -189,11 +235,11 @@ Summary: 6 findings across 3 categories
         </div>
       </div>
 
-      {/* 04 - Visdom Security */}
+      {/* 05 - Visdom Security */}
       <div class="platform-block fade-up">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <div class="component-number">04</div>
+            <div class="component-number">05</div>
             <h3 class="text-2xl font-bold text-text mt-1 mb-4">
               Visdom Security
             </h3>
@@ -229,7 +275,7 @@ with zero blast radius into production.
         </div>
       </div>
 
-      {/* 05 - Visdom Machine CI */}
+      {/* 06 - Visdom Machine CI */}
       <div class="platform-block fade-up">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <div class="order-2 lg:order-1">
@@ -254,7 +300,7 @@ with zero blast radius into production.
             </div>
           </div>
           <div class="order-1 lg:order-2">
-            <div class="component-number">05</div>
+            <div class="component-number">06</div>
             <h3 class="text-2xl font-bold text-text mt-1 mb-4 flex items-center gap-3 flex-wrap">
               Visdom Machine CI
               <span class="tag bg-amber/10 text-amber border border-amber/20 text-xs font-medium normal-case tracking-normal">Coming Soon</span>
