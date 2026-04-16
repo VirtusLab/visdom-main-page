@@ -21,6 +21,13 @@
   --color-phase-build: #10b981;
   --color-phase-validate: #f59e0b;
 
+  /* Maturity level backgrounds */
+  --color-maturity-0: #f4f4f5;
+  --color-maturity-1: #ccfbf1;
+  --color-maturity-2: #d1fae5;
+  --color-maturity-3: #dcfce7;
+  --color-maturity-4: #bbf7d0;
+
   /* Design system token aliases */
   --card: var(--color-bg);
   --card-surface: var(--color-surface);
@@ -31,6 +38,10 @@
   --font-heading: 'Montserrat', sans-serif;
   --font-body: 'Inter', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
 }
 
 html {
