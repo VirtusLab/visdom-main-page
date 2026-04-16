@@ -1,17 +1,4 @@
 ---
-import { Nav as NavReact } from '@virtuslab/visdom-ui';
-
-const links = [
-  { label: 'Platform', href: '#platform' },
-  { label: 'Insights', href: '#insights' },
-  { label: 'AI Radar', href: '#radar' },
-  { label: 'Matrix', href: 'https://visdom-ai-maturity-matrix.pages.dev', external: true },
-];
-
-const cta = { label: 'Get in Touch', href: '#contact' };
+import { NavWithBrand } from './NavWithBrand';
 ---
-<NavReact
-  links={links}
-  cta={cta}
-  client:load
-/>
+<NavWithBrand client:load />
