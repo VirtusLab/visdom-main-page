@@ -1,5 +1,5 @@
 import React from 'react';
-import { Nav, VisdomBrand } from '@virtuslab/visdom-ui';
+import { TopBar, Nav, VisdomBrand } from '@virtuslab/visdom-ui';
 
 const links = [
   { label: 'Platform', href: '#platform' },
@@ -12,10 +12,17 @@ const cta = { label: 'Get in Touch', href: '#contact' };
 
 export function NavWithBrand() {
   return (
-    <Nav
-      brand={<VisdomBrand product="2.0 AI-Native SDLC" />}
-      links={links}
-      cta={cta}
-    />
+    <>
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <TopBar />
+        <Nav
+          brand={<VisdomBrand product="2.0 AI-Native SDLC" />}
+          links={links}
+          cta={cta}
+          className="relative top-auto left-auto right-auto"
+        />
+      </div>
+      <div style={{ height: '96px' }} />
+    </>
   );
 }
