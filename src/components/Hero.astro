@@ -5,9 +5,11 @@
 
     {/* Big product name */}
     <div class="hero-brand fade-up">
+      <div class="hero-brand-logo">
+        <img src={`${import.meta.env.BASE_URL}/virtuslab-logo.svg`} alt="VirtusLab" class="hero-vl-logo" />
+      </div>
       <div class="hero-brand-line">
-        <span class="hero-brand-vl">VirtusLab</span>
-        <span class="hero-brand-name"><span class="hero-brand-vis">Vis</span>Dom</span>
+        <span class="hero-brand-name">Visdom</span>
         <span class="hero-brand-version">2.0</span>
       </div>
       <div class="hero-brand-tagline">AI-Native SDLC Platform</div>
@@ -38,7 +40,7 @@
           <div class="hv-header">
             <div class="flex items-center gap-2">
               <span class="text-emerald font-bold text-sm" style="font-family: var(--font-heading);">
-                <span class="text-emerald">Vis</span><span class="text-text">Dom</span>
+                <span class="text-text">Visdom</span>
               </span>
               <span class="text-[10px] text-text-muted">2.0</span>
             </div>
@@ -116,20 +118,24 @@
     text-align: center;
   }
 
+  .hero-brand-logo {
+    margin-bottom: 12px;
+  }
+
+  .hero-vl-logo {
+    height: 20px;
+    width: auto;
+    color: var(--color-text-muted);
+    margin: 0 auto;
+    display: block;
+  }
+
   .hero-brand-line {
     display: flex;
     align-items: baseline;
     justify-content: center;
-    gap: 12px;
+    gap: 16px;
     flex-wrap: wrap;
-  }
-
-  .hero-brand-vl {
-    font-family: var(--font-heading);
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
-    font-weight: 500;
-    color: var(--color-text-muted);
-    letter-spacing: 0.02em;
   }
 
   .hero-brand-name {
@@ -139,13 +145,6 @@
     letter-spacing: -0.03em;
     line-height: 1;
     color: var(--color-text);
-  }
-
-  .hero-brand-vis {
-    background: linear-gradient(135deg, var(--color-emerald) 0%, var(--color-blue) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
   }
 
   .hero-brand-version {

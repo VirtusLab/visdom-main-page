@@ -40,9 +40,8 @@ function BrandBar() {
 
 function VisdomNavBrand() {
   return (
-    <a href="/" className="text-lg font-semibold tracking-tight no-underline hover:opacity-80 transition-opacity">
-      <span className="text-emerald-500 font-bold">Vis</span>
-      <span className="text-gray-900">Dom</span>
+    <a href="/" className="text-lg font-bold tracking-tight no-underline hover:opacity-80 transition-opacity text-gray-900">
+      Visdom
     </a>
   );
 }
