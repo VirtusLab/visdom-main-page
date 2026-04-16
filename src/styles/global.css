@@ -28,10 +28,21 @@
   --color-maturity-3: #dcfce7;
   --color-maturity-4: #bbf7d0;
 
-  /* Design system token aliases */
+  /* Design system token aliases — shadcn/visdom-ui primitives */
+  --background: var(--color-bg);
+  --foreground: var(--color-text);
+  --primary: var(--color-emerald);
+  --primary-foreground: #ffffff;
+  --muted: var(--color-surface);
+  --muted-foreground: var(--color-text-muted);
+  --accent: var(--color-emerald-light);
+  --accent-foreground: var(--color-emerald-dark);
   --card: var(--color-bg);
+  --card-foreground: var(--color-text);
   --card-surface: var(--color-surface);
   --border: var(--color-border);
+  --input: var(--color-border);
+  --ring: var(--color-emerald);
   --radius: 0.625rem;
   --radius-xl: calc(var(--radius) + 4px);
 
