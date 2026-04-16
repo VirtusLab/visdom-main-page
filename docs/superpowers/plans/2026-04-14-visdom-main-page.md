@@ -1,8 +1,8 @@
-# VisDom Main Page Implementation Plan
+# Visdom Main Page Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build a standalone dark-themed landing page for the VisDom platform showcasing solutions, blog series, AI-Radar, and Maturity Matrix reference.
+**Goal:** Build a standalone dark-themed landing page for the Visdom platform showcasing solutions, blog series, AI-Radar, and Maturity Matrix reference.
 
 **Architecture:** Static Astro site with Tailwind CSS 4. All content is hardcoded (no CMS). Components are `.astro` files - one per page section. Data for solution cards and blog series lives in typed arrays within each component. Vived Engine design language: dark `#181823` background, glassmorphism cards, emerald accent.
 
@@ -37,7 +37,7 @@ src/
   styles/
     global.css             # Tailwind imports, custom utilities, animations
 public/
-  favicon.svg              # VisDom favicon
+  favicon.svg              # Visdom favicon
 ```
 
 ---
@@ -277,7 +277,7 @@ const { title } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="VisDom - The Agent-Ready SDLC Platform. From assessment to autonomous delivery." />
+    <meta name="description" content="Visdom - The AI-Native SDLC Platform. From assessment to autonomous delivery." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -302,10 +302,10 @@ Write `src/pages/index.astro`:
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
 ---
-<Layout title="VisDom - The Agent-Ready SDLC Platform">
+<Layout title="Visdom - The AI-Native SDLC Platform">
   <main>
     <div class="container section">
-      <h1 class="section-title">VisDom</h1>
+      <h1 class="section-title">Visdom</h1>
       <p class="section-subtitle">Scaffold working. Building sections next.</p>
     </div>
   </main>
@@ -329,7 +329,7 @@ Write `public/favicon.svg`:
 cd /Users/askowronski/Projects/visdom-main-page && npx astro dev
 ```
 
-Expected: Dark page with "VisDom" heading, correct fonts loading.
+Expected: Dark page with "Visdom" heading, correct fonts loading.
 
 - [ ] **Step 9: Init git and commit**
 
@@ -338,7 +338,7 @@ cd /Users/askowronski/Projects/visdom-main-page
 git init
 echo "node_modules/\ndist/\n.astro/\n.DS_Store" > .gitignore
 git add -A
-git commit -m "feat: scaffold Astro project with Tailwind and VisDom design tokens"
+git commit -m "feat: scaffold Astro project with Tailwind and Visdom design tokens"
 ```
 
 ---
@@ -404,7 +404,7 @@ const stats = [
     <div class="max-w-3xl">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald/10 border border-emerald/20 text-emerald text-xs font-medium mb-6">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald pulse-dot"></span>
-        Agent-Ready SDLC Platform
+        AI-Native SDLC Platform
       </div>
 
       <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6" style="font-family: var(--font-heading);">
@@ -416,7 +416,7 @@ const stats = [
 
       <p class="text-lg sm:text-xl text-white/50 mb-10 max-w-2xl leading-relaxed">
         Most organizations adopted AI coding tools. Few changed the infrastructure around them.
-        VisDom transforms your SDLC into an agent-operable production system - from assessment to autonomous delivery.
+        Visdom transforms your SDLC into an agent-operable production system - from assessment to autonomous delivery.
       </p>
 
       <div class="flex flex-wrap gap-4 mb-16">
@@ -472,7 +472,7 @@ const pillars = [
 <section class="section border-t border-white/5">
   <div class="container">
     <p class="text-sm font-medium text-emerald uppercase tracking-wider mb-4">Three Pillars</p>
-    <h2 class="section-title mb-12">What Makes an SDLC Agent-Ready</h2>
+    <h2 class="section-title mb-12">What Makes an SDLC AI-Native</h2>
 
     <div class="grid md:grid-cols-3 gap-6">
       {pillars.map(pillar => (
@@ -505,7 +505,7 @@ import Hero from '../components/Hero.astro';
 import Pillars from '../components/Pillars.astro';
 import '../styles/global.css';
 ---
-<Layout title="VisDom - The Agent-Ready SDLC Platform">
+<Layout title="Visdom - The AI-Native SDLC Platform">
   <Nav />
   <main>
     <Hero />
@@ -674,7 +674,7 @@ const phases = [
     <p class="text-sm font-medium text-emerald uppercase tracking-wider mb-4">Our Solutions</p>
     <h2 class="section-title">From Assessment to Autonomous Delivery</h2>
     <p class="section-subtitle mb-16">
-      Each solution works standalone. Together, they form an Agent-Ready SDLC.
+      Each solution works standalone. Together, they form an AI-Native SDLC.
     </p>
 
     {/* Journey Timeline */}
@@ -702,7 +702,7 @@ const phases = [
       </div>
       <div class="grid lg:grid-cols-1 gap-6 max-w-2xl">
         <SolutionCard
-          title="VisDom Maturity Matrix"
+          title="Visdom Maturity Matrix"
           subtitle="AI-Native SDLC Assessment"
           problem="You can't optimize what you can't measure. Most teams don't know where they stand on AI readiness."
           capabilities={[
@@ -743,7 +743,7 @@ const phases = [
           ]}
           tags={[
             { label: 'Infrastructure', color: 'purple' },
-            { label: 'Agent-Ready', color: 'emerald' },
+            { label: 'AI-Native', color: 'emerald' },
           ]}
           ctas={[
             { label: 'View on GitHub', href: 'https://github.com/VirtusLab', external: true },
@@ -870,7 +870,7 @@ Exported to CLAUDE.md `}<span class="text-emerald">&#x2713;</span>
       </div>
       <div class="grid lg:grid-cols-1 gap-6 max-w-2xl">
         <SolutionCard
-          title="VisDom Code Review"
+          title="Visdom Code Review"
           subtitle="Multi-layered AI Review Pipeline"
           problem="45% of AI-generated code contains OWASP vulnerabilities. Your seniors spend 30-50% of their time reviewing PRs. This doesn't scale."
           capabilities={[
@@ -922,7 +922,7 @@ import Pillars from '../components/Pillars.astro';
 import Solutions from '../components/Solutions.astro';
 import '../styles/global.css';
 ---
-<Layout title="VisDom - The Agent-Ready SDLC Platform">
+<Layout title="Visdom - The AI-Native SDLC Platform">
   <Nav />
   <main>
     <Hero />
@@ -1045,7 +1045,7 @@ const baseUrl = 'https://virtuslab.com';
 
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       <SeriesCard
-        title="VISDOM - Agent-Ready SDLC"
+        title="VISDOM - AI-Native SDLC"
         color="#10b981"
         description="Deep dives into what it takes to make your software delivery pipeline ready for AI agents. No hype, just hard-won lessons from real enterprise engagements."
         stats="10+ articles"
@@ -1248,7 +1248,7 @@ const perspectives = ['Development', 'Delivery', 'Organization', 'Infrastructure
   <div class="container text-center">
     <h2 class="section-title mx-auto">Where does your organization stand?</h2>
     <p class="text-white/50 mt-4 mb-12 max-w-xl mx-auto">
-      The VisDom Maturity Matrix maps 60 practices across 4 perspectives and 5 maturity levels - from Ad-hoc to Autonomous.
+      The Visdom Maturity Matrix maps 60 practices across 4 perspectives and 5 maturity levels - from Ad-hoc to Autonomous.
     </p>
 
     {/* Level timeline */}
@@ -1377,7 +1377,7 @@ Write `src/components/CtaSection.astro`:
 ```astro
 <section id="contact" class="section border-t border-white/5">
   <div class="container text-center">
-    <h2 class="section-title mx-auto">Ready to Make Your SDLC Agent-Ready?</h2>
+    <h2 class="section-title mx-auto">Ready to Make Your SDLC AI-Native?</h2>
     <p class="text-white/50 mt-4 mb-12 max-w-xl mx-auto">
       Start where it makes sense. Try a tool, take the assessment, or talk to our engineers.
     </p>
@@ -1472,7 +1472,7 @@ import CtaSection from '../components/CtaSection.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 ---
-<Layout title="VisDom - The Agent-Ready SDLC Platform">
+<Layout title="Visdom - The AI-Native SDLC Platform">
   <Nav />
   <main>
     <Hero />

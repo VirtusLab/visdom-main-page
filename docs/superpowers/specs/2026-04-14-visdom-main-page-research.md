@@ -1,4 +1,4 @@
-# VisDom Main Page — Research Report & Competitive Analysis
+# Visdom Main Page — Research Report & Competitive Analysis
 
 ## 1. Current State: What virtuslab.com/services/visdom Does Today
 
@@ -22,10 +22,10 @@
 4. **No engagement methodology** — no timeline, no "how we work" framework
 5. **Java modernization dilutes the message** — mixes agent platform with legacy migration services
 6. **No architectural depth** — no diagrams, no technical deep-dive, no code
-7. **No open-source showcase** — despite having 160+ repos, none are highlighted as part of VisDom
+7. **No open-source showcase** — despite having 160+ repos, none are highlighted as part of Visdom
 8. **No thought leadership** — no blog posts, no "State of X" reports, no industry data
 9. **Generic CTA** — just "Contact" vs. graduated engagement options
-10. **No demo/interactive element** — no way to experience VisDom before talking to sales
+10. **No demo/interactive element** — no way to experience Visdom before talking to sales
 
 ---
 
@@ -48,7 +48,7 @@ The strongest pages open with the customer's pain, not capabilities:
 - **Dataiku**: "88% using AI, only 6% getting real value"
 - **Slalom**: "91% increasing spend, only 39% measuring ROI"
 
-**VisDom gap**: No pain statistic or problem statement at all.
+**Visdom gap**: No pain statistic or problem statement at all.
 
 #### Pattern 2: Three-Pillar Mental Model
 Nearly every strong page uses a 3-part framework to organize complexity:
@@ -56,7 +56,7 @@ Nearly every strong page uses a 3-part framework to organize complexity:
 - CrewAI: Easy / Trusted / Scalable
 - Dataiku: People / Orchestration / Governance
 
-**VisDom**: Already has this (Context Fabric / Machine-Speed CI / Risk Assessment). This is a strength to build on.
+**Visdom**: Already has this (Context Fabric / Machine-Speed CI / Risk Assessment). This is a strength to build on.
 
 #### Pattern 3: Dual-Track Audience Strategy
 Best pages serve both technical AND business audiences:
@@ -64,7 +64,7 @@ Best pages serve both technical AND business audiences:
 - **CrewAI**: Visual editor (non-technical) + API/GitHub (developers)
 - **Cognizant**: Neuro platform page (business) + neuro-san open-source (engineers)
 
-**VisDom gap**: Speaks only to executives. Engineering leaders and developers are ignored.
+**Visdom gap**: Speaks only to executives. Engineering leaders and developers are ignored.
 
 #### Pattern 4: Quantified + Named Social Proof
 The most compelling combine logos AND specific outcomes:
@@ -72,7 +72,7 @@ The most compelling combine logos AND specific outcomes:
 - **LangChain**: "80% case resolution time reduction" (Klarna)
 - **Dataiku**: "saved 1,600 hours/month," "$45M in attrition costs"
 
-**VisDom gap**: Has good numbers but anonymous clients ("investment bank"). Named = credible.
+**Visdom gap**: Has good numbers but anonymous clients ("investment bank"). Named = credible.
 
 #### Pattern 5: Progressive Disclosure of Technical Depth
 Best pages layer complexity:
@@ -82,7 +82,7 @@ Best pages layer complexity:
 4. Architecture diagrams, code examples, pricing deeper on page
 5. Links to docs/GitHub for deepest dive
 
-**Google Vertex** executes this best. **VisDom gap**: No technical depth at any level.
+**Google Vertex** executes this best. **Visdom gap**: No technical depth at any level.
 
 #### Pattern 6: Concrete Engagement Timeline
 Specific timelines build confidence:
@@ -90,13 +90,13 @@ Specific timelines build confidence:
 - **Cognizant**: "15 minutes" prototyping speed
 - **Palantir**: 5-day AIP Bootcamp
 
-**VisDom gap**: No methodology or timeline whatsoever.
+**Visdom gap**: No methodology or timeline whatsoever.
 
 #### Pattern 7: Open Source as Trust Signal
 Companies with OSS components gain engineering credibility:
 - LangChain, CrewAI, Cognizant, Microsoft, Google all pair commercial + OSS
 
-**VisDom gap**: VirtusLab has 160+ OSS repos and contributes to Scala compiler — this is a massive under-leveraged asset.
+**Visdom gap**: VirtusLab has 160+ OSS repos and contributes to Scala compiler — this is a massive under-leveraged asset.
 
 #### Pattern 8: Engineering vs. Consulting Messaging
 
@@ -108,7 +108,7 @@ Companies with OSS components gain engineering credibility:
 | Technical depth | Architecture, code, pricing | Frameworks, maturity models |
 | Trust model | "Try it yourself" (bottom-up) | "Our experts guide you" (top-down) |
 
-**VisDom sits in no-man's land**: claims engineering focus but uses consulting-speak.
+**Visdom sits in no-man's land**: claims engineering focus but uses consulting-speak.
 
 ---
 
@@ -122,10 +122,10 @@ Companies with OSS components gain engineering credibility:
 
 ---
 
-## 4. What VisDom Should Steal (and What to Avoid)
+## 4. What Visdom Should Steal (and What to Avoid)
 
 ### Steal
-- **Thoughtworks' 3-3-3 timeline** — Create VisDom's own engagement methodology with concrete phases
+- **Thoughtworks' 3-3-3 timeline** — Create Visdom's own engagement methodology with concrete phases
 - **Cognizant's dual-page strategy** — Business-focused main page + engineering deep-dive
 - **LangChain's problem-first framing** — Open with the pain of AI agents in enterprises
 - **CrewAI's quantified case studies** — Name clients, show specific before/after metrics
@@ -141,7 +141,7 @@ Companies with OSS components gain engineering credibility:
 
 ---
 
-## 5. What Makes VisDom Unique (Underexploited Assets)
+## 5. What Makes Visdom Unique (Underexploited Assets)
 
 1. **Deep JVM/Scala compiler heritage** — No other agent consultancy can claim 15 years of compiler-level engineering
 2. **160+ OSS repositories** — Massive open-source portfolio, completely invisible on the page

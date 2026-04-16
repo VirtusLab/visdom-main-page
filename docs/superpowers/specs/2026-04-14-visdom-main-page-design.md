@@ -1,8 +1,8 @@
-# VisDom Main Page - Design Spec
+# Visdom Main Page - Design Spec
 
 ## Overview
 
-Standalone landing page for the VisDom platform (visdom.virtuslab.com or similar).
+Standalone landing page for the Visdom platform (visdom.virtuslab.com or similar).
 Built as a static site using the Vived Engine design language (dark theme, glassmorphism, Montserrat + JetBrains Mono).
 
 **Primary goal**: Convert engineering leaders and CTOs who know they have an "AI adoption without infrastructure" problem into qualified conversations.
@@ -21,7 +21,7 @@ Built as a static site using the Vived Engine design language (dark theme, glass
 - **Design language**: Vived Engine reference
   - Dark background: `#181823`
   - Surface: `#21212d`
-  - Primary accent: emerald `#10b981` (VisDom brand green, consistent with Code Review + Maturity Matrix)
+  - Primary accent: emerald `#10b981` (Visdom brand green, consistent with Code Review + Maturity Matrix)
   - Secondary accent: blue `#0693e3` to purple `#9b51e0` gradient (Vived Engine signature)
   - Glassmorphism: `backdrop-blur-xl bg-white/5 border border-white/10`
   - Pill-shaped CTAs with hover lift
@@ -53,7 +53,7 @@ This spec focuses on sections 4 and 5 as requested.
 "From Assessment to Autonomous Delivery"
 
 Each solution works standalone.
-Together, they form an Agent-Ready SDLC.
+Together, they form an AI-Native SDLC.
 ```
 
 ### Journey Timeline (Layer 1)
@@ -83,12 +83,12 @@ Each phase contains 1-3 product cards. Cards use glassmorphism style.
 
 #### Phase 1: ASSESS
 
-**Card: VisDom Maturity Matrix**
+**Card: Visdom Maturity Matrix**
 
 ```
 Tags: [Interactive Tool] [Self-Assessment]
 
-Title: VisDom Maturity Matrix
+Title: Visdom Maturity Matrix
 Subtitle: AI-Native SDLC Assessment
 
 Problem: "You can't optimize what you can't measure. Most teams
@@ -118,7 +118,7 @@ Links to: virtus-lab-ai-maturity-matrix deployment
 **Card: Context Fabric**
 
 ```
-Tags: [Infrastructure] [Agent-Ready]
+Tags: [Infrastructure] [AI-Native]
 
 Title: Context Fabric
 Subtitle: Structured, agent-consumable context
@@ -254,12 +254,12 @@ CTAs: [Explore Insurance Architecture →] [View C4 Diagrams →]
 
 #### Phase 4: VALIDATE
 
-**Card: VisDom Code Review (VCR)**
+**Card: Visdom Code Review (VCR)**
 
 ```
 Tags: [Framework] [Process] [Multi-Layer]
 
-Title: VisDom Code Review
+Title: Visdom Code Review
 Subtitle: Multi-layered AI Review Pipeline
 
 Problem: "45% of AI-generated code contains OWASP vulnerabilities.
@@ -364,7 +364,7 @@ Each series card shows: series icon/illustration, title, description, article co
 
 ---
 
-**Series 1: VISDOM - The Agent-Ready SDLC**
+**Series 1: VISDOM - The AI-Native SDLC**
 
 ```
 Icon: Circuit board / neural network pattern
@@ -502,7 +502,7 @@ The latest edition in each series gets a **featured treatment** inside the card:
 
 ```
 ┌─────────────────────────────────────────────┐
-│ ▌ VISDOM - The Agent-Ready SDLC    10+ arts │
+│ ▌ VISDOM - The AI-Native SDLC    10+ arts │
 │                                              │
 │ "Deep dives into what it takes..."           │
 │                                              │
@@ -636,7 +636,7 @@ a reference to the full Maturity Matrix tool and a secondary CTA for assessment.
 │                                                                   │
 │  Where does your organization stand?                              │
 │                                                                   │
-│  The VisDom Maturity Matrix maps 60 practices across              │
+│  The Visdom Maturity Matrix maps 60 practices across              │
 │  4 perspectives and 5 maturity levels - from Ad-hoc               │
 │  to Autonomous.                                                   │
 │                                                                   │
@@ -721,7 +721,7 @@ Links:
 
 ## Complete Article Inventory
 
-### VISDOM Series (Agent-Ready SDLC)
+### VISDOM Series (AI-Native SDLC)
 | # | Title | Date |
 |---|-------|------|
 | 1 | Interview with Artur Skowronski, lead of VISDOM | Mar 24, 2026 |
