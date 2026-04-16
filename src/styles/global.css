@@ -190,8 +190,19 @@ body {
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);
 }
 
-.logo-chip svg {
+.logo-chip svg,
+.logo-chip img {
   flex-shrink: 0;
+  display: block;
+}
+
+.logo-chip--wordmark {
+  padding: 4px 12px;
+}
+
+.logo-chip--wordmark img {
+  height: 22px;
+  width: auto;
 }
 
 /* ── Tag ── */
