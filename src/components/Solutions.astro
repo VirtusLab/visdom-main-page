@@ -111,7 +111,10 @@ Blast radius: 12 files`}
               <span class="tag bg-amber/10 text-amber border border-amber/20">Security</span>
               <span class="tag bg-blue/10 text-blue border border-blue/20">Performance</span>
             </div>
-            <a href="#contact" class="btn-pill btn-outline text-sm">Learn More &rarr;</a>
+            <div class="flex gap-3">
+              <a href="https://virtuslab.github.io/visdom-code-review/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">Read the Reference</a>
+              <a href="https://virtuslab.github.io/visdom-code-review/before-after/" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Before / After</a>
+            </div>
           </div>
           <div>
             <Terminal title="vcr">
@@ -137,88 +140,87 @@ Summary: 6 findings across 3 categories
         </div>
       </div>
 
-      {/* 03 - Visdom Tracing */}
+      {/* 03 - Visdom Testing */}
       <div class="platform-block fade-up">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <div class="order-2 lg:order-1">
-            <div class="card accent-card p-8">
-              <div class="space-y-5">
-                {[
-                  { label: 'Capture', desc: 'Session traces, token usage, tool calls, secret redaction', color: 'var(--color-emerald)' },
-                  { label: 'Enforce', desc: 'Model allowlists, path protection, token budgets', color: 'var(--color-blue)' },
-                  { label: 'Audit', desc: 'Ed25519 signatures, hash-chained records, SOX/PCI-DSS', color: 'var(--color-purple)' },
-                  { label: 'Analyze', desc: 'Cost tracking, model distribution, adoption patterns', color: 'var(--color-amber)' },
-                  { label: 'Attribute', desc: 'Line-by-line AI code attribution via tree-sitter', color: 'var(--color-emerald)' },
-                ].map(item => (
-                  <div class="flex items-start gap-3 group">
-                    <span class="w-2 h-2 rounded-full mt-1.5 shrink-0 transition-transform group-hover:scale-150" style={`background: ${item.color}`}></span>
-                    <div>
-                      <span class="text-sm font-semibold text-text">{item.label}</span>
-                      <span class="text-xs text-text-muted ml-2">{item.desc}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <Terminal title="visdom-testing">
+{`$ visdom test --strategy diamond
+Layer 0: Architecture (ArchUnit)
+  ├─ Layer boundaries          0/10 violations ✓
+  ├─ Field injection           0/10 ✓
+  └─ Forbidden APIs            0/10 ✓
+
+Layer 1: Property-based (jqwik)
+  ├─ 12 properties, 10k cases each
+  └─ Rounding bug found in VAT.apply()
+
+Layer 2: Mutation (PIT)
+  ├─ Mutation score            73%
+  └─ 2/2 computation bugs caught
+
+`}<span class="text-emerald">Tests trusted ✓</span>
+            </Terminal>
           </div>
           <div class="order-1 lg:order-2">
             <div class="component-number">03</div>
             <h3 class="text-2xl font-bold text-text mt-1 mb-4">
-              Visdom Tracing
+              Visdom Testing
             </h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              You can't govern what you can't see. Full observability into every AI agent interaction — session traces, token usage, tool calls, model decisions — with cryptographic audit trails for compliance.
+              When AI writes both the code and the tests, line coverage becomes a lying oracle. A multi-layered testing strategy — architecture, property-based, mutation — that catches what 90% coverage misses.
             </p>
             <p class="text-sm text-text-muted mb-6">
-              Built on <span class="font-semibold text-text">TraceVault</span> — a flight recorder for AI development with governance and audit capabilities.
+              Adaptive shape — <span class="font-semibold text-text">Pyramid, Trophy, Honeycomb, Diamond</span> — tuned to your architecture, with ArchUnit gates that stop AI from drifting.
             </p>
             <div class="flex flex-wrap gap-2 mb-6">
-              <span class="tag bg-blue/10 text-blue border border-blue/20">Open Source</span>
-              <span class="tag bg-amber/10 text-amber border border-amber/20">Governance</span>
-              <span class="tag bg-purple/10 text-purple border border-purple/20">Compliance</span>
+              <span class="tag bg-blue/10 text-blue border border-blue/20">ArchUnit</span>
+              <span class="tag bg-purple/10 text-purple border border-purple/20">Property-Based</span>
+              <span class="tag bg-amber/10 text-amber border border-amber/20">Mutation Testing</span>
             </div>
             <div class="flex gap-3">
-              <a href="https://tracevault.dev/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">tracevault.dev</a>
-              <a href="https://github.com/softwaremill/tracevault" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">GitHub</a>
+              <a href="https://virtuslab.github.io/visdom-testing/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">Read the Reference</a>
+              <a href="https://virtuslab.github.io/visdom-testing/before-after/" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Before / After</a>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 04 - Visdom Sandboxing */}
+      {/* 04 - Visdom Security */}
       <div class="platform-block fade-up">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <div class="component-number">04</div>
             <h3 class="text-2xl font-bold text-text mt-1 mb-4">
-              Visdom Sandboxing
+              Visdom Security
             </h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              AI agents need room to experiment without breaking things. Ephemeral, fully isolated environments where agents can execute code, run tests, and iterate freely — with zero risk to production.
+              AI agents need room to experiment without breaking things — and without becoming the breach. Ephemeral, fully isolated execution environments with policy guardrails, secret redaction, and zero blast radius into production.
             </p>
             <p class="text-sm text-text-muted mb-6">
-              Powered by <span class="font-semibold text-text">Sandcat</span> — lightweight, disposable execution environments built for agentic workflows.
+              Powered by <span class="font-semibold text-text">Sandcat</span> — lightweight, disposable sandboxes built for agentic workflows, with scoped credentials and egress controls.
             </p>
             <div class="flex flex-wrap gap-2 mb-6">
               <span class="tag bg-emerald/10 text-emerald border border-emerald/20">Isolation</span>
-              <span class="tag bg-blue/10 text-blue border border-blue/20">Ephemeral Environments</span>
-              <span class="tag bg-purple/10 text-purple border border-purple/20">Zero Side Effects</span>
+              <span class="tag bg-blue/10 text-blue border border-blue/20">Policy Guardrails</span>
+              <span class="tag bg-purple/10 text-purple border border-purple/20">Zero Blast Radius</span>
             </div>
             <a href="#contact" class="btn-pill btn-outline text-sm">Learn More &rarr;</a>
           </div>
           <div>
             <Terminal title="sandcat">
-{`$ sandcat create --from main
+{`$ sandcat create --from main --policy strict
 Creating isolated environment...
   ├─ Cloning repository        ✓
   ├─ Provisioning services     ✓
-  ├─ Seeding test data         ✓
+  ├─ Scoped credentials        ✓
+  ├─ Egress allowlist applied  ✓
   └─ Agent access configured   ✓
 
 Sandbox ready: sb-a1b2c3
-Agent can now safely execute, test,
-and iterate without side effects.
-`}<span class="text-emerald">Environment live ✓</span>
+Agent can execute, test, and iterate
+with zero blast radius into production.
+`}<span class="text-emerald">Environment secured ✓</span>
             </Terminal>
           </div>
         </div>
