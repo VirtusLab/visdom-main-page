@@ -21,7 +21,7 @@
   --color-phase-build: #10b981;
   --color-phase-validate: #f59e0b;
 
-  /* Design system token aliases — keeps .card / .surface-card in sync with Card component */
+  /* Design system token aliases */
   --card: var(--color-bg);
   --card-surface: var(--color-surface);
   --border: var(--color-border);
@@ -45,31 +45,49 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Card — aligned with design system Card component (rounded-xl border bg-card shadow-sm) */
+/* ── Scroll animations ── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children */
+.fade-up:nth-child(2) { transition-delay: 0.1s; }
+.fade-up:nth-child(3) { transition-delay: 0.2s; }
+.fade-up:nth-child(4) { transition-delay: 0.25s; }
+
+/* ── Card ── */
 .card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl); /* rounded-xl */
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); /* shadow-sm */
-  transition: all 0.3s ease;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .card:hover {
   border-color: var(--color-emerald);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  transform: translateY(-3px);
 }
 
-/* Surface card (subtle bg) — aligned with design system Card component */
+/* ── Surface card ── */
 .surface-card {
   background: var(--card-surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl); /* rounded-xl */
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); /* shadow-sm */
-  transition: all 0.3s ease;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Terminal block - stays dark */
+/* ── Terminal block ── */
 .terminal {
   background: #1a1b2e;
   border: 1px solid #2a2b3e;
@@ -80,9 +98,10 @@ body {
   padding: 16px 20px;
   overflow-x: auto;
   color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 32px rgba(26, 27, 46, 0.25);
 }
 
-/* Pill button — mirrors design system Button component (button.tsx) with pill shape */
+/* ── Pill button ── */
 .btn-pill {
   display: inline-flex;
   align-items: center;
@@ -95,7 +114,7 @@ body {
   font-family: var(--font-body);
   line-height: 1.25;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   text-decoration: none;
   outline: none;
   cursor: pointer;
@@ -111,17 +130,18 @@ body {
   opacity: 0.5;
 }
 
-/* Primary — bg-primary text-primary-foreground hover:bg-primary/90 */
 .btn-primary {
   background: var(--color-emerald);
   color: var(--color-bg);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
 }
 
 .btn-primary:hover {
-  background: color-mix(in srgb, var(--color-emerald) 90%, transparent);
+  background: var(--color-emerald-dark);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+  transform: translateY(-1px);
 }
 
-/* Outline — border bg-background hover:bg-accent hover:text-accent-foreground */
 .btn-outline {
   background: transparent;
   color: var(--color-text);
@@ -134,7 +154,7 @@ body {
   background: var(--color-emerald-light);
 }
 
-/* Tag — mirrors design system Badge component (badge.tsx) */
+/* ── Tag ── */
 .tag {
   display: inline-flex;
   align-items: center;
@@ -150,7 +170,7 @@ body {
   border: 1px solid transparent;
 }
 
-/* Pulse animation for live dot */
+/* ── Pulse animation ── */
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
   50% { opacity: 0.8; box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
@@ -160,7 +180,16 @@ body {
   animation: pulse-dot 2s infinite;
 }
 
-/* Section spacing - generous breathing room */
+/* ── Progress bar animation ── */
+@keyframes grow-bar {
+  from { width: 0; }
+}
+
+.progress-bar {
+  animation: grow-bar 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── Section spacing ── */
 .section {
   padding: 128px 0;
 }
@@ -171,7 +200,12 @@ body {
   padding: 0 32px;
 }
 
-/* Section heading */
+/* ── Alternating section backgrounds ── */
+.section-alt {
+  background: var(--color-surface);
+}
+
+/* ── Section heading ── */
 .section-title {
   font-family: var(--font-heading);
   font-size: 2.5rem;
@@ -197,8 +231,61 @@ body {
   margin-bottom: 12px;
 }
 
+/* ── Component number ── */
+.component-number {
+  font-family: var(--font-heading);
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--color-emerald) 0%, var(--color-blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.25;
+  user-select: none;
+}
+
+/* ── Platform block ── */
+.platform-block {
+  position: relative;
+  padding: 32px 0;
+}
+
+.platform-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+}
+
+.platform-block:first-child::before {
+  display: none;
+}
+
+/* ── Gradient accent line for cards ── */
+.accent-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.accent-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-emerald), var(--color-blue));
+  border-radius: 3px 3px 0 0;
+}
+
+/* ── Responsive ── */
 @media (max-width: 640px) {
   .section { padding: 80px 0; }
   .section-title { font-size: 1.875rem; }
   .container { padding: 0 20px; }
+  .component-number { font-size: 3rem; }
 }
