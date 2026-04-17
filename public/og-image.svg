@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#0693e3"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.85" cy="0.15" r="0.6">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Accent bar top -->
+  <rect x="0" y="0" width="1200" height="6" fill="url(#accent)"/>
+
+  <!-- VirtusLab mark -->
+  <g transform="translate(80, 80)">
+    <text x="0" y="16" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#9ca3af" letter-spacing="0.15em">VIRTUSLAB</text>
+  </g>
+
+  <!-- Product name -->
+  <g transform="translate(80, 220)">
+    <text x="0" y="0" font-family="Montserrat, system-ui, sans-serif" font-size="140" font-weight="800" fill="#111827" letter-spacing="-0.03em">Visdom</text>
+    <text x="440" y="-40" font-family="JetBrains Mono, monospace" font-size="28" font-weight="700" fill="#10b981">2.0</text>
+  </g>
+
+  <!-- Headline -->
+  <text x="80" y="340" font-family="Montserrat, system-ui, sans-serif" font-size="44" font-weight="700" fill="#111827" letter-spacing="-0.02em">AI-Native SDLC Platform</text>
+
+  <!-- Tagline -->
+  <text x="80" y="400" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="400" fill="#6b7280">
+    <tspan x="80" dy="0">The missing infrastructure for agent-generated code —</tspan>
+    <tspan x="80" dy="36">review, governance, and guardrails built in.</tspan>
+  </text>
+
+  <!-- Pill chips -->
+  <g transform="translate(80, 520)" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="600">
+    <g>
+      <rect x="0" y="0" width="160" height="42" rx="21" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.3"/>
+      <text x="80" y="28" fill="#059669" text-anchor="middle">Context Fabric</text>
+    </g>
+    <g transform="translate(180, 0)">
+      <rect x="0" y="0" width="155" height="42" rx="21" fill="#faf5ff" stroke="#9b51e0" stroke-opacity="0.3"/>
+      <text x="77.5" y="28" fill="#7c3aed" text-anchor="middle">Code Review</text>
+    </g>
+    <g transform="translate(355, 0)">
+      <rect x="0" y="0" width="120" height="42" rx="21" fill="#eff6ff" stroke="#0693e3" stroke-opacity="0.3"/>
+      <text x="60" y="28" fill="#0369a1" text-anchor="middle">Testing</text>
+    </g>
+    <g transform="translate(495, 0)">
+      <rect x="0" y="0" width="155" height="42" rx="21" fill="#fffbeb" stroke="#f59e0b" stroke-opacity="0.3"/>
+      <text x="77.5" y="28" fill="#b45309" text-anchor="middle">Governance</text>
+    </g>
+    <g transform="translate(670, 0)">
+      <rect x="0" y="0" width="130" height="42" rx="21" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.3"/>
+      <text x="65" y="28" fill="#059669" text-anchor="middle">Security</text>
+    </g>
+  </g>
+</svg>

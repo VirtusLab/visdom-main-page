@@ -1,21 +1,52 @@
 ---
 interface Props {
   title: string;
+  description?: string;
+  ogImage?: string;
 }
-const { title } = Astro.props;
+const {
+  title,
+  description = "The missing infrastructure for agent-generated code. Visdom lets your AI agents ship at agent speed, pass human review, and leave a trail regulators will sign off on — from assessment to autonomous delivery.",
+  ogImage,
+} = Astro.props;
+
+const siteUrl = "https://virtuslab.github.io/visdom-main-page";
+const base = import.meta.env.BASE_URL;
+const canonical = new URL(Astro.url.pathname, siteUrl).toString();
+const ogImageUrl = ogImage ?? `${siteUrl}/og-image.png`;
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Visdom by VirtusLab - AI-Native SDLC Platform. Build agent-ready engineering infrastructure." />
-    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}/favicon.svg`} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Visdom by VirtusLab" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Visdom 2.0 — AI-Native SDLC Platform by VirtusLab" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:site" content="@VirtusLab" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@600;700;800&display=optional" as="style" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@600;700;800&display=optional" rel="stylesheet" />
-    <title>{title}</title>
   </head>
   <body class="min-h-screen">
     <slot />
