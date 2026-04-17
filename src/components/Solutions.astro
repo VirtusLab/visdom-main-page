@@ -194,6 +194,7 @@ Layer 2: Mutation (PIT)
               <div class="space-y-5">
                 {[
                   { label: 'Trace', desc: 'Session traces, token usage, tool calls, secret redaction', color: 'var(--color-emerald)' },
+                  { label: 'Observe', desc: 'Real-time dashboards, token spend by model, adoption velocity, team-level metrics', color: 'var(--color-blue)' },
                   { label: 'Enforce', desc: 'Model allowlists, path protection, token budgets', color: 'var(--color-blue)' },
                   { label: 'Audit', desc: 'Ed25519 signatures, hash-chained records, SOX/PCI-DSS', color: 'var(--color-purple)' },
                   { label: 'Evaluate', desc: 'Auto-evaluation, model distribution, adoption patterns', color: 'var(--color-amber)' },
@@ -218,14 +219,18 @@ Layer 2: Mutation (PIT)
             <p class="text-text-secondary leading-relaxed mb-6">
               Your team ships AI-generated code while legal says yes the first time. Every agent interaction lands as a tamper-evident, signed receipt, so EU AI Act, SOX, and PCI-DSS stop being a release blocker and become a checkbox you can prove on demand.
             </p>
+            <p class="text-text-secondary leading-relaxed mb-6">
+              You see exactly where agent effort goes and whether it compounds. Token spend by model, session traces by team, adoption velocity by quarter, so you walk into the next budget review with numbers, not vibes, and make the call with confidence.
+            </p>
             <p class="text-sm text-text-muted mb-6">
               Powered by <span class="font-semibold text-text">TraceVault</span>: a flight recorder for AI development with Ed25519-signed, hash-chained records and line-by-line AI attribution.
             </p>
             <div class="flex flex-wrap gap-2 mb-6">
               <span class="tag bg-emerald/10 text-emerald border border-emerald/20">Tracing</span>
+              <span class="tag bg-blue/10 text-blue border border-blue/20">Observability</span>
               <span class="tag bg-purple/10 text-purple border border-purple/20">Audit Trail</span>
               <span class="tag bg-amber/10 text-amber border border-amber/20">EU AI Act</span>
-              <span class="tag bg-blue/10 text-blue border border-blue/20">Auto-Evaluation</span>
+              <span class="tag bg-blue/10 text-blue border border-blue/20">Token Analytics</span>
             </div>
             <div class="flex gap-3">
               <a href="https://tracevault.dev/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">tracevault.dev</a>
