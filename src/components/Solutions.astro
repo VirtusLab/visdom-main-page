@@ -5,9 +5,9 @@ import Terminal from './Terminal.astro';
   <div class="container">
     <div class="fade-up">
       <p class="section-label">Platform Components</p>
-      <h2 class="section-title">Seven building blocks of an Agent-Native CI</h2>
+      <h2 class="section-title">Building Blocks of Agent-Native SDLC</h2>
       <p class="section-subtitle mb-24">
-        Each component works standalone. Together, they close the gap between what your agents can write and what your auditors, reviewers, and CI will actually accept.
+        Each component works standalone. Together, they let your team ship what your agents write, through the reviewers, auditors, and CI that decide what actually reaches production.
       </p>
     </div>
 
@@ -22,7 +22,7 @@ import Terminal from './Terminal.astro';
               Visdom Maturity Matrix
             </h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              Stop guessing whether you're "doing AI right." A 20-minute self-assessment names the exact practices blocking agent adoption in your org — so you can argue for budget with evidence, not vibes, and prove quarter-over-quarter progress to leadership.
+              Walk into your next budget review with a named, prioritized list of the practices blocking agent adoption in your org, not vibes. In 20 minutes you'll know where you sit, what to move first, and how to prove quarter-over-quarter progress to leadership.
             </p>
             <div class="flex flex-wrap gap-2 mb-6">
               <span class="tag bg-blue/10 text-blue border border-blue/20">Interactive Assessment</span>
@@ -76,10 +76,10 @@ Blast radius: 12 files`}
               Visdom Context Fabric
             </h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              Your agents hallucinate because your repo is a black box to them. Give agents — and every reviewer — deterministic answers to "who owns this, what breaks if I change it, where does this pattern already exist." Review rework drops. Refactors stop turning into incident retros.
+              Your engineers stop guessing. For any file, they answer in seconds: who owns it, what breaks if it changes, where the pattern already exists. Their agents work from the same deterministic context. Review rework drops. Refactors stop turning into incident retros.
             </p>
             <p class="text-sm text-text-muted mb-6">
-              Powered by <span class="font-semibold text-text">Visdom Developer Intelligence</span> — deterministic code expertise, blast radius analysis, and ownership graphs via MCP.
+              Powered by <span class="font-semibold text-text">Visdom Developer Intelligence</span>: deterministic code expertise, blast radius analysis, and ownership graphs via MCP.
             </p>
             <div class="flex flex-wrap gap-2 mb-6">
               <span class="tag bg-blue/10 text-blue border border-blue/20">Open Source</span>
@@ -104,7 +104,7 @@ Blast radius: 12 files`}
               <span class="text-base font-normal text-text-muted">VCR</span>
             </h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              Your seniors spend 30–50% of their week reviewing PRs they didn't write. VCR reviews every PR with architectural context — catching boundary violations, security holes, and performance regressions before they hit production — so seniors only open the ones that actually need them. ~$0.10 per PR, no SaaS, runs in your CI.
+              Your seniors get their week back. Every PR arrives pre-reviewed against your architecture — boundary violations, security holes, performance regressions caught before human eyes, so seniors only open the ones that actually need them. ~$0.10 per PR, no SaaS, runs in your CI.
             </p>
             <div class="flex flex-wrap gap-2 mb-6">
               <span class="tag bg-purple/10 text-purple border border-purple/20">Architecture</span>
@@ -149,10 +149,10 @@ Summary: 6 findings across 3 categories
               Visdom Testing
             </h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              When AI writes both the code and the tests, line coverage stops meaning anything. Architecture gates, property-based, and mutation testing catch the computation bugs hiding behind 90% green CI — and the architectural drift your team already voted against.
+              When AI writes both the code and the tests, you can't trust coverage anymore, but you can trust that the tests catch the bugs that matter. Architecture gates, property-based checks, and mutation testing surface the computation bugs hiding behind 90% green CI, and stop the architectural drift your team already voted against.
             </p>
             <p class="text-sm text-text-muted mb-6">
-              Powered by <span class="font-semibold text-text">Visdom Testing</span> — adaptive test shape (Pyramid, Trophy, Honeycomb, Diamond) tuned to your architecture, with ArchUnit gates that stop AI from drifting.
+              Powered by <span class="font-semibold text-text">Visdom Testing</span>: adaptive test shape (Pyramid, Trophy, Honeycomb, Diamond) tuned to your architecture, with ArchUnit gates that stop AI from drifting.
             </p>
             <div class="flex flex-wrap gap-2 mb-6">
               <span class="tag bg-blue/10 text-blue border border-blue/20">ArchUnit</span>
@@ -216,10 +216,10 @@ Layer 2: Mutation (PIT)
               Visdom Governance
             </h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              Ship AI-generated code without the compliance bottleneck. A tamper-evident record of every agent interaction turns EU AI Act, SOX, and PCI-DSS requirements from a release blocker into a signed receipt — and gives legal the audit trail they need to say yes.
+              Your team ships AI-generated code while legal says yes the first time. Every agent interaction lands as a tamper-evident, signed receipt, so EU AI Act, SOX, and PCI-DSS stop being a release blocker and become a checkbox you can prove on demand.
             </p>
             <p class="text-sm text-text-muted mb-6">
-              Powered by <span class="font-semibold text-text">TraceVault</span> — a flight recorder for AI development with Ed25519-signed, hash-chained records and line-by-line AI attribution.
+              Powered by <span class="font-semibold text-text">TraceVault</span>: a flight recorder for AI development with Ed25519-signed, hash-chained records and line-by-line AI attribution.
             </p>
             <div class="flex flex-wrap gap-2 mb-6">
               <span class="tag bg-emerald/10 text-emerald border border-emerald/20">Tracing</span>
@@ -244,10 +244,10 @@ Layer 2: Mutation (PIT)
               Visdom Security
             </h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              Let agents move fast without betting the company on it. A rogue prompt can't exfiltrate secrets, corrupt a database, or push to prod — because it never had the keys to begin with. Experimentation without the breach headline.
+              Your engineers let agents iterate freely, because a rogue prompt can't exfiltrate secrets, touch a production database, or reach any credential that matters. It never had the keys. You get experimentation speed without the breach headline.
             </p>
             <p class="text-sm text-text-muted mb-6">
-              Powered by <span class="font-semibold text-text">Sandcat</span> — ephemeral, fully isolated sandboxes with scoped credentials, egress allowlists, and policy guardrails built for agentic workflows.
+              Powered by <span class="font-semibold text-text">Sandcat</span>: ephemeral, fully isolated sandboxes with scoped credentials, egress allowlists, and policy guardrails built for agentic workflows.
             </p>
             <div class="flex flex-wrap gap-2 mb-6">
               <span class="tag bg-emerald/10 text-emerald border border-emerald/20">Isolation</span>
@@ -306,7 +306,7 @@ with zero blast radius into production.
               <span class="tag bg-amber/10 text-amber border border-amber/20 text-xs font-medium normal-case tracking-normal">Coming Soon</span>
             </h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              Your CI takes 45 minutes. An AI agent iterates 50× per hour. The mismatch burns tokens on agents looping against a pipeline built for humans. We re-architect yours to run at machine speed — the same 88% build-time reduction we've delivered on production JVM fleets.
+              Your agents iterate 50× per hour instead of stalling against a pipeline built for humans. We re-architect your CI to run at machine speed, delivering the same 88% build-time reduction we've achieved on production JVM fleets, so your team stops paying for tokens burned in loops.
             </p>
             <p class="text-xs uppercase tracking-wider text-text-muted mb-3">Built on</p>
             <div class="flex flex-wrap items-center gap-3 mb-6">

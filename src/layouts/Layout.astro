@@ -6,7 +6,7 @@ interface Props {
 }
 const {
   title,
-  description = "The missing infrastructure for agent-generated code. Visdom lets your AI agents ship at agent speed, pass human review, and leave a trail regulators will sign off on — from assessment to autonomous delivery.",
+  description = "The missing infrastructure for agent-generated code. Visdom lets your AI agents ship at agent speed, pass human review, and leave a trail regulators will sign off on, from assessment to autonomous delivery.",
   ogImage,
 } = Astro.props;
 
@@ -34,7 +34,7 @@ const ogImageUrl = ogImage ?? `${siteUrl}/og-image.png`;
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Visdom 2.0 — AI-Native SDLC Platform by VirtusLab" />
+    <meta property="og:image:alt" content="Visdom 2.0: AI-Native SDLC Platform by VirtusLab" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
