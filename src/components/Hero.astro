@@ -2,13 +2,19 @@
 ---
 <section class="hero">
   <div class="container">
-    <div class="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] gap-12 lg:gap-16 items-center">
-      <div class="fade-up">
-        <div class="hero-eyebrow">
-          <img src={`${import.meta.env.BASE_URL}/virtuslab-logo.svg`} alt="" class="hero-vl-logo" />
-          <span>VISDOM BY VIRTUSLAB</span>
-        </div>
+    <div class="hero-brand fade-up">
+      <div class="hero-brand-logo">
+        <img src={`${import.meta.env.BASE_URL}/virtuslab-logo.svg`} alt="VirtusLab" class="hero-vl-logo" />
+      </div>
+      <div class="hero-brand-line">
+        <span class="hero-brand-name">Visdom</span>
+        <span class="hero-brand-version">2.0</span>
+      </div>
+      <div class="hero-brand-tagline">AI-Native SDLC Platform</div>
+    </div>
 
+    <div class="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] gap-12 lg:gap-16 items-center mt-12 lg:mt-16">
+      <div class="fade-up">
         <h1 class="text-4xl sm:text-5xl lg:text-[3.6rem] font-extrabold tracking-tight text-text mb-6 leading-[1.05] max-w-3xl">
           We help enterprise teams build agent-ready SDLC.
         </h1>
@@ -114,23 +120,58 @@
   }
 
   .hero-vl-logo {
-    height: 14px;
+    height: 20px;
     width: auto;
-    opacity: 0.75;
+    color: var(--color-text-muted);
+    margin: 0 auto;
+    display: block;
   }
 
-  .hero-eyebrow {
+  .hero-brand {
+    text-align: center;
+  }
+
+  .hero-brand-logo {
+    margin-bottom: 12px;
+  }
+
+  .hero-brand-line {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    align-items: baseline;
+    justify-content: center;
+    gap: 16px;
     flex-wrap: wrap;
-    margin-bottom: 1.25rem;
+  }
+
+  .hero-brand-name {
     font-family: var(--font-heading);
-    font-size: 0.78rem;
+    font-size: clamp(3.5rem, 10vw, 6rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--color-text);
+  }
+
+  .hero-brand-version {
+    font-family: var(--font-mono);
+    font-size: clamp(0.875rem, 2vw, 1.125rem);
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
+    color: var(--color-emerald);
+    background: var(--color-emerald-light);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    padding: 2px 10px;
+    border-radius: 9999px;
+    align-self: center;
+  }
+
+  .hero-brand-tagline {
+    font-family: var(--font-heading);
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-weight: 500;
     color: var(--color-text-secondary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 8px;
   }
 
   .hero-trust {
@@ -270,6 +311,18 @@
   @media (max-width: 767px) {
     .hero {
       padding-top: 7rem;
+    }
+
+    .hero-brand {
+      text-align: left;
+    }
+
+    .hero-brand-line {
+      justify-content: flex-start;
+    }
+
+    .hero-vl-logo {
+      margin: 0;
     }
 
     .hero-trust {
