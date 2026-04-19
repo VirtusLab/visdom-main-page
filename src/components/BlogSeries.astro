@@ -5,11 +5,11 @@ const BASE = 'https://virtuslab.com';
 
 const series = [
   {
-    title: 'VISDOM - AI-Native SDLC',
+    title: 'VISDOM',
     color: 'var(--color-emerald)',
     stats: '10+ articles',
     description:
-      'Exploring the intersection of AI agents and modern software delivery. How to build infrastructure that lets machines ship code safely at machine speed.',
+      'Field notes on agent-ready SDLC, context, CI, review, and governance.',
     featured: {
       title: 'AI in the SDLC: Faster or Just Busier?',
       date: 'Apr 10, 2026',
@@ -40,7 +40,7 @@ const series = [
     color: 'var(--color-blue)',
     stats: '16 editions',
     description:
-      'A curated showcase of the most interesting open-source AI projects on GitHub. Each edition highlights tools that are pushing the boundaries of what agents can do.',
+      'What we watch in open source and why it matters.',
     featured: {
       title: '#16: Project N.O.M.A.D. - Civilization in a Docker Container',
       date: 'Mar 25, 2026',
@@ -71,7 +71,7 @@ const series = [
     color: 'var(--color-purple)',
     stats: '13+ articles',
     description:
-      'Deep dives into the AI landscape - models, techniques, and practical engineering wisdom. From RAG optimization to understanding how the tools you use actually work.',
+      'Technical analysis of models, systems, and engineering patterns.',
     featured: {
       title: 'Interview with Krzysztof Grajek, lead engineer behind TraceVault',
       date: 'Apr 13, 2026',
@@ -101,10 +101,52 @@ const series = [
 ---
 <section class="section" id="insights">
   <div class="container">
-    <div class="text-center mb-16 fade-up">
-      <p class="section-label">Thought Leadership</p>
-      <h2 class="section-title">Engineering Insights, Not Marketing Fluff</h2>
-      <p class="section-subtitle mb-20">Three series. 50+ articles. Written by engineers, for engineers.</p>
+    <div id="thesis" class="grid xl:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.15fr)] gap-8 items-start mb-16">
+      <div class="surface-card p-8 fade-up">
+        <p class="section-label mb-4">The thesis behind this</p>
+        <h2 class="text-3xl font-bold text-text mb-6">We start with operating model, not tool procurement.</h2>
+        <div class="space-y-4 text-text-secondary leading-relaxed">
+          <p>
+            We do not treat AI adoption as a tooling procurement exercise. We start with operating model, capability ownership, verification discipline, and the practical constraints that determine whether agents help or create drag.
+          </p>
+          <p>
+            The Visdom Maturity Matrix gives us the assessment model. Our article series and live Radar make the public case for how engineering teams should evaluate, adopt, and operationalize these patterns.
+          </p>
+          <p>
+            If you want the implementation path, start with the Matrix. If you want to understand how we think, read the writing and follow the Radar.
+          </p>
+        </div>
+
+        <div class="matrix-panel mt-8">
+          <div>
+            <span class="matrix-value">60</span>
+            <span class="matrix-label">practices</span>
+          </div>
+          <div>
+            <span class="matrix-value">4</span>
+            <span class="matrix-label">perspectives</span>
+          </div>
+          <div>
+            <span class="matrix-value">5</span>
+            <span class="matrix-label">maturity levels</span>
+          </div>
+        </div>
+
+        <a href="https://visdom-ai-maturity-matrix.pages.dev/matrix/development" target="_blank" rel="noopener" class="btn-pill btn-primary mt-8">Open the Matrix -&gt;</a>
+      </div>
+
+      <div class="fade-up">
+        <p class="section-label">Public writing</p>
+        <h2 class="section-title">We publish the argument in public, then apply it with client teams.</h2>
+        <p class="section-subtitle mb-10">
+          Supporting writing: 50+ articles across three VirtusLab series, VISDOM, GitHub All-Stars, and AI-Insight.
+        </p>
+        <div class="thesis-notes">
+          <p><strong>VISDOM.</strong> Field notes on agent-ready SDLC, context, CI, review, and governance.</p>
+          <p><strong>GitHub All-Stars.</strong> What we watch in open source and why it matters.</p>
+          <p><strong>AI-Insight.</strong> Technical analysis of models, systems, and engineering patterns.</p>
+        </div>
+      </div>
     </div>
 
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -116,3 +158,53 @@ const series = [
     </div>
   </div>
 </section>
+
+<style>
+  .matrix-panel {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .matrix-panel > div {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .matrix-value {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .matrix-label {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.82rem;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .thesis-notes {
+    display: grid;
+    gap: 0.85rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+
+  .thesis-notes strong {
+    color: var(--color-text);
+  }
+
+  @media (max-width: 767px) {
+    .matrix-panel {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,15 +1,48 @@
 ---
-import { Pillars as PillarsReact } from '@virtuslab/visdom-ui';
-
-const pillars = [
-  { value: '88%', label: 'build time decrease' },
-  { value: '43%', label: 'PR merge time reduction' },
-  { value: '160+', label: 'open-source repositories' },
-  { value: '15+', label: 'years in JVM ecosystem' },
+const observations = [
+  {
+    title: 'The model works. The chassis does not.',
+    body: 'Most teams we talk to already have Copilot, Cursor, or Claude Code in the hands of engineers. The suggestions are often useful. The failure shows up later, when senior engineers spend half their week untangling agent-generated pull requests that pass CI and still cut across architecture. The block is rarely the model.',
+  },
+  {
+    title: 'Nobody owns this capability.',
+    body: 'Adopting agents at enterprise scale is a platform engineering problem. Someone has to own context delivery, sandbox isolation, attribution, policy, and machine-speed CI. In most organizations we assess, those responsibilities are split across DevEx, platform, and security, and nobody is accountable for the full operating model.',
+  },
+  {
+    title: 'Vendor sprawl without a thesis.',
+    body: 'The average stack we audit is a pile of disconnected tools: generation in one place, measurement somewhere else, governance bolted on later, and no usable context layer underneath any of it. Each vendor solves a slice. Nobody is wiring the system your engineers need if agents are going to move from task to verified deploy.',
+  },
 ];
 ---
-<section class="pb-8">
+<section class="section problem-section">
   <div class="container">
-    <PillarsReact pillars={pillars} client:load />
+    <div class="fade-up mb-14">
+      <p class="section-label">What we see in the field</p>
+      <h2 class="section-title">What we see going wrong in AI adoption</h2>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6">
+      {observations.map((item) => (
+        <article class="surface-card p-8 fade-up">
+          <h3 class="text-xl font-bold text-text mb-4">{item.title}</h3>
+          <p class="text-text-secondary leading-relaxed">{item.body}</p>
+        </article>
+      ))}
+    </div>
+
+    <p class="problem-close fade-up">That is the gap we close.</p>
   </div>
 </section>
+
+<style>
+  .problem-section {
+    padding-top: 1rem;
+  }
+
+  .problem-close {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+</style>

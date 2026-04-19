@@ -1,8 +1,61 @@
 ---
-import { MaturityRef as MaturityRefReact } from '@virtuslab/visdom-ui';
 ---
-<MaturityRefReact
-  assessmentHref="https://visdom-ai-maturity-matrix.pages.dev/assessment"
-  matrixHref="https://visdom-ai-maturity-matrix.pages.dev/matrix/development"
-  client:load
-/>
+<section id="start" class="section section-alt">
+  <div class="container">
+    <div class="fade-up mb-14">
+      <p class="section-label">Next step</p>
+      <h2 class="section-title">Start the conversation</h2>
+      <p class="section-subtitle">
+        The fastest way to find out whether we are a good fit is a 20-minute Matrix assessment. We both get a clearer picture of where your organization is now and what the first move should be. After that, we can scope a Foundation engagement or send you on your way with the roadmap. Either outcome is fine with us.
+      </p>
+    </div>
+
+    <div class="start-grid">
+      <article class="card p-8 start-primary fade-up">
+        <p class="section-label mb-4">Primary path</p>
+        <h3 class="text-3xl font-bold text-text mb-4">Take the 20-minute Matrix Assessment</h3>
+        <p class="text-text-secondary leading-relaxed mb-8">
+          60 practices, four perspectives, five maturity levels. No signup, no sales call. You leave with a scored report.
+        </p>
+        <a href="https://visdom-ai-maturity-matrix.pages.dev/assessment" target="_blank" rel="noopener" class="btn-pill btn-primary">Start assessment -&gt;</a>
+      </article>
+
+      <article class="surface-card p-8 fade-up">
+        <h3 class="text-2xl font-bold text-text mb-4">Book a Phase 1 scoping call</h3>
+        <p class="text-text-secondary leading-relaxed mb-8">
+          30 minutes with the engineers who built Visdom. We will discuss your environment and decide whether a two-week Foundation engagement makes sense.
+        </p>
+        <a href="https://virtuslab.com/contact" target="_blank" rel="noopener" class="btn-pill btn-outline">Talk to the team -&gt;</a>
+      </article>
+
+      <article class="surface-card p-8 fade-up">
+        <h3 class="text-2xl font-bold text-text mb-4">Explore the open source</h3>
+        <p class="text-text-secondary leading-relaxed mb-8">
+          Start with ViDIA on GitHub. Our deterministic context server is MIT-licensed and self-hostable, and it is the fastest way to see how we think about context before you ever talk to us.
+        </p>
+        <a href="https://github.com/VirtusLab/visdom-developer-intelligence" target="_blank" rel="noopener" class="btn-pill btn-outline">View on GitHub -&gt;</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .start-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) repeat(2, minmax(0, 0.85fr));
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+
+  .start-primary {
+    background:
+      radial-gradient(circle at top right, rgba(16, 185, 129, 0.14), transparent 40%),
+      var(--card);
+  }
+
+  @media (max-width: 1023px) {
+    .start-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

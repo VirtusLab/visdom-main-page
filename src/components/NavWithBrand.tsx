@@ -2,13 +2,13 @@ import React from 'react';
 import { Nav, VirtusLabLogo } from '@virtuslab/visdom-ui';
 
 const links = [
-  { label: 'Platform', href: '#platform' },
-  { label: 'Insights', href: '#insights' },
+  { label: 'Platform', href: '#kit' },
+  { label: 'Insights', href: '#thesis' },
   { label: 'AI Radar', href: '#radar' },
   { label: 'Matrix', href: 'https://visdom-ai-maturity-matrix.pages.dev', external: true },
 ];
 
-const cta = { label: 'Get in Touch', href: '#contact' };
+const cta = { label: 'Get in Touch', href: '#start' };
 
 function BrandBar() {
   return (
@@ -41,7 +41,7 @@ function BrandBar() {
 function VisdomNavBrand() {
   return (
     <a href="/" className="text-lg font-bold tracking-tight no-underline hover:opacity-80 transition-opacity text-gray-900">
-      Visdom
+      Visdom by VirtusLab
     </a>
   );
 }

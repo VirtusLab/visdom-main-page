@@ -2,90 +2,90 @@
 ---
 <section class="hero">
   <div class="container">
-
-    {/* Big product name */}
-    <div class="hero-brand fade-up">
-      <div class="hero-brand-logo">
-        <img src={`${import.meta.env.BASE_URL}/virtuslab-logo.svg`} alt="VirtusLab" class="hero-vl-logo" />
-      </div>
-      <div class="hero-brand-line">
-        <span class="hero-brand-name">Visdom</span>
-        <span class="hero-brand-version">2.0</span>
-      </div>
-      <div class="hero-brand-tagline">AI-Native SDLC Platform</div>
-    </div>
-
-    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mt-12 lg:mt-16">
-
-      {/* Left — text */}
+    <div class="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] gap-12 lg:gap-16 items-center">
       <div class="fade-up">
-        <h1 class="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold tracking-tight text-text mb-6 leading-[1.15]">
-          Your AI agents are only as good as your engineering infrastructure
+        <div class="hero-eyebrow">
+          <img src={`${import.meta.env.BASE_URL}/virtuslab-logo.svg`} alt="" class="hero-vl-logo" />
+          <span>VISDOM BY VIRTUSLAB</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl lg:text-[3.6rem] font-extrabold tracking-tight text-text mb-6 leading-[1.05] max-w-3xl">
+          We help enterprise teams build agent-ready SDLC.
         </h1>
 
-        <p class="text-lg text-text-secondary mb-10 leading-relaxed max-w-xl">
-          Your agents already write the code. Your CI, reviews, and audit trail weren't built for machines. Visdom is the missing infrastructure, so AI-generated work ships at agent speed, passes human review, and leaves a trail regulators will sign off on.
-        </p>
+        <div class="space-y-4 text-lg text-text-secondary leading-relaxed max-w-3xl">
+          <p>
+            Most organizations adopting AI hit the same wall: the model works, but the infrastructure around it, context, CI, review, and governance, was never built for machine-speed iteration.
+          </p>
+          <p>
+            We have been solving this at VirtusLab for three years. Now we help other teams get there faster.
+          </p>
+          <p>
+            We bring opinionated patterns, six open-source components, and engineers who have shipped this before.
+          </p>
+        </div>
 
-        <div class="flex flex-wrap gap-4">
-          <a href="#platform" class="btn-pill btn-primary">Explore the Platform</a>
-          <a href="https://visdom-ai-maturity-matrix.pages.dev/assessment" target="_blank" rel="noopener" class="btn-pill btn-outline">Take the Assessment</a>
+        <div class="flex flex-wrap gap-4 mt-10">
+          <a href="https://visdom-ai-maturity-matrix.pages.dev/assessment" target="_blank" rel="noopener" class="btn-pill btn-primary">Take the 20-min Matrix Assessment</a>
+          <a href="#engage" class="btn-pill btn-outline">How we engage -&gt;</a>
+        </div>
+
+        <div class="hero-trust mt-8">
+          <span>Built by the team behind the Visdom Maturity Matrix and AI Engineering Radar</span>
+          <span>160+ open-source repositories</span>
+          <span>15+ years in JVM ecosystem</span>
         </div>
       </div>
 
-      {/* Right — hero visual */}
       <div class="fade-up hero-visual-wrap">
         <div class="hero-visual">
-          {/* Header */}
           <div class="hv-header">
-            <div class="flex items-center gap-2">
-              <span class="text-emerald font-bold text-sm" style="font-family: var(--font-heading);">
-                <span class="text-text">Visdom</span>
-              </span>
-              <span class="text-[10px] text-text-muted">2.0</span>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">Forward-Deployed Build Pattern</p>
+              <h2 class="text-xl font-bold text-text mt-2">We embed, deploy, and hand over.</h2>
             </div>
-            <div class="flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-emerald pulse-dot"></span>
-              <span class="text-[10px] text-emerald font-medium">All systems live</span>
-            </div>
+            <span class="tag bg-emerald/10 text-emerald border border-emerald/20">Capability transfer</span>
           </div>
 
-          {/* Platform blocks */}
-          <div class="hv-grid">
+          <div class="space-y-4">
             {[
-              { num: '00', name: 'Maturity Matrix', color: '#3b82f6' },
-              { num: '01', name: 'Context Fabric', color: '#10b981' },
-              { num: '02', name: 'Code Review', color: '#9b51e0' },
-              { num: '03', name: 'Tracing', color: '#f59e0b' },
-              { num: '04', name: 'Sandboxing', color: '#0693e3' },
-              { num: '05', name: 'Machine CI', color: '#10b981' },
-            ].map((block, i) => (
-              <div class="hv-block" style={`--block-color: ${block.color}; animation-delay: ${0.1 + i * 0.08}s`}>
-                <div class="flex items-center gap-2">
-                  <span class="hv-block-dot" style={`background: ${block.color}`}></span>
-                  <span class="text-[10px] font-bold text-text-muted">{block.num}</span>
-                </div>
-                <div class="text-xs font-semibold text-text mt-1.5">{block.name}</div>
-                <div class="hv-block-bar mt-2">
-                  <div class="hv-block-bar-fill" style={`background: ${block.color}; width: ${65 + i * 6}%`}></div>
+              {
+                phase: 'Phase 1',
+                title: 'Foundation',
+                detail: 'We assess your current stack, map the Matrix gaps, and name the first pilot team.',
+                accent: 'var(--color-blue)',
+              },
+              {
+                phase: 'Phase 2',
+                title: 'Pilot implementation',
+                detail: 'We deploy the kit into your repos, CI, and controls with your platform engineers in the loop.',
+                accent: 'var(--color-emerald)',
+              },
+              {
+                phase: 'Phase 3',
+                title: 'Scale and transfer',
+                detail: 'Your team leads rollout while we review architecture, unblock edge cases, and step back.',
+                accent: 'var(--color-purple)',
+              },
+            ].map((step) => (
+              <div class="hv-row" style={`--row-accent: ${step.accent}`}>
+                <div class="hv-phase">{step.phase}</div>
+                <div class="hv-copy">
+                  <div class="hv-title">{step.title}</div>
+                  <p>{step.detail}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Bottom stats row */}
           <div class="hv-footer">
-            <div class="hv-stat">
-              <span class="text-emerald font-bold text-sm">88%</span>
-              <span class="text-[9px] text-text-muted">faster builds</span>
+            <div>
+              <span class="hv-footer-label">What we bring</span>
+              <strong>Six open-source components</strong>
             </div>
-            <div class="hv-stat">
-              <span class="text-blue font-bold text-sm">50x</span>
-              <span class="text-[9px] text-text-muted">agent iterations/hr</span>
-            </div>
-            <div class="hv-stat">
-              <span class="text-purple font-bold text-sm">$0.10</span>
-              <span class="text-[9px] text-text-muted">per PR review</span>
+            <div>
+              <span class="hv-footer-label">What your team keeps</span>
+              <strong>The operating capability</strong>
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@
 <style>
   .hero {
     padding-top: 8rem;
-    padding-bottom: 6rem;
+    padding-bottom: 5rem;
     position: relative;
     overflow: hidden;
   }
@@ -113,63 +113,50 @@
     pointer-events: none;
   }
 
-  /* ── Big product brand ── */
-  .hero-brand {
-    text-align: center;
-  }
-
-  .hero-brand-logo {
-    margin-bottom: 12px;
-  }
-
   .hero-vl-logo {
-    height: 20px;
+    height: 14px;
     width: auto;
-    color: var(--color-text-muted);
-    margin: 0 auto;
-    display: block;
+    opacity: 0.75;
   }
 
-  .hero-brand-line {
+  .hero-eyebrow {
     display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 16px;
+    align-items: center;
+    gap: 10px;
     flex-wrap: wrap;
-  }
-
-  .hero-brand-name {
+    margin-bottom: 1.25rem;
     font-family: var(--font-heading);
-    font-size: clamp(3.5rem, 10vw, 6rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    color: var(--color-text);
-  }
-
-  .hero-brand-version {
-    font-family: var(--font-mono);
-    font-size: clamp(0.875rem, 2vw, 1.125rem);
+    font-size: 0.78rem;
     font-weight: 600;
-    color: var(--color-emerald);
-    background: var(--color-emerald-light);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    padding: 2px 10px;
-    border-radius: 9999px;
-    align-self: center;
-  }
-
-  .hero-brand-tagline {
-    font-family: var(--font-heading);
-    font-size: clamp(1rem, 3vw, 1.5rem);
-    font-weight: 500;
-    color: var(--color-text-secondary);
-    letter-spacing: 0.08em;
     text-transform: uppercase;
-    margin-top: 8px;
+    letter-spacing: 0.18em;
+    color: var(--color-text-secondary);
   }
 
-  /* ── Hero visual card ── */
+  .hero-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    font-size: 0.92rem;
+    color: var(--color-text-secondary);
+  }
+
+  .hero-trust span {
+    position: relative;
+  }
+
+  .hero-trust span:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 9999px;
+    background: var(--color-border);
+    transform: translateY(-50%);
+  }
+
   .hero-visual-wrap {
     perspective: 1200px;
   }
@@ -178,7 +165,7 @@
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: 16px;
-    padding: 20px;
+    padding: 24px;
     box-shadow:
       0 1px 3px rgba(0, 0, 0, 0.04),
       0 8px 40px rgba(0, 0, 0, 0.06),
@@ -192,86 +179,112 @@
   }
 
   .hv-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
     padding-bottom: 14px;
     margin-bottom: 16px;
     border-bottom: 1px solid var(--color-border-light);
   }
 
-  .hv-grid {
+  .hv-row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .hv-block {
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: start;
     background: var(--color-surface);
     border: 1px solid var(--color-border-light);
     border-radius: 10px;
-    padding: 10px 12px;
+    padding: 14px;
     transition: all 0.25s ease;
-    animation: hv-block-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    position: relative;
   }
 
-  .hv-block:hover {
-    border-color: var(--block-color);
-    box-shadow: 0 2px 12px color-mix(in srgb, var(--block-color) 15%, transparent);
+  .hv-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    border-radius: 10px 0 0 10px;
+    background: var(--row-accent);
+  }
+
+  .hv-row:hover {
+    border-color: var(--row-accent);
+    box-shadow: 0 2px 12px color-mix(in srgb, var(--row-accent) 15%, transparent);
     transform: translateY(-2px);
   }
 
-  @keyframes hv-block-in {
-    from {
-      opacity: 0;
-      transform: translateY(8px) scale(0.97);
-    }
+  .hv-phase {
+    min-width: 68px;
+    padding: 6px 10px;
+    border-radius: 9999px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
   }
 
-  .hv-block-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
+  .hv-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0.35rem;
   }
 
-  .hv-block-bar {
-    height: 3px;
-    background: var(--color-surface-light);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  .hv-block-bar-fill {
-    height: 100%;
-    border-radius: 3px;
-    opacity: 0.5;
+  .hv-copy p {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
   }
 
   .hv-footer {
-    display: flex;
-    justify-content: space-around;
-    padding-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding-top: 16px;
+    margin-top: 16px;
     border-top: 1px solid var(--color-border-light);
   }
 
-  .hv-stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
+  .hv-footer > div {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: 10px;
+    padding: 12px 14px;
   }
 
-  @media (max-width: 1024px) {
-    .hero-visual {
-      transform: none;
+  .hv-footer-label {
+    display: block;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.35rem;
+  }
+
+  @media (max-width: 767px) {
+    .hero {
+      padding-top: 7rem;
     }
-  }
 
-  @media (max-width: 480px) {
-    .hv-grid {
-      grid-template-columns: repeat(2, 1fr);
+    .hero-trust {
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .hero-trust span::after {
+      display: none;
+    }
+
+    .hv-header,
+    .hv-footer,
+    .hv-row {
+      grid-template-columns: 1fr;
     }
   }
 </style>

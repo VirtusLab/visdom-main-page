@@ -1,29 +1,56 @@
 ---
-import { AiRadar as AiRadarReact } from '@virtuslab/visdom-ui';
-
 const stats = [
   { value: '777', label: 'signals' },
   { value: '17', label: 'areas' },
   { value: '354', label: 'discoveries' },
   { value: '251', label: 'releases' },
 ];
-const topAreas = [
-  'Coding agents (211)',
-  'MCP integration (143)',
-  'Context engineering (116)',
-  'Agent sandboxing (85)',
-  'Observability (48)',
-  'Governance (37)',
-];
 ---
 <section id="radar" class="section">
   <div class="container">
-    <AiRadarReact
-      stats={stats}
-      topAreas={topAreas}
-      ctaLabel="Open AI-Radar Dashboard"
-      ctaHref="https://visdom-ai-maturity-matrix.pages.dev/dashboard"
-      client:load
-    />
+    <div class="radar-shell fade-up">
+      <div class="radar-copy">
+        <p class="section-label">AI Engineering Radar</p>
+        <h2 class="section-title">AI Engineering Radar · Live</h2>
+        <p class="section-subtitle mb-10">
+          We track the AI engineering ecosystem in real time, classify signals by maturity level, and map them back to the Matrix practices. Our clients use the Radar to answer a simple question: what shipped recently that our team should actually evaluate, without assigning someone to do that research full time.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-10">
+        {stats.map((item) => (
+          <div class="card p-6">
+            <div class="radar-value">{item.value}</div>
+            <div class="radar-label">{item.label}</div>
+          </div>
+        ))}
+      </div>
+
+      <a href="https://visdom-ai-maturity-matrix.pages.dev/dashboard" target="_blank" rel="noopener" class="btn-pill btn-primary">Open AI-Radar Dashboard</a>
+    </div>
   </div>
 </section>
+
+<style>
+  .radar-shell {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.04), rgba(6, 147, 227, 0.05));
+    border: 1px solid var(--color-border);
+    border-radius: 24px;
+    padding: 2rem;
+  }
+
+  .radar-value {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .radar-label {
+    margin-top: 0.4rem;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-text-secondary);
+  }
+</style>

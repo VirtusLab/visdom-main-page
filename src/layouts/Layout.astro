@@ -6,7 +6,7 @@ interface Props {
 }
 const {
   title,
-  description = "The missing infrastructure for agent-generated code. Visdom lets your AI agents ship at agent speed, pass human review, and leave a trail regulators will sign off on, from assessment to autonomous delivery.",
+  description = "We embed with enterprise platform teams to build the context, CI, review, and governance infrastructure agents actually need. We bring an open-source kit, deploy it with your team, and hand over the capability.",
   ogImage,
 } = Astro.props;
 
@@ -25,7 +25,6 @@ const ogImageUrl = ogImage ?? `${siteUrl}/og-image.png`;
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Visdom by VirtusLab" />
     <meta property="og:title" content={title} />
@@ -34,9 +33,8 @@ const ogImageUrl = ogImage ?? `${siteUrl}/og-image.png`;
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Visdom 2.0: AI-Native SDLC Platform by VirtusLab" />
+    <meta property="og:image:alt" content="Visdom by VirtusLab: how we build agent-ready SDLC with enterprise teams" />
 
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
