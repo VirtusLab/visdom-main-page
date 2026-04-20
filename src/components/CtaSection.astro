@@ -1,3 +1,175 @@
 ---
 ---
-<Fragment />
+<section id="contact" class="section final-cta-section">
+  <div class="container">
+    <div class="final-cta fade-up">
+      <div class="final-cta-head">
+        <p class="section-label">§ Next move</p>
+        <h2 class="final-cta-title">Skip the deck. Start with the code.</h2>
+        <p class="final-cta-sub">
+          The fastest way to know if we can help is a 30-minute call with the engineers who built this — not a pre-sales pitch. If the fit is there, we scope a 2-week Foundation together. If it isn't, you leave with pointers to the open-source components and the Matrix.
+        </p>
+      </div>
+
+      <div class="final-cta-grid">
+        <article class="final-cta-card final-cta-card--primary">
+          <p class="final-cta-card-label">Recommended</p>
+          <h3>Book a working session</h3>
+          <p>30 minutes with a staff engineer. We review your current stack, name the one pattern that would move your number first, and tell you if Visdom is the wrong fit.</p>
+          <a href="mailto:visdom@virtuslab.com?subject=Working%20session%20request" class="btn-pill btn-primary">Book a session -&gt;</a>
+        </article>
+
+        <article class="final-cta-card">
+          <p class="final-cta-card-label">Self-serve</p>
+          <h3>Run the Matrix yourself</h3>
+          <p>60 practices across 4 perspectives. Takes 20 minutes. You keep the result, with or without us.</p>
+          <a href="https://visdom-ai-maturity-matrix.pages.dev/assessment" target="_blank" rel="noopener" class="btn-pill btn-outline">Take the assessment -&gt;</a>
+        </article>
+
+        <article class="final-cta-card">
+          <p class="final-cta-card-label">Engineering-first</p>
+          <h3>Read the code</h3>
+          <p>All six components are open source. Clone, run, judge the engineering before you judge the sales deck.</p>
+          <a href="https://github.com/VirtusLab" target="_blank" rel="noopener" class="btn-pill btn-outline">Browse on GitHub -&gt;</a>
+        </article>
+      </div>
+
+      <p class="final-cta-footnote">
+        Prefer email? <a href="mailto:visdom@virtuslab.com">visdom@virtuslab.com</a> — replies come from an engineer, within one business day.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .final-cta-section {
+    padding-top: 6rem;
+    padding-bottom: 7rem;
+    background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .final-cta-section::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    left: 50%;
+    width: 800px;
+    height: 800px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .final-cta {
+    position: relative;
+    max-width: 64rem;
+    margin: 0 auto;
+  }
+
+  .final-cta-head {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .final-cta-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin: 0.5rem 0 1.25rem;
+  }
+
+  .final-cta-sub {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 42rem;
+    margin: 0 auto;
+  }
+
+  .final-cta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .final-cta-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.75rem;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  .final-cta-card--primary {
+    border-color: rgba(16, 185, 129, 0.35);
+    box-shadow:
+      0 0 0 1px rgba(16, 185, 129, 0.15),
+      0 12px 32px rgba(16, 185, 129, 0.12);
+    background:
+      linear-gradient(180deg, rgba(16, 185, 129, 0.04), rgba(16, 185, 129, 0.08)),
+      #ffffff;
+  }
+
+  .final-cta-card-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .final-cta-card--primary .final-cta-card-label {
+    color: var(--color-emerald-dark, #047857);
+  }
+
+  .final-cta-card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .final-cta-card p {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin: 0;
+    flex-grow: 1;
+  }
+
+  .final-cta-card .btn-pill {
+    align-self: flex-start;
+    margin-top: 0.5rem;
+  }
+
+  .final-cta-footnote {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .final-cta-footnote a {
+    color: var(--color-emerald-dark, var(--color-emerald));
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 900px) {
+    .final-cta-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
