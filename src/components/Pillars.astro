@@ -22,6 +22,9 @@ const systematic = [
     <div class="fade-up diagnosis-head">
       <p class="section-label">§ 01 · The Diagnosis</p>
       <h2 class="section-title">The tools changed. The system didn't.</h2>
+      <p class="diagnosis-lead">
+        Every team we meet has bought Copilot, Cursor, or a Claude subscription. Commits went up. Lead time barely moved. The friction isn't the model — it's everything around it: context, review, test trust, governance, CI. Tools alone don't move the number. Engineering does.
+      </p>
     </div>
 
     <div class="diagnosis-shell fade-up">
@@ -36,7 +39,13 @@ const systematic = [
       </article>
 
       <div class="diagnosis-divider" aria-hidden="true">
+        <svg class="diagnosis-divider-arrow" viewBox="0 0 16 16" fill="none">
+          <path d="M4 2 L12 8 L4 14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
         <span>VISDOM</span>
+        <svg class="diagnosis-divider-arrow" viewBox="0 0 16 16" fill="none">
+          <path d="M4 2 L12 8 L4 14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
       </div>
 
       <article class="diagnosis-column diagnosis-column--outcome">
@@ -59,8 +68,15 @@ const systematic = [
   }
 
   .diagnosis-head {
-    max-width: 42rem;
+    max-width: 48rem;
     margin-bottom: 3rem;
+  }
+
+  .diagnosis-lead {
+    margin-top: 1.25rem;
+    font-size: 1.125rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
   }
 
   .diagnosis-shell {
@@ -145,13 +161,22 @@ const systematic = [
 
   .diagnosis-divider {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    padding: 18px 0;
     border-radius: 999px;
     background:
       linear-gradient(180deg, rgba(16, 185, 129, 0.06), rgba(16, 185, 129, 0.18)),
       #f0fdf4;
     border: 1px solid rgba(16, 185, 129, 0.16);
+  }
+
+  .diagnosis-divider-arrow {
+    width: 22px;
+    height: 22px;
+    color: var(--color-emerald);
+    flex-shrink: 0;
   }
 
   .diagnosis-divider span {
@@ -171,12 +196,18 @@ const systematic = [
 
     .diagnosis-divider {
       min-height: 72px;
+      flex-direction: row;
+      padding: 0 18px;
     }
 
     .diagnosis-divider span {
       writing-mode: horizontal-tb;
       transform: none;
       letter-spacing: 0.18em;
+    }
+
+    .diagnosis-divider-arrow {
+      transform: rotate(90deg);
     }
   }
 </style>

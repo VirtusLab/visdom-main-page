@@ -106,20 +106,63 @@ const phases = [
       <div class="platform-block fade-up">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <div class="order-2 lg:order-1">
-            <Terminal title="vidia">
-{`$ vidia init
-Scanning repository...
-Detected: pyproject.toml, .pre-commit-config.yaml,
-          GitHub Actions, Docker Compose, ArchUnit
-Found 23 rules across 6 categories.
-Exported to CLAUDE.md `}<span class="text-emerald">&#x2713;</span>{`
+            <div class="fabric-diagram" aria-label="Visdom Context Fabric ingests repository, documentation, tickets, and CI data, then exposes deterministic answers to agents">
+              <div class="fabric-column fabric-column--sources">
+                <p class="fabric-column-label">Sources</p>
+                {[
+                  { name: 'Git repository', meta: 'code · history · blame' },
+                  { name: 'Confluence / Notion', meta: 'ADRs · runbooks' },
+                  { name: 'Jira / Linear', meta: 'tickets · ownership' },
+                  { name: 'CI / Actions', meta: 'builds · artifacts' },
+                  { name: 'CLAUDE.md / rules', meta: 'conventions' },
+                ].map((item) => (
+                  <div class="fabric-node">
+                    <strong>{item.name}</strong>
+                    <span>{item.meta}</span>
+                  </div>
+                ))}
+              </div>
 
-$ vidia expert src/auth/login.py
-Expert: @jkowalski (score: 0.87)
-Last touch: 3 days ago
-Bus factor: 1 ⚠
-Blast radius: 12 files`}
-            </Terminal>
+              <svg class="fabric-wires fabric-wires--in" viewBox="0 0 80 320" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0,32 C40,32 40,160 80,160" />
+                <path d="M0,96 C40,96 40,160 80,160" />
+                <path d="M0,160 L80,160" />
+                <path d="M0,224 C40,224 40,160 80,160" />
+                <path d="M0,288 C40,288 40,160 80,160" />
+              </svg>
+
+              <div class="fabric-core">
+                <span class="fabric-core-tag">VISDOM</span>
+                <strong>Context Fabric</strong>
+                <p>Ingest · normalize · index the repo's ground truth.</p>
+                <ul>
+                  <li>Ownership graph</li>
+                  <li>Dependency &amp; blast radius</li>
+                  <li>Convention index</li>
+                  <li>Expertise ranking</li>
+                </ul>
+              </div>
+
+              <svg class="fabric-wires fabric-wires--out" viewBox="0 0 80 320" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0,160 C40,160 40,80 80,80" />
+                <path d="M0,160 L80,160" />
+                <path d="M0,160 C40,160 40,240 80,240" />
+              </svg>
+
+              <div class="fabric-column fabric-column--outputs">
+                <p class="fabric-column-label">Deterministic answers</p>
+                {[
+                  { name: 'Who owns this?', meta: '@jkowalski · 0.87' },
+                  { name: 'What breaks if I change it?', meta: 'blast radius: 12 files' },
+                  { name: 'Where does this pattern exist?', meta: '3 precedents · src/auth/*' },
+                ].map((item) => (
+                  <div class="fabric-node fabric-node--output">
+                    <strong>{item.name}</strong>
+                    <span>{item.meta}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
           <div class="order-1 lg:order-2">
             <div class="component-number">01</div>
@@ -165,25 +208,20 @@ Blast radius: 12 files`}
             </div>
           </div>
           <div>
-            <Terminal title="vcr">
-{`$ vcr analyze --pr 142
-Scanning diff... 23 files changed
-
-◉ Architecture  3 findings
-  ├─ Service boundary violation in OrderService
-  ├─ Missing retry policy on external call
-  └─ Circular dependency introduced
-
-◉ Security      1 finding
-  └─ Unvalidated input in /api/webhook
-
-◉ Performance   2 findings
-  ├─ N+1 query in UserRepository.findAll()
-  └─ Missing index on orders.status
-
-Summary: 6 findings across 3 categories
-`}<span class="text-emerald">Review ready ✓</span>
-            </Terminal>
+            <figure class="screenshot-frame">
+              <div class="screenshot-chrome" aria-hidden="true">
+                <span></span><span></span><span></span>
+                <span class="screenshot-title">vcr · review dashboard</span>
+              </div>
+              <img
+                src={`${import.meta.env.BASE_URL}/vcr-dashboard.png`}
+                alt="VCR dashboard showing findings per week across repositories, with critical findings, PR coverage and week-over-week trends"
+                loading="lazy"
+                width="1920"
+                height="1080"
+              />
+              <figcaption>Findings, critical count, and PR coverage across repos — updated every CI run.</figcaption>
+            </figure>
           </div>
         </div>
       </div>
@@ -487,5 +525,213 @@ with zero blast radius into production.
       bottom: -1px;
       transform: translateX(50%) rotate(135deg);
     }
+  }
+
+  .fabric-diagram {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1.1fr) 48px minmax(0, 1fr);
+    align-items: center;
+    gap: 6px;
+    padding: 22px 18px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04);
+  }
+
+  .fabric-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .fabric-column-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 2px;
+  }
+
+  .fabric-node {
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-light);
+    border-radius: 10px;
+    background: var(--color-surface);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    transition: all 0.2s ease;
+  }
+
+  .fabric-node strong {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.25;
+  }
+
+  .fabric-node span {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+  }
+
+  .fabric-node--output {
+    border-color: rgba(16, 185, 129, 0.2);
+    background: linear-gradient(180deg, rgba(16, 185, 129, 0.04), rgba(16, 185, 129, 0.08));
+  }
+
+  .fabric-node--output strong {
+    color: var(--color-emerald-dark, var(--color-text));
+  }
+
+  .fabric-wires {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    stroke: rgba(16, 185, 129, 0.35);
+    stroke-width: 1.25;
+    fill: none;
+  }
+
+  .fabric-core {
+    position: relative;
+    padding: 20px 18px;
+    border-radius: 14px;
+    background:
+      linear-gradient(180deg, rgba(16, 185, 129, 0.06), rgba(16, 185, 129, 0.16)),
+      #f0fdf4;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.6),
+      0 8px 24px rgba(16, 185, 129, 0.08);
+    text-align: center;
+  }
+
+  .fabric-core-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--color-emerald-dark, #047857);
+    margin-bottom: 10px;
+  }
+
+  .fabric-core strong {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 6px;
+  }
+
+  .fabric-core p {
+    font-size: 0.82rem;
+    color: var(--color-text-secondary);
+    line-height: 1.45;
+    margin-bottom: 12px;
+  }
+
+  .fabric-core ul {
+    list-style: none;
+    padding: 10px 0 0;
+    margin: 0;
+    border-top: 1px dashed rgba(16, 185, 129, 0.3);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 10px;
+    text-align: left;
+  }
+
+  .fabric-core li {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    position: relative;
+    padding-left: 12px;
+  }
+
+  .fabric-core li::before {
+    content: '◆';
+    position: absolute;
+    left: 0;
+    color: var(--color-emerald);
+    font-size: 0.55rem;
+    top: 3px;
+  }
+
+  @media (max-width: 900px) {
+    .fabric-diagram {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .fabric-wires {
+      display: none;
+    }
+
+    .fabric-core ul {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .screenshot-frame {
+    margin: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #0b0f17;
+    border: 1px solid var(--color-border);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.04),
+      0 12px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  .screenshot-chrome {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: #1a1f2b;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .screenshot-chrome > span:not(.screenshot-title) {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  .screenshot-chrome > span:nth-child(1) { background: #ef5f5a; }
+  .screenshot-chrome > span:nth-child(2) { background: #f7bf3e; }
+  .screenshot-chrome > span:nth-child(3) { background: #5dc759; }
+
+  .screenshot-title {
+    margin-left: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .screenshot-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .screenshot-frame figcaption {
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.55);
+    background: #0b0f17;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
 </style>
