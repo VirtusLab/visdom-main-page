@@ -1,48 +1,182 @@
 ---
-const observations = [
-  {
-    title: 'The model works. The chassis does not.',
-    body: 'Most teams we talk to already have Copilot, Cursor, or Claude Code in the hands of engineers. The suggestions are often useful. The failure shows up later, when senior engineers spend half their week untangling agent-generated pull requests that pass CI and still cut across architecture. The block is rarely the model.',
-  },
-  {
-    title: 'Nobody owns this capability.',
-    body: 'Adopting agents at enterprise scale is a platform engineering problem. Someone has to own context delivery, sandbox isolation, attribution, policy, and machine-speed CI. In most organizations we assess, those responsibilities are split across DevEx, platform, and security, and nobody is accountable for the full operating model.',
-  },
-  {
-    title: 'Vendor sprawl without a thesis.',
-    body: 'The average stack we audit is a pile of disconnected tools: generation in one place, measurement somewhere else, governance bolted on later, and no usable context layer underneath any of it. Each vendor solves a slice. Nobody is wiring the system your engineers need if agents are going to move from task to verified deploy.',
-  },
+const adHoc = [
+  'Prompts live in Slack. Context re-invented every session.',
+  'Every PR lands on the same two seniors. Reviews are the bottleneck.',
+  'Agent actions invisible, no trail, no attribution, no audit.',
+  'Coverage is green; tests were written by the same model.',
+  'Legal and CISO say "not yet" because there is nothing to audit.',
+  'CI was built for humans. Agents burn tokens waiting for it.',
+];
+
+const systematic = [
+  'Context fabric checked in. Agents and humans read the same ground truth.',
+  'Every PR pre-reviewed in CI. Seniors only open what matters.',
+  'Every agent action signed, attributed, replayable, EU AI Act ready.',
+  'Mutation testing and architecture gates catch what coverage missed.',
+  'Legal signs off once. Compliance becomes a checkbox, not a blocker.',
+  'CI at machine speed. 50 iterations per agent per hour.',
 ];
 ---
-<section class="section problem-section">
+<section class="section diagnosis-section">
   <div class="container">
-    <div class="fade-up mb-14">
-      <p class="section-label">What we see in the field</p>
-      <h2 class="section-title">What we see going wrong in AI adoption</h2>
+    <div class="fade-up diagnosis-head">
+      <p class="section-label">§ 01 · The Diagnosis</p>
+      <h2 class="section-title">Tools arrived. Delivery didn't change.</h2>
     </div>
 
-    <div class="grid lg:grid-cols-3 gap-6">
-      {observations.map((item) => (
-        <article class="surface-card p-8 fade-up">
-          <h3 class="text-xl font-bold text-text mb-4">{item.title}</h3>
-          <p class="text-text-secondary leading-relaxed">{item.body}</p>
-        </article>
-      ))}
-    </div>
+    <div class="diagnosis-shell fade-up">
+      <article class="diagnosis-column diagnosis-column--pain">
+        <p class="diagnosis-level">Level 1 · Ad-hoc</p>
+        <p class="diagnosis-summary">Where most teams sit after year one of AI rollout.</p>
+        <ul class="diagnosis-list diagnosis-list--pain">
+          {adHoc.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </article>
 
-    <p class="problem-close fade-up">That is the gap we close.</p>
+      <div class="diagnosis-divider" aria-hidden="true">
+        <span>VISDOM</span>
+      </div>
+
+      <article class="diagnosis-column diagnosis-column--outcome">
+        <p class="diagnosis-level">Level 3 · Systematic</p>
+        <p class="diagnosis-summary">Where our engagements land teams inside twelve months.</p>
+        <ul class="diagnosis-list diagnosis-list--outcome">
+          {systematic.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </article>
+    </div>
   </div>
 </section>
 
 <style>
-  .problem-section {
-    padding-top: 1rem;
+  .diagnosis-section {
+    padding-top: 2.5rem;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   }
 
-  .problem-close {
-    margin-top: 2rem;
-    font-size: 1.2rem;
+  .diagnosis-head {
+    max-width: 42rem;
+    margin-bottom: 3rem;
+  }
+
+  .diagnosis-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 88px minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+
+  .diagnosis-column {
+    border: 1px solid var(--color-border);
+    border-radius: 24px;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.92);
+  }
+
+  .diagnosis-column--pain {
+    box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.08);
+  }
+
+  .diagnosis-column--outcome {
+    box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.1);
+  }
+
+  .diagnosis-level {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
     font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .diagnosis-column--pain .diagnosis-level {
+    color: #b45309;
+  }
+
+  .diagnosis-column--outcome .diagnosis-level {
+    color: var(--color-emerald-dark);
+  }
+
+  .diagnosis-summary {
+    margin: 0 0 1.75rem;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+  }
+
+  .diagnosis-list {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .diagnosis-list li {
+    position: relative;
+    padding-left: 1.8rem;
+    line-height: 1.7;
     color: var(--color-text);
+  }
+
+  .diagnosis-list--pain li::before,
+  .diagnosis-list--outcome li::before {
+    position: absolute;
+    left: 0;
+    top: 0.05rem;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+  }
+
+  .diagnosis-list--pain li::before {
+    content: '◇';
+    color: #b45309;
+  }
+
+  .diagnosis-list--outcome li::before {
+    content: '●';
+    color: var(--color-emerald);
+  }
+
+  .diagnosis-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background:
+      linear-gradient(180deg, rgba(16, 185, 129, 0.06), rgba(16, 185, 129, 0.18)),
+      #f0fdf4;
+    border: 1px solid rgba(16, 185, 129, 0.16);
+  }
+
+  .diagnosis-divider span {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    color: var(--color-emerald-dark);
+  }
+
+  @media (max-width: 1023px) {
+    .diagnosis-shell {
+      grid-template-columns: 1fr;
+    }
+
+    .diagnosis-divider {
+      min-height: 72px;
+    }
+
+    .diagnosis-divider span {
+      writing-mode: horizontal-tb;
+      transform: none;
+      letter-spacing: 0.18em;
+    }
   }
 </style>

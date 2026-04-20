@@ -65,7 +65,7 @@ const phases = [
       </p>
     </div>
 
-    <div class="space-y-6 mb-8">
+    <div class="space-y-6 mb-10">
       {phases.map((phase) => (
         <article class="engagement-card fade-up" style={`--phase-accent: ${phase.accent}`}>
           <div class="engagement-head">
@@ -77,9 +77,22 @@ const phases = [
       ))}
     </div>
 
-    <p class="footprint-line fade-up">
-      Phase 1: VirtusLab leads, your team observes -&gt; Phase 2: VirtusLab leads with deep client collaboration -&gt; Phase 3: your team leads, VirtusLab advises
-    </p>
+    <div class="transfer-signal fade-up" aria-label="Capability transfer across engagement phases">
+      <div class="transfer-step">
+        <span class="transfer-step-label">Phase 1</span>
+        <strong>VirtusLab leads</strong>
+      </div>
+      <div class="transfer-arrow" aria-hidden="true"></div>
+      <div class="transfer-step">
+        <span class="transfer-step-label">Phase 2</span>
+        <strong>Deep collaboration</strong>
+      </div>
+      <div class="transfer-arrow" aria-hidden="true"></div>
+      <div class="transfer-step">
+        <span class="transfer-step-label">Phase 3</span>
+        <strong>Your team leads</strong>
+      </div>
+    </div>
 
     <div id="kit" class="fade-up mt-24">
       <p class="section-label">Open-source delivery kit</p>
@@ -400,9 +413,79 @@ with zero blast radius into production.
     color: var(--color-text-secondary);
     text-align: center;
   }
+
+  .transfer-signal {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 120px minmax(0, 1fr) 120px minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+    padding: 1.5rem 1.75rem;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(6, 147, 227, 0.05));
+    border: 1px solid rgba(16, 185, 129, 0.14);
+    border-radius: var(--radius-xl);
+    margin-bottom: 1rem;
+  }
+
+  .transfer-step {
+    text-align: center;
+  }
+
+  .transfer-step-label {
+    display: block;
+    margin-bottom: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-emerald-dark);
+  }
+
+  .transfer-step strong {
+    font-size: 1.05rem;
+    color: var(--color-text);
+  }
+
+  .transfer-arrow {
+    position: relative;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.9));
+  }
+
+  .transfer-arrow::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid var(--color-emerald);
+    border-right: 2px solid var(--color-emerald);
+    transform: translateY(-50%) rotate(45deg);
+  }
+
   @media (max-width: 767px) {
     .footprint-line {
       text-align: left;
+    }
+
+    .transfer-signal {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .transfer-arrow {
+      width: 2px;
+      height: 28px;
+      justify-self: center;
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.9));
+    }
+
+    .transfer-arrow::after {
+      right: 50%;
+      top: auto;
+      bottom: -1px;
+      transform: translateX(50%) rotate(135deg);
     }
   }
 </style>

@@ -1,56 +1,228 @@
 ---
 const stats = [
-  { value: '777', label: 'signals' },
-  { value: '17', label: 'areas' },
-  { value: '354', label: 'discoveries' },
-  { value: '251', label: 'releases' },
+  { value: '777', label: 'Signals' },
+  { value: '17', label: 'Areas' },
+  { value: '354', label: 'Discoveries' },
+  { value: '251', label: 'Releases' },
 ];
+
+const categories = [
+  { label: 'Coding agents', value: 211 },
+  { label: 'MCP integration', value: 143 },
+  { label: 'Context engineering', value: 116 },
+  { label: 'Agent sandboxing', value: 85 },
+  { label: 'Observability', value: 48 },
+  { label: 'Governance', value: 37 },
+];
+
+const maxCategory = Math.max(...categories.map((item) => item.value));
 ---
-<section id="radar" class="section">
+<section id="radar" class="section radar-section">
   <div class="container">
     <div class="radar-shell fade-up">
-      <div class="radar-copy">
-        <p class="section-label">AI Engineering Radar</p>
-        <h2 class="section-title">AI Engineering Radar · Live</h2>
-        <p class="section-subtitle mb-10">
-          We track the AI engineering ecosystem in real time, classify signals by maturity level, and map them back to the Matrix practices. Our clients use the Radar to answer a simple question: what shipped recently that our team should actually evaluate, without assigning someone to do that research full time.
-        </p>
+      <div class="radar-head">
+        <div>
+          <p class="section-label radar-label">AI Radar · Live Feed</p>
+          <h2 class="section-title radar-title">Tracking the ecosystem in real time.</h2>
+        </div>
+        <p class="radar-footnote">UPDATED DAILY · LAST REFRESH 00:14 UTC</p>
       </div>
 
-      <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-10">
+      <div class="radar-stats">
         {stats.map((item) => (
-          <div class="card p-6">
-            <div class="radar-value">{item.value}</div>
-            <div class="radar-label">{item.label}</div>
+          <div class="radar-stat">
+            <span class="radar-stat-value">{item.value}</span>
+            <span class="radar-stat-label">{item.label}</span>
           </div>
         ))}
       </div>
 
-      <a href="https://visdom-ai-maturity-matrix.pages.dev/dashboard" target="_blank" rel="noopener" class="btn-pill btn-primary">Open AI-Radar Dashboard</a>
+      <div class="radar-grid">
+        <div class="radar-categories">
+          {categories.map((item) => (
+            <div class="radar-category">
+              <div class="radar-category-row">
+                <span class="radar-category-label">{item.label}</span>
+                <span class="radar-category-value">{item.value}</span>
+              </div>
+              <div class="radar-bar">
+                <div
+                  class="radar-bar-fill progress-bar"
+                  style={`width: ${(item.value / maxCategory) * 100}%`}
+                ></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <aside class="radar-explainer">
+          <p class="radar-kicker">Signal classification</p>
+          <p class="radar-copy">
+            Signals are auto-discovered from releases, papers, blogs, and repositories. Each one is classified by the same maturity levels we use in the Matrix — so you can see which areas are actually maturing, and which are still vibes.
+          </p>
+          <a href="https://visdom-ai-maturity-matrix.pages.dev/dashboard" target="_blank" rel="noopener" class="btn-pill btn-primary radar-cta">Open dashboard -&gt;</a>
+        </aside>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  .radar-shell {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.04), rgba(6, 147, 227, 0.05));
-    border: 1px solid var(--color-border);
-    border-radius: 24px;
-    padding: 2rem;
+  .radar-section {
+    background:
+      radial-gradient(circle at top right, rgba(16, 185, 129, 0.18), transparent 30%),
+      linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
   }
 
-  .radar-value {
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--color-text);
+  .radar-shell {
+    border: 1px solid rgba(16, 185, 129, 0.18);
+    border-radius: 28px;
+    padding: 2rem;
+    background: rgba(7, 12, 24, 0.82);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .radar-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+    flex-wrap: wrap;
+  }
+
+  .radar-label,
+  .radar-title {
+    color: #f8fafc;
   }
 
   .radar-label {
-    margin-top: 0.4rem;
-    font-size: 0.82rem;
+    color: #6ee7b7;
+  }
+
+  .radar-footnote,
+  .radar-stat-label,
+  .radar-category-label,
+  .radar-category-value,
+  .radar-kicker {
+    font-family: var(--font-mono);
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--color-text-secondary);
+  }
+
+  .radar-footnote {
+    font-size: 0.76rem;
+    color: #94a3b8;
+  }
+
+  .radar-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .radar-stat {
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 18px;
+    padding: 1rem 1.1rem;
+    background: rgba(15, 23, 42, 0.72);
+  }
+
+  .radar-stat-value {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ecfdf5;
+  }
+
+  .radar-stat-label {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.72rem;
+    color: #6ee7b7;
+  }
+
+  .radar-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .radar-categories {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.25rem;
+  }
+
+  .radar-category {
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 18px;
+    padding: 1rem 1rem 0.9rem;
+    background: rgba(15, 23, 42, 0.58);
+  }
+
+  .radar-category-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .radar-category-label {
+    font-size: 0.73rem;
+    color: #cbd5e1;
+  }
+
+  .radar-category-value {
+    font-size: 0.78rem;
+    color: #86efac;
+  }
+
+  .radar-bar {
+    height: 7px;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.16);
+    overflow: hidden;
+  }
+
+  .radar-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #10b981, #34d399);
+  }
+
+  .radar-explainer {
+    border: 1px solid rgba(16, 185, 129, 0.18);
+    border-radius: 22px;
+    padding: 1.35rem;
+    background: linear-gradient(180deg, rgba(16, 185, 129, 0.08), rgba(15, 23, 42, 0.4));
+  }
+
+  .radar-kicker {
+    margin: 0 0 0.8rem;
+    font-size: 0.72rem;
+    color: #6ee7b7;
+  }
+
+  .radar-copy {
+    margin: 0 0 1.25rem;
+    line-height: 1.75;
+    color: #e2e8f0;
+  }
+
+  .radar-cta {
+    width: 100%;
+  }
+
+  @media (max-width: 1023px) {
+    .radar-stats,
+    .radar-categories,
+    .radar-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
