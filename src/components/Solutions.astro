@@ -334,20 +334,53 @@ Layer 2: Mutation (PIT)
             <a href="#contact" class="btn-pill btn-outline text-sm">Learn More -&gt;</a>
           </div>
           <div>
-            <Terminal title="sandcat">
-{`$ sandcat create --from main --policy strict
-Creating isolated environment...
-  ├─ Cloning repository        ✓
-  ├─ Provisioning services     ✓
-  ├─ Scoped credentials        ✓
-  ├─ Egress allowlist applied  ✓
-  └─ Agent access configured   ✓
+            <div class="sandbox-diagram" aria-label="Sandcat isolates the agent in an ephemeral sandbox, with an egress wall separating it from production">
+              <div class="sandbox-zone sandbox-zone--inside">
+                <p class="sandbox-zone-label">Sandcat · ephemeral sandbox</p>
+                <div class="sandbox-agent">
+                  <span class="sandbox-agent-tag">AGENT</span>
+                  <div class="sandbox-agent-body">
+                    <strong>sb-a1b2c3</strong>
+                    <span>execute · test · iterate</span>
+                  </div>
+                </div>
+                <ul class="sandbox-props">
+                  <li><span>Scoped token</span><em>2h · read-only</em></li>
+                  <li><span>Repo clone</span><em>from main</em></li>
+                  <li><span>Policy</span><em>strict</em></li>
+                </ul>
+              </div>
 
-Sandbox ready: sb-a1b2c3
-Agent can execute, test, and iterate
-with zero blast radius into production.
-`}<span class="text-emerald">Environment secured ✓</span>
-            </Terminal>
+              <div class="sandbox-wall" aria-hidden="true">
+                <span class="sandbox-wall-label">EGRESS WALL</span>
+                <ul class="sandbox-wall-list sandbox-wall-list--allow">
+                  <li><span class="sandbox-mark sandbox-mark--ok">✓</span>npm / PyPI</li>
+                  <li><span class="sandbox-mark sandbox-mark--ok">✓</span>LLM APIs</li>
+                  <li><span class="sandbox-mark sandbox-mark--ok">✓</span>test services</li>
+                </ul>
+                <ul class="sandbox-wall-list sandbox-wall-list--deny">
+                  <li><span class="sandbox-mark sandbox-mark--no">✗</span>prod database</li>
+                  <li><span class="sandbox-mark sandbox-mark--no">✗</span>secrets vault</li>
+                  <li><span class="sandbox-mark sandbox-mark--no">✗</span>deploy pipeline</li>
+                </ul>
+              </div>
+
+              <div class="sandbox-zone sandbox-zone--outside">
+                <p class="sandbox-zone-label">Production</p>
+                <div class="sandbox-prod">
+                  <span class="sandbox-prod-lock" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="4" y="10" width="16" height="11" rx="2" />
+                      <path d="M8 10 V7 a4 4 0 1 1 8 0 v3" />
+                    </svg>
+                  </span>
+                  <div>
+                    <strong>Unreachable by design</strong>
+                    <span>No credentials. No path. No blast radius.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -733,5 +766,267 @@ with zero blast radius into production.
     color: rgba(255, 255, 255, 0.55);
     background: #0b0f17;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .sandbox-diagram {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 0.9fr);
+    gap: 12px;
+    align-items: stretch;
+    padding: 18px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04);
+  }
+
+  .sandbox-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px dashed rgba(16, 185, 129, 0.35);
+    background:
+      linear-gradient(180deg, rgba(16, 185, 129, 0.04), rgba(16, 185, 129, 0.09)),
+      #ffffff;
+    position: relative;
+  }
+
+  .sandbox-zone--outside {
+    border-style: solid;
+    border-color: var(--color-border);
+    background:
+      repeating-linear-gradient(135deg, rgba(148, 163, 184, 0.08) 0 8px, transparent 8px 16px),
+      #fafafa;
+  }
+
+  .sandbox-zone-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .sandbox-zone--inside .sandbox-zone-label {
+    color: var(--color-emerald-dark, #047857);
+  }
+
+  .sandbox-agent {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+  }
+
+  .sandbox-agent-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--color-emerald-dark, #047857);
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 999px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+  }
+
+  .sandbox-agent-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .sandbox-agent-body strong {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .sandbox-agent-body span {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+  }
+
+  .sandbox-props {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .sandbox-props li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 10px;
+    background: #ffffff;
+    border: 1px solid var(--color-border-light);
+    border-radius: 8px;
+    gap: 8px;
+  }
+
+  .sandbox-props span {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .sandbox-props em {
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+  }
+
+  .sandbox-wall {
+    position: relative;
+    min-width: 168px;
+    padding: 12px;
+    border-radius: 14px;
+    background:
+      linear-gradient(180deg, rgba(251, 146, 60, 0.04), rgba(251, 146, 60, 0.1));
+    border: 1px solid rgba(251, 146, 60, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sandbox-wall::before,
+  .sandbox-wall::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: repeating-linear-gradient(180deg, rgba(251, 146, 60, 0.55) 0 6px, transparent 6px 12px);
+  }
+
+  .sandbox-wall::before { left: -1px; }
+  .sandbox-wall::after { right: -1px; }
+
+  .sandbox-wall-label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: rgba(194, 65, 12, 1);
+    text-align: center;
+    margin-bottom: 2px;
+  }
+
+  .sandbox-wall-list {
+    list-style: none;
+    margin: 0;
+    padding: 6px 8px;
+    background: #ffffff;
+    border: 1px solid var(--color-border-light);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .sandbox-wall-list li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-text-secondary);
+  }
+
+  .sandbox-mark {
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .sandbox-mark--ok {
+    color: var(--color-emerald-dark, #047857);
+    background: rgba(16, 185, 129, 0.15);
+  }
+
+  .sandbox-mark--no {
+    color: #b91c1c;
+    background: rgba(239, 68, 68, 0.14);
+  }
+
+  .sandbox-prod {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+  }
+
+  .sandbox-prod-lock {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(148, 163, 184, 0.15);
+    color: #475569;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .sandbox-prod-lock svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .sandbox-prod strong {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .sandbox-prod span {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+  }
+
+  @media (max-width: 900px) {
+    .sandbox-diagram {
+      grid-template-columns: 1fr;
+    }
+
+    .sandbox-wall::before,
+    .sandbox-wall::after {
+      width: 100%;
+      height: 2px;
+      left: 0;
+      right: auto;
+      top: -1px;
+      bottom: auto;
+      background: repeating-linear-gradient(90deg, rgba(251, 146, 60, 0.55) 0 6px, transparent 6px 12px);
+    }
+
+    .sandbox-wall::after {
+      top: auto;
+      bottom: -1px;
+    }
   }
 </style>
