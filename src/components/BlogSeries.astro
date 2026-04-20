@@ -10,6 +10,7 @@ const series = [
       title: 'AI in the SDLC: Faster or Just Busier?',
       date: 'Apr 10, 2026',
       href: `${BASE}/blog/ai/ai-in-the-sdlc-faster-or-just-busier/`,
+      image: 'blog-visdom.jpg',
     },
     linkLabel: 'Read latest article',
   },
@@ -21,6 +22,7 @@ const series = [
       title: '#16: Project N.O.M.A.D. - Civilization in a Docker Container',
       date: 'Mar 25, 2026',
       href: `${BASE}/blog/ai/project-nomad/`,
+      image: 'blog-github-all-stars.jpg',
     },
     linkLabel: 'Read latest article',
   },
@@ -32,6 +34,7 @@ const series = [
       title: 'Interview with Krzysztof Grajek, lead engineer behind TraceVault',
       date: 'Apr 13, 2026',
       href: `${BASE}/blog/ai/interview-with-krzysztof-grajek-lead-engineer-behind-trace-vault/`,
+      image: 'blog-ai-insight.jpg',
     },
     linkLabel: 'Read latest article',
   },
@@ -50,6 +53,9 @@ const series = [
     <div class="writing-grid">
       {series.map((item) => (
         <article class="writing-card fade-up">
+          <a href={item.latest.href} target="_blank" rel="noopener" class="writing-thumb" aria-label={item.latest.title}>
+            <img src={`${import.meta.env.BASE_URL}/${item.latest.image}`} alt="" loading="lazy" width="1200" height="627" />
+          </a>
           <div class="writing-card-line" style={`background: ${item.color}`}></div>
           <p class="writing-series">{item.title}</p>
           <p class="writing-description">{item.description}</p>
@@ -87,6 +93,27 @@ const series = [
     border-radius: var(--radius-xl);
     background: var(--card);
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+    overflow: hidden;
+  }
+
+  .writing-thumb {
+    display: block;
+    margin: -1.5rem -1.5rem 0;
+    aspect-ratio: 1200 / 627;
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+
+  .writing-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .writing-thumb:hover img {
+    transform: scale(1.02);
   }
 
   .writing-card-line {
