@@ -1,4 +1,6 @@
 ---
+import Terminal from './Terminal.astro';
+
 const differentiators = [
   {
     title: 'We bring the kit',
@@ -35,62 +37,6 @@ const phases = [
   },
 ];
 
-const kit = [
-  {
-    number: '01',
-    name: 'ViDIA',
-    purpose: 'Deterministic developer intelligence for ownership, expertise, and blast-radius analysis.',
-    what: 'ViDIA indexes repository history, structural relationships, and collaboration signals so your engineers and coding agents can resolve ownership, likely experts, and change impact from a stable context layer.',
-    deploy: 'We integrate ViDIA into your MCP-enabled IDE setup, connect its knowledge graph to your repository and service boundaries, and co-author the operating rules with your platform team.',
-    href: 'https://github.com/VirtusLab/visdom-developer-intelligence',
-    cta: 'See on GitHub',
-  },
-  {
-    number: '02',
-    name: 'VCR',
-    purpose: 'Machine review for architecture, security, and performance checks in pull requests.',
-    what: 'VCR analyzes pull request diffs against explicit rules so architectural violations, security issues, and common regression patterns are surfaced before a senior engineer spends review time on them.',
-    deploy: 'We wire VCR into your CI and review workflow, encode your architectural constraints into review rules, and tune the findings with your senior engineers until the signal is usable.',
-    href: 'https://virtuslab.github.io/visdom-code-review/',
-    cta: 'Open reference',
-  },
-  {
-    number: '03',
-    name: 'Visdom Testing',
-    purpose: 'Verification patterns for code written and tested in agent-heavy workflows.',
-    what: 'Visdom Testing combines architecture tests, property-based testing, and mutation checks so your team can verify behavior that line coverage alone no longer explains.',
-    deploy: 'We fit the test strategy to your architecture, install the right gates into CI, and help your engineers decide which invariants must hold before agents are allowed to merge work.',
-    href: 'https://virtuslab.github.io/visdom-testing/',
-    cta: 'Open reference',
-  },
-  {
-    number: '04',
-    name: 'TraceVault',
-    purpose: 'Tamper-evident tracing, attribution, and audit records for AI-assisted development.',
-    what: 'TraceVault records sessions, tool calls, token usage, and code attribution in a signed audit trail so your team can explain how AI-assisted changes were produced.',
-    deploy: 'We connect TraceVault to your development toolchain, map the retained evidence to your governance requirements, and set up the dashboards and retention model your risk teams will actually use.',
-    href: 'https://github.com/softwaremill/tracevault',
-    cta: 'See on GitHub',
-  },
-  {
-    number: '05',
-    name: 'Sandcat',
-    purpose: 'Isolated execution environments for agent workflows with scoped credentials and policy controls.',
-    what: 'Sandcat creates ephemeral sandboxes where agents can execute, test, and iterate without inheriting the network access, credentials, or blast radius of a normal developer workstation.',
-    deploy: 'We fit Sandcat to your infrastructure boundaries, define the credential and egress policies with your security team, and make the sandbox flow usable enough that engineers will adopt it.',
-    href: 'https://virtuslab.com/contact',
-    cta: 'Talk to the team',
-  },
-  {
-    number: '06',
-    name: 'Visdom Machine CI',
-    purpose: 'CI architecture tuned for rapid agent feedback loops rather than human waiting time.',
-    what: 'Visdom Machine CI restructures validation pipelines so builds, checks, and feedback loops complete fast enough for machine-driven iteration to be economical.',
-    deploy: 'We review the pipeline bottlenecks in your build graph, rework the validation path with your platform team, and hand over the operating model needed to keep iteration speed high after we leave.',
-    href: 'https://virtuslab.com/blog/ai/the-fallacy/',
-    cta: 'Read the article',
-  },
-];
 ---
 <section class="section section-alt">
   <div class="container">
@@ -143,25 +89,266 @@ const kit = [
       </p>
     </div>
 
-    <div class="grid xl:grid-cols-2 gap-6">
-      {kit.map((item) => (
-        <article class="surface-card p-8 fade-up kit-card">
-          <div class="flex items-start justify-between gap-4 mb-5">
-            <div>
-              <div class="component-number">{item.number}</div>
-              <h3 class="text-2xl font-bold text-text mt-2">{item.name}</h3>
+    <div class="space-y-12">
+      <div class="platform-block fade-up">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="order-2 lg:order-1">
+            <Terminal title="vidia">
+{`$ vidia init
+Scanning repository...
+Detected: pyproject.toml, .pre-commit-config.yaml,
+          GitHub Actions, Docker Compose, ArchUnit
+Found 23 rules across 6 categories.
+Exported to CLAUDE.md `}<span class="text-emerald">&#x2713;</span>{`
+
+$ vidia expert src/auth/login.py
+Expert: @jkowalski (score: 0.87)
+Last touch: 3 days ago
+Bus factor: 1 ⚠
+Blast radius: 12 files`}
+            </Terminal>
+          </div>
+          <div class="order-1 lg:order-2">
+            <div class="component-number">01</div>
+            <h3 class="text-2xl font-bold text-text mt-1 mb-4">Visdom Context Fabric</h3>
+            <p class="text-text-secondary leading-relaxed mb-6">
+              Your agents hallucinate because your repo is a black box to them. Give agents, and every reviewer, deterministic answers to "who owns this, what breaks if I change it, where does this pattern already exist." Review rework drops. Refactors stop turning into incident retros.
+            </p>
+            <p class="text-sm text-text-muted mb-6">
+              Powered by <span class="font-semibold text-text">Visdom Developer Intelligence</span>, deterministic code expertise, blast radius analysis, and ownership graphs via MCP.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-6">
+              <span class="tag bg-blue/10 text-blue border border-blue/20">Open Source</span>
+              <span class="tag bg-emerald/10 text-emerald border border-emerald/20">MCP Server</span>
+              <span class="tag bg-purple/10 text-purple border border-purple/20">CLI</span>
             </div>
-            <a href={item.href} target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">{item.cta}</a>
+            <div class="flex gap-3">
+              <a href="https://github.com/VirtusLab/visdom-developer-intelligence" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">View on GitHub</a>
+              <a href="https://github.com/VirtusLab/visdom-developer-intelligence" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Documentation</a>
+            </div>
           </div>
+        </div>
+      </div>
 
-          <p class="kit-purpose">{item.purpose}</p>
-
-          <div class="kit-copy">
-            <p><strong>What it does.</strong> {item.what}</p>
-            <p><strong>How we deploy it.</strong> {item.deploy}</p>
+      <div class="platform-block fade-up">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="component-number">02</div>
+            <h3 class="text-2xl font-bold text-text mt-1 mb-4">
+              Visdom Code Review
+              <span class="text-base font-normal text-text-muted">VCR</span>
+            </h3>
+            <p class="text-text-secondary leading-relaxed mb-6">
+              Your seniors spend 30-50% of their week reviewing PRs they did not write. VCR reviews every PR with architectural context, catching boundary violations, security holes, and performance regressions before they hit production, so seniors only open the ones that actually need them. ~$0.10 per PR, no SaaS, runs in your CI.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-6">
+              <span class="tag bg-purple/10 text-purple border border-purple/20">Architecture</span>
+              <span class="tag bg-amber/10 text-amber border border-amber/20">Security</span>
+              <span class="tag bg-blue/10 text-blue border border-blue/20">Performance</span>
+            </div>
+            <div class="flex gap-3">
+              <a href="https://virtuslab.github.io/visdom-code-review/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">Read the Reference</a>
+              <a href="https://virtuslab.github.io/visdom-code-review/before-after/" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Before / After</a>
+            </div>
           </div>
-        </article>
-      ))}
+          <div>
+            <Terminal title="vcr">
+{`$ vcr analyze --pr 142
+Scanning diff... 23 files changed
+
+◉ Architecture  3 findings
+  ├─ Service boundary violation in OrderService
+  ├─ Missing retry policy on external call
+  └─ Circular dependency introduced
+
+◉ Security      1 finding
+  └─ Unvalidated input in /api/webhook
+
+◉ Performance   2 findings
+  ├─ N+1 query in UserRepository.findAll()
+  └─ Missing index on orders.status
+
+Summary: 6 findings across 3 categories
+`}<span class="text-emerald">Review ready ✓</span>
+            </Terminal>
+          </div>
+        </div>
+      </div>
+
+      <div class="platform-block fade-up">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="component-number">03</div>
+            <h3 class="text-2xl font-bold text-text mt-1 mb-4">Visdom Testing</h3>
+            <p class="text-text-secondary leading-relaxed mb-6">
+              When AI writes both the code and the tests, line coverage stops meaning anything. Architecture gates, property-based, and mutation testing catch the computation bugs hiding behind 90% green CI, and the architectural drift your team already voted against.
+            </p>
+            <p class="text-sm text-text-muted mb-6">
+              Powered by <span class="font-semibold text-text">Visdom Testing</span>, adaptive test shape tuned to your architecture, with ArchUnit gates that stop AI from drifting.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-6">
+              <span class="tag bg-blue/10 text-blue border border-blue/20">ArchUnit</span>
+              <span class="tag bg-purple/10 text-purple border border-purple/20">Property-Based</span>
+              <span class="tag bg-amber/10 text-amber border border-amber/20">Mutation Testing</span>
+            </div>
+            <div class="flex gap-3">
+              <a href="https://virtuslab.github.io/visdom-testing/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">Read the Reference</a>
+              <a href="https://virtuslab.github.io/visdom-testing/before-after/" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Before / After</a>
+            </div>
+          </div>
+          <div>
+            <Terminal title="visdom-testing">
+{`$ visdom test --strategy diamond
+Layer 0: Architecture (ArchUnit)
+  ├─ Layer boundaries          0/10 violations ✓
+  ├─ Field injection           0/10 ✓
+  └─ Forbidden APIs            0/10 ✓
+
+Layer 1: Property-based (jqwik)
+  ├─ 12 properties, 10k cases each
+  └─ Rounding bug found in VAT.apply()
+
+Layer 2: Mutation (PIT)
+  ├─ Mutation score            73%
+  └─ 2/2 computation bugs caught
+
+`}<span class="text-emerald">Tests trusted ✓</span>
+            </Terminal>
+          </div>
+        </div>
+      </div>
+
+      <div class="platform-block fade-up">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="order-2 lg:order-1">
+            <div class="card accent-card p-8">
+              <div class="space-y-5">
+                {[
+                  { label: 'Trace', desc: 'Session traces, token usage, tool calls, secret redaction', color: 'var(--color-emerald)' },
+                  { label: 'Enforce', desc: 'Model allowlists, path protection, token budgets', color: 'var(--color-blue)' },
+                  { label: 'Audit', desc: 'Ed25519 signatures, hash-chained records, SOX/PCI-DSS', color: 'var(--color-purple)' },
+                  { label: 'Evaluate', desc: 'Auto-evaluation, model distribution, adoption patterns', color: 'var(--color-amber)' },
+                  { label: 'Attribute', desc: 'Line-by-line AI code attribution via tree-sitter', color: 'var(--color-emerald)' },
+                ].map(item => (
+                  <div class="flex items-start gap-3 group">
+                    <span class="w-2 h-2 rounded-full mt-1.5 shrink-0 transition-transform group-hover:scale-150" style={`background: ${item.color}`}></span>
+                    <div>
+                      <span class="text-sm font-semibold text-text">{item.label}</span>
+                      <span class="text-xs text-text-muted ml-2">{item.desc}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div class="order-1 lg:order-2">
+            <div class="component-number">04</div>
+            <h3 class="text-2xl font-bold text-text mt-1 mb-4">Visdom Governance</h3>
+            <p class="text-text-secondary leading-relaxed mb-6">
+              Ship AI-generated code without the compliance bottleneck. A tamper-evident record of every agent interaction turns EU AI Act, SOX, and PCI-DSS requirements from a release blocker into a signed receipt, and gives legal the audit trail they need to say yes.
+            </p>
+            <p class="text-sm text-text-muted mb-6">
+              Powered by <span class="font-semibold text-text">TraceVault</span>, a flight recorder for AI development with Ed25519-signed, hash-chained records and line-by-line AI attribution.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-6">
+              <span class="tag bg-emerald/10 text-emerald border border-emerald/20">Tracing</span>
+              <span class="tag bg-purple/10 text-purple border border-purple/20">Audit Trail</span>
+              <span class="tag bg-amber/10 text-amber border border-amber/20">EU AI Act</span>
+              <span class="tag bg-blue/10 text-blue border border-blue/20">Auto-Evaluation</span>
+            </div>
+            <div class="flex gap-3">
+              <a href="https://tracevault.dev/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">tracevault.dev</a>
+              <a href="https://github.com/softwaremill/tracevault" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">GitHub</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="platform-block fade-up">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="component-number">05</div>
+            <h3 class="text-2xl font-bold text-text mt-1 mb-4">Visdom Security</h3>
+            <p class="text-text-secondary leading-relaxed mb-6">
+              Let agents move fast without betting the company on it. A rogue prompt cannot exfiltrate secrets, corrupt a database, or push to prod, because it never had the keys to begin with. Experimentation without the breach headline.
+            </p>
+            <p class="text-sm text-text-muted mb-6">
+              Powered by <span class="font-semibold text-text">Sandcat</span>, ephemeral, fully isolated sandboxes with scoped credentials, egress allowlists, and policy guardrails built for agentic workflows.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-6">
+              <span class="tag bg-emerald/10 text-emerald border border-emerald/20">Isolation</span>
+              <span class="tag bg-blue/10 text-blue border border-blue/20">Policy Guardrails</span>
+              <span class="tag bg-purple/10 text-purple border border-purple/20">Zero Blast Radius</span>
+            </div>
+            <a href="#contact" class="btn-pill btn-outline text-sm">Learn More -&gt;</a>
+          </div>
+          <div>
+            <Terminal title="sandcat">
+{`$ sandcat create --from main --policy strict
+Creating isolated environment...
+  ├─ Cloning repository        ✓
+  ├─ Provisioning services     ✓
+  ├─ Scoped credentials        ✓
+  ├─ Egress allowlist applied  ✓
+  └─ Agent access configured   ✓
+
+Sandbox ready: sb-a1b2c3
+Agent can execute, test, and iterate
+with zero blast radius into production.
+`}<span class="text-emerald">Environment secured ✓</span>
+            </Terminal>
+          </div>
+        </div>
+      </div>
+
+      <div class="platform-block fade-up">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="order-2 lg:order-1">
+            <div class="card accent-card p-8">
+              <div class="space-y-6">
+                {[
+                  { label: 'Build time reduction', value: '-88%', width: '88%' },
+                  { label: 'PR merge time', value: '-43%', width: '43%' },
+                  { label: 'Agent iteration speed', value: '50x/hr', width: '95%' },
+                ].map(item => (
+                  <div>
+                    <div class="flex justify-between text-sm mb-2">
+                      <span class="text-text-secondary">{item.label}</span>
+                      <span class="font-semibold text-emerald">{item.value}</span>
+                    </div>
+                    <div class="h-2.5 bg-surface-light rounded-full overflow-hidden">
+                      <div class="h-full rounded-full progress-bar" style={`width: ${item.width}; background: linear-gradient(90deg, var(--color-emerald), var(--color-blue))`}></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div class="order-1 lg:order-2">
+            <div class="component-number">06</div>
+            <h3 class="text-2xl font-bold text-text mt-1 mb-4 flex items-center gap-3 flex-wrap">
+              Visdom Machine CI
+              <span class="tag bg-amber/10 text-amber border border-amber/20 text-xs font-medium normal-case tracking-normal">Coming Soon</span>
+            </h3>
+            <p class="text-text-secondary leading-relaxed mb-6">
+              Your CI takes 45 minutes. An AI agent iterates 50x per hour. The mismatch burns tokens on agents looping against a pipeline built for humans. We re-architect yours to run at machine speed, the same 88% build-time reduction we have delivered on production JVM fleets.
+            </p>
+            <p class="text-xs uppercase tracking-wider text-text-muted mb-3">Built on</p>
+            <div class="flex flex-wrap items-center gap-3 mb-6">
+              <a href="https://bazel.build/" target="_blank" rel="noopener" class="logo-chip" aria-label="Bazel">
+                <img src="/bazel-logo.svg" alt="" width="22" height="22" />
+                <span>Bazel</span>
+              </a>
+              <a href="https://www.engflow.com/" target="_blank" rel="noopener" class="logo-chip logo-chip--wordmark" aria-label="EngFlow">
+                <img src="/engflow-logo.png" alt="EngFlow" height="22" />
+              </a>
+              <span class="tag bg-purple/10 text-purple border border-purple/20">Gradle</span>
+              <span class="tag bg-amber/10 text-amber border border-amber/20">Performance</span>
+            </div>
+            <a href="https://virtuslab.com/blog/ai/the-fallacy/" target="_blank" rel="noopener" class="btn-pill btn-outline text-sm">Read: "The Ferrari Engine in a Fiat 500" -&gt;</a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -213,30 +400,6 @@ const kit = [
     color: var(--color-text-secondary);
     text-align: center;
   }
-
-  .kit-card {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .kit-purpose {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--color-text);
-  }
-
-  .kit-copy {
-    display: grid;
-    gap: 0.85rem;
-    color: var(--color-text-secondary);
-    line-height: 1.7;
-  }
-
-  .kit-copy strong {
-    color: var(--color-text);
-  }
-
   @media (max-width: 767px) {
     .footprint-line {
       text-align: left;
