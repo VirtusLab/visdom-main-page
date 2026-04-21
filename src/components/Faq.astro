@@ -42,7 +42,7 @@ const faqs = [
 
     <div class="faq-list">
       {faqs.map((item, i) => (
-        <details class="faq-item fade-up" open={i === 0}>
+        <details class="faq-item fade-up" name="faq" open={i === 0}>
           <summary>
             <span class="faq-q">{item.q}</span>
             <span class="faq-icon" aria-hidden="true"></span>
