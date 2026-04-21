@@ -1,0 +1,123 @@
+---
+const results = [
+  {
+    value: '43%',
+    headline: 'reduction in PR merge time',
+    client: 'Leading investment bank',
+    detail: 'Scala monorepo, managed IntelliJ IDEA solution.',
+  },
+  {
+    value: '15%',
+    headline: 'decrease in pod count for a single workload',
+    client: 'Global hospitality leader',
+    detail: 'Workload right-sizing across the platform footprint.',
+  },
+  {
+    value: '88%',
+    headline: 'reduction in build times',
+    client: 'Global freight forwarder',
+    detail: 'Scala monorepo migrated from sbt to Bazel - 40-60 min down to ~5 min.',
+  },
+];
+---
+<section id="results" class="section client-results-section">
+  <div class="container">
+    <div class="fade-up mb-10">
+      <p class="section-label">Proof</p>
+      <h2 class="section-title">Real client results</h2>
+      <p class="section-subtitle">
+        Numbers from production engagements - clients under NDA, full write-ups on the
+        <a href="https://virtuslab.com/success-stories/" target="_blank" rel="noopener" class="results-link">VirtusLab success stories</a>
+        page.
+      </p>
+    </div>
+
+    <div class="results-grid">
+      {results.map((r) => (
+        <article class="result-card fade-up">
+          <div class="result-badge">{r.value}</div>
+          <p class="result-headline">{r.headline}</p>
+          <p class="result-client">for a {r.client.toLowerCase()}</p>
+          <p class="result-detail">{r.detail}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .client-results-section {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+
+  .results-link {
+    color: var(--color-emerald-dark, var(--color-emerald));
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 600;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: 2rem 1.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .result-badge {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 5.5rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--radius-md, 12px);
+    background: linear-gradient(135deg, var(--color-blue), #4338ca);
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.85rem;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    box-shadow: 0 8px 18px rgba(67, 56, 202, 0.18);
+    margin-bottom: 0.75rem;
+  }
+
+  .result-headline {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+  }
+
+  .result-client {
+    margin: 0;
+    font-weight: 700;
+    color: var(--color-text);
+    font-size: 1rem;
+  }
+
+  .result-detail {
+    margin: 0.5rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 900px) {
+    .results-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
