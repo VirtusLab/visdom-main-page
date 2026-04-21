@@ -1,0 +1,162 @@
+---
+const faqs = [
+  {
+    q: 'In what model do you sell this? Body leasing?',
+    a: 'Fixed-scope Professional Services. Small teams of two to four staff engineers committed to a concrete outcome - not time-and-materials per head. We are not a body-leasing shop: we do not place juniors under your PM and call it delivery.',
+  },
+  {
+    q: 'How much time does my team need to commit?',
+    a: 'Rough guidance: Phase 1 takes roughly four hours per week for two weeks from two or three people (tech lead, SRE, security). Phase 2 asks for one engineer on your side as an embedded partner, close to full-time, with the rest of the team async. By Phase 3 the roles flip - your platform team drives, we assist on request.',
+  },
+  {
+    q: 'What is the typical ROI and when do we see it?',
+    a: 'First signal usually lands six to eight weeks in, once the pilot team is shipping on the new setup. Full-rollout ROI tends to surface at six to nine months. We do not ship a ROI calculator - we measure cycle time, PR merge time and build time before the pilot and again after, and the report is part of the engagement.',
+  },
+  {
+    q: 'What technologies do you support?',
+    a: 'Our deepest experience is in the JVM world - Scala, Kotlin, Java, Bazel, sbt, Gradle. Most of the platform components are tech-agnostic and have been deployed against Python, TypeScript and Go stacks as well. If your stack is unusual, ask - we will tell you up front what we have and have not shipped against.',
+  },
+  {
+    q: 'Do you keep access to our code or infrastructure after the engagement?',
+    a: 'No. All credentials are revoked at the end of the engagement. The code stays with you - we do not keep a copy of your repository. If you want a retainer (Phase 4), we sign a new NDA and contract for that scope.',
+  },
+  {
+    q: 'Where do the -88% and -43% numbers come from?',
+    a: 'Both are from VirtusLab client engagements. The -88% build-time figure comes from a global logistics company where we migrated a Scala monorepo from sbt to Bazel (40-60 minutes down to around 5). The -43% PR merge time comes from an investment bank running a managed IntelliJ IDEA solution on a Scala monorepo. Clients are under NDA. Full write-ups live on the VirtusLab success stories page.',
+  },
+];
+---
+<section id="faq" class="section section-alt faq-section">
+  <div class="container">
+    <div class="fade-up mb-10">
+      <p class="section-label">FAQ</p>
+      <h2 class="section-title">Questions we hear before we start</h2>
+      <p class="section-subtitle">
+        Straight answers to the questions procurement, platform leads and engineering directors actually ask us on the first call.
+      </p>
+    </div>
+
+    <div class="faq-list">
+      {faqs.map((item, i) => (
+        <details class="faq-item fade-up" open={i === 0}>
+          <summary>
+            <span class="faq-q">{item.q}</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </summary>
+          <p class="faq-a">{item.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <p class="faq-footnote">
+      Not here? Email <a href="mailto:visdom@virtuslab.com">visdom@virtuslab.com</a> - an engineer will reply within one business day.
+    </p>
+  </div>
+</section>
+
+<style>
+  .faq-section {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
+  .faq-list {
+    max-width: 52rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .faq-item {
+    background: var(--card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: 1.1rem 1.4rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .faq-item[open] {
+    border-color: rgba(16, 185, 129, 0.35);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.08);
+  }
+
+  .faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 1.02rem;
+    line-height: 1.4;
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-q {
+    flex: 1;
+  }
+
+  .faq-icon {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    position: relative;
+  }
+
+  .faq-icon::before,
+  .faq-icon::after {
+    content: '';
+    position: absolute;
+    background: var(--color-emerald);
+    border-radius: 2px;
+    transition: transform 0.2s ease;
+  }
+
+  .faq-icon::before {
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    transform: translateY(-50%);
+  }
+
+  .faq-icon::after {
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    transform: translateX(-50%);
+  }
+
+  .faq-item[open] .faq-icon::after {
+    transform: translateX(-50%) scaleY(0);
+  }
+
+  .faq-a {
+    margin: 0.9rem 0 0;
+    color: var(--color-text-secondary);
+    font-size: 0.98rem;
+    line-height: 1.65;
+  }
+
+  .faq-footnote {
+    margin: 2.5rem auto 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+  }
+
+  .faq-footnote a {
+    color: var(--color-emerald-dark, var(--color-emerald));
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

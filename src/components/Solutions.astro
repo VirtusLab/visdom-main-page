@@ -35,6 +35,12 @@ const phases = [
     body: 'Your platform team leads rollout across the wider organization. We stay close enough to unblock hard decisions, review architecture, and help with exceptions, but we are no longer driving day-to-day delivery. By the end, your team should be able to operate the platform without us.',
     accent: 'var(--color-purple)',
   },
+  {
+    name: 'Phase 4 - Ongoing partnership',
+    meta: 'optional · retainer or on-call',
+    body: 'After transfer you own the platform end-to-end. If you want a safety net, we offer a named-engineer retainer for architectural reviews, critical fixes on open-source components, and help with the next maturity step. No lock-in, no minimums - you call us when you need us, not the other way around.',
+    accent: 'var(--color-amber)',
+  },
 ];
 
 ---
@@ -61,7 +67,7 @@ const phases = [
       <p class="section-label">Engagement model</p>
       <h2 class="section-title">How we engage</h2>
       <p class="section-subtitle mb-14">
-        We structure engagements in three phases with capability transfer designed in from the start. You should end with the capability, not a dependency on us.
+        We structure engagements in three phases with capability transfer designed in from the start. You should end with the capability, not a dependency on us. A fourth phase is available as an optional retainer once the transfer is complete.
       </p>
     </div>
 
@@ -391,9 +397,9 @@ Layer 2: Mutation (PIT)
             <div class="card accent-card p-8">
               <div class="space-y-6">
                 {[
-                  { label: 'Build time reduction', value: '-88%', width: '88%' },
-                  { label: 'PR merge time', value: '-43%', width: '43%' },
-                  { label: 'Agent iteration speed', value: '50x/hr', width: '95%' },
+                  { label: 'Build time reduction', value: '-88%', width: '88%', note: 'Global logistics, Scala monorepo, sbt -> Bazel. 40-60 min -> 5 min.' },
+                  { label: 'PR merge time', value: '-43%', width: '43%', note: 'Investment bank, Scala monorepo, managed IntelliJ IDEA.' },
+                  { label: 'Agent iteration speed', value: '50x/hr', width: '95%', note: 'Target cadence for coding agents - the speed today\'s pipelines need to keep up with.' },
                 ].map(item => (
                   <div>
                     <div class="flex justify-between text-sm mb-2">
@@ -403,9 +409,15 @@ Layer 2: Mutation (PIT)
                     <div class="h-2.5 bg-surface-light rounded-full overflow-hidden">
                       <div class="h-full rounded-full progress-bar" style={`width: ${item.width}; background: linear-gradient(90deg, var(--color-emerald), var(--color-blue))`}></div>
                     </div>
+                    <p class="metric-note">{item.note}</p>
                   </div>
                 ))}
               </div>
+              <p class="metric-footnote">
+                Client names under NDA. Full write-ups on the
+                <a href="https://virtuslab.com/success-stories/" target="_blank" rel="noopener">VirtusLab success stories</a>
+                page.
+              </p>
             </div>
           </div>
           <div class="order-1 lg:order-2">
@@ -483,6 +495,26 @@ Layer 2: Mutation (PIT)
     font-size: 0.95rem;
     color: var(--color-text-secondary);
     text-align: center;
+  }
+
+  .metric-note {
+    margin-top: 0.45rem;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--color-text-muted);
+  }
+
+  .metric-footnote {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--color-border);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+  }
+
+  .metric-footnote a {
+    color: var(--color-emerald-dark);
+    text-decoration: underline;
   }
 
   .transfer-signal {
