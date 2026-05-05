@@ -366,3 +366,124 @@ const stations = [
     .pt-tab.is-active { transform: none; }
   }
 </style>
+
+<script>
+  (() => {
+    const tour = document.querySelector('.pipeline-tour');
+    if (!tour) return;
+
+    const stage = tour.querySelector('.pt-stage');
+    const tabs = Array.from(tour.querySelectorAll('.pt-tab'));
+    const panes = Array.from(tour.querySelectorAll('.pt-detail-pane'));
+    if (!stage || tabs.length === 0 || panes.length === 0) return;
+
+    const TOTAL = tabs.length;
+    const STEP_MS = 4000;
+    const COOLDOWN_MS = 8000;
+    const PROGRESS = ['10%', '30%', '50%', '70%', '90%'];
+
+    const reducedMotion =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let current = 1;
+    let autoplayTimer = null;
+    let cooldownTimer = null;
+    let inCooldown = false;
+    let userInside = false;
+
+    function setStep(n) {
+      current = n;
+      stage.dataset.active = String(n);
+      stage.style.setProperty('--pt-progress', PROGRESS[n - 1]);
+      tabs.forEach((tab) => {
+        const i = parseInt(tab.dataset.step, 10);
+        const isActive = i === n;
+        const isCompleted = i < n;
+        tab.classList.toggle('is-active', isActive);
+        tab.classList.toggle('is-completed', isCompleted);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        tab.setAttribute('tabindex', isActive ? '0' : '-1');
+      });
+      panes.forEach((pane) => {
+        const i = parseInt(pane.dataset.step, 10);
+        const isActive = i === n;
+        pane.classList.toggle('is-active', isActive);
+        if (isActive) {
+          pane.removeAttribute('hidden');
+        } else {
+          pane.setAttribute('hidden', '');
+        }
+      });
+    }
+
+    function startAutoplay() {
+      if (reducedMotion || inCooldown || userInside) return;
+      stopAutoplay();
+      autoplayTimer = window.setInterval(() => {
+        const next = current >= TOTAL ? 1 : current + 1;
+        setStep(next);
+      }, STEP_MS);
+    }
+
+    function stopAutoplay() {
+      if (autoplayTimer) {
+        window.clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    }
+
+    function beginCooldown() {
+      inCooldown = true;
+      stopAutoplay();
+      if (cooldownTimer) window.clearTimeout(cooldownTimer);
+      cooldownTimer = window.setTimeout(() => {
+        inCooldown = false;
+        startAutoplay();
+      }, COOLDOWN_MS);
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const i = parseInt(tab.dataset.step, 10);
+        setStep(i);
+        beginCooldown();
+      });
+      tab.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        e.preventDefault();
+        const dir = e.key === 'ArrowRight' ? 1 : -1;
+        let next = current + dir;
+        if (next < 1) next = TOTAL;
+        if (next > TOTAL) next = 1;
+        setStep(next);
+        const target = tabs.find((t) => parseInt(t.dataset.step, 10) === next);
+        if (target) target.focus();
+        beginCooldown();
+      });
+    });
+
+    stage.addEventListener('mouseenter', () => {
+      userInside = true;
+      stopAutoplay();
+    });
+    stage.addEventListener('mouseleave', () => {
+      userInside = false;
+      startAutoplay();
+    });
+    stage.addEventListener('focusin', () => {
+      userInside = true;
+      stopAutoplay();
+    });
+    stage.addEventListener('focusout', (e) => {
+      if (!stage.contains(e.relatedTarget)) {
+        userInside = false;
+        startAutoplay();
+      }
+    });
+
+    // Init: ensure step 1 is consistent and start autoplay.
+    setStep(1);
+    startAutoplay();
+  })();
+</script>
