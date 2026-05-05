@@ -261,6 +261,9 @@ const stations = [
     border-left: 1px solid var(--color-border-light);
     padding-left: 6px;
     opacity: 0;
+    transform-origin: center;
+    display: inline-flex;
+    align-items: center;
   }
 
   /* === Animation === */
@@ -308,52 +311,57 @@ const stations = [
   /* Station keyframes: dim → light at its trigger time → hold until cycle end → reset. */
 
   @keyframes pt-light-1 {
-    0%, 16% { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); }
-    18%     { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
-    100%    { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+    0%, 16%   { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); transform: scale(1); }
+    18%       { opacity: 1.0; box-shadow: 0 6px 22px rgba(16,185,129,0.18); border-color: rgba(16,185,129,0.55); transform: scale(1.04); }
+    22%       { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
+    100%      { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
   }
   @keyframes pt-light-2 {
-    0%, 33% { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); }
-    35%     { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
-    100%    { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+    0%, 33%   { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); transform: scale(1); }
+    35%       { opacity: 1.0; box-shadow: 0 6px 22px rgba(16,185,129,0.18); border-color: rgba(16,185,129,0.55); transform: scale(1.04); }
+    39%       { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
+    100%      { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
   }
   @keyframes pt-light-3 {
-    0%, 50% { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); }
-    52%     { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
-    100%    { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+    0%, 50%   { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); transform: scale(1); }
+    52%       { opacity: 1.0; box-shadow: 0 6px 22px rgba(16,185,129,0.18); border-color: rgba(16,185,129,0.55); transform: scale(1.04); }
+    56%       { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
+    100%      { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
   }
   @keyframes pt-light-4 {
-    0%, 68% { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); }
-    70%     { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
-    100%    { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+    0%, 68%   { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); transform: scale(1); }
+    70%       { opacity: 1.0; box-shadow: 0 6px 22px rgba(16,185,129,0.18); border-color: rgba(16,185,129,0.55); transform: scale(1.04); }
+    74%       { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
+    100%      { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
   }
   @keyframes pt-light-5 {
-    0%, 85% { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); }
-    87%     { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
-    100%    { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+    0%, 85%   { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); transform: scale(1); }
+    87%       { opacity: 1.0; box-shadow: 0 6px 22px rgba(16,185,129,0.18); border-color: rgba(16,185,129,0.55); transform: scale(1.04); }
+    91%       { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
+    100%      { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
   }
 
   /* Badge keyframes: hidden → fade in at station's trigger → hold. */
 
   @keyframes pt-badge-1 {
-    0%, 16%  { opacity: 0; }
-    20%, 100%{ opacity: 1; }
+    0%, 16%   { opacity: 0; transform: translateY(8px); }
+    21%, 100% { opacity: 1; transform: translateY(0); }
   }
   @keyframes pt-badge-2 {
-    0%, 33%  { opacity: 0; }
-    37%, 100%{ opacity: 1; }
+    0%, 33%   { opacity: 0; transform: translateY(8px); }
+    38%, 100% { opacity: 1; transform: translateY(0); }
   }
   @keyframes pt-badge-3 {
-    0%, 50%  { opacity: 0; }
-    54%, 100%{ opacity: 1; }
+    0%, 50%   { opacity: 0; transform: translateY(8px); }
+    55%, 100% { opacity: 1; transform: translateY(0); }
   }
   @keyframes pt-badge-4 {
-    0%, 68%  { opacity: 0; }
-    72%, 100%{ opacity: 1; }
+    0%, 68%   { opacity: 0; transform: translateY(8px); }
+    73%, 100% { opacity: 1; transform: translateY(0); }
   }
   @keyframes pt-badge-5 {
-    0%, 85%  { opacity: 0; }
-    89%, 100%{ opacity: 1; }
+    0%, 85%   { opacity: 0; transform: translateY(8px); }
+    90%, 100% { opacity: 1; transform: translateY(0); }
   }
 
   /* Stamp keyframes: hidden → fade in as token reaches each station. */
@@ -366,11 +374,31 @@ const stations = [
   .pt-stamp[data-step="4"] { animation-name: pt-stamp-4; }
   .pt-stamp[data-step="5"] { animation-name: pt-stamp-5; }
 
-  @keyframes pt-stamp-1 { 0%, 17% { opacity: 0; } 21%, 100% { opacity: 1; } }
-  @keyframes pt-stamp-2 { 0%, 34% { opacity: 0; } 38%, 100% { opacity: 1; } }
-  @keyframes pt-stamp-3 { 0%, 51% { opacity: 0; } 55%, 100% { opacity: 1; } }
-  @keyframes pt-stamp-4 { 0%, 69% { opacity: 0; } 73%, 100% { opacity: 1; } }
-  @keyframes pt-stamp-5 { 0%, 86% { opacity: 0; } 90%, 100% { opacity: 1; } }
+  @keyframes pt-stamp-1 {
+    0%, 17%   { opacity: 0; transform: scale(0.7); }
+    20%       { opacity: 1; transform: scale(1.15); }
+    24%, 100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pt-stamp-2 {
+    0%, 34%   { opacity: 0; transform: scale(0.7); }
+    37%       { opacity: 1; transform: scale(1.15); }
+    41%, 100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pt-stamp-3 {
+    0%, 51%   { opacity: 0; transform: scale(0.7); }
+    54%       { opacity: 1; transform: scale(1.15); }
+    58%, 100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pt-stamp-4 {
+    0%, 69%   { opacity: 0; transform: scale(0.7); }
+    72%       { opacity: 1; transform: scale(1.15); }
+    76%, 100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pt-stamp-5 {
+    0%, 86%   { opacity: 0; transform: scale(0.7); }
+    89%       { opacity: 1; transform: scale(1.15); }
+    93%, 100% { opacity: 1; transform: scale(1); }
+  }
 
   /* === Port sparks === */
 
