@@ -181,4 +181,75 @@ const stations = [
     100%  { transform: translateX(calc(100cqw - 100% - 44px)); }
   }
 
+  /* Station "light up" animation — runs for the full cycle so we control
+     state at every keyframe. Each station gets a different `animation-delay:
+     0s` but a different timeline by using a different keyframes set. */
+
+  .pt-station { animation: var(--pt-cycle) linear infinite; }
+
+  .pt-station[data-step="1"] { animation-name: pt-light-1; }
+  .pt-station[data-step="2"] { animation-name: pt-light-2; }
+  .pt-station[data-step="3"] { animation-name: pt-light-3; }
+  .pt-station[data-step="4"] { animation-name: pt-light-4; }
+  .pt-station[data-step="5"] { animation-name: pt-light-5; }
+
+  .pt-station-badge { animation: var(--pt-cycle) linear infinite; }
+
+  .pt-station[data-step="1"] .pt-station-badge { animation-name: pt-badge-1; }
+  .pt-station[data-step="2"] .pt-station-badge { animation-name: pt-badge-2; }
+  .pt-station[data-step="3"] .pt-station-badge { animation-name: pt-badge-3; }
+  .pt-station[data-step="4"] .pt-station-badge { animation-name: pt-badge-4; }
+  .pt-station[data-step="5"] .pt-station-badge { animation-name: pt-badge-5; }
+
+  /* Station keyframes: dim → light at its trigger time → hold until cycle end → reset. */
+
+  @keyframes pt-light-1 {
+    0%, 16% { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); }
+    18%     { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+    100%    { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+  }
+  @keyframes pt-light-2 {
+    0%, 33% { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); }
+    35%     { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+    100%    { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+  }
+  @keyframes pt-light-3 {
+    0%, 50% { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); }
+    52%     { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+    100%    { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+  }
+  @keyframes pt-light-4 {
+    0%, 68% { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); }
+    70%     { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+    100%    { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+  }
+  @keyframes pt-light-5 {
+    0%, 85% { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); }
+    87%     { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+    100%    { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
+  }
+
+  /* Badge keyframes: hidden → fade in at station's trigger → hold. */
+
+  @keyframes pt-badge-1 {
+    0%, 16%  { opacity: 0; }
+    20%, 100%{ opacity: 1; }
+  }
+  @keyframes pt-badge-2 {
+    0%, 33%  { opacity: 0; }
+    37%, 100%{ opacity: 1; }
+  }
+  @keyframes pt-badge-3 {
+    0%, 50%  { opacity: 0; }
+    54%, 100%{ opacity: 1; }
+  }
+  @keyframes pt-badge-4 {
+    0%, 68%  { opacity: 0; }
+    72%, 100%{ opacity: 1; }
+  }
+  @keyframes pt-badge-5 {
+    0%, 85%  { opacity: 0; }
+    89%, 100%{ opacity: 1; }
+  }
+
 </style>
