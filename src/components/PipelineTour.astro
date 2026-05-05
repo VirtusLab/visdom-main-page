@@ -1,10 +1,50 @@
 ---
 const stations = [
-  { id: 'context',  title: 'Context Fabric', sub: 'Agents read the ground truth',       badge: 'blast radius: 12 files', stamp: '✓ ctx' },
-  { id: 'dev',      title: 'Development',    sub: 'Agent + engineer co-author',         badge: '+47 −12',                stamp: '✓ dev' },
-  { id: 'review',   title: 'Code Review',    sub: 'VCR pre-reviews in CI',              badge: '0 critical · $0.10',     stamp: '✓ review' },
-  { id: 'tests',    title: 'Testing',        sub: 'Architecture · property · mutation', badge: '73% mutation',           stamp: '✓ tests' },
-  { id: 'ci',       title: 'Machine CI',     sub: 'Pipeline at agent speed',            badge: '5m vs 45m',              stamp: '✓ shipped' },
+  {
+    id: 'context',
+    title: 'Context Fabric',
+    sub: 'Agents read the ground truth',
+    badge: 'blast radius: 12 files',
+    stamp: '✓ ctx',
+    // Layered fabric / database
+    icon: '<path d="M2 4 h12 M2 8 h12 M2 12 h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  },
+  {
+    id: 'dev',
+    title: 'Development',
+    sub: 'Agent + engineer co-author',
+    badge: '+47 −12',
+    stamp: '✓ dev',
+    // Code brackets <>
+    icon: '<path d="M6 4 L2 8 L6 12 M10 4 L14 8 L10 12" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+  },
+  {
+    id: 'review',
+    title: 'Code Review',
+    sub: 'VCR pre-reviews in CI',
+    badge: '0 critical · $0.10',
+    stamp: '✓ review',
+    // Eye
+    icon: '<path d="M1 8 C 4 3, 12 3, 15 8 C 12 13, 4 13, 1 8 Z" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.4" fill="none"/>',
+  },
+  {
+    id: 'tests',
+    title: 'Testing',
+    sub: 'Architecture · property · mutation',
+    badge: '73% mutation',
+    stamp: '✓ tests',
+    // Flask
+    icon: '<path d="M6 2 v4 L3 13 a1.5 1.5 0 0 0 1.4 2 h7.2 A1.5 1.5 0 0 0 13 13 L10 6 V2 M5 2 h6" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+  },
+  {
+    id: 'ci',
+    title: 'Machine CI',
+    sub: 'Pipeline at agent speed',
+    badge: '5m vs 45m',
+    stamp: '✓ shipped',
+    // Lightning bolt
+    icon: '<path d="M9 1 L3 9 h4 L7 15 l6-8 h-4 z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/>',
+  },
 ];
 ---
 <section class="section pipeline-tour" aria-labelledby="pipeline-tour-title">
@@ -20,7 +60,14 @@ const stations = [
         <div class="pt-stations">
           {stations.map((s, i) => (
             <div class="pt-station" data-step={i + 1} id={`pt-station-${s.id}`}>
-              <p class="pt-station-label">{s.title}</p>
+              <span class="pt-port pt-port--left" aria-hidden="true"></span>
+              <span class="pt-port pt-port--right" aria-hidden="true"></span>
+              <div class="pt-station-head">
+                <span class="pt-station-icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" set:html={s.icon}></svg>
+                </span>
+                <p class="pt-station-label">{s.title}</p>
+              </div>
               <p class="pt-station-sub">{s.sub}</p>
               <span class="pt-station-badge">{s.badge}</span>
             </div>
@@ -57,7 +104,7 @@ const stations = [
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius-xl);
-    padding: 18px 22px 92px;
+    padding: 18px 22px 22px;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04);
     container-type: inline-size;
   }
@@ -75,7 +122,7 @@ const stations = [
   .pt-stations {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 14px;
+    gap: 26px;
   }
 
   .pt-station {
@@ -87,18 +134,46 @@ const stations = [
     border-radius: 12px;
     background: var(--color-surface);
     position: relative;
+    overflow: visible;
     opacity: 0.6;
     transition: none;
+    min-height: 132px;
   }
-  .pt-station::before {
-    content: '';
+  .pt-station-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+
+  .pt-station-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--color-emerald-dark);
+    flex-shrink: 0;
+    display: inline-flex;
+  }
+  .pt-station-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .pt-port {
     position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    border-radius: 12px 0 0 12px;
-    background: rgba(16, 185, 129, 0);
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-bg);
+    border: 1.5px solid rgba(16, 185, 129, 0.45);
+    transform: translateY(-50%);
+    z-index: 2;
     transition: none;
   }
+  .pt-port--left { left: -17px; }
+  .pt-port--right { right: -17px; }
+
   .pt-station-label {
     font-size: 0.95rem;
     font-weight: 700;
@@ -129,20 +204,23 @@ const stations = [
     position: absolute;
     left: 22px;
     right: 22px;
-    bottom: 56px;
-    height: 28px;
+    top: calc(18px + 66px); /* stage top padding + half of station min-height */
+    transform: translateY(-50%);
+    height: 4px;
     width: calc(100% - 44px);
+    pointer-events: none;
   }
   .pt-wire path {
     stroke: rgba(16, 185, 129, 0.45);
-    stroke-width: 1.25;
+    stroke-width: 1.5;
     fill: none;
   }
 
   .pt-token {
     position: absolute;
     left: 22px;
-    bottom: 38px;
+    top: calc(18px + 66px);
+    transform: translate(0, -50%);
     width: max-content;
     display: inline-flex;
     align-items: center;
@@ -157,6 +235,7 @@ const stations = [
     color: var(--color-text);
     white-space: nowrap;
     will-change: transform;
+    z-index: 3;
   }
   .pt-token-label { font-weight: 600; }
   .pt-stamp {
@@ -176,9 +255,9 @@ const stations = [
   }
 
   @keyframes pt-token-travel {
-    0%    { transform: translateX(0); }
-    87.5% { transform: translateX(calc(100cqw - 100% - 44px)); }
-    100%  { transform: translateX(calc(100cqw - 100% - 44px)); }
+    0%    { transform: translate(0, -50%); }
+    87.5% { transform: translate(calc(100cqw - 100% - 44px), -50%); }
+    100%  { transform: translate(calc(100cqw - 100% - 44px), -50%); }
   }
 
   /* Station "light up" animation — runs for the full cycle so we control
@@ -276,10 +355,9 @@ const stations = [
 
     .pt-stations {
       grid-template-columns: 1fr;
-      gap: 12px;
+      gap: 22px;
     }
 
-    /* Hide the desktop SVG wire; replace with a CSS-drawn vertical line. */
     .pt-wire { display: none; }
     .pt-stage::before {
       content: '';
@@ -291,17 +369,20 @@ const stations = [
       background: rgba(16, 185, 129, 0.45);
     }
 
+    .pt-port--left, .pt-port--right { display: none; }
+
     .pt-token {
       left: 14px;
+      top: 56px;
       right: auto;
       bottom: auto;
-      top: 56px;
+      transform: translate(0, 0);
     }
 
     @keyframes pt-token-travel {
-      0%    { transform: translateY(0); }
-      87.5% { transform: translateY(calc(100cqh - 80px)); }
-      100%  { transform: translateY(calc(100cqh - 80px)); }
+      0%    { transform: translate(0, 0); }
+      87.5% { transform: translate(0, calc(100cqh - 80px)); }
+      100%  { transform: translate(0, calc(100cqh - 80px)); }
     }
   }
 
@@ -328,12 +409,12 @@ const stations = [
     }
 
     .pt-token {
-      transform: translateX(calc(100cqw - 100% - 44px));
+      transform: translate(calc(100cqw - 100% - 44px), -50%);
     }
 
     @media (max-width: 900px) {
       .pt-token {
-        transform: translateY(calc(100cqh - 80px));
+        transform: translate(0, calc(100cqh - 80px));
       }
     }
 
