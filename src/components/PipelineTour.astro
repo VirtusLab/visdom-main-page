@@ -74,8 +74,9 @@ const stations = [
           ))}
         </div>
 
-        <svg class="pt-wire" viewBox="0 0 1000 80" preserveAspectRatio="none" aria-hidden="true">
-          <path id="pt-path" d="M 50 40 L 950 40" />
+        <svg class="pt-wire" viewBox="0 0 1000 4" preserveAspectRatio="none" aria-hidden="true">
+          <path id="pt-path" d="M 0 2 L 1000 2" />
+          <path id="pt-path-active" d="M 0 2 L 1000 2" />
         </svg>
 
         <div class="pt-token">
@@ -216,6 +217,22 @@ const stations = [
     fill: none;
   }
 
+  .pt-wire #pt-path-active {
+    stroke: rgba(16, 185, 129, 0.95);
+    stroke-width: 2;
+    fill: none;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: pt-wire-fill var(--pt-cycle) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.55));
+  }
+
+  @keyframes pt-wire-fill {
+    0%    { stroke-dashoffset: 1000; }
+    87.5% { stroke-dashoffset: 0; }
+    100%  { stroke-dashoffset: 0; }
+  }
+
   .pt-token {
     position: absolute;
     left: 22px;
@@ -251,7 +268,15 @@ const stations = [
   :root { --pt-cycle: 8s; }
 
   .pt-token {
-    animation: pt-token-travel var(--pt-cycle) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    /* Combined animation: travel + halo pulse */
+    animation:
+      pt-token-travel var(--pt-cycle) cubic-bezier(0.65, 0, 0.35, 1) infinite,
+      pt-token-halo 1.6s ease-in-out infinite;
+  }
+
+  @keyframes pt-token-halo {
+    0%, 100% { box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 0 rgba(16, 185, 129, 0.0); }
+    50%      { box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 14px 2px rgba(16, 185, 129, 0.45); }
   }
 
   @keyframes pt-token-travel {
@@ -347,6 +372,54 @@ const stations = [
   @keyframes pt-stamp-4 { 0%, 69% { opacity: 0; } 73%, 100% { opacity: 1; } }
   @keyframes pt-stamp-5 { 0%, 86% { opacity: 0; } 90%, 100% { opacity: 1; } }
 
+  /* === Port sparks === */
+
+  .pt-port { animation: var(--pt-cycle) linear infinite; }
+
+  .pt-station[data-step="1"] .pt-port--left  { animation-name: pt-spark-1; }
+  .pt-station[data-step="1"] .pt-port--right { animation-name: pt-spark-1b; }
+  .pt-station[data-step="2"] .pt-port--left  { animation-name: pt-spark-2; }
+  .pt-station[data-step="2"] .pt-port--right { animation-name: pt-spark-2b; }
+  .pt-station[data-step="3"] .pt-port--left  { animation-name: pt-spark-3; }
+  .pt-station[data-step="3"] .pt-port--right { animation-name: pt-spark-3b; }
+  .pt-station[data-step="4"] .pt-port--left  { animation-name: pt-spark-4; }
+  .pt-station[data-step="4"] .pt-port--right { animation-name: pt-spark-4b; }
+  .pt-station[data-step="5"] .pt-port--left  { animation-name: pt-spark-5; }
+  .pt-station[data-step="5"] .pt-port--right { animation-name: pt-spark-5b; }
+
+  /* Spark macro: dim → flash at port entry → settle bright. */
+  @keyframes pt-spark-1   { 0%, 16% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
+                            18%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
+                            22%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 6px 1px rgba(16,185,129,0.4); transform: translateY(-50%) scale(1); }
+                            22.01%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
+  @keyframes pt-spark-1b  { 0%, 19% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
+                            21%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
+                            25%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
+  @keyframes pt-spark-2   { 0%, 33% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
+                            35%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
+                            39%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
+  @keyframes pt-spark-2b  { 0%, 36% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
+                            38%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
+                            42%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
+  @keyframes pt-spark-3   { 0%, 50% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
+                            52%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
+                            56%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
+  @keyframes pt-spark-3b  { 0%, 53% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
+                            55%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
+                            59%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
+  @keyframes pt-spark-4   { 0%, 68% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
+                            70%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
+                            74%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
+  @keyframes pt-spark-4b  { 0%, 71% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
+                            73%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
+                            77%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
+  @keyframes pt-spark-5   { 0%, 85% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
+                            87%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
+                            91%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
+  @keyframes pt-spark-5b  { 0%, 88% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
+                            90%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
+                            94%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
+
   @media (max-width: 900px) {
     .pt-stage {
       padding: 18px 18px 22px 56px;
@@ -392,10 +465,14 @@ const stations = [
   .pt-figure:hover .pt-station,
   .pt-figure:hover .pt-station-badge,
   .pt-figure:hover .pt-stamp,
+  .pt-figure:hover .pt-port,
+  .pt-figure:hover #pt-path-active,
   .pt-figure:focus-within .pt-token,
   .pt-figure:focus-within .pt-station,
   .pt-figure:focus-within .pt-station-badge,
-  .pt-figure:focus-within .pt-stamp {
+  .pt-figure:focus-within .pt-stamp,
+  .pt-figure:focus-within .pt-port,
+  .pt-figure:focus-within #pt-path-active {
     animation-play-state: paused;
   }
 
@@ -404,8 +481,19 @@ const stations = [
     .pt-token,
     .pt-station,
     .pt-station-badge,
-    .pt-stamp {
+    .pt-stamp,
+    .pt-port,
+    #pt-path-active {
       animation: none !important;
+    }
+
+    #pt-path-active {
+      stroke-dashoffset: 0;
+    }
+
+    .pt-port {
+      background: rgb(16, 185, 129);
+      border-color: rgb(16, 185, 129);
     }
 
     .pt-token {
