@@ -305,4 +305,42 @@ const stations = [
     }
   }
 
+  /* Pause the entire tour when the user hovers the section or focuses
+     a child element via keyboard. Saves the cycle position. */
+  .pt-figure:hover .pt-token,
+  .pt-figure:hover .pt-station,
+  .pt-figure:hover .pt-station-badge,
+  .pt-figure:hover .pt-stamp,
+  .pt-figure:focus-within .pt-token,
+  .pt-figure:focus-within .pt-station,
+  .pt-figure:focus-within .pt-station-badge,
+  .pt-figure:focus-within .pt-stamp {
+    animation-play-state: paused;
+  }
+
+  /* Reduced motion: render the static "done" end state — no animation. */
+  @media (prefers-reduced-motion: reduce) {
+    .pt-token,
+    .pt-station,
+    .pt-station-badge,
+    .pt-stamp {
+      animation: none !important;
+    }
+
+    .pt-token {
+      transform: translateX(calc(100cqw - 100% - 44px));
+    }
+
+    .pt-station {
+      opacity: 1;
+      box-shadow: 0 4px 18px rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.45);
+    }
+
+    .pt-station-badge,
+    .pt-stamp {
+      opacity: 1;
+    }
+  }
+
 </style>
