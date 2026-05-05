@@ -252,4 +252,20 @@ const stations = [
     89%, 100%{ opacity: 1; }
   }
 
+  /* Stamp keyframes: hidden → fade in as token reaches each station. */
+
+  .pt-stamp { animation: var(--pt-cycle) linear infinite; }
+
+  .pt-stamp[data-step="1"] { animation-name: pt-stamp-1; }
+  .pt-stamp[data-step="2"] { animation-name: pt-stamp-2; }
+  .pt-stamp[data-step="3"] { animation-name: pt-stamp-3; }
+  .pt-stamp[data-step="4"] { animation-name: pt-stamp-4; }
+  .pt-stamp[data-step="5"] { animation-name: pt-stamp-5; }
+
+  @keyframes pt-stamp-1 { 0%, 17% { opacity: 0; } 21%, 100% { opacity: 1; } }
+  @keyframes pt-stamp-2 { 0%, 34% { opacity: 0; } 38%, 100% { opacity: 1; } }
+  @keyframes pt-stamp-3 { 0%, 51% { opacity: 0; } 55%, 100% { opacity: 1; } }
+  @keyframes pt-stamp-4 { 0%, 69% { opacity: 0; } 73%, 100% { opacity: 1; } }
+  @keyframes pt-stamp-5 { 0%, 86% { opacity: 0; } 90%, 100% { opacity: 1; } }
+
 </style>
