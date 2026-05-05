@@ -1,0 +1,119 @@
+---
+const stations = [
+  { id: 'context',  title: 'Context Fabric', sub: 'Agents read the ground truth',       badge: 'blast radius: 12 files', stamp: '✓ ctx' },
+  { id: 'dev',      title: 'Development',    sub: 'Agent + engineer co-author',         badge: '+47 −12',                stamp: '✓ dev' },
+  { id: 'review',   title: 'Code Review',    sub: 'VCR pre-reviews in CI',              badge: '0 critical · $0.10',     stamp: '✓ review' },
+  { id: 'tests',    title: 'Testing',        sub: 'Architecture · property · mutation', badge: '73% mutation',           stamp: '✓ tests' },
+  { id: 'ci',       title: 'Machine CI',     sub: 'Pipeline at agent speed',            badge: '5m vs 45m',              stamp: '✓ shipped' },
+];
+---
+<section class="section pipeline-tour" aria-labelledby="pipeline-tour-title">
+  <div class="container">
+    <div class="fade-up pt-head">
+      <p class="section-label">§ 01 · How a change flows</p>
+      <h2 id="pipeline-tour-title" class="section-title">One commit. Five stations. Machine speed.</h2>
+    </div>
+
+    <figure class="pt-figure fade-up" aria-hidden="true">
+      <div class="pt-stage">
+        {stations.map((s, i) => (
+          <div class="pt-station" data-step={i + 1} id={`pt-station-${s.id}`}>
+            <p class="pt-station-label">{s.title}</p>
+            <p class="pt-station-sub">{s.sub}</p>
+            <span class="pt-station-badge">{s.badge}</span>
+          </div>
+        ))}
+
+        <svg class="pt-wire" viewBox="0 0 1000 80" preserveAspectRatio="none" aria-hidden="true">
+          <path id="pt-path" d="M 50 40 L 950 40" />
+        </svg>
+
+        <div class="pt-token">
+          <span class="pt-token-label">feat: pricing rule</span>
+          {stations.map((s, i) => (
+            <span class="pt-stamp" data-step={i + 1}>{s.stamp}</span>
+          ))}
+        </div>
+      </div>
+
+      <figcaption class="sr-only">
+        Visdom pipeline: a code change moves through Context Fabric, development, code review, testing, and machine-speed CI.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .pipeline-tour { padding-top: 3rem; padding-bottom: 3rem; }
+  .pt-head { max-width: 48rem; margin-bottom: 2rem; }
+
+  .pt-figure { margin: 0; }
+  .pt-stage {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 28px 24px 80px;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04);
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .pt-station {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px;
+    border: 1px solid var(--color-border-light);
+    border-radius: 12px;
+    background: var(--color-surface);
+    position: relative;
+  }
+  .pt-station-label { font-size: 0.95rem; font-weight: 700; color: var(--color-text); margin: 0; }
+  .pt-station-sub   { font-size: 0.8rem; color: var(--color-text-secondary); margin: 0; line-height: 1.4; }
+  .pt-station-badge {
+    margin-top: 6px;
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 3px 8px;
+  }
+
+  .pt-wire { position: absolute; left: 24px; right: 24px; bottom: 50px; height: 24px; width: calc(100% - 48px); }
+  .pt-wire path { stroke: rgba(16, 185, 129, 0.35); stroke-width: 1.25; fill: none; }
+
+  .pt-token {
+    position: absolute;
+    left: 24px;
+    bottom: 38px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-text);
+    white-space: nowrap;
+  }
+  .pt-token-label { font-weight: 600; }
+  .pt-stamp {
+    color: var(--color-emerald-dark);
+    font-size: 0.66rem;
+    border-left: 1px solid var(--color-border-light);
+    padding-left: 6px;
+  }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+</style>
