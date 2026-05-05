@@ -138,29 +138,15 @@ const stations = [
     margin-bottom: 18px;
   }
 
-  /* Background connector line spanning the row, behind tabs. */
+  /* Subtle separator below the tabs row. */
   .pt-tabs::before {
     content: '';
     position: absolute;
     left: 0;
     right: 0;
-    top: calc(50% - 8px);
-    height: 1.5px;
-    background: rgba(16, 185, 129, 0.18);
-    z-index: 0;
-  }
-
-  /* Active progress fill — width set via --pt-progress on .pt-stage. */
-  .pt-tabs::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: calc(50% - 8px);
-    height: 2px;
-    width: var(--pt-progress, 10%);
-    background: linear-gradient(90deg, rgba(16, 185, 129, 0.85), rgba(16, 185, 129, 0.55));
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.45);
-    transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    bottom: -10px;
+    height: 1px;
+    background: var(--color-border-light);
     z-index: 0;
   }
 
@@ -345,7 +331,7 @@ const stations = [
       gap: 8px;
       margin-bottom: 16px;
     }
-    .pt-tabs::before, .pt-tabs::after { display: none; }
+    .pt-tabs::before { display: none; }
     .pt-destination { justify-self: start; margin-top: 4px; }
     .pt-detail-head { grid-template-columns: 1fr; gap: 6px; }
     .pt-detail-badge { justify-self: start; }
@@ -358,7 +344,6 @@ const stations = [
     .pt-tab-check,
     .pt-tab-icon,
     .pt-detail-pane,
-    .pt-tabs::after,
     .pt-destination {
       transition: none;
       animation: none !important;
