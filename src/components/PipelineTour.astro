@@ -5,8 +5,7 @@ const stations = [
     title: 'Context Fabric',
     sub: 'Agents read the ground truth',
     badge: 'blast radius: 12 files',
-    stamp: '✓ ctx',
-    // Layered fabric / database
+    body: "Agents hallucinate because your repo is a black box. Visdom gives agents, and every reviewer, deterministic answers to who owns this, what breaks if I change it, where this pattern already exists. Review rework drops. Refactors stop turning into incident retros.",
     icon: '<path d="M2 4 h12 M2 8 h12 M2 12 h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
   },
   {
@@ -14,8 +13,7 @@ const stations = [
     title: 'Development',
     sub: 'Agent + engineer co-author',
     badge: '+47 −12',
-    stamp: '✓ dev',
-    // Code brackets <>
+    body: "Engineers and agents co-author the change against the same context, conventions, and audit trail — instead of prompts living in Slack and context being re-invented every session.",
     icon: '<path d="M6 4 L2 8 L6 12 M10 4 L14 8 L10 12" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
   },
   {
@@ -23,8 +21,7 @@ const stations = [
     title: 'Code Review',
     sub: 'VCR pre-reviews in CI',
     badge: '0 critical · $0.10',
-    stamp: '✓ review',
-    // Eye
+    body: "VCR catches boundary violations, security holes, and performance regressions before they hit production. Seniors only open the PRs that actually need them. Runs in your CI, ~$0.10 per PR, no SaaS.",
     icon: '<path d="M1 8 C 4 3, 12 3, 15 8 C 12 13, 4 13, 1 8 Z" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.4" fill="none"/>',
   },
   {
@@ -32,8 +29,7 @@ const stations = [
     title: 'Testing',
     sub: 'Architecture · property · mutation',
     badge: '73% mutation',
-    stamp: '✓ tests',
-    // Flask
+    body: "When AI writes both code and tests, line coverage stops meaning anything. Architecture gates, property-based, and mutation testing catch the computation bugs hiding behind 90% green CI, and the architectural drift your team already voted against.",
     icon: '<path d="M6 2 v4 L3 13 a1.5 1.5 0 0 0 1.4 2 h7.2 A1.5 1.5 0 0 0 13 13 L10 6 V2 M5 2 h6" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
   },
   {
@@ -41,8 +37,7 @@ const stations = [
     title: 'Machine CI',
     sub: 'Pipeline at agent speed',
     badge: '5m vs 45m',
-    stamp: '✓ shipped',
-    // Lightning bolt
+    body: "Your CI takes 45 minutes. An AI agent iterates 50× per hour. We re-architect pipelines to machine speed — the same 88% build-time reduction we have shipped on production JVM fleets.",
     icon: '<path d="M9 1 L3 9 h4 L7 15 l6-8 h-4 z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/>',
   },
 ];
@@ -55,39 +50,47 @@ const stations = [
     </div>
 
     <figure class="pt-figure fade-up">
-      <div class="pt-stage">
+      <div class="pt-stage" data-active="1">
         <p class="pt-stage-label">Pipeline</p>
-        <div class="pt-stations">
+
+        <div class="pt-tabs" role="tablist" aria-label="Visdom pipeline steps">
           {stations.map((s, i) => (
-            <div class="pt-station" data-step={i + 1} id={`pt-station-${s.id}`}>
-              <span class="pt-port pt-port--left" aria-hidden="true"></span>
-              <span class="pt-port pt-port--right" aria-hidden="true"></span>
-              <div class="pt-station-head">
-                <span class="pt-station-icon" aria-hidden="true">
-                  <svg viewBox="0 0 16 16" set:html={s.icon}></svg>
-                </span>
-                <p class="pt-station-label">{s.title}</p>
-              </div>
-              <p class="pt-station-sub">{s.sub}</p>
-              <span class="pt-station-badge">{s.badge}</span>
-            </div>
+            <button
+              type="button"
+              class={`pt-tab${i === 0 ? ' is-active' : ''}`}
+              data-step={i + 1}
+              role="tab"
+              aria-selected={i === 0 ? 'true' : 'false'}
+              aria-controls={`pt-pane-${s.id}`}
+              id={`pt-tab-${s.id}`}
+            >
+              <span class="pt-tab-icon" aria-hidden="true">
+                <svg viewBox="0 0 16 16" set:html={s.icon}></svg>
+              </span>
+              <span class="pt-tab-title">{s.title}</span>
+              <span class="pt-tab-check" aria-hidden="true">✓</span>
+            </button>
           ))}
+          <span class="pt-destination" aria-hidden="true">→ prod</span>
         </div>
 
-        <div class="pt-destination" aria-hidden="true">
-          <span class="pt-destination-dot"></span>
-          <span class="pt-destination-label">→ prod</span>
-        </div>
-
-        <svg class="pt-wire" viewBox="0 0 1000 4" preserveAspectRatio="none" aria-hidden="true">
-          <path id="pt-path" d="M 0 2 L 1000 2" />
-          <path id="pt-path-active" d="M 0 2 L 1000 2" />
-        </svg>
-
-        <div class="pt-token">
-          <span class="pt-token-label">feat: pricing rule</span>
+        <div class="pt-detail">
           {stations.map((s, i) => (
-            <span class="pt-stamp" data-step={i + 1}>{s.stamp}</span>
+            <div
+              class={`pt-detail-pane${i === 0 ? ' is-active' : ''}`}
+              data-step={i + 1}
+              role="tabpanel"
+              id={`pt-pane-${s.id}`}
+              aria-labelledby={`pt-tab-${s.id}`}
+              hidden={i !== 0}
+            >
+              <div class="pt-detail-head">
+                <h3 class="pt-detail-title">{s.title}</h3>
+                <span class="pt-detail-sub">{s.sub}</span>
+                <span class="pt-detail-badge">{s.badge}</span>
+              </div>
+              <p class="pt-detail-body">{s.body}</p>
+            </div>
           ))}
         </div>
       </div>
@@ -110,9 +113,8 @@ const stations = [
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius-xl);
-    padding: 18px 22px 22px;
+    padding: 22px;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04);
-    container-type: inline-size;
   }
 
   .pt-stage-label {
@@ -125,510 +127,242 @@ const stations = [
     margin: 0 0 14px;
   }
 
-  .pt-stations {
+  /* === Tabs row === */
+
+  .pt-tabs {
+    position: relative;
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 26px;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
   }
 
-  .pt-station {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 14px;
-    border: 1px solid var(--color-border-light);
-    border-radius: 12px;
-    background: var(--color-surface);
-    position: relative;
-    overflow: visible;
-    opacity: 0.6;
-    transition: none;
-    min-height: 132px;
+  /* Background connector line spanning the row, behind tabs. */
+  .pt-tabs::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(50% - 8px);
+    height: 1.5px;
+    background: rgba(16, 185, 129, 0.18);
+    z-index: 0;
   }
-  .pt-station-head {
-    display: flex;
+
+  /* Active progress fill — width set via --pt-progress on .pt-stage. */
+  .pt-tabs::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: calc(50% - 8px);
+    height: 2px;
+    width: var(--pt-progress, 10%);
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.85), rgba(16, 185, 129, 0.55));
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.45);
+    transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    z-index: 0;
+  }
+
+  .pt-tab {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 8px;
-    margin-bottom: 2px;
+    padding: 14px 14px 14px 14px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-light);
+    border-radius: 12px;
+    text-align: left;
+    font: inherit;
+    color: var(--color-text);
+    cursor: pointer;
+    transition:
+      border-color 0.25s ease,
+      box-shadow 0.25s ease,
+      background 0.25s ease,
+      transform 0.25s ease;
   }
 
-  .pt-station-icon {
+  .pt-tab:hover {
+    border-color: rgba(16, 185, 129, 0.45);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.08);
+  }
+
+  .pt-tab:focus-visible {
+    outline: 2px solid var(--color-emerald);
+    outline-offset: 3px;
+  }
+
+  .pt-tab.is-active {
+    border-color: rgba(16, 185, 129, 0.6);
+    background: linear-gradient(180deg, rgba(16, 185, 129, 0.06), rgba(16, 185, 129, 0.12));
+    box-shadow: 0 6px 22px rgba(16, 185, 129, 0.16);
+    transform: translateY(-1px);
+  }
+
+  .pt-tab-icon {
     width: 18px;
     height: 18px;
-    color: var(--color-emerald-dark);
+    color: var(--color-text-muted);
     flex-shrink: 0;
     display: inline-flex;
+    transition: color 0.25s ease;
   }
-  .pt-station-icon svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
+  .pt-tab.is-active .pt-tab-icon,
+  .pt-tab.is-completed .pt-tab-icon { color: var(--color-emerald-dark); }
 
-  .pt-port {
-    position: absolute;
-    top: 50%;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--color-bg);
-    border: 1.5px solid rgba(16, 185, 129, 0.45);
-    transform: translateY(-50%);
-    z-index: 2;
-    transition: none;
-  }
-  .pt-port--left { left: -17px; }
-  .pt-port--right { right: -17px; }
+  .pt-tab-icon svg { width: 100%; height: 100%; display: block; }
 
-  .pt-station-label {
+  .pt-tab-title {
     font-size: 0.95rem;
     font-weight: 700;
     color: var(--color-text);
-    margin: 0;
-  }
-  .pt-station-sub {
-    font-size: 0.78rem;
-    color: var(--color-text-secondary);
-    margin: 0;
-    line-height: 1.4;
-    min-height: 2.2em;
-  }
-  .pt-station-badge {
-    margin-top: 6px;
-    align-self: flex-start;
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    color: var(--color-text-muted);
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    padding: 3px 8px;
-    opacity: 0;
-  }
-
-  .pt-wire {
-    position: absolute;
-    left: 22px;
-    right: 22px;
-    top: calc(18px + 66px); /* stage top padding + half of station min-height */
-    transform: translateY(-50%);
-    height: 4px;
-    width: calc(100% - 44px);
-    pointer-events: none;
-  }
-  .pt-wire path {
-    stroke: rgba(16, 185, 129, 0.45);
-    stroke-width: 1.5;
-    fill: none;
-  }
-
-  .pt-wire #pt-path-active {
-    stroke: rgba(16, 185, 129, 0.95);
-    stroke-width: 2;
-    fill: none;
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-    animation: pt-wire-fill var(--pt-cycle) cubic-bezier(0.65, 0, 0.35, 1) infinite;
-    filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.55));
-  }
-
-  @keyframes pt-wire-fill {
-    0%    { stroke-dashoffset: 1000; }
-    87.5% { stroke-dashoffset: 0; }
-    100%  { stroke-dashoffset: 0; }
-  }
-
-  .pt-token {
-    position: absolute;
-    left: 22px;
-    top: calc(18px + 66px);
-    transform: translate(0, -50%);
-    width: max-content;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--color-text);
     white-space: nowrap;
-    will-change: transform;
-    z-index: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .pt-token-label { font-weight: 600; }
-  .pt-stamp {
+
+  .pt-tab-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
     color: var(--color-emerald-dark);
-    font-size: 0.66rem;
-    border-left: 1px solid var(--color-border-light);
-    padding-left: 6px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.35);
     opacity: 0;
-    transform-origin: center;
-    display: inline-flex;
-    align-items: center;
+    transform: scale(0.7);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .pt-tab.is-completed .pt-tab-check,
+  .pt-tab.is-active .pt-tab-check {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .pt-tab.is-active .pt-tab-check {
+    /* Active step shows a hollow dot rather than a check until completed. */
+    background: rgb(16, 185, 129);
+    color: #ffffff;
   }
 
-  /* === Animation === */
-
-  :root { --pt-cycle: 8s; }
-
-  .pt-token {
-    /* Combined animation: travel + halo pulse */
-    animation:
-      pt-token-travel var(--pt-cycle) cubic-bezier(0.65, 0, 0.35, 1) infinite,
-      pt-token-halo 1.6s ease-in-out infinite;
-  }
-
-  @keyframes pt-token-halo {
-    0%, 100% { box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 0 rgba(16, 185, 129, 0.0); }
-    50%      { box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 14px 2px rgba(16, 185, 129, 0.45); }
-  }
-
-  @keyframes pt-token-travel {
-    0%    { transform: translate(0, -50%); }
-    87.5% { transform: translate(calc(100cqw - 100% - 124px), -50%); }
-    100%  { transform: translate(calc(100cqw - 100% - 124px), -50%); }
-  }
-
-  /* Station "light up" animation — runs for the full cycle so we control
-     state at every keyframe. Each station gets a different `animation-delay:
-     0s` but a different timeline by using a different keyframes set. */
-
-  .pt-station { animation: var(--pt-cycle) linear infinite; }
-
-  .pt-station[data-step="1"] { animation-name: pt-light-1; }
-  .pt-station[data-step="2"] { animation-name: pt-light-2; }
-  .pt-station[data-step="3"] { animation-name: pt-light-3; }
-  .pt-station[data-step="4"] { animation-name: pt-light-4; }
-  .pt-station[data-step="5"] { animation-name: pt-light-5; }
-
-  .pt-station-badge { animation: var(--pt-cycle) linear infinite; }
-
-  .pt-station[data-step="1"] .pt-station-badge { animation-name: pt-badge-1; }
-  .pt-station[data-step="2"] .pt-station-badge { animation-name: pt-badge-2; }
-  .pt-station[data-step="3"] .pt-station-badge { animation-name: pt-badge-3; }
-  .pt-station[data-step="4"] .pt-station-badge { animation-name: pt-badge-4; }
-  .pt-station[data-step="5"] .pt-station-badge { animation-name: pt-badge-5; }
-
-  /* Station keyframes: dim → light at its trigger time → hold until cycle end → reset. */
-
-  @keyframes pt-light-1 {
-    0%, 16%   { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); transform: scale(1); }
-    18%       { opacity: 1.0; box-shadow: 0 6px 22px rgba(16,185,129,0.18); border-color: rgba(16,185,129,0.55); transform: scale(1.04); }
-    22%       { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
-    100%      { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
-  }
-  @keyframes pt-light-2 {
-    0%, 33%   { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); transform: scale(1); }
-    35%       { opacity: 1.0; box-shadow: 0 6px 22px rgba(16,185,129,0.18); border-color: rgba(16,185,129,0.55); transform: scale(1.04); }
-    39%       { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
-    100%      { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
-  }
-  @keyframes pt-light-3 {
-    0%, 50%   { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); transform: scale(1); }
-    52%       { opacity: 1.0; box-shadow: 0 6px 22px rgba(16,185,129,0.18); border-color: rgba(16,185,129,0.55); transform: scale(1.04); }
-    56%       { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
-    100%      { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
-  }
-  @keyframes pt-light-4 {
-    0%, 68%   { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); transform: scale(1); }
-    70%       { opacity: 1.0; box-shadow: 0 6px 22px rgba(16,185,129,0.18); border-color: rgba(16,185,129,0.55); transform: scale(1.04); }
-    74%       { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
-    100%      { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
-  }
-  @keyframes pt-light-5 {
-    0%, 85%   { opacity: 0.6; box-shadow: none; border-color: var(--color-border-light); transform: scale(1); }
-    87%       { opacity: 1.0; box-shadow: 0 6px 22px rgba(16,185,129,0.18); border-color: rgba(16,185,129,0.55); transform: scale(1.04); }
-    91%       { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
-    100%      { opacity: 1.0; box-shadow: 0 4px 18px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); transform: scale(1); }
-  }
-
-  /* Badge keyframes: hidden → fade in at station's trigger → hold. */
-
-  @keyframes pt-badge-1 {
-    0%, 16%   { opacity: 0; transform: translateY(8px); }
-    21%, 100% { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes pt-badge-2 {
-    0%, 33%   { opacity: 0; transform: translateY(8px); }
-    38%, 100% { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes pt-badge-3 {
-    0%, 50%   { opacity: 0; transform: translateY(8px); }
-    55%, 100% { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes pt-badge-4 {
-    0%, 68%   { opacity: 0; transform: translateY(8px); }
-    73%, 100% { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes pt-badge-5 {
-    0%, 85%   { opacity: 0; transform: translateY(8px); }
-    90%, 100% { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Stamp keyframes: hidden → fade in as token reaches each station. */
-
-  .pt-stamp { animation: var(--pt-cycle) linear infinite; }
-
-  .pt-stamp[data-step="1"] { animation-name: pt-stamp-1; }
-  .pt-stamp[data-step="2"] { animation-name: pt-stamp-2; }
-  .pt-stamp[data-step="3"] { animation-name: pt-stamp-3; }
-  .pt-stamp[data-step="4"] { animation-name: pt-stamp-4; }
-  .pt-stamp[data-step="5"] { animation-name: pt-stamp-5; }
-
-  @keyframes pt-stamp-1 {
-    0%, 17%   { opacity: 0; transform: scale(0.7); }
-    20%       { opacity: 1; transform: scale(1.15); }
-    24%, 100% { opacity: 1; transform: scale(1); }
-  }
-  @keyframes pt-stamp-2 {
-    0%, 34%   { opacity: 0; transform: scale(0.7); }
-    37%       { opacity: 1; transform: scale(1.15); }
-    41%, 100% { opacity: 1; transform: scale(1); }
-  }
-  @keyframes pt-stamp-3 {
-    0%, 51%   { opacity: 0; transform: scale(0.7); }
-    54%       { opacity: 1; transform: scale(1.15); }
-    58%, 100% { opacity: 1; transform: scale(1); }
-  }
-  @keyframes pt-stamp-4 {
-    0%, 69%   { opacity: 0; transform: scale(0.7); }
-    72%       { opacity: 1; transform: scale(1.15); }
-    76%, 100% { opacity: 1; transform: scale(1); }
-  }
-  @keyframes pt-stamp-5 {
-    0%, 86%   { opacity: 0; transform: scale(0.7); }
-    89%       { opacity: 1; transform: scale(1.15); }
-    93%, 100% { opacity: 1; transform: scale(1); }
-  }
-
-  /* === Port sparks === */
-
-  .pt-port { animation: var(--pt-cycle) linear infinite; }
-
-  .pt-station[data-step="1"] .pt-port--left  { animation-name: pt-spark-1; }
-  .pt-station[data-step="1"] .pt-port--right { animation-name: pt-spark-1b; }
-  .pt-station[data-step="2"] .pt-port--left  { animation-name: pt-spark-2; }
-  .pt-station[data-step="2"] .pt-port--right { animation-name: pt-spark-2b; }
-  .pt-station[data-step="3"] .pt-port--left  { animation-name: pt-spark-3; }
-  .pt-station[data-step="3"] .pt-port--right { animation-name: pt-spark-3b; }
-  .pt-station[data-step="4"] .pt-port--left  { animation-name: pt-spark-4; }
-  .pt-station[data-step="4"] .pt-port--right { animation-name: pt-spark-4b; }
-  .pt-station[data-step="5"] .pt-port--left  { animation-name: pt-spark-5; }
-  .pt-station[data-step="5"] .pt-port--right { animation-name: pt-spark-5b; }
-
-  /* Spark macro: dim → flash at port entry → settle bright. */
-  @keyframes pt-spark-1   { 0%, 16% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
-                            18%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
-                            22%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 6px 1px rgba(16,185,129,0.4); transform: translateY(-50%) scale(1); }
-                            22.01%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
-  @keyframes pt-spark-1b  { 0%, 19% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
-                            21%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
-                            25%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
-  @keyframes pt-spark-2   { 0%, 33% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
-                            35%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
-                            39%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
-  @keyframes pt-spark-2b  { 0%, 36% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
-                            38%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
-                            42%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
-  @keyframes pt-spark-3   { 0%, 50% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
-                            52%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
-                            56%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
-  @keyframes pt-spark-3b  { 0%, 53% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
-                            55%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
-                            59%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
-  @keyframes pt-spark-4   { 0%, 68% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
-                            70%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
-                            74%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
-  @keyframes pt-spark-4b  { 0%, 71% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
-                            73%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
-                            77%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
-  @keyframes pt-spark-5   { 0%, 85% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
-                            87%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
-                            91%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
-  @keyframes pt-spark-5b  { 0%, 88% { background: var(--color-bg); border-color: rgba(16,185,129,0.45); box-shadow: none; transform: translateY(-50%) scale(1); }
-                            90%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
-                            94%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
-
-  /* === Destination chip + card pulse === */
-
+  /* Destination chip */
   .pt-destination {
-    position: absolute;
-    right: 6px;
-    top: calc(18px + 66px);
-    transform: translate(0, -50%);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 4px 10px 4px 4px;
+    position: relative;
+    z-index: 1;
+    align-self: center;
+    padding: 6px 12px;
     border-radius: 999px;
     background: var(--color-bg);
     border: 1px solid rgba(16, 185, 129, 0.35);
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     color: var(--color-emerald-dark);
-    z-index: 1;
-    opacity: 0.45;
-    animation: pt-destination var(--pt-cycle) ease-out infinite;
+    opacity: 0.55;
+    transition: opacity 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    white-space: nowrap;
+  }
+  .pt-stage[data-active="5"] .pt-destination {
+    opacity: 1;
+    background: linear-gradient(180deg, rgba(16, 185, 129, 0.06), rgba(16, 185, 129, 0.12));
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
   }
 
-  .pt-destination-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(16, 185, 129, 0.35);
-    box-shadow: none;
-    transition: none;
+  /* === Detail panel === */
+
+  .pt-detail {
+    position: relative;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    background: var(--color-surface);
+    padding: 22px 24px;
+    min-height: 168px;
   }
 
-  @keyframes pt-destination {
-    0%, 84%   { opacity: 0.45; }
-    87%       { opacity: 1; }
-    91%       { opacity: 1; }
-    100%      { opacity: 1; }
+  .pt-detail-pane[hidden] { display: none; }
+  .pt-detail-pane {
+    /* Smooth swap when the controller toggles `hidden`. */
+    animation: pt-detail-fade 0.35s ease;
+  }
+  @keyframes pt-detail-fade {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  .pt-destination-dot { animation: pt-destination-dot var(--pt-cycle) ease-out infinite; }
-
-  @keyframes pt-destination-dot {
-    0%, 84%   { background: rgba(16, 185, 129, 0.35); box-shadow: none; transform: scale(1); }
-    87%       { background: rgb(16, 185, 129);        box-shadow: 0 0 14px 4px rgba(16,185,129,0.55); transform: scale(1.4); }
-    93%       { background: rgb(16, 185, 129);        box-shadow: 0 0 6px 1px rgba(16,185,129,0.35); transform: scale(1); }
-    100%      { background: rgb(16, 185, 129);        box-shadow: 0 0 6px 1px rgba(16,185,129,0.35); transform: scale(1); }
+  .pt-detail-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
   }
 
-  /* Whole-stage glow pulse at the end of the cycle. */
-  .pt-stage { animation: pt-stage-pulse var(--pt-cycle) ease-out infinite; }
-
-  @keyframes pt-stage-pulse {
-    0%, 84%   { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04); }
-    87%       { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 0 0 6px rgba(16,185,129,0.12), 0 0 28px 4px rgba(16,185,129,0.18); }
-    93%       { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04); }
-    100%      { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04); }
+  .pt-detail-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text);
   }
+
+  .pt-detail-sub {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.02em;
+  }
+
+  .pt-detail-badge {
+    justify-self: end;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--color-bg);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-emerald-dark);
+  }
+
+  .pt-detail-body {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  /* === Mobile === */
 
   @media (max-width: 900px) {
-    .pt-stage {
-      padding: 18px 18px 22px 56px;
-      container-type: size;
-    }
-
-    .pt-stations {
+    .pt-tabs {
       grid-template-columns: 1fr;
-      gap: 22px;
+      gap: 8px;
+      margin-bottom: 16px;
     }
-
-    .pt-wire { display: none; }
-    .pt-stage::before {
-      content: '';
-      position: absolute;
-      left: 32px;
-      top: 56px;
-      bottom: 24px;
-      width: 1px;
-      background: rgba(16, 185, 129, 0.45);
-    }
-
-    .pt-port--left, .pt-port--right { display: none; }
-
-    .pt-token {
-      left: 14px;
-      top: 56px;
-      right: auto;
-      bottom: auto;
-      transform: translate(0, 0);
-    }
-
-    @keyframes pt-token-travel {
-      0%    { transform: translate(0, 0); }
-      87.5% { transform: translate(0, calc(100cqh - 80px)); }
-      100%  { transform: translate(0, calc(100cqh - 80px)); }
-    }
-
-    .pt-destination {
-      right: auto;
-      left: 4px;
-      top: auto;
-      bottom: 8px;
-      transform: translate(0, 0);
-    }
+    .pt-tabs::before, .pt-tabs::after { display: none; }
+    .pt-destination { justify-self: start; margin-top: 4px; }
+    .pt-detail-head { grid-template-columns: 1fr; gap: 6px; }
+    .pt-detail-badge { justify-self: start; }
   }
 
-  /* Pause the entire tour when the user hovers the section or focuses
-     a child element via keyboard. Saves the cycle position. */
-  .pt-figure:hover .pt-token,
-  .pt-figure:hover .pt-station,
-  .pt-figure:hover .pt-station-badge,
-  .pt-figure:hover .pt-stamp,
-  .pt-figure:hover .pt-port,
-  .pt-figure:hover #pt-path-active,
-  .pt-figure:hover .pt-destination,
-  .pt-figure:hover .pt-destination-dot,
-  .pt-figure:hover .pt-stage,
-  .pt-figure:focus-within .pt-token,
-  .pt-figure:focus-within .pt-station,
-  .pt-figure:focus-within .pt-station-badge,
-  .pt-figure:focus-within .pt-stamp,
-  .pt-figure:focus-within .pt-port,
-  .pt-figure:focus-within #pt-path-active,
-  .pt-figure:focus-within .pt-destination,
-  .pt-figure:focus-within .pt-destination-dot,
-  .pt-figure:focus-within .pt-stage {
-    animation-play-state: paused;
-  }
+  /* === Reduced motion === */
 
-  /* Reduced motion: render the static "done" end state — no animation. */
   @media (prefers-reduced-motion: reduce) {
-    .pt-token,
-    .pt-station,
-    .pt-station-badge,
-    .pt-stamp,
-    .pt-port,
-    #pt-path-active,
-    .pt-destination,
-    .pt-destination-dot,
-    .pt-stage {
+    .pt-tab,
+    .pt-tab-check,
+    .pt-tab-icon,
+    .pt-detail-pane,
+    .pt-tabs::after,
+    .pt-destination {
+      transition: none;
       animation: none !important;
     }
-
-    #pt-path-active {
-      stroke-dashoffset: 0;
-    }
-
-    .pt-port {
-      background: rgb(16, 185, 129);
-      border-color: rgb(16, 185, 129);
-    }
-
-    .pt-destination { opacity: 1; }
-    .pt-destination-dot {
-      background: rgb(16, 185, 129);
-      box-shadow: 0 0 6px 1px rgba(16,185,129,0.35);
-    }
-
-    .pt-token {
-      transform: translate(calc(100cqw - 100% - 124px), -50%);
-    }
-
-    @media (max-width: 900px) {
-      .pt-token {
-        transform: translate(0, calc(100cqh - 80px));
-      }
-    }
-
-    .pt-station {
-      opacity: 1;
-      box-shadow: 0 4px 18px rgba(16,185,129,0.12);
-      border-color: rgba(16,185,129,0.45);
-    }
-
-    .pt-station-badge,
-    .pt-stamp {
-      opacity: 1;
-    }
+    .pt-tab.is-active { transform: none; }
   }
-
 </style>
