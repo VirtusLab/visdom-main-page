@@ -268,4 +268,41 @@ const stations = [
   @keyframes pt-stamp-4 { 0%, 69% { opacity: 0; } 73%, 100% { opacity: 1; } }
   @keyframes pt-stamp-5 { 0%, 86% { opacity: 0; } 90%, 100% { opacity: 1; } }
 
+  @media (max-width: 900px) {
+    .pt-stage {
+      padding: 18px 18px 22px 56px;
+      container-type: size;
+    }
+
+    .pt-stations {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    /* Hide the desktop SVG wire; replace with a CSS-drawn vertical line. */
+    .pt-wire { display: none; }
+    .pt-stage::before {
+      content: '';
+      position: absolute;
+      left: 32px;
+      top: 56px;
+      bottom: 24px;
+      width: 1px;
+      background: rgba(16, 185, 129, 0.45);
+    }
+
+    .pt-token {
+      left: 14px;
+      right: auto;
+      bottom: auto;
+      top: 56px;
+    }
+
+    @keyframes pt-token-travel {
+      0%    { transform: translateY(0); }
+      87.5% { transform: translateY(calc(100cqh - 80px)); }
+      100%  { transform: translateY(calc(100cqh - 80px)); }
+    }
+  }
+
 </style>
