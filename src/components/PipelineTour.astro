@@ -59,6 +59,7 @@ const stations = [
     border-radius: var(--radius-xl);
     padding: 18px 22px 92px;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04);
+    container-type: inline-size;
   }
 
   .pt-stage-label {
@@ -142,6 +143,7 @@ const stations = [
     position: absolute;
     left: 22px;
     bottom: 38px;
+    width: max-content;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -154,7 +156,7 @@ const stations = [
     font-size: 0.72rem;
     color: var(--color-text);
     white-space: nowrap;
-    will-change: offset-distance;
+    will-change: transform;
   }
   .pt-token-label { font-weight: 600; }
   .pt-stamp {
@@ -163,6 +165,20 @@ const stations = [
     border-left: 1px solid var(--color-border-light);
     padding-left: 6px;
     opacity: 0;
+  }
+
+  /* === Animation === */
+
+  :root { --pt-cycle: 8s; }
+
+  .pt-token {
+    animation: pt-token-travel var(--pt-cycle) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+
+  @keyframes pt-token-travel {
+    0%    { transform: translateX(0); }
+    87.5% { transform: translateX(calc(100cqw - 100% - 44px)); }
+    100%  { transform: translateX(calc(100cqw - 100% - 44px)); }
   }
 
 </style>
