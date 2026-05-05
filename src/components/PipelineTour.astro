@@ -74,6 +74,11 @@ const stations = [
           ))}
         </div>
 
+        <div class="pt-destination" aria-hidden="true">
+          <span class="pt-destination-dot"></span>
+          <span class="pt-destination-label">→ prod</span>
+        </div>
+
         <svg class="pt-wire" viewBox="0 0 1000 4" preserveAspectRatio="none" aria-hidden="true">
           <path id="pt-path" d="M 0 2 L 1000 2" />
           <path id="pt-path-active" d="M 0 2 L 1000 2" />
@@ -284,8 +289,8 @@ const stations = [
 
   @keyframes pt-token-travel {
     0%    { transform: translate(0, -50%); }
-    87.5% { transform: translate(calc(100cqw - 100% - 44px), -50%); }
-    100%  { transform: translate(calc(100cqw - 100% - 44px), -50%); }
+    87.5% { transform: translate(calc(100cqw - 100% - 124px), -50%); }
+    100%  { transform: translate(calc(100cqw - 100% - 124px), -50%); }
   }
 
   /* Station "light up" animation — runs for the full cycle so we control
@@ -448,6 +453,63 @@ const stations = [
                             90%     { background: rgb(16,185,129);  border-color: rgb(16,185,129);     box-shadow: 0 0 12px 4px rgba(16,185,129,0.6); transform: translateY(-50%) scale(1.6); }
                             94%, 100% { background: rgb(16,185,129); border-color: rgb(16,185,129); box-shadow: 0 0 4px 0 rgba(16,185,129,0.3); transform: translateY(-50%) scale(1); } }
 
+  /* === Destination chip + card pulse === */
+
+  .pt-destination {
+    position: absolute;
+    right: 6px;
+    top: calc(18px + 66px);
+    transform: translate(0, -50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px 4px 4px;
+    border-radius: 999px;
+    background: var(--color-bg);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-emerald-dark);
+    z-index: 1;
+    opacity: 0.45;
+    animation: pt-destination var(--pt-cycle) ease-out infinite;
+  }
+
+  .pt-destination-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.35);
+    box-shadow: none;
+    transition: none;
+  }
+
+  @keyframes pt-destination {
+    0%, 84%   { opacity: 0.45; }
+    87%       { opacity: 1; }
+    91%       { opacity: 1; }
+    100%      { opacity: 1; }
+  }
+
+  .pt-destination-dot { animation: pt-destination-dot var(--pt-cycle) ease-out infinite; }
+
+  @keyframes pt-destination-dot {
+    0%, 84%   { background: rgba(16, 185, 129, 0.35); box-shadow: none; transform: scale(1); }
+    87%       { background: rgb(16, 185, 129);        box-shadow: 0 0 14px 4px rgba(16,185,129,0.55); transform: scale(1.4); }
+    93%       { background: rgb(16, 185, 129);        box-shadow: 0 0 6px 1px rgba(16,185,129,0.35); transform: scale(1); }
+    100%      { background: rgb(16, 185, 129);        box-shadow: 0 0 6px 1px rgba(16,185,129,0.35); transform: scale(1); }
+  }
+
+  /* Whole-stage glow pulse at the end of the cycle. */
+  .pt-stage { animation: pt-stage-pulse var(--pt-cycle) ease-out infinite; }
+
+  @keyframes pt-stage-pulse {
+    0%, 84%   { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04); }
+    87%       { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 0 0 6px rgba(16,185,129,0.12), 0 0 28px 4px rgba(16,185,129,0.18); }
+    93%       { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04); }
+    100%      { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04); }
+  }
+
   @media (max-width: 900px) {
     .pt-stage {
       padding: 18px 18px 22px 56px;
@@ -485,6 +547,14 @@ const stations = [
       87.5% { transform: translate(0, calc(100cqh - 80px)); }
       100%  { transform: translate(0, calc(100cqh - 80px)); }
     }
+
+    .pt-destination {
+      right: auto;
+      left: 4px;
+      top: auto;
+      bottom: 8px;
+      transform: translate(0, 0);
+    }
   }
 
   /* Pause the entire tour when the user hovers the section or focuses
@@ -495,12 +565,18 @@ const stations = [
   .pt-figure:hover .pt-stamp,
   .pt-figure:hover .pt-port,
   .pt-figure:hover #pt-path-active,
+  .pt-figure:hover .pt-destination,
+  .pt-figure:hover .pt-destination-dot,
+  .pt-figure:hover .pt-stage,
   .pt-figure:focus-within .pt-token,
   .pt-figure:focus-within .pt-station,
   .pt-figure:focus-within .pt-station-badge,
   .pt-figure:focus-within .pt-stamp,
   .pt-figure:focus-within .pt-port,
-  .pt-figure:focus-within #pt-path-active {
+  .pt-figure:focus-within #pt-path-active,
+  .pt-figure:focus-within .pt-destination,
+  .pt-figure:focus-within .pt-destination-dot,
+  .pt-figure:focus-within .pt-stage {
     animation-play-state: paused;
   }
 
@@ -511,7 +587,10 @@ const stations = [
     .pt-station-badge,
     .pt-stamp,
     .pt-port,
-    #pt-path-active {
+    #pt-path-active,
+    .pt-destination,
+    .pt-destination-dot,
+    .pt-stage {
       animation: none !important;
     }
 
@@ -524,8 +603,14 @@ const stations = [
       border-color: rgb(16, 185, 129);
     }
 
+    .pt-destination { opacity: 1; }
+    .pt-destination-dot {
+      background: rgb(16, 185, 129);
+      box-shadow: 0 0 6px 1px rgba(16,185,129,0.35);
+    }
+
     .pt-token {
-      transform: translate(calc(100cqw - 100% - 44px), -50%);
+      transform: translate(calc(100cqw - 100% - 124px), -50%);
     }
 
     @media (max-width: 900px) {
