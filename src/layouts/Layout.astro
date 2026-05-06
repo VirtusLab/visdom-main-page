@@ -14,6 +14,8 @@ const siteUrl = "https://virtuslab.github.io/visdom-main-page";
 const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImageUrl = ogImage ?? `${siteUrl}/og-image.png`;
+
+const piwikScript = `(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://virtuslab.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', 'bc10b3c8-70d2-4d9b-8ceb-d2b7454546b7');`
 ---
 <!doctype html>
 <html lang="en">
@@ -45,6 +47,8 @@ const ogImageUrl = ogImage ?? `${siteUrl}/og-image.png`;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@600;700;800&display=optional" as="style" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@600;700;800&display=optional" rel="stylesheet" />
+
+    <script id="CookieConsent" src="https://policy.app.cookieinformation.com/uc.js" data-culture="EN" data-gcm-version="2.0" type="text/javascript"></script>
   </head>
   <body class="min-h-screen">
     <slot />
@@ -61,5 +65,11 @@ const ogImageUrl = ogImage ?? `${siteUrl}/og-image.png`;
       );
       document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
     </script>
+    <script
+      is:inline
+      type="text/javascript"
+      set:html={piwikScript}
+      id="piwik-script"
+    />
   </body>
 </html>
