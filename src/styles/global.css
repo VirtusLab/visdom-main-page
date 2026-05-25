@@ -28,7 +28,7 @@
   --color-maturity-3: #dcfce7;
   --color-maturity-4: #bbf7d0;
 
-  /* Design system token aliases — shadcn/visdom-ui primitives */
+  /* Design system token aliases: shadcn/visdom-ui primitives */
   --background: var(--color-bg);
   --foreground: var(--color-text);
   --primary: var(--color-emerald);

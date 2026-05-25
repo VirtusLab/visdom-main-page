@@ -8,7 +8,7 @@ const links = [
   { label: 'Matrix', href: 'https://visdom-ai-maturity-matrix.pages.dev', external: true },
 ];
 
-const cta = { label: 'Get in Touch', href: '#start' };
+const cta = { label: 'Get in Touch', href: '#contact' };
 
 function BrandBar() {
   return (
@@ -40,9 +40,9 @@ function BrandBar() {
 
 function VisdomNavBrand() {
   return (
-    <a href="/" className="text-lg font-bold tracking-tight no-underline hover:opacity-80 transition-opacity text-gray-900">
+    <span className="text-lg font-bold tracking-tight no-underline hover:opacity-80 transition-opacity text-gray-900">
       Visdom by VirtusLab
-    </a>
+    </span>
   );
 }
 
