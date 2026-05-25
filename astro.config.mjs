@@ -4,8 +4,8 @@ import react from '@astrojs/react';
 
 export default defineConfig({
   integrations: [react()],
-  site: 'https://virtuslab.github.io',
-  base: '/visdom-main-page',
+  site: process.env.SITE || 'https://virtuslab.github.io',
+  base: process.env.BASE ?? '/visdom-main-page',
   vite: {
     plugins: [tailwindcss()],
   },
