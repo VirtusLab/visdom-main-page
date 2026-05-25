@@ -54,7 +54,7 @@ const series = [
       {series.map((item) => (
         <article class="writing-card fade-up">
           <a href={item.latest.href} target="_blank" rel="noopener" class="writing-thumb" aria-label={item.latest.title}>
-            <img src={`${import.meta.env.BASE_URL}${item.latest.image}`} alt="" loading="lazy" width="1200" height="627" />
+            <img src={`${(import.meta.env.BASE_URL || '/').replace(/\/$/, '')}/${item.latest.image}`} alt="" loading="lazy" width="1200" height="627" />
           </a>
           <div class="writing-card-line" style={`background: ${item.color}`}></div>
           <p class="writing-series">{item.title}</p>
