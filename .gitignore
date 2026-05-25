@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# internal reference docs (BMC, meeting recordings) — not for public repo
+docs/
