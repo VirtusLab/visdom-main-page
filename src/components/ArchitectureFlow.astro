@@ -21,6 +21,13 @@ const icons: Record<string, string> = {
   repo: '<line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
   docs: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8M16 17H8M10 9H8"/>',
   org: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  // module header + accent icons
+  layers: '<path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/>',
+  flask: '<path d="M9 3h6M10 3v5L5 16a3 3 0 0 0 2.6 4.5h8.8A3 3 0 0 0 19 16l-5-8V3"/><path d="M7.5 14h9"/>',
+  eye: '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/>',
+  pr: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6"/><path d="M13 6h2a3 3 0 0 1 3 3v6"/>',
+  link: '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+  spark: '<path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/>',
 };
 
 const testLayers = [
@@ -56,33 +63,21 @@ const captions = [
 // `stage` ties the particle to the reveal step that owns its path.
 // `pause` > 0 turns the dot into a discrete "packet": fade in, travel once,
 // fade out, wait, repeat. Without `pause` it loops continuously (the context loop).
+// Discrete "packet" dots remain only where they read as items (knowledge in,
+// traces down). Lines that carry flow use CSS light streaks instead.
 const particles = [
-  // source wires -> fabric core (stage 0): calm, staggered feed
   ...sources.map((_, i) => ({ path: `af-w${i}`, dur: 3.0, delay: i * 0.55, pause: 1.8, tone: 'ctx', stage: 0 })),
-  // preflight, one-way into the agent (stage 1)
-  { path: 'af-prerail', dur: 2.0, delay: 0.2, pause: 1.4, tone: 'accent', stage: 1 },
-  // active context loop, the centerpiece: continuous, both directions (stage 2)
-  { path: 'af-answer', dur: 1.9, delay: 0, tone: 'accent', stage: 2 },
-  { path: 'af-answer', dur: 1.9, delay: 0.95, tone: 'accent', stage: 2 },
-  { path: 'af-query', dur: 1.9, delay: 0.4, tone: 'accent', stage: 2 },
-  { path: 'af-query', dur: 1.9, delay: 1.3, tone: 'accent', stage: 2 },
-  // pipeline connectors: one pulse chained left -> right (cycle = dur + pause = 3s)
-  { path: 'af-c1', dur: 0.9, delay: 0, pause: 2.1, tone: 'accent', stage: 3 },
-  { path: 'af-c2', dur: 0.9, delay: 1.0, pause: 2.1, tone: 'accent', stage: 4 },
-  { path: 'af-c3', dur: 0.9, delay: 2.0, pause: 2.1, tone: 'accent', stage: 5 },
-  // auto-fix loop back to the agent (stage 5)
-  { path: 'af-autofix', dur: 3.2, delay: 0.6, pause: 1.8, tone: 'green', stage: 5 },
-  // trace drops into the vault (stage 6)
   ...[0, 1, 2, 3, 4].map((i) => ({ path: `af-t${i}`, dur: 1.4, delay: i * 0.5, pause: 1.8, tone: 'trace', stage: 6 })),
 ];
+const particleStages = [...new Set(particles.map((p) => p.stage))];
 
 // vertical layout helpers
 const srcY = (i: number) => 92 + i * 54;
-const testY = (i: number) => 170 + i * 46;
+const testY = (i: number) => 196 + i * 42;
 const revW = [168, 168, 168, 168];
 const revX = [952, 952, 952, 952];
 const revIndent = (i: number) => i * 9; // nested look = increasing depth
-const revY = (i: number) => 172 + i * 46;
+const revY = (i: number) => 196 + i * 42;
 ---
 
 <section class="af" id="how-it-works" aria-labelledby="af-title">
@@ -110,26 +105,51 @@ const revY = (i: number) => 172 + i * 46;
               <stop offset="0%" stop-color="var(--vmm-accent-2)" />
               <stop offset="100%" stop-color="var(--vmm-accent)" />
             </radialGradient>
+            <linearGradient id="af-depth-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--vmm-accent)" stop-opacity="0.12" />
+              <stop offset="100%" stop-color="var(--vmm-accent)" stop-opacity="0.9" />
+            </linearGradient>
+            <pattern id="af-grid" width="26" height="26" patternUnits="userSpaceOnUse">
+              <circle cx="1" cy="1" r="1" class="af-grid-dot" />
+            </pattern>
           </defs>
+
+          <!-- blueprint substrate: dot grid + corner registration marks -->
+          <rect x="36" y="40" width="1248" height="504" fill="url(#af-grid)" class="af-bp" aria-hidden="true" />
+          <g class="af-fid" aria-hidden="true">
+            {[[40, 44], [1280, 44], [40, 540], [1280, 540]].map(([x, y]) => (
+              <path d={`M${x - 5},${y} H${x + 5} M${x},${y - 5} V${y + 5}`} />
+            ))}
+          </g>
 
           <!-- ============ TRACEVAULT (baseplate, spans everything) ============ -->
           <g id="af-tracevault" class="af-group" data-reveal>
             <rect x="44" y="462" width="1232" height="78" rx="18" class="af-vault" />
-            <line x1="44" y1="490" x2="1276" y2="490" class="af-vault-rule" />
-            <text x="70" y="496" class="af-vault-label">TraceVault</text>
-            <text x="70" y="519" class="af-vault-sub">Signed, hash-chained record across every step</text>
-            <text x="1252" y="507" text-anchor="end" class="af-vault-tag">observability</text>
-            {[331, 600, 814, 1034, 1225].map((x) => (
+            <line x1="60" y1="463.5" x2="1260" y2="463.5" class="af-sheen" />
+            <g class="af-vault-icon" transform="translate(66,482) scale(0.8)" set:html={icons.link} />
+            <text x="96" y="492" class="af-vault-label">TraceVault</text>
+            <text x="96" y="516" class="af-vault-sub">Signed, hash-chained record across every step</text>
+            {/* hash-chain motif: linked blocks, append-only */}
+            <g class="af-chain" aria-hidden="true">
+              {[1128, 1156, 1184, 1212].map((x, i) => (
+                <>
+                  <rect x={x} y="484" width="14" height="14" rx="3" class={`af-chain-block${i === 3 ? ' af-chain-block--head' : ''}`} />
+                  {i < 3 && <line x1={x + 14} y1="491" x2={x + 28} y2="491" class="af-chain-link" />}
+                </>
+              ))}
+            </g>
+            <text x="1252" y="521" text-anchor="end" class="af-vault-tag">Ed25519 · append-only</text>
+            {[332, 600, 814, 1036, 1226].map((x) => (
               <circle cx={x} cy="462" r="3.5" class="af-vault-mark" />
             ))}
           </g>
 
           <!-- trace-drop paths (stage bottom -> vault) -->
-          <path id="af-t0" class="af-trace-path af-reveal" d="M331,322 L331,462" />
-          <path id="af-t1" class="af-trace-path af-reveal" d="M600,316 L600,462" />
-          <path id="af-t2" class="af-trace-path af-reveal" d="M814,372 L814,462" />
-          <path id="af-t3" class="af-trace-path af-reveal" d="M1034,362 L1034,462" />
-          <path id="af-t4" class="af-trace-path af-reveal" d="M1225,374 L1225,462" />
+          <path id="af-t0" class="af-trace-path af-reveal" d="M332,322 L332,462" />
+          <path id="af-t1" class="af-trace-path af-reveal" d="M600,320 L600,462" />
+          <path id="af-t2" class="af-trace-path af-reveal" d="M814,380 L814,462" />
+          <path id="af-t3" class="af-trace-path af-reveal" d="M1036,380 L1036,462" />
+          <path id="af-t4" class="af-trace-path af-reveal" d="M1226,366 L1226,462" />
 
           <!-- ============ CONTEXT FABRIC ============ -->
           <g id="af-context" class="af-group" data-reveal>
@@ -147,14 +167,16 @@ const revY = (i: number) => 172 + i * 46;
             ))}
             <!-- fabric core -->
             <rect x="276" y="190" width="112" height="120" rx="20" class="af-core" />
-            <text x="332" y="240" text-anchor="middle" class="af-core-label">Context</text>
-            <text x="332" y="264" text-anchor="middle" class="af-core-label">Fabric</text>
-            <circle cx="332" cy="288" r="3.5" class="af-core-pulse" />
+            <g class="af-core-icon" transform="translate(322,204) scale(0.85)" set:html={icons.layers} />
+            <text x="332" y="252" text-anchor="middle" class="af-core-label">Context</text>
+            <text x="332" y="274" text-anchor="middle" class="af-core-label">Fabric</text>
+            <circle cx="332" cy="293" r="3.5" class="af-core-pulse" />
           </g>
 
           <!-- ============ PREFLIGHT RAIL ============ -->
           <g id="af-preflight" class="af-group" data-reveal>
             <path id="af-prerail" class="af-rail-pre" d="M388,202 L534,206" marker-end="url(#af-arrow)" />
+            <path class="af-streak" pathLength="100" d="M388,202 L534,206" style="animation-duration:2.6s" />
             <text x="458" y="186" text-anchor="middle" class="af-rail-label">Preflight context</text>
           </g>
 
@@ -162,6 +184,8 @@ const revY = (i: number) => 172 + i * 46;
           <g id="af-loop" class="af-group" data-reveal>
             <path id="af-answer" class="af-loop-path" d="M390,258 C 436,226 506,228 544,246" marker-end="url(#af-arrow)" />
             <path id="af-query" class="af-loop-path" d="M544,266 C 506,312 436,310 390,282" marker-end="url(#af-arrow)" />
+            <path class="af-streak" pathLength="100" d="M390,258 C 436,226 506,228 544,246" style="animation-duration:1.8s" />
+            <path class="af-streak" pathLength="100" d="M544,266 C 506,312 436,310 390,282" style="animation-duration:1.8s;animation-delay:-0.9s" />
             <text x="468" y="336" text-anchor="middle" class="af-loop-label">Active context</text>
             <text x="468" y="356" text-anchor="middle" class="af-loop-sub">continuous · two-way</text>
           </g>
@@ -169,21 +193,34 @@ const revY = (i: number) => 172 + i * 46;
           <!-- ============ CODING AGENT (always present hub) ============ -->
           <g id="af-agent" class="af-group af-group--base af-reveal">
             <circle cx="600" cy="240" r="74" class="af-agent-ring" />
-            <circle cx="600" cy="240" r="62" class="af-agent-core" />
-            <text x="600" y="234" text-anchor="middle" class="af-agent-label">Coding</text>
-            <text x="600" y="258" text-anchor="middle" class="af-agent-label">Agent</text>
+            <circle cx="600" cy="240" r="67" class="af-agent-ticks" />
+            <circle cx="600" cy="240" r="58" class="af-agent-core" />
+            <g class="af-agent-spark" transform="translate(591,198) scale(0.75)" set:html={icons.spark} />
+            <text x="600" y="244" text-anchor="middle" class="af-agent-label">Coding</text>
+            <text x="600" y="266" text-anchor="middle" class="af-agent-label">Agent</text>
           </g>
 
           <!-- pipeline connectors (the main spine) -->
-          <path id="af-c1" class="af-pipe af-reveal" d="M676,240 L722,240" marker-end="url(#af-arrow)" />
-          <path id="af-c2" class="af-pipe af-reveal" d="M904,250 L936,250" marker-end="url(#af-arrow)" />
-          <path id="af-c3" class="af-pipe af-reveal" d="M1132,250 C 1142,250 1141,188 1148,186" marker-end="url(#af-arrow)" />
+          <g id="af-c1g" class="af-reveal">
+            <path id="af-c1" class="af-pipe" d="M676,240 L722,240" marker-end="url(#af-arrow)" />
+            <path class="af-streak af-streak--pipe" pathLength="100" d="M676,240 L722,240" style="animation-duration:2.4s" />
+          </g>
+          <g id="af-c2g" class="af-reveal">
+            <path id="af-c2" class="af-pipe" d="M904,250 L936,250" marker-end="url(#af-arrow)" />
+            <path class="af-streak af-streak--pipe" pathLength="100" d="M904,250 L936,250" style="animation-duration:2.4s;animation-delay:0.8s" />
+          </g>
+          <g id="af-c3g" class="af-reveal">
+            <path id="af-c3" class="af-pipe" d="M1132,250 C 1142,250 1141,218 1148,218" marker-end="url(#af-arrow)" />
+            <path class="af-streak af-streak--pipe" pathLength="100" d="M1132,250 C 1142,250 1141,218 1148,218" style="animation-duration:2.4s;animation-delay:1.6s" />
+          </g>
 
           <!-- ============ TESTING ============ -->
-          <g id="af-testing" class="af-group" data-reveal>
-            <text x="726" y="150" class="af-stage-title">Testing</text>
-            <line x1="726" y1="158" x2="750" y2="158" class="af-title-tick" />
-            <rect x="724" y="158" width="180" height="212" rx="16" class="af-panel" />
+          <g id="af-testing" class="af-group af-module" data-reveal>
+            <rect x="724" y="158" width="180" height="216" rx="16" class="af-panel" />
+            <line x1="740" y1="159.5" x2="888" y2="159.5" class="af-sheen" />
+            <rect x="730" y="164" width="168" height="26" rx="8" class="af-mhead" />
+            <g class="af-mhead-icon" transform="translate(740,169) scale(0.66)" set:html={icons.flask} />
+            <text x="762" y="182" class="af-mhead-label">Testing</text>
             {testLayers.map((t, i) => (
               <g class="af-test-row">
                 <rect x="734" y={testY(i)} width="160" height="36" rx="8" class="af-chip" />
@@ -193,11 +230,15 @@ const revY = (i: number) => 172 + i * 46;
           </g>
 
           <!-- ============ CODE REVIEW (deepening) ============ -->
-          <g id="af-review" class="af-group" data-reveal>
-            <text x="940" y="150" class="af-stage-title">Code review</text>
-            <line x1="940" y1="158" x2="964" y2="158" class="af-title-tick" />
-            <rect x="940" y="158" width="192" height="212" rx="16" class="af-panel" />
-            <text x="1036" y="392" text-anchor="middle" class="af-depth-label">deeper analysis ↓</text>
+          <g id="af-review" class="af-group af-module" data-reveal>
+            <rect x="940" y="158" width="192" height="216" rx="16" class="af-panel" />
+            <line x1="956" y1="159.5" x2="1116" y2="159.5" class="af-sheen" />
+            <rect x="946" y="164" width="180" height="26" rx="8" class="af-mhead" />
+            <g class="af-mhead-icon" transform="translate(956,169) scale(0.66)" set:html={icons.eye} />
+            <text x="978" y="182" class="af-mhead-label">Code review</text>
+            <text x="1036" y="394" text-anchor="middle" class="af-depth-label">deeper analysis ↓</text>
+            {/* depth gauge: analysis intensity ramps downward */}
+            <rect x="1124" y="196" width="4" height="162" rx="2" fill="url(#af-depth-grad)" />
             {reviewLevels.map((r, i) => (
               <g class={`af-review-row af-depth-${i}`}>
                 <rect x={revX[i] + revIndent(i)} y={revY(i)} width={revW[i] - revIndent(i)} height="36" rx="8" class="af-review-bar" />
@@ -208,39 +249,44 @@ const revY = (i: number) => 172 + i * 46;
           </g>
 
           <!-- ============ PR & TRIAGE ============ -->
-          <g id="af-triage" class="af-group" data-reveal>
-            <text x="1150" y="150" class="af-stage-title">PR &amp; triage</text>
-            <line x1="1150" y1="158" x2="1174" y2="158" class="af-title-tick" />
-            <rect x="1150" y="158" width="150" height="54" rx="12" class="af-pr" />
-            <text x="1225" y="190" text-anchor="middle" class="af-pr-label">Pull Request</text>
+          <g id="af-triage" class="af-group af-module" data-reveal>
+            <rect x="1142" y="158" width="168" height="216" rx="16" class="af-panel" />
+            <line x1="1158" y1="159.5" x2="1294" y2="159.5" class="af-sheen" />
+            <rect x="1148" y="164" width="156" height="26" rx="8" class="af-mhead" />
+            <g class="af-mhead-icon" transform="translate(1158,169) scale(0.66)" set:html={icons.pr} />
+            <text x="1180" y="182" class="af-mhead-label">PR &amp; triage</text>
 
-            <!-- fork -->
-            <path class="af-branch af-branch--green" d="M1225,212 C 1225,232 1190,236 1190,250" />
-            <path class="af-branch af-branch--risk" d="M1225,212 C 1225,290 1260,300 1260,314" />
+            <rect x="1154" y="198" width="144" height="42" rx="10" class="af-pr" />
+            <text x="1226" y="224" text-anchor="middle" class="af-pr-label">Pull Request</text>
+
+            <!-- fork: trivial drops straight, risk routes along the panel edge -->
+            <path class="af-branch af-branch--green" d="M1226,240 L1226,250" marker-end="url(#af-arrow)" />
+            <path class="af-branch af-branch--risk" d="M1226,240 C 1226,248 1148,250 1148,278 L1148,326 Q1148,334 1154,335" marker-end="url(#af-arrow)" />
 
             <g class="af-triage-node af-triage-node--green">
-              <rect x="1150" y="250" width="150" height="48" rx="10" class="af-card af-card--green" />
-              <text x="1166" y="270" class="af-card-label af-card-label--green">Green · trivial</text>
-              <text x="1166" y="288" class="af-card-sub">agent auto-fixes</text>
+              <rect x="1154" y="256" width="144" height="46" rx="10" class="af-card af-card--green" />
+              <text x="1168" y="276" class="af-card-label af-card-label--green">Green · trivial</text>
+              <text x="1168" y="293" class="af-card-sub">agent auto-fixes</text>
             </g>
             <g class="af-triage-node af-triage-node--risk">
-              <rect x="1150" y="314" width="150" height="48" rx="10" class="af-card af-card--risk" />
-              <text x="1190" y="334" class="af-card-label af-card-label--risk">High-risk</text>
-              <text x="1190" y="352" class="af-card-sub">human approval gate</text>
-              <g class="af-human" transform="translate(1166,330)">
+              <rect x="1154" y="314" width="144" height="46" rx="10" class="af-card af-card--risk" />
+              <text x="1192" y="334" class="af-card-label af-card-label--risk">High-risk</text>
+              <text x="1192" y="351" class="af-card-sub">human approval</text>
+              <g class="af-human" transform="translate(1172,332)">
                 <circle cx="0" cy="-4" r="5" class="af-human-mark" />
                 <path d="M-8,10 a8,9 0 0 1 16,0" class="af-human-mark" />
               </g>
             </g>
 
-            <!-- auto-fix loop back to the agent: leaves the PR top, arcs clear above the panels -->
-            <path id="af-autofix" class="af-autofix-path" d="M1225,156 C 1020,36 770,42 608,156" marker-end="url(#af-arrow)" />
-            <text x="915" y="46" text-anchor="middle" class="af-autofix-label">auto-fix → back to agent</text>
+            <!-- auto-fix loop back to the agent: leaves the triage top, arcs clear above the panels -->
+            <path id="af-autofix" class="af-autofix-path" d="M1226,152 C 1020,34 770,40 608,154" marker-end="url(#af-arrow)" />
+            <path class="af-streak af-streak--soft" pathLength="100" d="M1226,152 C 1020,34 770,40 608,154" style="animation-duration:3.6s" />
+            <text x="915" y="44" text-anchor="middle" class="af-autofix-label">auto-fix → back to agent</text>
           </g>
 
           <!-- ============ AMBIENT PARTICLES (grouped per reveal stage) ============ -->
           <g class="af-particles" aria-hidden="true">
-            {[0, 1, 2, 3, 4, 5, 6].map((stage) => (
+            {particleStages.map((stage) => (
               <g class="af-pgroup" data-stage={stage}>
                 {particles.filter((p) => p.stage === stage).map((p) => (
                   <circle class={`af-particle af-particle--${p.tone}`} r="3.2" cx="-20" cy="-20"
@@ -248,6 +294,14 @@ const revY = (i: number) => 172 + i * 46;
                 ))}
               </g>
             ))}
+          </g>
+
+          <!-- ============ HUD RETICLE (slides between active stages) ============ -->
+          <g id="af-reticle" aria-hidden="true">
+            <path id="af-ret-tl" class="af-ret-c" d="M0,14 L0,4 Q0,0 4,0 L14,0" />
+            <path id="af-ret-tr" class="af-ret-c" d="M0,14 L0,4 Q0,0 4,0 L14,0" />
+            <path id="af-ret-bl" class="af-ret-c" d="M0,14 L0,4 Q0,0 4,0 L14,0" />
+            <path id="af-ret-br" class="af-ret-c" d="M0,14 L0,4 Q0,0 4,0 L14,0" />
           </g>
         </svg>
       </div>
@@ -293,7 +347,45 @@ const revY = (i: number) => 172 + i * 46;
   /* ---- stage reveal (driven by GSAP; everything visible without JS) ---- */
   .js .af-group[data-reveal],
   .js .af-reveal { opacity: 0; }
-  .af-group.is-active :is(.af-core, .af-agent-core, .af-pr, .af-panel) { filter: drop-shadow(0 0 12px var(--vmm-accent)); }
+  .af-group.is-active :is(.af-core, .af-agent-core, .af-panel, .af-vault) { filter: drop-shadow(0 0 12px var(--vmm-accent-soft)) drop-shadow(0 0 4px var(--vmm-accent)); }
+
+  /* ---- blueprint substrate ---- */
+  .af-grid-dot { fill: var(--color-text-muted); opacity: 0.35; }
+  .af-bp { opacity: 0.5; pointer-events: none; }
+  .af-fid path { stroke: var(--color-border); stroke-width: 1.25; fill: none; }
+
+  /* 1px inner top highlight: gives panels a machined edge */
+  .af-sheen { stroke: rgba(255, 255, 255, 0.5); stroke-width: 1; opacity: 0.5; }
+  :global(.dark) .af-sheen { stroke: rgba(255, 255, 255, 0.14); opacity: 1; }
+
+  /* module header chip */
+  .af-mhead { fill: var(--color-surface-light); }
+  .af-mhead-label { fill: var(--color-text); font: 600 12px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
+  .af-mhead-icon, .af-core-icon, .af-vault-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* light streaks: a glowing segment travels the path (pathLength=100) */
+  .af-streak {
+    fill: none;
+    stroke: var(--vmm-accent-2);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 14 86;
+    animation: af-streak 2.4s linear infinite;
+    filter: drop-shadow(0 0 3px var(--vmm-accent));
+    pointer-events: none;
+  }
+  .af-streak--pipe { stroke-width: 3; stroke-dasharray: 22 78; }
+  .af-streak--soft { stroke-width: 2; stroke-dasharray: 8 92; opacity: 0.9; }
+  @keyframes af-streak { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+
+  /* HUD reticle corners */
+  .af-ret-c { fill: none; stroke: var(--vmm-accent); stroke-width: 2; opacity: 0; }
+
+  /* hover microinteractions */
+  .af-src { transition: transform 0.25s ease; }
+  .af-src:hover { transform: translateX(4px); }
+  .af-module .af-panel { transition: stroke 0.25s ease; }
+  .af-module:hover .af-panel { stroke: color-mix(in oklab, var(--vmm-accent) 45%, var(--color-border)); }
 
   /* ---- nodes / cards ---- */
   .af-card { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
@@ -328,23 +420,37 @@ const revY = (i: number) => 172 + i * 46;
   .af-rail-label { fill: var(--color-text); font: 600 14px var(--font-body); }
 
   /* dashes drift along the path direction: constant, legible direction cue */
-  .af-loop-path { fill: none; stroke: var(--vmm-accent); stroke-width: 2; stroke-dasharray: 5 5; animation: af-dash 1.1s linear infinite; }
+  .af-loop-path { fill: none; stroke: color-mix(in oklab, var(--vmm-accent) 55%, transparent); stroke-width: 2; stroke-dasharray: 5 5; }
   .af-loop-label { fill: var(--color-emerald-dark); font: 700 15px var(--font-body); }
   .af-loop-sub { fill: var(--color-text-secondary); font: 500 12.5px var(--font-body); }
 
   .af-agent-ring { fill: none; stroke: var(--vmm-accent); stroke-width: 2; opacity: 0.5; transform-box: fill-box; transform-origin: center; animation: af-ring 2.8s ease-out infinite; }
+  /* dial: slowly rotating tick ring around the agent */
+  .af-agent-ticks {
+    fill: none;
+    stroke: var(--vmm-accent);
+    stroke-width: 3;
+    stroke-dasharray: 2 9;
+    opacity: 0.55;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: af-rotate 40s linear infinite;
+  }
   .af-agent-core { fill: url(#af-agent-grad); }
+  .af-agent-spark { fill: none; stroke: rgba(255, 255, 255, 0.9); stroke-width: 1.8; stroke-linejoin: round; }
   .af-agent-label { fill: var(--primary-foreground, #fff); font: 700 17px var(--font-heading); }
+  @keyframes af-rotate { to { transform: rotate(360deg); } }
 
   .af-panel { fill: var(--color-surface); stroke: var(--color-border); stroke-width: 1.25; }
   .af-chip { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
   .af-chip-label { fill: var(--color-text); font: 600 13.5px var(--font-body); }
 
-  .af-review-bar { fill: var(--vmm-accent-soft); stroke: var(--vmm-accent); stroke-width: 1.25; }
-  .af-depth-0 .af-review-bar { opacity: 0.5; }
-  .af-depth-1 .af-review-bar { opacity: 0.68; }
-  .af-depth-2 .af-review-bar { opacity: 0.84; }
-  .af-depth-3 .af-review-bar { opacity: 1; }
+  /* depth ramp: fill saturation grows, only L4 earns the accent border */
+  .af-review-bar { stroke: color-mix(in oklab, var(--vmm-accent) 20%, var(--color-border)); stroke-width: 1.25; }
+  .af-depth-0 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 5%, var(--card)); }
+  .af-depth-1 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 11%, var(--card)); }
+  .af-depth-2 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 18%, var(--card)); }
+  .af-depth-3 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 27%, var(--card)); stroke: var(--vmm-accent); }
   .af-review-n { fill: var(--color-emerald-dark); font: 700 12px var(--font-mono); }
   .af-review-label { fill: var(--color-text); font: 600 13px var(--font-body); }
   .af-depth-label { fill: var(--color-text-secondary); font: 600 12.5px var(--font-body); }
@@ -356,7 +462,7 @@ const revY = (i: number) => 172 + i * 46;
   .af-branch--risk { stroke: var(--color-amber); }
   .af-human-mark { fill: none; stroke: var(--color-amber); stroke-width: 1.6; }
 
-  .af-autofix-path { fill: none; stroke: var(--vmm-accent); stroke-width: 1.75; stroke-dasharray: 4 6; opacity: 0.7; animation: af-dash 1.4s linear infinite; }
+  .af-autofix-path { fill: none; stroke: color-mix(in oklab, var(--vmm-accent) 60%, transparent); stroke-width: 1.75; stroke-dasharray: 4 6; }
   .af-autofix-label { fill: var(--color-emerald-dark); font: 600 13px var(--font-body); }
 
   /* ---- vault ---- */
@@ -368,8 +474,11 @@ const revY = (i: number) => 172 + i * 46;
   .af-vault-rule { stroke: color-mix(in oklab, var(--vmm-accent) 20%, var(--color-border)); stroke-width: 1; opacity: 0.7; }
   .af-vault-label { fill: var(--color-text); font: 700 19px var(--font-heading); }
   .af-vault-sub { fill: var(--color-text-secondary); font: 500 13.5px var(--font-body); }
-  .af-vault-tag { fill: var(--vmm-accent); font: 700 12px var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; }
+  .af-vault-tag { fill: var(--color-text-secondary); font: 600 11px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
   .af-vault-mark { fill: var(--vmm-accent); }
+  .af-chain-block { fill: var(--vmm-accent-soft); stroke: color-mix(in oklab, var(--vmm-accent) 45%, var(--color-border)); stroke-width: 1.25; }
+  .af-chain-block--head { fill: color-mix(in oklab, var(--vmm-accent) 30%, var(--card)); stroke: var(--vmm-accent); }
+  .af-chain-link { stroke: color-mix(in oklab, var(--vmm-accent) 40%, var(--color-border)); stroke-width: 1.5; stroke-dasharray: 2 3; }
 
   /* dark bg is near-black: the vault needs a stronger tint to read as a layer */
   :global(.dark) .af-vault {
@@ -424,7 +533,6 @@ const revY = (i: number) => 172 + i * 46;
 
   @keyframes af-pulse { 0%, 100% { opacity: 1; r: 3.5; } 50% { opacity: 0.4; r: 6; } }
   @keyframes af-ring { 0% { opacity: 0.5; transform: scale(1); } 100% { opacity: 0; transform: scale(1.18); } }
-  @keyframes af-dash { to { stroke-dashoffset: -20; } }
 
   /* ---- responsive: no pin, stack captions, static reveal ---- */
   @media (max-width: 900px) {
@@ -445,8 +553,8 @@ const revY = (i: number) => 172 + i * 46;
   @media (prefers-reduced-motion: reduce) {
     .js .af-group[data-reveal],
     .js .af-reveal { opacity: 1; }
-    .af-core-pulse, .af-agent-ring, .af-loop-path, .af-autofix-path { animation: none; }
-    .af-particle { display: none; }
+    .af-core-pulse, .af-agent-ring, .af-agent-ticks, .af-streak { animation: none; }
+    .af-streak, .af-particle, #af-reticle { display: none; }
     .af-step { opacity: 1; }
     /* no scrub: stack descriptions so they do not overlap */
     .af-steps { padding-bottom: 0; }
@@ -477,12 +585,42 @@ const revY = (i: number) => 172 + i * 46;
       ['#af-context'],
       ['#af-preflight', '#af-agent'],
       ['#af-loop'],
-      ['#af-testing', '#af-c1'],
-      ['#af-review', '#af-c2'],
-      ['#af-triage', '#af-c3'],
+      ['#af-testing', '#af-c1g'],
+      ['#af-review', '#af-c2g'],
+      ['#af-triage', '#af-c3g'],
       ['#af-tracevault', '#af-t0', '#af-t1', '#af-t2', '#af-t3', '#af-t4'],
     ].map((sels) => sels.flatMap((s) => Array.from(document.querySelectorAll(s))));
     const allTargets = reveal.flat();
+
+    // HUD reticle target boxes per stage (viewBox coordinates)
+    const RETICLE = [
+      { x: 268, y: 182, w: 128, h: 136 },
+      { x: 382, y: 168, w: 168, h: 52 },
+      { x: 376, y: 220, w: 184, h: 146 },
+      { x: 716, y: 150, w: 196, h: 232 },
+      { x: 932, y: 150, w: 208, h: 232 },
+      { x: 1134, y: 150, w: 184, h: 232 },
+      { x: 36, y: 454, w: 1248, h: 94 },
+    ];
+    const corners = {
+      tl: document.getElementById('af-ret-tl'),
+      tr: document.getElementById('af-ret-tr'),
+      bl: document.getElementById('af-ret-bl'),
+      br: document.getElementById('af-ret-br'),
+    };
+    const moveReticle = (idx, instant = false) => {
+      const r = RETICLE[idx];
+      if (!r || !corners.tl) return;
+      const pos = {
+        tl: { x: r.x, y: r.y, scaleX: 1, scaleY: 1 },
+        tr: { x: r.x + r.w, y: r.y, scaleX: -1, scaleY: 1 },
+        bl: { x: r.x, y: r.y + r.h, scaleX: 1, scaleY: -1 },
+        br: { x: r.x + r.w, y: r.y + r.h, scaleX: -1, scaleY: -1 },
+      };
+      Object.entries(pos).forEach(([k, p]) => {
+        gsap.to(corners[k], { ...p, opacity: 1, duration: instant ? 0 : 0.55, ease: 'power3.out' });
+      });
+    };
 
     // ---- ambient particle motion (always on unless reduced motion) ----
     // pause > 0: discrete packet (fade in, travel once, fade out, wait, repeat)
@@ -507,15 +645,20 @@ const revY = (i: number) => 172 + i * 46;
       });
     }
 
+    let lastIdx = -1;
     const setActive = (idx) => {
+      if (idx === lastIdx) return;
+      lastIdx = idx;
       groups.forEach((g, i) => g && g.classList.toggle('is-active', i === idx));
       captions.forEach((c, i) => c.classList.toggle('is-active', i === idx));
+      moveReticle(idx);
     };
 
     if (reduce || compact) {
-      // static: everything revealed, no scrub
+      // static: everything revealed, no scrub, no reticle
       gsap.set(allTargets, { opacity: 1, y: 0 });
       gsap.set('.af-pgroup', { opacity: 1 });
+      gsap.set('#af-reticle', { display: 'none' });
       captions.forEach((c) => c.classList.add('is-active'));
     } else {
       const steps = reveal.length;
@@ -537,12 +680,14 @@ const revY = (i: number) => 172 + i * 46;
 
       reveal.forEach((els, i) => {
         tl.to(els, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, i);
-        tl.to(`.af-pgroup[data-stage="${i}"]`, { opacity: 1, duration: 0.5 }, i + 0.25);
+        const grp = document.querySelector(`.af-pgroup[data-stage="${i}"]`);
+        if (grp) tl.to(grp, { opacity: 1, duration: 0.5 }, i + 0.25);
       });
       // tail room so the last stage fully lands before the scroll ends
       tl.to({}, { duration: 0.8 });
 
       setActive(0);
+      moveReticle(0, true);
     }
 
     ScrollTrigger.refresh();
