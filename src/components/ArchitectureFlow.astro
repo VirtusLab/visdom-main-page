@@ -1,0 +1,447 @@
+---
+// Architecture Flow: scroll-driven, ambient-animated SVG of the Visdom
+// AI software-engineering architecture. See docs/architecture-flow.md.
+// Edit the data arrays below to add/rename sources, tests, review levels,
+// triage branches, or the scroll captions.
+
+const sources = [
+  'Jira',
+  'Git & commit history',
+  'Comments & discussions',
+  'Repositories',
+  'Documentation',
+  'Org knowledge',
+];
+
+const testLayers = [
+  'Classic tests',
+  'Mutation testing',
+  'Architecture testing',
+  'Property-based',
+];
+
+const reviewLevels = [
+  { n: 'L1', label: 'Linting review' },
+  { n: 'L2', label: 'Deterministic review' },
+  { n: 'L3', label: 'Single-pass LLM' },
+  { n: 'L4', label: 'Deep LLM review' },
+];
+
+const triageBranches = [
+  { tone: 'green', label: 'Green · trivial', sub: 'agent auto-fixes' },
+  { tone: 'risk', label: 'High-risk · critical', sub: 'human approval gate' },
+];
+
+const captions = [
+  { n: '01', t: 'Context Fabric', d: 'We pull Jira, code history, discussions, repos and docs into one place the agent can actually query.' },
+  { n: '02', t: 'Preflight context', d: 'Before it writes a line, the agent is loaded with the context the task needs.' },
+  { n: '03', t: 'Active context', d: 'As it works, the agent keeps asking the Fabric and getting answers back. Context flows both ways, without stopping.' },
+  { n: '04', t: 'Testing layer', d: 'Finished code runs a quality gate: classic, mutation, architecture and property-based tests.' },
+  { n: '05', t: 'Multi-level code review', d: 'Four levels, each deeper than the last: linting, deterministic, single-pass LLM, then deep LLM.' },
+  { n: '06', t: 'PR & triage', d: 'A pull request sorts every bug by risk. Trivial ones the agent fixes itself; critical ones stop for a human.' },
+  { n: '07', t: 'TraceVault', d: 'Every decision, test and review is recorded to TraceVault, one audit trail across the whole system.' },
+];
+
+// Ambient particles. Each rides an SVG path (by id) via GSAP MotionPath.
+const particles = [
+  // source wires -> fabric core
+  ...sources.map((_, i) => ({ path: `af-w${i}`, dur: 2.6, delay: i * 0.25, tone: 'ctx' })),
+  // active context loop (the centerpiece, both directions)
+  { path: 'af-answer', dur: 1.9, delay: 0, tone: 'accent' },
+  { path: 'af-answer', dur: 1.9, delay: 0.95, tone: 'accent' },
+  { path: 'af-query', dur: 1.9, delay: 0.4, tone: 'accent' },
+  { path: 'af-query', dur: 1.9, delay: 1.3, tone: 'accent' },
+  // preflight (one-way, into the agent)
+  { path: 'af-prerail', dur: 2.4, delay: 0, tone: 'accent' },
+  { path: 'af-prerail', dur: 2.4, delay: 1.2, tone: 'accent' },
+  // pipeline connectors
+  { path: 'af-c1', dur: 1.4, delay: 0, tone: 'accent' },
+  { path: 'af-c2', dur: 1.4, delay: 0.5, tone: 'accent' },
+  { path: 'af-c3', dur: 1.4, delay: 1.0, tone: 'accent' },
+  // auto-fix loop back to the agent
+  { path: 'af-autofix', dur: 3.4, delay: 0, tone: 'green' },
+  // trace drops into the vault
+  ...[0, 1, 2, 3, 4].map((i) => ({ path: `af-t${i}`, dur: 1.6, delay: i * 0.3, tone: 'trace' })),
+  ...[0, 1, 2, 3, 4].map((i) => ({ path: `af-t${i}`, dur: 1.6, delay: i * 0.3 + 0.8, tone: 'trace' })),
+];
+
+// vertical layout helpers
+const srcY = (i: number) => 92 + i * 54;
+const testY = (i: number) => 170 + i * 46;
+const revW = [176, 152, 128, 104];
+const revX = [948, 960, 972, 984];
+const revY = (i: number) => 172 + i * 46;
+---
+
+<section class="af" id="how-it-works" aria-labelledby="af-title">
+  <div class="container af-head">
+    <p class="section-label">§ 01 · How a change flows</p>
+    <h2 id="af-title" class="section-title">One architecture, end to end</h2>
+    <p class="section-subtitle">
+      Context Fabric feeds the Coding Agent and keeps answering it as it works. The code then runs
+      testing, multi-level review, and risk triage, while TraceVault records every step.
+    </p>
+  </div>
+
+  <div class="af-track">
+    <div class="af-viewport">
+      <div class="af-stage">
+        <svg viewBox="0 0 1320 760" role="img" aria-labelledby="af-svg-title" class="af-svg" preserveAspectRatio="xMidYMid meet">
+          <title id="af-svg-title">Visdom architecture: Context Fabric, Coding Agent, Testing, Code Review, PR triage and TraceVault.</title>
+
+          <defs>
+            <marker id="af-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" class="af-arrowhead" />
+            </marker>
+          </defs>
+
+          <!-- ============ TRACEVAULT (baseplate, spans everything) ============ -->
+          <g id="af-tracevault" class="af-group" data-reveal>
+            <rect x="44" y="648" width="1232" height="84" rx="18" class="af-vault" />
+            <line x1="44" y1="676" x2="1276" y2="676" class="af-vault-rule" />
+            <text x="70" y="682" class="af-vault-label">TraceVault</text>
+            <text x="70" y="706" class="af-vault-sub">Signed, hash-chained record across every step</text>
+            <text x="1252" y="694" text-anchor="end" class="af-vault-tag">observability</text>
+          </g>
+
+          <!-- trace-drop paths (stage bottom -> vault) -->
+          <path id="af-t0" class="af-trace-path" d="M331,322 L331,648" />
+          <path id="af-t1" class="af-trace-path" d="M600,316 L600,648" />
+          <path id="af-t2" class="af-trace-path" d="M814,372 L814,648" />
+          <path id="af-t3" class="af-trace-path" d="M1034,362 L1034,648" />
+          <path id="af-t4" class="af-trace-path" d="M1225,374 L1225,648" />
+
+          <!-- ============ CONTEXT FABRIC ============ -->
+          <g id="af-context" class="af-group" data-reveal>
+            <text x="44" y="72" class="af-stage-title">Context Fabric</text>
+            {sources.map((s, i) => (
+              <g class="af-src">
+                <rect x="44" y={srcY(i)} width="188" height="42" rx="10" class="af-card" />
+                <circle cx="64" cy={srcY(i) + 21} r="4" class="af-dot" />
+                <text x="80" y={srcY(i) + 26} class="af-card-label">{s}</text>
+                <path id={`af-w${i}`} class="af-wire" d={`M232,${srcY(i) + 21} C 256,${srcY(i) + 21} 256,250 276,250`} />
+              </g>
+            ))}
+            <!-- fabric core -->
+            <rect x="276" y="190" width="112" height="120" rx="20" class="af-core" />
+            <text x="332" y="240" text-anchor="middle" class="af-core-label">Context</text>
+            <text x="332" y="264" text-anchor="middle" class="af-core-label">Fabric</text>
+            <circle cx="332" cy="288" r="3.5" class="af-core-pulse" />
+          </g>
+
+          <!-- ============ PREFLIGHT RAIL ============ -->
+          <g id="af-preflight" class="af-group" data-reveal>
+            <path id="af-prerail" class="af-rail-pre" d="M388,214 L532,210" marker-end="url(#af-arrow)" />
+            <text x="460" y="196" text-anchor="middle" class="af-rail-label">Preflight context</text>
+          </g>
+
+          <!-- ============ ACTIVE CONTEXT LOOP (centerpiece) ============ -->
+          <g id="af-loop" class="af-group" data-reveal>
+            <path id="af-answer" class="af-loop-path" d="M390,256 C 432,210 508,210 548,242" marker-end="url(#af-arrow)" />
+            <path id="af-query" class="af-loop-path" d="M548,262 C 508,314 432,314 390,278" marker-end="url(#af-arrow)" />
+            <text x="468" y="300" text-anchor="middle" class="af-loop-label">Active context</text>
+            <text x="468" y="320" text-anchor="middle" class="af-loop-sub">continuous · two-way</text>
+          </g>
+
+          <!-- ============ CODING AGENT (always present hub) ============ -->
+          <g id="af-agent" class="af-group af-group--base">
+            <circle cx="600" cy="240" r="74" class="af-agent-ring" />
+            <circle cx="600" cy="240" r="62" class="af-agent-core" />
+            <text x="600" y="234" text-anchor="middle" class="af-agent-label">Coding</text>
+            <text x="600" y="258" text-anchor="middle" class="af-agent-label">Agent</text>
+          </g>
+
+          <!-- pipeline connectors -->
+          <path id="af-c1" class="af-pipe" d="M666,240 L724,240" marker-end="url(#af-arrow)" />
+          <path id="af-c2" class="af-pipe" d="M904,250 L938,250" marker-end="url(#af-arrow)" />
+          <path id="af-c3" class="af-pipe" d="M1132,250 C 1142,250 1142,188 1150,188" marker-end="url(#af-arrow)" />
+
+          <!-- ============ TESTING ============ -->
+          <g id="af-testing" class="af-group" data-reveal>
+            <text x="726" y="150" class="af-stage-title">Testing</text>
+            <rect x="724" y="158" width="180" height="212" rx="16" class="af-panel" />
+            {testLayers.map((t, i) => (
+              <g class="af-test-row">
+                <rect x="740" y={testY(i)} width="148" height="36" rx="8" class="af-chip" />
+                <text x="814" y={testY(i) + 23} text-anchor="middle" class="af-chip-label">{t}</text>
+              </g>
+            ))}
+          </g>
+
+          <!-- ============ CODE REVIEW (deepening) ============ -->
+          <g id="af-review" class="af-group" data-reveal>
+            <text x="940" y="150" class="af-stage-title">Code review</text>
+            <rect x="940" y="158" width="192" height="212" rx="16" class="af-panel" />
+            <text x="1036" y="392" text-anchor="middle" class="af-depth-label">deeper analysis ↓</text>
+            {reviewLevels.map((r, i) => (
+              <g class={`af-review-row af-depth-${i}`}>
+                <rect x={revX[i]} y={revY(i)} width={revW[i]} height="36" rx="8" class="af-review-bar" />
+                <text x={revX[i] + 14} y={revY(i) + 23} class="af-review-n">{r.n}</text>
+                <text x={revX[i] + revW[i] - 12} y={revY(i) + 23} text-anchor="end" class="af-review-label">{r.label}</text>
+              </g>
+            ))}
+          </g>
+
+          <!-- ============ PR & TRIAGE ============ -->
+          <g id="af-triage" class="af-group" data-reveal>
+            <text x="1150" y="150" class="af-stage-title">PR &amp; triage</text>
+            <rect x="1150" y="158" width="150" height="54" rx="12" class="af-pr" />
+            <text x="1225" y="190" text-anchor="middle" class="af-pr-label">Pull Request</text>
+
+            <!-- fork -->
+            <path class="af-branch af-branch--green" d="M1225,212 C 1225,232 1190,236 1190,250" />
+            <path class="af-branch af-branch--risk" d="M1225,212 C 1225,290 1260,300 1260,314" />
+
+            <g class="af-triage-node af-triage-node--green">
+              <rect x="1150" y="250" width="150" height="48" rx="10" class="af-card af-card--green" />
+              <text x="1166" y="270" class="af-card-label af-card-label--green">Green · trivial</text>
+              <text x="1166" y="288" class="af-card-sub">agent auto-fixes</text>
+            </g>
+            <g class="af-triage-node af-triage-node--risk">
+              <rect x="1150" y="314" width="150" height="48" rx="10" class="af-card af-card--risk" />
+              <text x="1190" y="334" class="af-card-label af-card-label--risk">High-risk</text>
+              <text x="1190" y="352" class="af-card-sub">human approval gate</text>
+              <g class="af-human" transform="translate(1166,330)">
+                <circle cx="0" cy="-4" r="5" class="af-human-mark" />
+                <path d="M-8,10 a8,9 0 0 1 16,0" class="af-human-mark" />
+              </g>
+            </g>
+
+            <!-- auto-fix loop back to the agent (long arc along the top) -->
+            <path id="af-autofix" class="af-autofix-path" d="M1150,262 C 880,70 760,70 600,162" marker-end="url(#af-arrow)" />
+            <text x="868" y="60" text-anchor="middle" class="af-autofix-label">auto-fix → back to agent</text>
+          </g>
+
+          <!-- ============ AMBIENT PARTICLES ============ -->
+          <g class="af-particles" aria-hidden="true">
+            {particles.map((p) => (
+              <circle class={`af-particle af-particle--${p.tone}`} r="3.2" cx="-20" cy="-20"
+                data-path={`#${p.path}`} data-dur={p.dur} data-delay={p.delay} />
+            ))}
+          </g>
+        </svg>
+      </div>
+
+      <ol class="af-captions">
+        {captions.map((c, i) => (
+          <li class={`af-caption${i === 0 ? ' is-active' : ''}`} data-step={i}>
+            <span class="af-caption-n">{c.n}</span>
+            <span class="af-caption-t">{c.t}</span>
+            <span class="af-caption-d">{c.d}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .af { position: relative; padding: 4rem 0 2rem; }
+  .af-head { max-width: 48rem; margin-bottom: 2rem; }
+  .af-head .section-subtitle { margin-top: 0.75rem; }
+
+  /* tall track -> sticky viewport for the scrubbed scene */
+  .af-track { position: relative; height: 460vh; }
+  .af-viewport {
+    position: sticky;
+    top: 0;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1.75fr) minmax(260px, 1fr);
+    gap: 2.5rem;
+    align-items: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1.5rem clamp(20px, 5vw, 48px);
+  }
+
+  .af-svg { width: 100%; height: auto; overflow: visible; }
+
+  /* ---- stage reveal states (driven by GSAP; sane defaults without JS) ---- */
+  .af-group { transition: opacity 0.3s ease; }
+  .js .af-group[data-reveal] { opacity: 0.22; }
+  .js .af-group[data-reveal].is-revealed { opacity: 1; }
+  .af-group.is-active :is(.af-core, .af-agent-core, .af-pr, .af-panel) { filter: drop-shadow(0 0 10px var(--vmm-accent)); }
+
+  /* ---- nodes / cards ---- */
+  .af-card { fill: var(--card); stroke: var(--color-border); stroke-width: 1; }
+  .af-card--green { stroke: var(--vmm-accent); }
+  .af-card--risk { stroke: var(--color-amber); }
+  .af-card-label { fill: var(--color-text); font: 600 14px var(--font-body); }
+  .af-card-label--green { fill: var(--color-emerald-dark); }
+  .af-card-label--risk { fill: var(--color-amber); }
+  .af-card-sub { fill: var(--color-text-muted); font: 500 11px var(--font-body); }
+  .af-dot { fill: var(--vmm-accent); }
+
+  .af-stage-title { fill: var(--color-text-muted); font: 700 13px var(--font-body); letter-spacing: 0.12em; text-transform: uppercase; }
+
+  .af-core { fill: var(--vmm-accent-soft); stroke: var(--vmm-accent); stroke-width: 1.5; }
+  .af-core-label { fill: var(--color-text); font: 700 16px var(--font-heading); }
+  .af-core-pulse { fill: var(--vmm-accent); animation: af-pulse 2.4s ease-in-out infinite; }
+
+  .af-wire, .af-pipe, .af-trace-path { fill: none; stroke: var(--color-border); stroke-width: 1.5; }
+  .af-trace-path { stroke-dasharray: 2 7; opacity: 0.5; }
+  .af-arrowhead { fill: var(--vmm-accent); }
+
+  .af-rail-pre { fill: none; stroke: var(--vmm-accent); stroke-width: 3; }
+  .af-rail-label { fill: var(--color-text-secondary); font: 600 12px var(--font-body); }
+
+  .af-loop-path { fill: none; stroke: var(--vmm-accent); stroke-width: 2; stroke-dasharray: 5 5; }
+  .af-loop-label { fill: var(--color-emerald-dark); font: 700 13px var(--font-body); }
+  .af-loop-sub { fill: var(--color-text-muted); font: 500 11px var(--font-body); }
+
+  .af-agent-ring { fill: none; stroke: var(--vmm-accent); stroke-width: 2; opacity: 0.5; transform-box: fill-box; transform-origin: center; animation: af-ring 2.8s ease-out infinite; }
+  .af-agent-core { fill: var(--vmm-accent); }
+  .af-agent-label { fill: var(--primary-foreground, #fff); font: 700 17px var(--font-heading); }
+
+  .af-panel { fill: var(--color-surface); stroke: var(--color-border); stroke-width: 1; }
+  .af-chip { fill: var(--card); stroke: var(--color-border); stroke-width: 1; }
+  .af-chip-label { fill: var(--color-text-secondary); font: 600 12px var(--font-body); }
+
+  .af-review-bar { fill: var(--vmm-accent-soft); stroke: var(--vmm-accent); stroke-width: 1; }
+  .af-depth-0 .af-review-bar { opacity: 0.55; }
+  .af-depth-1 .af-review-bar { opacity: 0.7; }
+  .af-depth-2 .af-review-bar { opacity: 0.85; }
+  .af-depth-3 .af-review-bar { opacity: 1; }
+  .af-review-n { fill: var(--color-emerald-dark); font: 700 11px var(--font-mono); }
+  .af-review-label { fill: var(--color-text-secondary); font: 600 11px var(--font-body); }
+  .af-depth-label { fill: var(--color-text-muted); font: 600 11px var(--font-body); }
+
+  .af-pr { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 1.5; }
+  .af-pr-label { fill: var(--color-text); font: 700 14px var(--font-body); }
+  .af-branch { fill: none; stroke-width: 2; }
+  .af-branch--green { stroke: var(--vmm-accent); }
+  .af-branch--risk { stroke: var(--color-amber); }
+  .af-human-mark { fill: none; stroke: var(--color-amber); stroke-width: 1.6; }
+
+  .af-autofix-path { fill: none; stroke: var(--vmm-accent); stroke-width: 1.5; stroke-dasharray: 4 6; opacity: 0.55; }
+  .af-autofix-label { fill: var(--color-emerald-dark); font: 600 11px var(--font-body); opacity: 0.85; }
+
+  /* ---- vault ---- */
+  .af-vault { fill: var(--color-surface); stroke: var(--color-border); stroke-width: 1; }
+  .af-vault-rule { stroke: var(--color-border); stroke-width: 1; opacity: 0.6; }
+  .af-vault-label { fill: var(--color-text); font: 700 18px var(--font-heading); }
+  .af-vault-sub { fill: var(--color-text-muted); font: 500 12px var(--font-body); }
+  .af-vault-tag { fill: var(--vmm-accent); font: 700 11px var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; }
+
+  /* ---- particles ---- */
+  .af-particle { fill: var(--vmm-accent); }
+  .af-particle--green { fill: var(--vmm-accent); }
+  .af-particle--risk { fill: var(--color-amber); }
+  .af-particle--trace { fill: var(--color-text-muted); r: 2.4; }
+  .af-particle--ctx { fill: var(--vmm-accent-2); }
+
+  /* ---- captions ---- */
+  .af-captions { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+  .af-caption {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "n t" ". d";
+    gap: 2px 12px;
+    padding: 12px 14px;
+    border-left: 2px solid var(--color-border);
+    border-radius: 0 10px 10px 0;
+    opacity: 0.4;
+    transition: opacity 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  }
+  .af-caption.is-active { opacity: 1; border-left-color: var(--vmm-accent); background: var(--vmm-accent-soft); }
+  .af-caption-n { grid-area: n; font: 700 12px var(--font-mono); color: var(--vmm-accent); align-self: center; }
+  .af-caption-t { grid-area: t; font: 700 16px var(--font-heading); color: var(--color-text); }
+  .af-caption-d { grid-area: d; font: 400 13.5px var(--font-body); color: var(--color-text-secondary); line-height: 1.5; }
+
+  @keyframes af-pulse { 0%, 100% { opacity: 1; r: 3.5; } 50% { opacity: 0.4; r: 6; } }
+  @keyframes af-ring { 0% { opacity: 0.5; transform: scale(1); } 100% { opacity: 0; transform: scale(1.18); } }
+
+  /* ---- responsive: no pin, stack captions, static reveal ---- */
+  @media (max-width: 900px) {
+    .af-track { height: auto; }
+    .af-viewport { position: static; grid-template-columns: 1fr; min-height: 0; gap: 1.5rem; }
+    .js .af-group[data-reveal] { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js .af-group[data-reveal] { opacity: 1; }
+    .af-core-pulse, .af-agent-ring { animation: none; }
+    .af-particle { display: none; }
+    .af-caption { opacity: 1; }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+
+  gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+
+  const root = document.querySelector('.af');
+  if (root) {
+    document.documentElement.classList.add('js');
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const compact = window.matchMedia('(max-width: 900px)').matches;
+
+    const groups = ['af-context', 'af-preflight', 'af-loop', 'af-testing', 'af-review', 'af-triage', 'af-tracevault']
+      .map((id) => document.getElementById(id));
+    const captions = Array.from(root.querySelectorAll('.af-caption'));
+
+    // ---- ambient particle flow (always on unless reduced motion) ----
+    if (!reduce) {
+      root.querySelectorAll('.af-particle').forEach((p) => {
+        const sel = p.getAttribute('data-path');
+        const path = sel && document.querySelector(sel);
+        if (!path) return;
+        const dur = parseFloat(p.getAttribute('data-dur') || '2');
+        const delay = parseFloat(p.getAttribute('data-delay') || '0');
+        gsap.set(p, { opacity: 1 });
+        gsap.to(p, {
+          duration: dur,
+          delay,
+          repeat: -1,
+          ease: 'none',
+          motionPath: { path, align: path, alignOrigin: [0.5, 0.5] },
+        });
+      });
+    }
+
+    const setActive = (idx) => {
+      groups.forEach((g, i) => g && g.classList.toggle('is-active', i === idx));
+      captions.forEach((c, i) => c.classList.toggle('is-active', i === idx));
+    };
+
+    if (reduce || compact) {
+      // static: everything revealed, no scrub
+      groups.forEach((g) => g && g.classList.add('is-revealed'));
+      captions.forEach((c) => c.classList.add('is-active'));
+    } else {
+      const steps = groups.length;
+      groups.forEach((g) => g && g.classList.remove('is-revealed'));
+      // TraceVault is always partly present (it collects throughout)
+      const tv = document.getElementById('af-tracevault');
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.af-track',
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.5,
+          onUpdate: (self) => {
+            const idx = Math.min(steps - 1, Math.floor(self.progress * steps));
+            setActive(idx);
+          },
+        },
+      });
+
+      groups.forEach((g, i) => {
+        if (!g) return;
+        tl.to(g, { opacity: 1, duration: 1, onStart: () => g.classList.add('is-revealed'), onReverseComplete: () => g.classList.remove('is-revealed') }, i);
+      });
+
+      if (tv) gsap.set(tv, { opacity: 0.5 });
+      setActive(0);
+      if (groups[0]) groups[0].classList.add('is-revealed');
+    }
+
+    ScrollTrigger.refresh();
+  }
+</script>
