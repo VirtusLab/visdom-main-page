@@ -54,26 +54,26 @@ const captions = [
 
 // Ambient particles. Each rides an SVG path (by id) via GSAP MotionPath.
 // `stage` ties the particle to the reveal step that owns its path.
+// `pause` > 0 turns the dot into a discrete "packet": fade in, travel once,
+// fade out, wait, repeat. Without `pause` it loops continuously (the context loop).
 const particles = [
-  // source wires -> fabric core (stage 0)
-  ...sources.map((_, i) => ({ path: `af-w${i}`, dur: 2.6, delay: i * 0.25, tone: 'ctx', stage: 0 })),
+  // source wires -> fabric core (stage 0): calm, staggered feed
+  ...sources.map((_, i) => ({ path: `af-w${i}`, dur: 3.0, delay: i * 0.55, pause: 1.8, tone: 'ctx', stage: 0 })),
   // preflight, one-way into the agent (stage 1)
-  { path: 'af-prerail', dur: 2.4, delay: 0, tone: 'accent', stage: 1 },
-  { path: 'af-prerail', dur: 2.4, delay: 1.2, tone: 'accent', stage: 1 },
-  // active context loop, the centerpiece, both directions (stage 2)
+  { path: 'af-prerail', dur: 2.0, delay: 0.2, pause: 1.4, tone: 'accent', stage: 1 },
+  // active context loop, the centerpiece: continuous, both directions (stage 2)
   { path: 'af-answer', dur: 1.9, delay: 0, tone: 'accent', stage: 2 },
   { path: 'af-answer', dur: 1.9, delay: 0.95, tone: 'accent', stage: 2 },
   { path: 'af-query', dur: 1.9, delay: 0.4, tone: 'accent', stage: 2 },
   { path: 'af-query', dur: 1.9, delay: 1.3, tone: 'accent', stage: 2 },
-  // pipeline connectors
-  { path: 'af-c1', dur: 1.4, delay: 0, tone: 'accent', stage: 3 },
-  { path: 'af-c2', dur: 1.4, delay: 0.5, tone: 'accent', stage: 4 },
-  { path: 'af-c3', dur: 1.4, delay: 1.0, tone: 'accent', stage: 5 },
+  // pipeline connectors: one pulse chained left -> right (cycle = dur + pause = 3s)
+  { path: 'af-c1', dur: 0.9, delay: 0, pause: 2.1, tone: 'accent', stage: 3 },
+  { path: 'af-c2', dur: 0.9, delay: 1.0, pause: 2.1, tone: 'accent', stage: 4 },
+  { path: 'af-c3', dur: 0.9, delay: 2.0, pause: 2.1, tone: 'accent', stage: 5 },
   // auto-fix loop back to the agent (stage 5)
-  { path: 'af-autofix', dur: 3.4, delay: 0, tone: 'green', stage: 5 },
+  { path: 'af-autofix', dur: 3.2, delay: 0.6, pause: 1.8, tone: 'green', stage: 5 },
   // trace drops into the vault (stage 6)
-  ...[0, 1, 2, 3, 4].map((i) => ({ path: `af-t${i}`, dur: 1.6, delay: i * 0.3, tone: 'trace', stage: 6 })),
-  ...[0, 1, 2, 3, 4].map((i) => ({ path: `af-t${i}`, dur: 1.6, delay: i * 0.3 + 0.8, tone: 'trace', stage: 6 })),
+  ...[0, 1, 2, 3, 4].map((i) => ({ path: `af-t${i}`, dur: 1.4, delay: i * 0.5, pause: 1.8, tone: 'trace', stage: 6 })),
 ];
 
 // vertical layout helpers
@@ -102,7 +102,7 @@ const revY = (i: number) => 172 + i * 46;
           <title id="af-svg-title">Visdom architecture: Context Fabric, Coding Agent, Testing, Code Review, PR triage and TraceVault.</title>
 
           <defs>
-            <marker id="af-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <marker id="af-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
               <path d="M0,0 L10,5 L0,10 z" class="af-arrowhead" />
             </marker>
             <radialGradient id="af-agent-grad" cx="38%" cy="32%" r="78%">
@@ -138,7 +138,9 @@ const revY = (i: number) => 172 + i * 46;
                 <rect x="44" y={srcY(i)} width="214" height="44" rx="11" class="af-card" />
                 <g class="af-src-icon" transform={`translate(60,${srcY(i) + 11}) scale(0.9)`} set:html={icons[s.icon]} />
                 <text x="96" y={srcY(i) + 27} class="af-card-label">{s.label}</text>
-                <path id={`af-w${i}`} class="af-wire" d={`M258,${srcY(i) + 22} C 268,${srcY(i) + 22} 268,250 276,250`} />
+                {/* fan-in: each wire lands on its own port on the fabric edge */}
+                <path id={`af-w${i}`} class="af-wire" d={`M258,${srcY(i) + 22} C 268,${srcY(i) + 22} 264,${206 + i * 18} 276,${206 + i * 18}`} />
+                <circle cx="276" cy={206 + i * 18} r="2.5" class="af-port" />
               </g>
             ))}
             <!-- fabric core -->
@@ -150,14 +152,14 @@ const revY = (i: number) => 172 + i * 46;
 
           <!-- ============ PREFLIGHT RAIL ============ -->
           <g id="af-preflight" class="af-group" data-reveal>
-            <path id="af-prerail" class="af-rail-pre" d="M388,214 L532,210" marker-end="url(#af-arrow)" />
-            <text x="460" y="196" text-anchor="middle" class="af-rail-label">Preflight context</text>
+            <path id="af-prerail" class="af-rail-pre" d="M388,202 L534,206" marker-end="url(#af-arrow)" />
+            <text x="458" y="186" text-anchor="middle" class="af-rail-label">Preflight context</text>
           </g>
 
           <!-- ============ ACTIVE CONTEXT LOOP (centerpiece) ============ -->
           <g id="af-loop" class="af-group" data-reveal>
-            <path id="af-answer" class="af-loop-path" d="M390,256 C 432,210 508,210 548,242" marker-end="url(#af-arrow)" />
-            <path id="af-query" class="af-loop-path" d="M548,262 C 508,314 432,314 390,278" marker-end="url(#af-arrow)" />
+            <path id="af-answer" class="af-loop-path" d="M390,258 C 436,226 506,228 544,246" marker-end="url(#af-arrow)" />
+            <path id="af-query" class="af-loop-path" d="M544,266 C 506,312 436,310 390,282" marker-end="url(#af-arrow)" />
             <text x="468" y="336" text-anchor="middle" class="af-loop-label">Active context</text>
             <text x="468" y="356" text-anchor="middle" class="af-loop-sub">continuous · two-way</text>
           </g>
@@ -170,10 +172,10 @@ const revY = (i: number) => 172 + i * 46;
             <text x="600" y="258" text-anchor="middle" class="af-agent-label">Agent</text>
           </g>
 
-          <!-- pipeline connectors -->
-          <path id="af-c1" class="af-pipe af-reveal" d="M666,240 L724,240" marker-end="url(#af-arrow)" />
-          <path id="af-c2" class="af-pipe af-reveal" d="M904,250 L938,250" marker-end="url(#af-arrow)" />
-          <path id="af-c3" class="af-pipe af-reveal" d="M1132,250 C 1142,250 1142,188 1150,188" marker-end="url(#af-arrow)" />
+          <!-- pipeline connectors (the main spine) -->
+          <path id="af-c1" class="af-pipe af-reveal" d="M676,240 L722,240" marker-end="url(#af-arrow)" />
+          <path id="af-c2" class="af-pipe af-reveal" d="M904,250 L936,250" marker-end="url(#af-arrow)" />
+          <path id="af-c3" class="af-pipe af-reveal" d="M1132,250 C 1142,250 1141,188 1148,186" marker-end="url(#af-arrow)" />
 
           <!-- ============ TESTING ============ -->
           <g id="af-testing" class="af-group" data-reveal>
@@ -226,16 +228,20 @@ const revY = (i: number) => 172 + i * 46;
               </g>
             </g>
 
-            <!-- auto-fix loop back to the agent (long arc along the top) -->
-            <path id="af-autofix" class="af-autofix-path" d="M1150,262 C 880,70 760,70 600,162" marker-end="url(#af-arrow)" />
-            <text x="868" y="60" text-anchor="middle" class="af-autofix-label">auto-fix → back to agent</text>
+            <!-- auto-fix loop back to the agent: leaves the PR top, arcs clear above the panels -->
+            <path id="af-autofix" class="af-autofix-path" d="M1225,156 C 1020,36 770,42 608,156" marker-end="url(#af-arrow)" />
+            <text x="915" y="46" text-anchor="middle" class="af-autofix-label">auto-fix → back to agent</text>
           </g>
 
-          <!-- ============ AMBIENT PARTICLES ============ -->
+          <!-- ============ AMBIENT PARTICLES (grouped per reveal stage) ============ -->
           <g class="af-particles" aria-hidden="true">
-            {particles.map((p) => (
-              <circle class={`af-particle af-particle--${p.tone}`} r="3.2" cx="-20" cy="-20"
-                data-path={`#${p.path}`} data-dur={p.dur} data-delay={p.delay} data-stage={p.stage} />
+            {[0, 1, 2, 3, 4, 5, 6].map((stage) => (
+              <g class="af-pgroup" data-stage={stage}>
+                {particles.filter((p) => p.stage === stage).map((p) => (
+                  <circle class={`af-particle af-particle--${p.tone}`} r="3.2" cx="-20" cy="-20"
+                    data-path={`#${p.path}`} data-dur={p.dur} data-delay={p.delay} data-pause={p.pause ?? 0} />
+                ))}
+              </g>
             ))}
           </g>
         </svg>
@@ -300,18 +306,23 @@ const revY = (i: number) => 172 + i * 46;
   .af-core-label { fill: var(--color-text); font: 700 17px var(--font-heading); }
   .af-core-pulse { fill: var(--vmm-accent); animation: af-pulse 2.4s ease-in-out infinite; }
 
-  .af-wire, .af-pipe, .af-trace-path {
+  .af-wire, .af-trace-path {
     fill: none;
     stroke: color-mix(in oklab, var(--vmm-accent) 30%, var(--color-border));
     stroke-width: 1.75;
   }
-  .af-trace-path { stroke-dasharray: 2 7; opacity: 0.6; }
+  .af-trace-path { stroke-dasharray: 3 7; opacity: 0.6; }
+  .af-port { fill: var(--vmm-accent); opacity: 0.8; }
+
+  /* the main spine reads as THE flow: solid, accent, thicker */
+  .af-pipe { fill: none; stroke: var(--vmm-accent); stroke-width: 2.5; opacity: 0.85; }
   .af-arrowhead { fill: var(--vmm-accent); }
 
   .af-rail-pre { fill: none; stroke: var(--vmm-accent); stroke-width: 3; }
   .af-rail-label { fill: var(--color-text); font: 600 14px var(--font-body); }
 
-  .af-loop-path { fill: none; stroke: var(--vmm-accent); stroke-width: 2; stroke-dasharray: 5 5; }
+  /* dashes drift along the path direction: constant, legible direction cue */
+  .af-loop-path { fill: none; stroke: var(--vmm-accent); stroke-width: 2; stroke-dasharray: 5 5; animation: af-dash 1.1s linear infinite; }
   .af-loop-label { fill: var(--color-emerald-dark); font: 700 15px var(--font-body); }
   .af-loop-sub { fill: var(--color-text-secondary); font: 500 12.5px var(--font-body); }
 
@@ -339,7 +350,7 @@ const revY = (i: number) => 172 + i * 46;
   .af-branch--risk { stroke: var(--color-amber); }
   .af-human-mark { fill: none; stroke: var(--color-amber); stroke-width: 1.6; }
 
-  .af-autofix-path { fill: none; stroke: var(--vmm-accent); stroke-width: 1.5; stroke-dasharray: 4 6; opacity: 0.6; }
+  .af-autofix-path { fill: none; stroke: var(--vmm-accent); stroke-width: 1.5; stroke-dasharray: 4 6; opacity: 0.6; animation: af-dash 1.4s linear infinite; }
   .af-autofix-label { fill: var(--color-emerald-dark); font: 600 13px var(--font-body); }
 
   /* ---- vault ---- */
@@ -407,6 +418,7 @@ const revY = (i: number) => 172 + i * 46;
 
   @keyframes af-pulse { 0%, 100% { opacity: 1; r: 3.5; } 50% { opacity: 0.4; r: 6; } }
   @keyframes af-ring { 0% { opacity: 0.5; transform: scale(1); } 100% { opacity: 0; transform: scale(1.18); } }
+  @keyframes af-dash { to { stroke-dashoffset: -20; } }
 
   /* ---- responsive: no pin, stack captions, static reveal ---- */
   @media (max-width: 900px) {
@@ -427,7 +439,7 @@ const revY = (i: number) => 172 + i * 46;
   @media (prefers-reduced-motion: reduce) {
     .js .af-group[data-reveal],
     .js .af-reveal { opacity: 1; }
-    .af-core-pulse, .af-agent-ring { animation: none; }
+    .af-core-pulse, .af-agent-ring, .af-loop-path, .af-autofix-path { animation: none; }
     .af-particle { display: none; }
     .af-step { opacity: 1; }
     /* no scrub: stack descriptions so they do not overlap */
@@ -467,18 +479,25 @@ const revY = (i: number) => 172 + i * 46;
     const allTargets = reveal.flat();
 
     // ---- ambient particle motion (always on unless reduced motion) ----
+    // pause > 0: discrete packet (fade in, travel once, fade out, wait, repeat)
+    // pause = 0: continuous orbit (the active-context loop)
     if (!reduce) {
       root.querySelectorAll('.af-particle').forEach((p) => {
         const sel = p.getAttribute('data-path');
         const path = sel && document.querySelector(sel);
         if (!path) return;
-        gsap.to(p, {
-          duration: parseFloat(p.getAttribute('data-dur') || '2'),
-          delay: parseFloat(p.getAttribute('data-delay') || '0'),
-          repeat: -1,
-          ease: 'none',
-          motionPath: { path, align: path, alignOrigin: [0.5, 0.5] },
-        });
+        const dur = parseFloat(p.getAttribute('data-dur') || '2');
+        const delay = parseFloat(p.getAttribute('data-delay') || '0');
+        const pause = parseFloat(p.getAttribute('data-pause') || '0');
+        const motion = { motionPath: { path, align: path, alignOrigin: [0.5, 0.5] } };
+        if (pause > 0) {
+          const t = gsap.timeline({ repeat: -1, repeatDelay: pause, delay });
+          t.fromTo(p, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: 'none' }, 0)
+            .to(p, { ...motion, duration: dur, ease: 'power1.inOut' }, 0)
+            .to(p, { opacity: 0, duration: 0.25, ease: 'none' }, dur - 0.25);
+        } else {
+          gsap.to(p, { ...motion, duration: dur, delay, repeat: -1, ease: 'none' });
+        }
       });
     }
 
@@ -490,13 +509,15 @@ const revY = (i: number) => 172 + i * 46;
     if (reduce || compact) {
       // static: everything revealed, no scrub
       gsap.set(allTargets, { opacity: 1, y: 0 });
-      gsap.set('.af-particle', { opacity: reduce ? 0 : 1 });
+      gsap.set('.af-pgroup', { opacity: 1 });
       captions.forEach((c) => c.classList.add('is-active'));
     } else {
       const steps = reveal.length;
-      // start fully hidden, then unveil one cluster per scroll step
+      // start fully hidden, then unveil one cluster per scroll step.
+      // particles are gated via their stage GROUP, so the per-dot ambient
+      // tweens never fight the scroll tween over the same property.
       gsap.set(allTargets, { opacity: 0, y: 14 });
-      gsap.set('.af-particle', { opacity: 0 });
+      gsap.set('.af-pgroup', { opacity: 0 });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -510,7 +531,7 @@ const revY = (i: number) => 172 + i * 46;
 
       reveal.forEach((els, i) => {
         tl.to(els, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, i);
-        tl.to(`.af-particle[data-stage="${i}"]`, { opacity: 1, duration: 0.5 }, i + 0.25);
+        tl.to(`.af-pgroup[data-stage="${i}"]`, { opacity: 1, duration: 0.5 }, i + 0.25);
       });
       // tail room so the last stage fully lands before the scroll ends
       tl.to({}, { duration: 0.8 });
