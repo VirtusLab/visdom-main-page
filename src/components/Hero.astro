@@ -80,13 +80,6 @@
               </div>
             ))}
           </div>
-
-          <div class="hv-footer">
-            <div>
-              <span class="hv-footer-label">What your team keeps</span>
-              <strong>The operating capability</strong>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -302,31 +295,6 @@
     line-height: 1.6;
   }
 
-  .hv-footer {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    padding-top: 16px;
-    margin-top: 16px;
-    border-top: 1px solid var(--color-border-light);
-  }
-
-  .hv-footer > div {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border-light);
-    border-radius: 10px;
-    padding: 12px 14px;
-  }
-
-  .hv-footer-label {
-    display: block;
-    font-size: 0.74rem;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--color-text-muted);
-    margin-bottom: 0.35rem;
-  }
-
   @media (max-width: 767px) {
     .hero {
       padding-top: 7rem;
@@ -354,7 +322,6 @@
     }
 
     .hv-header,
-    .hv-footer,
     .hv-row {
       grid-template-columns: 1fr;
     }
