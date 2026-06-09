@@ -135,10 +135,10 @@ const revY = (i: number) => 172 + i * 46;
             <text x="44" y="72" class="af-stage-title">Context Fabric</text>
             {sources.map((s, i) => (
               <g class="af-src">
-                <rect x="44" y={srcY(i)} width="204" height="44" rx="11" class="af-card" />
+                <rect x="44" y={srcY(i)} width="214" height="44" rx="11" class="af-card" />
                 <g class="af-src-icon" transform={`translate(60,${srcY(i) + 11}) scale(0.9)`} set:html={icons[s.icon]} />
                 <text x="96" y={srcY(i) + 27} class="af-card-label">{s.label}</text>
-                <path id={`af-w${i}`} class="af-wire" d={`M248,${srcY(i) + 22} C 264,${srcY(i) + 22} 264,250 276,250`} />
+                <path id={`af-w${i}`} class="af-wire" d={`M258,${srcY(i) + 22} C 268,${srcY(i) + 22} 268,250 276,250`} />
               </g>
             ))}
             <!-- fabric core -->
@@ -181,7 +181,7 @@ const revY = (i: number) => 172 + i * 46;
             <rect x="724" y="158" width="180" height="212" rx="16" class="af-panel" />
             {testLayers.map((t, i) => (
               <g class="af-test-row">
-                <rect x="740" y={testY(i)} width="148" height="36" rx="8" class="af-chip" />
+                <rect x="734" y={testY(i)} width="160" height="36" rx="8" class="af-chip" />
                 <text x="814" y={testY(i) + 23} text-anchor="middle" class="af-chip-label">{t}</text>
               </g>
             ))}
@@ -288,28 +288,32 @@ const revY = (i: number) => 172 + i * 46;
   .af-card { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
   .af-card--green { stroke: var(--vmm-accent); }
   .af-card--risk { stroke: var(--color-amber); }
-  .af-card-label { fill: var(--color-text); font: 600 15px var(--font-body); }
-  .af-card-label--green { fill: var(--color-emerald-dark); font-weight: 700; }
-  .af-card-label--risk { fill: var(--color-amber); font-weight: 700; }
-  .af-card-sub { fill: var(--color-text-secondary); font: 500 12px var(--font-body); }
+  .af-card-label { fill: var(--color-text); font: 600 16px var(--font-body); }
+  .af-card-label--green { fill: var(--color-emerald-dark); font-weight: 700; font-size: 15px; }
+  .af-card-label--risk { fill: var(--color-amber); font-weight: 700; font-size: 15px; }
+  .af-card-sub { fill: var(--color-text-secondary); font: 500 12.5px var(--font-body); }
   .af-src-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 
-  .af-stage-title { fill: var(--color-text-secondary); font: 700 13px var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; }
+  .af-stage-title { fill: var(--color-text-secondary); font: 700 14px var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; }
 
   .af-core { fill: var(--vmm-accent-soft); stroke: var(--vmm-accent); stroke-width: 1.75; }
-  .af-core-label { fill: var(--color-text); font: 700 16px var(--font-heading); }
+  .af-core-label { fill: var(--color-text); font: 700 17px var(--font-heading); }
   .af-core-pulse { fill: var(--vmm-accent); animation: af-pulse 2.4s ease-in-out infinite; }
 
-  .af-wire, .af-pipe, .af-trace-path { fill: none; stroke: var(--color-border); stroke-width: 1.5; }
-  .af-trace-path { stroke-dasharray: 2 7; opacity: 0.55; }
+  .af-wire, .af-pipe, .af-trace-path {
+    fill: none;
+    stroke: color-mix(in oklab, var(--vmm-accent) 30%, var(--color-border));
+    stroke-width: 1.75;
+  }
+  .af-trace-path { stroke-dasharray: 2 7; opacity: 0.6; }
   .af-arrowhead { fill: var(--vmm-accent); }
 
   .af-rail-pre { fill: none; stroke: var(--vmm-accent); stroke-width: 3; }
-  .af-rail-label { fill: var(--color-text-secondary); font: 600 13px var(--font-body); }
+  .af-rail-label { fill: var(--color-text); font: 600 14px var(--font-body); }
 
   .af-loop-path { fill: none; stroke: var(--vmm-accent); stroke-width: 2; stroke-dasharray: 5 5; }
-  .af-loop-label { fill: var(--color-emerald-dark); font: 700 14px var(--font-body); }
-  .af-loop-sub { fill: var(--color-text-secondary); font: 500 12px var(--font-body); }
+  .af-loop-label { fill: var(--color-emerald-dark); font: 700 15px var(--font-body); }
+  .af-loop-sub { fill: var(--color-text-secondary); font: 500 12.5px var(--font-body); }
 
   .af-agent-ring { fill: none; stroke: var(--vmm-accent); stroke-width: 2; opacity: 0.5; transform-box: fill-box; transform-origin: center; animation: af-ring 2.8s ease-out infinite; }
   .af-agent-core { fill: url(#af-agent-grad); }
@@ -317,7 +321,7 @@ const revY = (i: number) => 172 + i * 46;
 
   .af-panel { fill: var(--color-surface); stroke: var(--color-border); stroke-width: 1.25; }
   .af-chip { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
-  .af-chip-label { fill: var(--color-text); font: 600 13px var(--font-body); }
+  .af-chip-label { fill: var(--color-text); font: 600 13.5px var(--font-body); }
 
   .af-review-bar { fill: var(--vmm-accent-soft); stroke: var(--vmm-accent); stroke-width: 1.25; }
   .af-depth-0 .af-review-bar { opacity: 0.5; }
@@ -325,26 +329,36 @@ const revY = (i: number) => 172 + i * 46;
   .af-depth-2 .af-review-bar { opacity: 0.84; }
   .af-depth-3 .af-review-bar { opacity: 1; }
   .af-review-n { fill: var(--color-emerald-dark); font: 700 12px var(--font-mono); }
-  .af-review-label { fill: var(--color-text); font: 600 12.5px var(--font-body); }
-  .af-depth-label { fill: var(--color-text-secondary); font: 600 12px var(--font-body); }
+  .af-review-label { fill: var(--color-text); font: 600 13px var(--font-body); }
+  .af-depth-label { fill: var(--color-text-secondary); font: 600 12.5px var(--font-body); }
 
   .af-pr { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 1.75; }
-  .af-pr-label { fill: var(--color-text); font: 700 14px var(--font-body); }
+  .af-pr-label { fill: var(--color-text); font: 700 15px var(--font-body); }
   .af-branch { fill: none; stroke-width: 2; }
   .af-branch--green { stroke: var(--vmm-accent); }
   .af-branch--risk { stroke: var(--color-amber); }
   .af-human-mark { fill: none; stroke: var(--color-amber); stroke-width: 1.6; }
 
   .af-autofix-path { fill: none; stroke: var(--vmm-accent); stroke-width: 1.5; stroke-dasharray: 4 6; opacity: 0.6; }
-  .af-autofix-label { fill: var(--color-emerald-dark); font: 600 12px var(--font-body); }
+  .af-autofix-label { fill: var(--color-emerald-dark); font: 600 13px var(--font-body); }
 
   /* ---- vault ---- */
-  .af-vault { fill: var(--color-surface); stroke: var(--color-border); stroke-width: 1.25; }
-  .af-vault-rule { stroke: var(--color-border); stroke-width: 1; opacity: 0.6; }
-  .af-vault-label { fill: var(--color-text); font: 700 18px var(--font-heading); }
-  .af-vault-sub { fill: var(--color-text-secondary); font: 500 12.5px var(--font-body); }
-  .af-vault-tag { fill: var(--vmm-accent); font: 700 11.5px var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; }
+  .af-vault {
+    fill: color-mix(in oklab, var(--vmm-accent) 5%, var(--color-surface));
+    stroke: color-mix(in oklab, var(--vmm-accent) 25%, var(--color-border));
+    stroke-width: 1.5;
+  }
+  .af-vault-rule { stroke: color-mix(in oklab, var(--vmm-accent) 20%, var(--color-border)); stroke-width: 1; opacity: 0.7; }
+  .af-vault-label { fill: var(--color-text); font: 700 19px var(--font-heading); }
+  .af-vault-sub { fill: var(--color-text-secondary); font: 500 13.5px var(--font-body); }
+  .af-vault-tag { fill: var(--vmm-accent); font: 700 12px var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; }
   .af-vault-mark { fill: var(--vmm-accent); }
+
+  /* dark bg is near-black: the vault needs a stronger tint to read as a layer */
+  :global(.dark) .af-vault {
+    fill: color-mix(in oklab, var(--vmm-accent) 10%, var(--color-surface));
+    stroke: color-mix(in oklab, var(--vmm-accent) 45%, var(--color-border));
+  }
 
   /* ---- particles ---- */
   .af-particle { fill: var(--vmm-accent); }
@@ -373,7 +387,7 @@ const revY = (i: number) => 172 + i * 46;
   .af-step.is-active { opacity: 1; border-top-color: var(--vmm-accent); }
   .af-step-head { display: flex; flex-direction: column; gap: 3px; }
   .af-step-n { font: 700 12px var(--font-mono); color: var(--vmm-accent); }
-  .af-step-t { font: 600 14px var(--font-heading); color: var(--color-text); line-height: 1.25; }
+  .af-step-t { font: 600 15px var(--font-heading); color: var(--color-text); line-height: 1.25; }
 
   /* description: all share one area at the bottom of the row, only active shows */
   .af-step-d {
@@ -403,7 +417,7 @@ const revY = (i: number) => 172 + i * 46;
 
     /* keep the wide diagram legible: swipe horizontally */
     .af-stage { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .af-svg { min-width: 760px; }
+    .af-svg { min-width: 960px; }
 
     .af-steps { grid-template-columns: 1fr; padding-bottom: 0; }
     .af-step { opacity: 1; }
@@ -498,6 +512,8 @@ const revY = (i: number) => 172 + i * 46;
         tl.to(els, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, i);
         tl.to(`.af-particle[data-stage="${i}"]`, { opacity: 1, duration: 0.5 }, i + 0.25);
       });
+      // tail room so the last stage fully lands before the scroll ends
+      tl.to({}, { duration: 0.8 });
 
       setActive(0);
     }
