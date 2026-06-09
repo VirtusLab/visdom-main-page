@@ -68,8 +68,9 @@ const particles = [
 // vertical layout helpers
 const srcY = (i: number) => 92 + i * 54;
 const testY = (i: number) => 170 + i * 46;
-const revW = [176, 152, 128, 104];
-const revX = [948, 960, 972, 984];
+const revW = [168, 168, 168, 168];
+const revX = [952, 952, 952, 952];
+const revIndent = (i: number) => i * 9; // nested look = increasing depth
 const revY = (i: number) => 172 + i * 46;
 ---
 
@@ -86,7 +87,7 @@ const revY = (i: number) => 172 + i * 46;
   <div class="af-track">
     <div class="af-viewport">
       <div class="af-stage">
-        <svg viewBox="0 0 1320 760" role="img" aria-labelledby="af-svg-title" class="af-svg" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 1320 552" role="img" aria-labelledby="af-svg-title" class="af-svg" preserveAspectRatio="xMidYMid meet">
           <title id="af-svg-title">Visdom architecture: Context Fabric, Coding Agent, Testing, Code Review, PR triage and TraceVault.</title>
 
           <defs>
@@ -97,29 +98,29 @@ const revY = (i: number) => 172 + i * 46;
 
           <!-- ============ TRACEVAULT (baseplate, spans everything) ============ -->
           <g id="af-tracevault" class="af-group" data-reveal>
-            <rect x="44" y="648" width="1232" height="84" rx="18" class="af-vault" />
-            <line x1="44" y1="676" x2="1276" y2="676" class="af-vault-rule" />
-            <text x="70" y="682" class="af-vault-label">TraceVault</text>
-            <text x="70" y="706" class="af-vault-sub">Signed, hash-chained record across every step</text>
-            <text x="1252" y="694" text-anchor="end" class="af-vault-tag">observability</text>
+            <rect x="44" y="462" width="1232" height="78" rx="18" class="af-vault" />
+            <line x1="44" y1="490" x2="1276" y2="490" class="af-vault-rule" />
+            <text x="70" y="496" class="af-vault-label">TraceVault</text>
+            <text x="70" y="519" class="af-vault-sub">Signed, hash-chained record across every step</text>
+            <text x="1252" y="507" text-anchor="end" class="af-vault-tag">observability</text>
           </g>
 
           <!-- trace-drop paths (stage bottom -> vault) -->
-          <path id="af-t0" class="af-trace-path" d="M331,322 L331,648" />
-          <path id="af-t1" class="af-trace-path" d="M600,316 L600,648" />
-          <path id="af-t2" class="af-trace-path" d="M814,372 L814,648" />
-          <path id="af-t3" class="af-trace-path" d="M1034,362 L1034,648" />
-          <path id="af-t4" class="af-trace-path" d="M1225,374 L1225,648" />
+          <path id="af-t0" class="af-trace-path" d="M331,322 L331,462" />
+          <path id="af-t1" class="af-trace-path" d="M600,316 L600,462" />
+          <path id="af-t2" class="af-trace-path" d="M814,372 L814,462" />
+          <path id="af-t3" class="af-trace-path" d="M1034,362 L1034,462" />
+          <path id="af-t4" class="af-trace-path" d="M1225,374 L1225,462" />
 
           <!-- ============ CONTEXT FABRIC ============ -->
           <g id="af-context" class="af-group" data-reveal>
             <text x="44" y="72" class="af-stage-title">Context Fabric</text>
             {sources.map((s, i) => (
               <g class="af-src">
-                <rect x="44" y={srcY(i)} width="188" height="42" rx="10" class="af-card" />
+                <rect x="44" y={srcY(i)} width="204" height="42" rx="10" class="af-card" />
                 <circle cx="64" cy={srcY(i) + 21} r="4" class="af-dot" />
                 <text x="80" y={srcY(i) + 26} class="af-card-label">{s}</text>
-                <path id={`af-w${i}`} class="af-wire" d={`M232,${srcY(i) + 21} C 256,${srcY(i) + 21} 256,250 276,250`} />
+                <path id={`af-w${i}`} class="af-wire" d={`M248,${srcY(i) + 21} C 264,${srcY(i) + 21} 264,250 276,250`} />
               </g>
             ))}
             <!-- fabric core -->
@@ -175,9 +176,9 @@ const revY = (i: number) => 172 + i * 46;
             <text x="1036" y="392" text-anchor="middle" class="af-depth-label">deeper analysis ↓</text>
             {reviewLevels.map((r, i) => (
               <g class={`af-review-row af-depth-${i}`}>
-                <rect x={revX[i]} y={revY(i)} width={revW[i]} height="36" rx="8" class="af-review-bar" />
-                <text x={revX[i] + 14} y={revY(i) + 23} class="af-review-n">{r.n}</text>
-                <text x={revX[i] + revW[i] - 12} y={revY(i) + 23} text-anchor="end" class="af-review-label">{r.label}</text>
+                <rect x={revX[i] + revIndent(i)} y={revY(i)} width={revW[i] - revIndent(i)} height="36" rx="8" class="af-review-bar" />
+                <text x={revX[i] + revIndent(i) + 13} y={revY(i) + 23} class="af-review-n">{r.n}</text>
+                <text x={revX[i] + revIndent(i) + 36} y={revY(i) + 23} class="af-review-label">{r.label}</text>
               </g>
             ))}
           </g>
@@ -222,12 +223,14 @@ const revY = (i: number) => 172 + i * 46;
         </svg>
       </div>
 
-      <ol class="af-captions">
+      <ol class="af-steps" role="list">
         {captions.map((c, i) => (
-          <li class={`af-caption${i === 0 ? ' is-active' : ''}`} data-step={i}>
-            <span class="af-caption-n">{c.n}</span>
-            <span class="af-caption-t">{c.t}</span>
-            <span class="af-caption-d">{c.d}</span>
+          <li class={`af-step${i === 0 ? ' is-active' : ''}`} data-step={i}>
+            <span class="af-step-head">
+              <span class="af-step-n">{c.n}</span>
+              <span class="af-step-t">{c.t}</span>
+            </span>
+            <span class="af-step-d">{c.d}</span>
           </li>
         ))}
       </ol>
@@ -241,21 +244,22 @@ const revY = (i: number) => 172 + i * 46;
   .af-head .section-subtitle { margin-top: 0.75rem; }
 
   /* tall track -> sticky viewport for the scrubbed scene */
-  .af-track { position: relative; height: 460vh; }
+  .af-track { position: relative; height: 420vh; }
   .af-viewport {
     position: sticky;
     top: 0;
     min-height: 100vh;
-    display: grid;
-    grid-template-columns: minmax(0, 1.75fr) minmax(260px, 1fr);
-    gap: 2.5rem;
-    align-items: center;
-    max-width: 1280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(1.5rem, 4vh, 3rem);
+    max-width: 1320px;
     margin: 0 auto;
-    padding: 1.5rem clamp(20px, 5vw, 48px);
+    padding: 2rem clamp(20px, 4vw, 56px);
   }
 
-  .af-svg { width: 100%; height: auto; overflow: visible; }
+  .af-stage { width: 100%; }
+  .af-svg { width: 100%; height: auto; overflow: visible; display: block; }
 
   /* ---- stage reveal states (driven by GSAP; sane defaults without JS) ---- */
   .af-group { transition: opacity 0.3s ease; }
@@ -331,23 +335,43 @@ const revY = (i: number) => 172 + i * 46;
   .af-particle--trace { fill: var(--color-text-muted); r: 2.4; }
   .af-particle--ctx { fill: var(--vmm-accent-2); }
 
-  /* ---- captions ---- */
-  .af-captions { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-  .af-caption {
+  /* ---- captions: bottom stepper, shared crossfading description ---- */
+  .af-steps {
+    list-style: none;
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 0 4.2em;
+    position: relative;
     display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-areas: "n t" ". d";
-    gap: 2px 12px;
-    padding: 12px 14px;
-    border-left: 2px solid var(--color-border);
-    border-radius: 0 10px 10px 0;
-    opacity: 0.4;
-    transition: opacity 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    grid-template-columns: repeat(7, 1fr);
   }
-  .af-caption.is-active { opacity: 1; border-left-color: var(--vmm-accent); background: var(--vmm-accent-soft); }
-  .af-caption-n { grid-area: n; font: 700 12px var(--font-mono); color: var(--vmm-accent); align-self: center; }
-  .af-caption-t { grid-area: t; font: 700 16px var(--font-heading); color: var(--color-text); }
-  .af-caption-d { grid-area: d; font: 400 13.5px var(--font-body); color: var(--color-text-secondary); line-height: 1.5; }
+  .af-step {
+    padding: 0.9rem 16px 1.1rem;
+    border-top: 2px solid var(--color-border);
+    opacity: 0.5;
+    transition: opacity 0.3s ease, border-color 0.3s ease;
+  }
+  .af-step.is-active { opacity: 1; border-top-color: var(--vmm-accent); }
+  .af-step-head { display: flex; flex-direction: column; gap: 3px; }
+  .af-step-n { font: 700 12px var(--font-mono); color: var(--vmm-accent); }
+  .af-step-t { font: 600 14px var(--font-heading); color: var(--color-text); line-height: 1.25; }
+
+  /* description: all share one area at the bottom of the row, only active shows */
+  .af-step-d {
+    position: absolute;
+    left: 0;
+    bottom: 0.3em;
+    width: min(64ch, 100%);
+    font: 400 clamp(1rem, 1.35vw, 1.2rem) var(--font-body);
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+  }
+  .af-step.is-active .af-step-d { opacity: 1; transform: none; }
 
   @keyframes af-pulse { 0%, 100% { opacity: 1; r: 3.5; } 50% { opacity: 0.4; r: 6; } }
   @keyframes af-ring { 0% { opacity: 0.5; transform: scale(1); } 100% { opacity: 0; transform: scale(1.18); } }
@@ -355,15 +379,23 @@ const revY = (i: number) => 172 + i * 46;
   /* ---- responsive: no pin, stack captions, static reveal ---- */
   @media (max-width: 900px) {
     .af-track { height: auto; }
-    .af-viewport { position: static; grid-template-columns: 1fr; min-height: 0; gap: 1.5rem; }
+    .af-viewport { position: static; min-height: 0; gap: 1.5rem; }
     .js .af-group[data-reveal] { opacity: 1; }
+
+    /* keep the wide diagram legible: swipe horizontally */
+    .af-stage { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .af-svg { min-width: 760px; }
+
+    .af-steps { grid-template-columns: 1fr; padding-bottom: 0; }
+    .af-step { opacity: 1; }
+    .af-step-d { position: static; opacity: 1; transform: none; width: auto; margin-top: 0.5rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .js .af-group[data-reveal] { opacity: 1; }
     .af-core-pulse, .af-agent-ring { animation: none; }
     .af-particle { display: none; }
-    .af-caption { opacity: 1; }
+    .af-step { opacity: 1; }
   }
 </style>
 
@@ -383,7 +415,7 @@ const revY = (i: number) => 172 + i * 46;
 
     const groups = ['af-context', 'af-preflight', 'af-loop', 'af-testing', 'af-review', 'af-triage', 'af-tracevault']
       .map((id) => document.getElementById(id));
-    const captions = Array.from(root.querySelectorAll('.af-caption'));
+    const captions = Array.from(root.querySelectorAll('.af-step'));
 
     // ---- ambient particle flow (always on unless reduced motion) ----
     if (!reduce) {
