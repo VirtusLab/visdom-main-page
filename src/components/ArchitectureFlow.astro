@@ -43,26 +43,27 @@ const captions = [
 ];
 
 // Ambient particles. Each rides an SVG path (by id) via GSAP MotionPath.
+// `stage` ties the particle to the reveal step that owns its path.
 const particles = [
-  // source wires -> fabric core
-  ...sources.map((_, i) => ({ path: `af-w${i}`, dur: 2.6, delay: i * 0.25, tone: 'ctx' })),
-  // active context loop (the centerpiece, both directions)
-  { path: 'af-answer', dur: 1.9, delay: 0, tone: 'accent' },
-  { path: 'af-answer', dur: 1.9, delay: 0.95, tone: 'accent' },
-  { path: 'af-query', dur: 1.9, delay: 0.4, tone: 'accent' },
-  { path: 'af-query', dur: 1.9, delay: 1.3, tone: 'accent' },
-  // preflight (one-way, into the agent)
-  { path: 'af-prerail', dur: 2.4, delay: 0, tone: 'accent' },
-  { path: 'af-prerail', dur: 2.4, delay: 1.2, tone: 'accent' },
+  // source wires -> fabric core (stage 0)
+  ...sources.map((_, i) => ({ path: `af-w${i}`, dur: 2.6, delay: i * 0.25, tone: 'ctx', stage: 0 })),
+  // preflight, one-way into the agent (stage 1)
+  { path: 'af-prerail', dur: 2.4, delay: 0, tone: 'accent', stage: 1 },
+  { path: 'af-prerail', dur: 2.4, delay: 1.2, tone: 'accent', stage: 1 },
+  // active context loop, the centerpiece, both directions (stage 2)
+  { path: 'af-answer', dur: 1.9, delay: 0, tone: 'accent', stage: 2 },
+  { path: 'af-answer', dur: 1.9, delay: 0.95, tone: 'accent', stage: 2 },
+  { path: 'af-query', dur: 1.9, delay: 0.4, tone: 'accent', stage: 2 },
+  { path: 'af-query', dur: 1.9, delay: 1.3, tone: 'accent', stage: 2 },
   // pipeline connectors
-  { path: 'af-c1', dur: 1.4, delay: 0, tone: 'accent' },
-  { path: 'af-c2', dur: 1.4, delay: 0.5, tone: 'accent' },
-  { path: 'af-c3', dur: 1.4, delay: 1.0, tone: 'accent' },
-  // auto-fix loop back to the agent
-  { path: 'af-autofix', dur: 3.4, delay: 0, tone: 'green' },
-  // trace drops into the vault
-  ...[0, 1, 2, 3, 4].map((i) => ({ path: `af-t${i}`, dur: 1.6, delay: i * 0.3, tone: 'trace' })),
-  ...[0, 1, 2, 3, 4].map((i) => ({ path: `af-t${i}`, dur: 1.6, delay: i * 0.3 + 0.8, tone: 'trace' })),
+  { path: 'af-c1', dur: 1.4, delay: 0, tone: 'accent', stage: 3 },
+  { path: 'af-c2', dur: 1.4, delay: 0.5, tone: 'accent', stage: 4 },
+  { path: 'af-c3', dur: 1.4, delay: 1.0, tone: 'accent', stage: 5 },
+  // auto-fix loop back to the agent (stage 5)
+  { path: 'af-autofix', dur: 3.4, delay: 0, tone: 'green', stage: 5 },
+  // trace drops into the vault (stage 6)
+  ...[0, 1, 2, 3, 4].map((i) => ({ path: `af-t${i}`, dur: 1.6, delay: i * 0.3, tone: 'trace', stage: 6 })),
+  ...[0, 1, 2, 3, 4].map((i) => ({ path: `af-t${i}`, dur: 1.6, delay: i * 0.3 + 0.8, tone: 'trace', stage: 6 })),
 ];
 
 // vertical layout helpers
@@ -106,11 +107,11 @@ const revY = (i: number) => 172 + i * 46;
           </g>
 
           <!-- trace-drop paths (stage bottom -> vault) -->
-          <path id="af-t0" class="af-trace-path" d="M331,322 L331,462" />
-          <path id="af-t1" class="af-trace-path" d="M600,316 L600,462" />
-          <path id="af-t2" class="af-trace-path" d="M814,372 L814,462" />
-          <path id="af-t3" class="af-trace-path" d="M1034,362 L1034,462" />
-          <path id="af-t4" class="af-trace-path" d="M1225,374 L1225,462" />
+          <path id="af-t0" class="af-trace-path af-reveal" d="M331,322 L331,462" />
+          <path id="af-t1" class="af-trace-path af-reveal" d="M600,316 L600,462" />
+          <path id="af-t2" class="af-trace-path af-reveal" d="M814,372 L814,462" />
+          <path id="af-t3" class="af-trace-path af-reveal" d="M1034,362 L1034,462" />
+          <path id="af-t4" class="af-trace-path af-reveal" d="M1225,374 L1225,462" />
 
           <!-- ============ CONTEXT FABRIC ============ -->
           <g id="af-context" class="af-group" data-reveal>
@@ -145,7 +146,7 @@ const revY = (i: number) => 172 + i * 46;
           </g>
 
           <!-- ============ CODING AGENT (always present hub) ============ -->
-          <g id="af-agent" class="af-group af-group--base">
+          <g id="af-agent" class="af-group af-group--base af-reveal">
             <circle cx="600" cy="240" r="74" class="af-agent-ring" />
             <circle cx="600" cy="240" r="62" class="af-agent-core" />
             <text x="600" y="234" text-anchor="middle" class="af-agent-label">Coding</text>
@@ -153,9 +154,9 @@ const revY = (i: number) => 172 + i * 46;
           </g>
 
           <!-- pipeline connectors -->
-          <path id="af-c1" class="af-pipe" d="M666,240 L724,240" marker-end="url(#af-arrow)" />
-          <path id="af-c2" class="af-pipe" d="M904,250 L938,250" marker-end="url(#af-arrow)" />
-          <path id="af-c3" class="af-pipe" d="M1132,250 C 1142,250 1142,188 1150,188" marker-end="url(#af-arrow)" />
+          <path id="af-c1" class="af-pipe af-reveal" d="M666,240 L724,240" marker-end="url(#af-arrow)" />
+          <path id="af-c2" class="af-pipe af-reveal" d="M904,250 L938,250" marker-end="url(#af-arrow)" />
+          <path id="af-c3" class="af-pipe af-reveal" d="M1132,250 C 1142,250 1142,188 1150,188" marker-end="url(#af-arrow)" />
 
           <!-- ============ TESTING ============ -->
           <g id="af-testing" class="af-group" data-reveal>
@@ -217,7 +218,7 @@ const revY = (i: number) => 172 + i * 46;
           <g class="af-particles" aria-hidden="true">
             {particles.map((p) => (
               <circle class={`af-particle af-particle--${p.tone}`} r="3.2" cx="-20" cy="-20"
-                data-path={`#${p.path}`} data-dur={p.dur} data-delay={p.delay} />
+                data-path={`#${p.path}`} data-dur={p.dur} data-delay={p.delay} data-stage={p.stage} />
             ))}
           </g>
         </svg>
@@ -261,11 +262,10 @@ const revY = (i: number) => 172 + i * 46;
   .af-stage { width: 100%; }
   .af-svg { width: 100%; height: auto; overflow: visible; display: block; }
 
-  /* ---- stage reveal states (driven by GSAP; sane defaults without JS) ---- */
-  .af-group { transition: opacity 0.3s ease; }
-  .js .af-group[data-reveal] { opacity: 0.22; }
-  .js .af-group[data-reveal].is-revealed { opacity: 1; }
-  .af-group.is-active :is(.af-core, .af-agent-core, .af-pr, .af-panel) { filter: drop-shadow(0 0 10px var(--vmm-accent)); }
+  /* ---- stage reveal (driven by GSAP; everything visible without JS) ---- */
+  .js .af-group[data-reveal],
+  .js .af-reveal { opacity: 0; }
+  .af-group.is-active :is(.af-core, .af-agent-core, .af-pr, .af-panel) { filter: drop-shadow(0 0 12px var(--vmm-accent)); }
 
   /* ---- nodes / cards ---- */
   .af-card { fill: var(--card); stroke: var(--color-border); stroke-width: 1; }
@@ -380,7 +380,8 @@ const revY = (i: number) => 172 + i * 46;
   @media (max-width: 900px) {
     .af-track { height: auto; }
     .af-viewport { position: static; min-height: 0; gap: 1.5rem; }
-    .js .af-group[data-reveal] { opacity: 1; }
+    .js .af-group[data-reveal],
+    .js .af-reveal { opacity: 1; }
 
     /* keep the wide diagram legible: swipe horizontally */
     .af-stage { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -392,10 +393,14 @@ const revY = (i: number) => 172 + i * 46;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .js .af-group[data-reveal] { opacity: 1; }
+    .js .af-group[data-reveal],
+    .js .af-reveal { opacity: 1; }
     .af-core-pulse, .af-agent-ring { animation: none; }
     .af-particle { display: none; }
     .af-step { opacity: 1; }
+    /* no scrub: stack descriptions so they do not overlap */
+    .af-steps { padding-bottom: 0; }
+    .af-step-d { position: static; opacity: 1; transform: none; width: auto; margin-top: 0.5rem; }
   }
 </style>
 
@@ -417,18 +422,27 @@ const revY = (i: number) => 172 + i * 46;
       .map((id) => document.getElementById(id));
     const captions = Array.from(root.querySelectorAll('.af-step'));
 
-    // ---- ambient particle flow (always on unless reduced motion) ----
+    // elements revealed at each scroll step (stage group + its connectors/traces)
+    const reveal = [
+      ['#af-context'],
+      ['#af-preflight', '#af-agent'],
+      ['#af-loop'],
+      ['#af-testing', '#af-c1'],
+      ['#af-review', '#af-c2'],
+      ['#af-triage', '#af-c3'],
+      ['#af-tracevault', '#af-t0', '#af-t1', '#af-t2', '#af-t3', '#af-t4'],
+    ].map((sels) => sels.flatMap((s) => Array.from(document.querySelectorAll(s))));
+    const allTargets = reveal.flat();
+
+    // ---- ambient particle motion (always on unless reduced motion) ----
     if (!reduce) {
       root.querySelectorAll('.af-particle').forEach((p) => {
         const sel = p.getAttribute('data-path');
         const path = sel && document.querySelector(sel);
         if (!path) return;
-        const dur = parseFloat(p.getAttribute('data-dur') || '2');
-        const delay = parseFloat(p.getAttribute('data-delay') || '0');
-        gsap.set(p, { opacity: 1 });
         gsap.to(p, {
-          duration: dur,
-          delay,
+          duration: parseFloat(p.getAttribute('data-dur') || '2'),
+          delay: parseFloat(p.getAttribute('data-delay') || '0'),
           repeat: -1,
           ease: 'none',
           motionPath: { path, align: path, alignOrigin: [0.5, 0.5] },
@@ -443,35 +457,31 @@ const revY = (i: number) => 172 + i * 46;
 
     if (reduce || compact) {
       // static: everything revealed, no scrub
-      groups.forEach((g) => g && g.classList.add('is-revealed'));
+      gsap.set(allTargets, { opacity: 1, y: 0 });
+      gsap.set('.af-particle', { opacity: reduce ? 0 : 1 });
       captions.forEach((c) => c.classList.add('is-active'));
     } else {
-      const steps = groups.length;
-      groups.forEach((g) => g && g.classList.remove('is-revealed'));
-      // TraceVault is always partly present (it collects throughout)
-      const tv = document.getElementById('af-tracevault');
+      const steps = reveal.length;
+      // start fully hidden, then unveil one cluster per scroll step
+      gsap.set(allTargets, { opacity: 0, y: 14 });
+      gsap.set('.af-particle', { opacity: 0 });
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: '.af-track',
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 0.5,
-          onUpdate: (self) => {
-            const idx = Math.min(steps - 1, Math.floor(self.progress * steps));
-            setActive(idx);
-          },
+          scrub: 0.6,
+          onUpdate: (self) => setActive(Math.min(steps - 1, Math.floor(self.progress * steps))),
         },
       });
 
-      groups.forEach((g, i) => {
-        if (!g) return;
-        tl.to(g, { opacity: 1, duration: 1, onStart: () => g.classList.add('is-revealed'), onReverseComplete: () => g.classList.remove('is-revealed') }, i);
+      reveal.forEach((els, i) => {
+        tl.to(els, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, i);
+        tl.to(`.af-particle[data-stage="${i}"]`, { opacity: 1, duration: 0.5 }, i + 0.25);
       });
 
-      if (tv) gsap.set(tv, { opacity: 0.5 });
       setActive(0);
-      if (groups[0]) groups[0].classList.add('is-revealed');
     }
 
     ScrollTrigger.refresh();
