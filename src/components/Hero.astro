@@ -1,6 +1,7 @@
 ---
 ---
 <section class="hero">
+  <div class="aurora" aria-hidden="true"></div>
   <div class="hero-fade" aria-hidden="true"></div>
   <div class="container">
     <div class="hero-brand fade-up">
@@ -16,8 +17,8 @@
 
     <div class="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] gap-12 lg:gap-16 items-center mt-12 lg:mt-16">
       <div class="fade-up">
-        <h1 class="text-4xl sm:text-5xl lg:text-[3.6rem] font-extrabold tracking-tight text-text mb-6 leading-[1.05] max-w-3xl">
-          We help enterprise teams build agent-ready SDLC.
+        <h1 class="hero-headline mb-6 max-w-3xl">
+          We help enterprise teams build <span class="hero-headline-accent serif-accent">agent-ready</span> SDLC.
         </h1>
 
         <div class="space-y-4 text-lg text-text-secondary leading-relaxed max-w-3xl">
@@ -98,50 +99,17 @@
     padding-bottom: 5rem;
     position: relative;
     overflow: hidden;
-    background-color: #ffffff;
+    background-color: var(--color-bg);
     background-image:
-      radial-gradient(rgba(15, 23, 42, 0.055) 1px, transparent 1px),
-      radial-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+      radial-gradient(var(--hero-grid) 1px, transparent 1px),
+      radial-gradient(var(--hero-grid-soft) 1px, transparent 1px);
     background-size: 28px 28px, 28px 28px;
     background-position: 0 0, 14px 14px;
-  }
-
-  .hero::before,
-  .hero::after {
-    content: '';
-    position: absolute;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .hero::before {
-    top: -40%;
-    right: -15%;
-    width: 70%;
-    height: 120%;
-    background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.13) 0%, rgba(16, 185, 129, 0.04) 40%, transparent 70%);
-    filter: blur(6px);
-    animation: heroDriftA 18s ease-in-out infinite alternate;
-  }
-
-  .hero::after {
-    bottom: -35%;
-    left: -20%;
-    width: 65%;
-    height: 110%;
-    background: radial-gradient(ellipse at center, rgba(6, 147, 227, 0.09) 0%, rgba(6, 147, 227, 0.03) 40%, transparent 70%);
-    filter: blur(8px);
-    animation: heroDriftB 22s ease-in-out infinite alternate;
   }
 
   .hero > .container {
     position: relative;
     z-index: 1;
-  }
-
-  .hero::before,
-  .hero::after {
-    mix-blend-mode: multiply;
   }
 
   .hero-fade {
@@ -150,24 +118,24 @@
     right: 0;
     bottom: 0;
     height: 160px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
+    background: linear-gradient(180deg, transparent 0%, var(--color-bg) 100%);
     pointer-events: none;
-    z-index: 0;
+    z-index: 1;
   }
 
-  @keyframes heroDriftA {
-    0% { transform: translate3d(0, 0, 0) scale(1); }
-    100% { transform: translate3d(-4%, 3%, 0) scale(1.08); }
+  .hero-headline {
+    font-family: var(--font-heading);
+    font-size: clamp(2.25rem, 5.2vw, 3.75rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    color: var(--color-text);
   }
 
-  @keyframes heroDriftB {
-    0% { transform: translate3d(0, 0, 0) scale(1); }
-    100% { transform: translate3d(3%, -2%, 0) scale(1.06); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero::before,
-    .hero::after { animation: none; }
+  .hero-headline-accent {
+    color: var(--vmm-accent);
+    font-size: 1.08em;
+    letter-spacing: -0.01em;
   }
 
   .hero-vl-logo {
