@@ -102,8 +102,9 @@ const revY = (i: number) => 172 + i * 46;
           <title id="af-svg-title">Visdom architecture: Context Fabric, Coding Agent, Testing, Code Review, PR triage and TraceVault.</title>
 
           <defs>
-            <marker id="af-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-              <path d="M0,0 L10,5 L0,10 z" class="af-arrowhead" />
+            <!-- sharp dart: long tip, concave tail -->
+            <marker id="af-arrow" viewBox="0 0 12 9" refX="11" refY="4.5" markerWidth="9" markerHeight="6.75" orient="auto-start-reverse">
+              <path d="M0,0.5 L12,4.5 L0,8.5 L3.2,4.5 Z" class="af-arrowhead" />
             </marker>
             <radialGradient id="af-agent-grad" cx="38%" cy="32%" r="78%">
               <stop offset="0%" stop-color="var(--vmm-accent-2)" />
@@ -133,6 +134,7 @@ const revY = (i: number) => 172 + i * 46;
           <!-- ============ CONTEXT FABRIC ============ -->
           <g id="af-context" class="af-group" data-reveal>
             <text x="44" y="72" class="af-stage-title">Context Fabric</text>
+            <line x1="44" y1="80" x2="68" y2="80" class="af-title-tick" />
             {sources.map((s, i) => (
               <g class="af-src">
                 <rect x="44" y={srcY(i)} width="214" height="44" rx="11" class="af-card" />
@@ -180,6 +182,7 @@ const revY = (i: number) => 172 + i * 46;
           <!-- ============ TESTING ============ -->
           <g id="af-testing" class="af-group" data-reveal>
             <text x="726" y="150" class="af-stage-title">Testing</text>
+            <line x1="726" y1="158" x2="750" y2="158" class="af-title-tick" />
             <rect x="724" y="158" width="180" height="212" rx="16" class="af-panel" />
             {testLayers.map((t, i) => (
               <g class="af-test-row">
@@ -192,6 +195,7 @@ const revY = (i: number) => 172 + i * 46;
           <!-- ============ CODE REVIEW (deepening) ============ -->
           <g id="af-review" class="af-group" data-reveal>
             <text x="940" y="150" class="af-stage-title">Code review</text>
+            <line x1="940" y1="158" x2="964" y2="158" class="af-title-tick" />
             <rect x="940" y="158" width="192" height="212" rx="16" class="af-panel" />
             <text x="1036" y="392" text-anchor="middle" class="af-depth-label">deeper analysis ↓</text>
             {reviewLevels.map((r, i) => (
@@ -206,6 +210,7 @@ const revY = (i: number) => 172 + i * 46;
           <!-- ============ PR & TRIAGE ============ -->
           <g id="af-triage" class="af-group" data-reveal>
             <text x="1150" y="150" class="af-stage-title">PR &amp; triage</text>
+            <line x1="1150" y1="158" x2="1174" y2="158" class="af-title-tick" />
             <rect x="1150" y="158" width="150" height="54" rx="12" class="af-pr" />
             <text x="1225" y="190" text-anchor="middle" class="af-pr-label">Pull Request</text>
 
@@ -301,6 +306,7 @@ const revY = (i: number) => 172 + i * 46;
   .af-src-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 
   .af-stage-title { fill: var(--color-text-secondary); font: 700 14px var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; }
+  .af-title-tick { stroke: var(--vmm-accent); stroke-width: 2.5; }
 
   .af-core { fill: var(--vmm-accent-soft); stroke: var(--vmm-accent); stroke-width: 1.75; }
   .af-core-label { fill: var(--color-text); font: 700 17px var(--font-heading); }
@@ -350,7 +356,7 @@ const revY = (i: number) => 172 + i * 46;
   .af-branch--risk { stroke: var(--color-amber); }
   .af-human-mark { fill: none; stroke: var(--color-amber); stroke-width: 1.6; }
 
-  .af-autofix-path { fill: none; stroke: var(--vmm-accent); stroke-width: 1.5; stroke-dasharray: 4 6; opacity: 0.6; animation: af-dash 1.4s linear infinite; }
+  .af-autofix-path { fill: none; stroke: var(--vmm-accent); stroke-width: 1.75; stroke-dasharray: 4 6; opacity: 0.7; animation: af-dash 1.4s linear infinite; }
   .af-autofix-label { fill: var(--color-emerald-dark); font: 600 13px var(--font-body); }
 
   /* ---- vault ---- */
