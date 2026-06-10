@@ -17,23 +17,22 @@ const agents = [
   },
   {
     icon: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
-    name: 'Prod signals agent',
-    sources: ['metrics', 'logs'],
-  },
-  {
-    icon: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
-    name: 'Security agent',
-    sources: ['scans', 'alerts'],
+    name: 'Signals agent',
+    sources: ['logs', 'metrics'],
   },
 ];
 
+const gates = ['Testing', 'VCR review', 'Triage'];
+
 const captions = [
-  'A ticket lands. No human has seen it yet.',
-  'The orchestrator reads it and picks its team.',
-  'Four agents, four sources, all in parallel.',
-  'Findings merge into one decision.',
-  'One question to a human, exactly when it matters.',
-  'A pull request, ready to review. That is the whole loop.',
+  'A ticket lands. The orchestrator reads it first.',
+  'It asks the Context Fabric: who owns this, what changed lately.',
+  'Three agents investigate in parallel: code, history, live signals.',
+  'After every step, one question: call a human? Not yet.',
+  'Findings merge into a drafted fix.',
+  'The fix runs the same gates as any change: tests, review, triage.',
+  'Triage says high-risk. Now the human is called, and approves.',
+  'A pull request, ready to review. End to end.',
 ];
 
 const triggers = ['Jira', 'Alert', 'Schedule', 'Webhook', 'CVE feed'];
@@ -45,7 +44,8 @@ const triggers = ['Jira', 'Alert', 'Schedule', 'Webhook', 'CVE feed'];
       <h2 id="os-title" class="os-title">One ticket in.<br />One <span class="serif-accent os-accent">pull request</span> out.</h2>
       <p class="os-sub">
         Every block above is really a specialized agent. The Orchestrator hires them per task,
-        runs them in parallel, merges what they find, and asks a human only when it matters.
+        runs them in parallel, pushes the result through the same gates you just saw,
+        and can call a human at any step. Usually it does not have to.
       </p>
     </div>
 
@@ -69,6 +69,10 @@ const triggers = ['Jira', 'Alert', 'Schedule', 'Webhook', 'CVE feed'];
 
         <!-- ============ CENTER: hub + agents ============ -->
         <div class="os-col os-col--center">
+          <div class="os-fabricq" id="os-fabricq">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+            Context Fabric · queried
+          </div>
           <div class="os-hub" id="os-hub">
             <span class="os-hub-ring" aria-hidden="true"></span>
             <span class="os-hub-core">
@@ -78,7 +82,7 @@ const triggers = ['Jira', 'Alert', 'Schedule', 'Webhook', 'CVE feed'];
           </div>
 
           <svg class="os-fan" viewBox="0 0 520 56" preserveAspectRatio="none" aria-hidden="true">
-            {[70, 195, 325, 450].map((x) => (
+            {[110, 260, 410].map((x) => (
               <>
                 <path class="os-fan-base" d={`M260,0 C 260,30 ${x},26 ${x},56`} />
                 <path class="os-fan-streak" pathLength="100" d={`M260,0 C 260,30 ${x},26 ${x},56`} />
@@ -102,14 +106,21 @@ const triggers = ['Jira', 'Alert', 'Schedule', 'Webhook', 'CVE feed'];
 
         <div class="os-wire os-wire--out" id="os-wire-out" aria-hidden="true"></div>
 
-        <!-- ============ OUT: human + PR ============ -->
+        <!-- ============ OUT: gates + human + PR ============ -->
         <div class="os-col os-col--out">
+          <div class="os-gates" aria-label="Quality gates">
+            {gates.map((g) => (
+              <span class="os-gate">{g}</span>
+            ))}
+          </div>
           <div class="os-human" id="os-human">
             <span class="os-human-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
             </span>
             <span class="os-human-name">Human in the loop</span>
             <span class="os-human-state">
+              <span class="os-human-idle">on call · every step</span>
+              <span class="os-human-no">not needed yet</span>
               <span class="os-human-q">approve?</span>
               <span class="os-human-ok">approved ✓</span>
             </span>
@@ -225,6 +236,29 @@ const triggers = ['Jira', 'Alert', 'Schedule', 'Webhook', 'CVE feed'];
   .is-human .os-wire--out { opacity: 1; animation: os-wireflow 1.2s linear infinite; }
   @keyframes os-wireflow { from { background-position: 120% 0; } to { background-position: -80% 0; } }
 
+  .os-col--center { position: relative; }
+
+  /* context fabric query pill: ties the showcase to the platform above */
+  .os-fabricq {
+    position: absolute;
+    top: -26px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in oklab, var(--vmm-accent) 45%, var(--color-border));
+    background: var(--card);
+    color: var(--vmm-accent);
+    font: 600 10.5px var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .os-fabricq svg { width: 13px; height: 13px; }
+
   /* hub */
   .os-hub { position: relative; display: grid; place-items: center; height: 128px; }
   .os-hub-ring {
@@ -274,7 +308,7 @@ const triggers = ['Jira', 'Alert', 'Schedule', 'Webhook', 'CVE feed'];
   @keyframes os-streak-up { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -100; } }
 
   /* agents */
-  .os-agents { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; width: 100%; }
+  .os-agents { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; width: 100%; }
   .os-agent {
     position: relative;
     display: flex;
@@ -318,6 +352,32 @@ const triggers = ['Jira', 'Alert', 'Schedule', 'Webhook', 'CVE feed'];
   .os-agent:nth-child(4) .os-agent-scan { animation-delay: 0.6s; }
   @keyframes os-scan { 0% { background-position: -60% 0; } 100% { background-position: 160% 0; } }
 
+  /* quality gates: the same pipeline as section 01 */
+  .os-gates { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .os-gate {
+    position: relative;
+    font: 600 10px var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    padding: 3px 9px;
+    transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  }
+  .os-gate.is-pass {
+    color: var(--vmm-accent);
+    border-color: color-mix(in oklab, var(--vmm-accent) 55%, var(--color-border));
+    background: var(--vmm-accent-soft);
+  }
+  .os-gate.is-pass::after { content: ' ✓'; }
+  .os-gate.is-risk {
+    color: var(--color-amber);
+    border-color: color-mix(in oklab, var(--color-amber) 60%, var(--color-border));
+    background: color-mix(in oklab, var(--color-amber) 10%, transparent);
+  }
+  .os-gate.is-risk::after { content: ' !'; }
+
   /* human */
   .os-human {
     display: flex;
@@ -348,11 +408,18 @@ const triggers = ['Jira', 'Alert', 'Schedule', 'Webhook', 'CVE feed'];
   .os-human-icon svg { width: 16px; height: 16px; }
   .os-human-name { font: 650 12.5px var(--font-body); color: var(--color-text); }
   .os-human-state { font: 600 10.5px var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; }
+  .os-human-idle { color: var(--color-text-muted); }
+  .os-human-no { color: var(--color-text-secondary); display: none; }
   .os-human-q { color: var(--color-amber); display: none; }
   .os-human-ok { color: var(--vmm-accent); display: none; }
+  .is-ping .os-human-idle, .is-human .os-human-idle, .is-approved .os-human-idle { display: none; }
+  .is-ping .os-human-no { display: inline; }
+  .is-human .os-human-no, .is-approved .os-human-no { display: none; }
   .is-human .os-human-q { display: inline; }
   .is-approved .os-human-q { display: none; }
   .is-approved .os-human-ok { display: inline; }
+  .is-ping .os-wire--out { opacity: 1; animation: os-wireflow 1.2s linear infinite; }
+  .is-ping .os-human { border-color: color-mix(in oklab, var(--vmm-accent) 40%, var(--color-border)); }
 
   .os-prwire { width: 2px; height: 26px; background: color-mix(in oklab, var(--vmm-accent) 35%, var(--color-border)); border-radius: 2px; }
 
@@ -418,51 +485,78 @@ const triggers = ['Jira', 'Alert', 'Schedule', 'Webhook', 'CVE feed'];
     const setCaption = (i) => captions.forEach((c, j) => c.classList.toggle('is-active', j === i));
     const ticket = '#os-ticket';
     const agentsEls = stage.querySelectorAll('.os-agent');
-    const states = ['is-scanning', 'is-merging', 'is-human', 'is-approved'];
+    const gateEls = stage.querySelectorAll('.os-gate');
+    const states = ['is-scanning', 'is-merging', 'is-ping', 'is-human', 'is-approved'];
 
     if (reduce) {
       // static: final state, everything visible, closing caption
       stage.classList.add('is-approved');
+      gateEls.forEach((g, i) => g.classList.add(i === gateEls.length - 1 ? 'is-risk' : 'is-pass'));
       setCaption(captions.length - 1);
     } else {
-      const resetClasses = () => states.forEach((s) => stage.classList.remove(s));
+      const resetClasses = () => {
+        states.forEach((s) => stage.classList.remove(s));
+        gateEls.forEach((g) => g.classList.remove('is-pass', 'is-risk'));
+      };
 
       const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.4 });
 
       // initial states
       tl.set(ticket, { x: -28, opacity: 0 });
+      tl.set('#os-fabricq', { xPercent: -50, y: 6, opacity: 0 });
+      tl.set('.os-fan', { opacity: 0 });
       tl.set(agentsEls, { y: 14, opacity: 0, scale: 0.95 });
-      tl.set('#os-human, .os-prwire', { opacity: 0.35 });
+      tl.set('#os-human, .os-prwire', { opacity: 0.45 });
+      tl.set('.os-gates', { opacity: 0.45 });
       tl.set('#os-pr', { y: 14, opacity: 0, scale: 0.96 });
       tl.call(resetClasses);
       tl.call(() => setCaption(0));
 
-      // 1. the ticket lands
+      // 1. the ticket lands, the orchestrator reads it
       tl.to(ticket, { x: 0, opacity: 1, duration: 0.7, ease: 'power3.out' });
+      tl.to('.os-hub-core', { scale: 1.06, duration: 0.35, yoyo: true, repeat: 1, ease: 'power2.inOut' }, '+=0.3');
 
-      // 2. orchestrator picks its team
-      tl.call(() => setCaption(1), null, '+=0.9');
-      tl.to('.os-hub-core', { scale: 1.07, duration: 0.35, yoyo: true, repeat: 1, ease: 'power2.inOut' }, '<');
-      tl.to(agentsEls, { y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.12, ease: 'back.out(1.5)' }, '+=0.2');
+      // 2. it asks the context fabric first
+      tl.call(() => setCaption(1), null, '+=0.5');
+      tl.to('#os-fabricq', { y: 0, opacity: 1, duration: 0.45, ease: 'back.out(1.6)' }, '<');
+      tl.to({}, { duration: 1.5 });
+      tl.to('#os-fabricq', { opacity: 0.55, duration: 0.4 });
 
-      // 3. parallel scan
-      tl.call(() => { setCaption(2); stage.classList.add('is-scanning'); }, null, '+=0.4');
-      tl.to({}, { duration: 3.0 });
+      // 3. three agents investigate in parallel
+      tl.call(() => setCaption(2));
+      tl.to('.os-fan', { opacity: 1, duration: 0.4 });
+      tl.to(agentsEls, { y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.13, ease: 'back.out(1.5)' }, '<');
+      tl.call(() => stage.classList.add('is-scanning'), null, '+=0.2');
+      tl.to({}, { duration: 2.4 });
 
-      // 4. findings merge
-      tl.call(() => { setCaption(3); stage.classList.remove('is-scanning'); stage.classList.add('is-merging'); });
+      // 4. every step asks: call a human? not yet
+      tl.call(() => { setCaption(3); stage.classList.add('is-ping'); });
+      tl.to({}, { duration: 1.5 });
+      tl.call(() => stage.classList.remove('is-ping'));
+
+      // 5. findings merge into a drafted fix
+      tl.call(() => { setCaption(4); stage.classList.remove('is-scanning'); stage.classList.add('is-merging'); });
       tl.to('.os-hub-core', { scale: 1.1, duration: 0.5, ease: 'power2.out' });
-      tl.to({}, { duration: 1.3 });
+      tl.to({}, { duration: 1.2 });
       tl.to('.os-hub-core', { scale: 1, duration: 0.4 });
+      tl.call(() => stage.classList.remove('is-merging'));
 
-      // 5. human in the loop
-      tl.call(() => { setCaption(4); stage.classList.remove('is-merging'); stage.classList.add('is-human'); });
+      // 6. the fix runs the same gates as any change
+      tl.call(() => setCaption(5));
+      tl.to('.os-gates', { opacity: 1, duration: 0.3 });
+      tl.call(() => gateEls[0] && gateEls[0].classList.add('is-pass'), null, '+=0.5');
+      tl.call(() => gateEls[1] && gateEls[1].classList.add('is-pass'), null, '+=0.6');
+      tl.call(() => gateEls[2] && gateEls[2].classList.add('is-risk'), null, '+=0.6');
+      tl.to({}, { duration: 0.8 });
+
+      // 7. high-risk: now the human is called
+      tl.call(() => { setCaption(6); stage.classList.add('is-human'); });
       tl.to('#os-human, .os-prwire', { opacity: 1, duration: 0.4 });
-      tl.to({}, { duration: 1.6 });
+      tl.to({}, { duration: 1.7 });
       tl.call(() => stage.classList.add('is-approved'));
 
-      // 6. the pull request
-      tl.call(() => setCaption(5), null, '+=0.3');
+      // 8. the pull request
+      tl.call(() => setCaption(7), null, '+=0.3');
       tl.to('#os-pr', { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.4)' });
       tl.to({}, { duration: 2.6 });
 
