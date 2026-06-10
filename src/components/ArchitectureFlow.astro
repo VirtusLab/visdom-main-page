@@ -28,6 +28,8 @@ const icons: Record<string, string> = {
   pr: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6"/><path d="M13 6h2a3 3 0 0 1 3 3v6"/>',
   link: '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
   spark: '<path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/>',
+  rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
 };
 
 const testLayers = [
@@ -57,6 +59,7 @@ const captions = [
   { n: '05', t: 'Multi-level code review', d: 'Four levels, each deeper than the last: linting, deterministic, single-pass LLM, then deep LLM.' },
   { n: '06', t: 'PR & triage', d: 'A pull request sorts every bug by risk. Trivial ones the agent fixes itself; critical ones stop for a human.' },
   { n: '07', t: 'TraceVault', d: 'Every decision, test and review is recorded to TraceVault, one audit trail across the whole system.' },
+  { n: '08', t: 'Ship to production', d: 'Every gate is green, so the change ships. Deliberate, safe, and worth celebrating: this is what all that quality buys you.' },
 ];
 
 // Ambient particles. Each rides an SVG path (by id) via GSAP MotionPath.
@@ -67,7 +70,9 @@ const captions = [
 // traces down). Lines that carry flow use CSS light streaks instead.
 const particles = [
   ...sources.map((_, i) => ({ path: `af-w${i}`, dur: 3.0, delay: i * 0.55, pause: 1.8, tone: 'ctx', stage: 0 })),
-  ...[0, 1, 2, 3, 4].map((i) => ({ path: `af-t${i}`, dur: 1.4, delay: i * 0.5, pause: 1.8, tone: 'trace', stage: 6 })),
+  ...[0, 1, 2, 3].map((i) => ({ path: `af-t${i}`, dur: 1.4, delay: i * 0.5, pause: 1.8, tone: 'trace', stage: 6 })),
+  // production docks onto the vault: its trace belongs to the ship stage
+  { path: 'af-t4', dur: 0.8, delay: 0.4, pause: 2.0, tone: 'trace', stage: 7 },
 ];
 const particleStages = [...new Set(particles.map((p) => p.stage))];
 
@@ -149,7 +154,7 @@ const revY = (i: number) => 196 + i * 42;
           <path id="af-t1" class="af-trace-path af-reveal" d="M600,320 L600,462" />
           <path id="af-t2" class="af-trace-path af-reveal" d="M814,380 L814,462" />
           <path id="af-t3" class="af-trace-path af-reveal" d="M1036,380 L1036,462" />
-          <path id="af-t4" class="af-trace-path af-reveal" d="M1226,366 L1226,462" />
+          <path id="af-t4" class="af-trace-path af-reveal" d="M1226,448 L1226,462" />
 
           <!-- ============ CONTEXT FABRIC ============ -->
           <g id="af-context" class="af-group" data-reveal>
@@ -284,6 +289,35 @@ const revY = (i: number) => 196 + i * 42;
             <text x="915" y="44" text-anchor="middle" class="af-autofix-label">auto-fix → back to agent</text>
           </g>
 
+          <!-- ============ SHIP TO PRODUCTION (the joyful finale) ============ -->
+          <g id="af-ship" class="af-group" data-reveal>
+            <path class="af-pipe" d="M1226,374 L1226,386" marker-end="url(#af-arrow)" />
+            <rect x="1154" y="392" width="144" height="52" rx="12" class="af-ship-box" />
+            <g class="af-ship-icon" transform="translate(1166,406) scale(0.95)" set:html={icons.rocket} />
+            <text x="1196" y="414" class="af-ship-label">Production</text>
+            <text x="1196" y="432" class="af-ship-sub">all gates green</text>
+            <!-- passed seal -->
+            <circle cx="1294" cy="396" r="11" class="af-seal" />
+            <g class="af-seal-check" transform="translate(1286,388) scale(0.66)" set:html={icons.check} />
+            <!-- confetti: the only multi-colour moment in the whole diagram -->
+            <g class="af-confetti" aria-hidden="true">
+              {[
+                { x: 1162, y: 384, c: 1, d: 0 },
+                { x: 1188, y: 378, c: 2, d: 0.3 },
+                { x: 1214, y: 382, c: 3, d: 0.6 },
+                { x: 1242, y: 376, c: 4, d: 0.15 },
+                { x: 1268, y: 383, c: 1, d: 0.45 },
+                { x: 1146, y: 404, c: 3, d: 0.7 },
+                { x: 1306, y: 416, c: 2, d: 0.2 },
+                { x: 1176, y: 372, c: 4, d: 0.55 },
+                { x: 1256, y: 370, c: 2, d: 0.85 },
+                { x: 1304, y: 380, c: 1, d: 1.0 },
+              ].map((p) => (
+                <rect x={p.x} y={p.y} width="5" height="5" rx="1.5" class={`af-conf af-conf--${p.c}`} style={`animation-delay:${p.d}s`} />
+              ))}
+            </g>
+          </g>
+
           <!-- ============ AMBIENT PARTICLES (grouped per reveal stage) ============ -->
           <g class="af-particles" aria-hidden="true">
             {particleStages.map((stage) => (
@@ -327,7 +361,7 @@ const revY = (i: number) => 196 + i * 42;
   .af-head .section-subtitle { margin-top: 0.75rem; }
 
   /* tall track -> sticky viewport for the scrubbed scene */
-  .af-track { position: relative; height: 420vh; }
+  .af-track { position: relative; height: 470vh; }
   .af-viewport {
     position: sticky;
     top: 0;
@@ -480,6 +514,29 @@ const revY = (i: number) => 196 + i * 42;
   .af-chain-block--head { fill: color-mix(in oklab, var(--vmm-accent) 30%, var(--card)); stroke: var(--vmm-accent); }
   .af-chain-link { stroke: color-mix(in oklab, var(--vmm-accent) 40%, var(--color-border)); stroke-width: 1.5; stroke-dasharray: 2 3; }
 
+  /* ---- ship to production: the joyful finale ---- */
+  .af-ship-box { fill: url(#af-agent-grad); }
+  .af-ship-icon { fill: none; stroke: rgba(255, 255, 255, 0.95); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .af-ship-label { fill: var(--primary-foreground, #fff); font: 700 15px var(--font-heading); }
+  .af-ship-sub { fill: rgba(255, 255, 255, 0.85); font: 600 9.5px var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; }
+  :global(.dark) .af-ship-label { fill: #062b1c; }
+  :global(.dark) .af-ship-sub { fill: rgba(6, 43, 28, 0.8); }
+  :global(.dark) .af-ship-icon { stroke: rgba(6, 43, 28, 0.95); }
+  .af-seal { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 1.75; }
+  .af-seal-check { fill: none; stroke: var(--vmm-accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .af-group.is-active .af-ship-box { filter: drop-shadow(0 0 14px var(--vmm-accent-soft)) drop-shadow(0 0 5px var(--vmm-accent)); }
+
+  .af-conf { transform-box: fill-box; transform-origin: center; animation: af-confetti 2.6s ease-out infinite; opacity: 0; }
+  .af-conf--1 { fill: var(--vmm-accent); }
+  .af-conf--2 { fill: var(--color-amber); }
+  .af-conf--3 { fill: var(--color-blue); }
+  .af-conf--4 { fill: var(--color-purple); }
+  @keyframes af-confetti {
+    0% { opacity: 0; transform: translateY(6px) rotate(0deg) scale(0.6); }
+    18% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-16px) rotate(140deg) scale(1); }
+  }
+
   /* dark bg is near-black: the vault needs a stronger tint to read as a layer */
   :global(.dark) .af-vault {
     fill: color-mix(in oklab, var(--vmm-accent) 10%, var(--color-surface));
@@ -502,7 +559,7 @@ const revY = (i: number) => 196 + i * 42;
     padding: 0 0 4.2em;
     position: relative;
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(8, 1fr);
   }
   .af-step {
     padding: 0.9rem 16px 1.1rem;
@@ -553,8 +610,8 @@ const revY = (i: number) => 196 + i * 42;
   @media (prefers-reduced-motion: reduce) {
     .js .af-group[data-reveal],
     .js .af-reveal { opacity: 1; }
-    .af-core-pulse, .af-agent-ring, .af-agent-ticks, .af-streak { animation: none; }
-    .af-streak, .af-particle, #af-reticle { display: none; }
+    .af-core-pulse, .af-agent-ring, .af-agent-ticks, .af-streak, .af-conf { animation: none; }
+    .af-streak, .af-particle, .af-confetti, #af-reticle { display: none; }
     .af-step { opacity: 1; }
     /* no scrub: stack descriptions so they do not overlap */
     .af-steps { padding-bottom: 0; }
@@ -576,7 +633,7 @@ const revY = (i: number) => 196 + i * 42;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const compact = window.matchMedia('(max-width: 900px)').matches;
 
-    const groups = ['af-context', 'af-preflight', 'af-loop', 'af-testing', 'af-review', 'af-triage', 'af-tracevault']
+    const groups = ['af-context', 'af-preflight', 'af-loop', 'af-testing', 'af-review', 'af-triage', 'af-tracevault', 'af-ship']
       .map((id) => document.getElementById(id));
     const captions = Array.from(root.querySelectorAll('.af-step'));
 
@@ -588,7 +645,8 @@ const revY = (i: number) => 196 + i * 42;
       ['#af-testing', '#af-c1g'],
       ['#af-review', '#af-c2g'],
       ['#af-triage', '#af-c3g'],
-      ['#af-tracevault', '#af-t0', '#af-t1', '#af-t2', '#af-t3', '#af-t4'],
+      ['#af-tracevault', '#af-t0', '#af-t1', '#af-t2', '#af-t3'],
+      ['#af-ship', '#af-t4'],
     ].map((sels) => sels.flatMap((s) => Array.from(document.querySelectorAll(s))));
     const allTargets = reveal.flat();
 
@@ -601,6 +659,7 @@ const revY = (i: number) => 196 + i * 42;
       { x: 932, y: 150, w: 208, h: 232 },
       { x: 1134, y: 150, w: 184, h: 232 },
       { x: 36, y: 454, w: 1248, h: 94 },
+      { x: 1144, y: 382, w: 164, h: 72 },
     ];
     const corners = {
       tl: document.getElementById('af-ret-tl'),
