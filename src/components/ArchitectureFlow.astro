@@ -69,20 +69,26 @@ const captions = [
 // Discrete "packet" dots remain only where they read as items (knowledge in,
 // traces down). Lines that carry flow use CSS light streaks instead.
 const particles = [
-  ...sources.map((_, i) => ({ path: `af-w${i}`, dur: 3.0, delay: i * 0.55, pause: 1.8, tone: 'ctx', stage: 0 })),
-  ...[0, 1, 2, 3, 4].map((i) => ({ path: `af-t${i}`, dur: 1.4, delay: i * 0.5, pause: 1.8, tone: 'trace', stage: 6 })),
-  // production drops its own trace: belongs to the ship stage
-  { path: 'af-t5', dur: 1.6, delay: 0.4, pause: 2.0, tone: 'trace', stage: 7 },
+  // knowledge drops from each source into the fabric bar (stage 0)
+  ...sources.map((_, i) => ({ path: `af-w${i}`, dur: 1.0, delay: i * 0.4, pause: 1.6, tone: 'ctx', stage: 0 })),
+  // code review taps the fabric for conventions and ownership (stage 4)
+  { path: 'af-tapr', dur: 1.1, delay: 0.2, pause: 1.5, tone: 'ctx', stage: 4 },
+  { path: 'af-tapr', dur: 1.1, delay: 1.6, pause: 1.5, tone: 'ctx', stage: 4 },
+  // traces drop into the vault (stage 6), production drops its own (stage 7)
+  { path: 'af-t0', dur: 1.2, delay: 0, pause: 1.8, tone: 'trace', stage: 6 },
+  ...[1, 2, 3].map((i) => ({ path: `af-t${i}`, dur: 0.7, delay: i * 0.5, pause: 1.8, tone: 'trace', stage: 6 })),
+  { path: 'af-t4', dur: 1.4, delay: 0.4, pause: 2.0, tone: 'trace', stage: 7 },
 ];
 const particleStages = [...new Set(particles.map((p) => p.stage))];
 
-// vertical layout helpers
-const srcY = (i: number) => 92 + i * 54;
-const testY = (i: number) => 196 + i * 42;
-const revW = [168, 168, 168, 168];
-const revX = [952, 952, 952, 952];
+// layout helpers: sources run horizontally, fabric is a bar like the vault
+const srcX = (i: number) => 44 + i * 188;
+const srcCX = (i: number) => 130 + i * 188;
+const testY = (i: number) => 288 + i * 42;
+const revW = [178, 178, 178, 178];
+const revX = [536, 536, 536, 536];
 const revIndent = (i: number) => i * 9; // nested look = increasing depth
-const revY = (i: number) => 196 + i * 42;
+const revY = (i: number) => 288 + i * 42;
 ---
 
 <section class="af" id="how-it-works" aria-labelledby="af-title">
@@ -98,7 +104,7 @@ const revY = (i: number) => 196 + i * 42;
   <div class="af-track">
     <div class="af-viewport">
       <div class="af-stage">
-        <svg viewBox="0 0 1460 552" role="img" aria-labelledby="af-svg-title" class="af-svg" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 1200 592" role="img" aria-labelledby="af-svg-title" class="af-svg" preserveAspectRatio="xMidYMid meet">
           <title id="af-svg-title">Visdom architecture: Context Fabric, Coding Agent, Testing, Code Review, PR triage and TraceVault.</title>
 
           <defs>
@@ -120,131 +126,137 @@ const revY = (i: number) => 196 + i * 42;
           </defs>
 
           <!-- blueprint substrate: dot grid + corner registration marks -->
-          <rect x="36" y="40" width="1388" height="504" fill="url(#af-grid)" class="af-bp" aria-hidden="true" />
+          <rect x="36" y="40" width="1128" height="524" fill="url(#af-grid)" class="af-bp" aria-hidden="true" />
           <g class="af-fid" aria-hidden="true">
-            {[[40, 44], [1420, 44], [40, 540], [1420, 540]].map(([x, y]) => (
+            {[[40, 44], [1160, 44], [40, 568], [1160, 568]].map(([x, y]) => (
               <path d={`M${x - 5},${y} H${x + 5} M${x},${y - 5} V${y + 5}`} />
             ))}
           </g>
 
           <!-- ============ TRACEVAULT (baseplate, spans everything) ============ -->
           <g id="af-tracevault" class="af-group" data-reveal>
-            <rect x="44" y="462" width="1372" height="78" rx="18" class="af-vault" />
-            <line x1="60" y1="463.5" x2="1400" y2="463.5" class="af-sheen" />
-            <g class="af-vault-icon" transform="translate(66,482) scale(0.8)" set:html={icons.link} />
-            <text x="96" y="492" class="af-vault-label">TraceVault</text>
-            <text x="96" y="516" class="af-vault-sub">Signed, hash-chained record across every step</text>
+            <rect x="44" y="488" width="1112" height="68" rx="18" class="af-vault" />
+            <line x1="60" y1="489.5" x2="1140" y2="489.5" class="af-sheen" />
+            <g class="af-vault-icon" transform="translate(64,505) scale(0.8)" set:html={icons.link} />
+            <text x="94" y="515" class="af-vault-label">TraceVault</text>
+            <text x="94" y="538" class="af-vault-sub">Signed, hash-chained record across every step</text>
             {/* hash-chain motif: linked blocks, append-only */}
             <g class="af-chain" aria-hidden="true">
-              {[1268, 1296, 1324, 1352].map((x, i) => (
+              {[940, 968, 996, 1024].map((x, i) => (
                 <>
-                  <rect x={x} y="484" width="14" height="14" rx="3" class={`af-chain-block${i === 3 ? ' af-chain-block--head' : ''}`} />
-                  {i < 3 && <line x1={x + 14} y1="491" x2={x + 28} y2="491" class="af-chain-link" />}
+                  <rect x={x} y="508" width="14" height="14" rx="3" class={`af-chain-block${i === 3 ? ' af-chain-block--head' : ''}`} />
+                  {i < 3 && <line x1={x + 14} y1="515" x2={x + 28} y2="515" class="af-chain-link" />}
                 </>
               ))}
             </g>
-            <text x="1392" y="521" text-anchor="end" class="af-vault-tag">Ed25519 · append-only</text>
-            {[332, 600, 814, 1036, 1226, 1391].map((x) => (
-              <circle cx={x} cy="462" r="3.5" class="af-vault-mark" />
+            <text x="1132" y="520" text-anchor="end" class="af-vault-tag">Ed25519</text>
+            {[150, 369, 625, 875, 1089].map((x) => (
+              <circle cx={x} cy="488" r="3.5" class="af-vault-mark" />
             ))}
           </g>
 
           <!-- trace-drop paths (stage bottom -> vault) -->
-          <path id="af-t0" class="af-trace-path af-reveal" d="M332,322 L332,462" />
-          <path id="af-t1" class="af-trace-path af-reveal" d="M600,320 L600,462" />
-          <path id="af-t2" class="af-trace-path af-reveal" d="M814,380 L814,462" />
-          <path id="af-t3" class="af-trace-path af-reveal" d="M1036,380 L1036,462" />
-          <path id="af-t4" class="af-trace-path af-reveal" d="M1226,380 L1226,462" />
-          <path id="af-t5" class="af-trace-path af-reveal" d="M1391,264 L1391,462" />
+          <path id="af-t0" class="af-trace-path af-reveal" d="M150,400 L150,488" />
+          <path id="af-t1" class="af-trace-path af-reveal" d="M369,466 L369,488" />
+          <path id="af-t2" class="af-trace-path af-reveal" d="M625,466 L625,488" />
+          <path id="af-t3" class="af-trace-path af-reveal" d="M875,466 L875,488" />
+          <path id="af-t4" class="af-trace-path af-reveal" d="M1089,344 L1089,488" />
 
-          <!-- ============ CONTEXT FABRIC ============ -->
+          <!-- ============ CONTEXT FABRIC: sources row + cross-cutting bar ============ -->
           <g id="af-context" class="af-group" data-reveal>
-            <text x="44" y="72" class="af-stage-title">Context Fabric</text>
-            <line x1="44" y1="80" x2="68" y2="80" class="af-title-tick" />
             {sources.map((s, i) => (
               <g class="af-src">
-                <rect x="44" y={srcY(i)} width="214" height="44" rx="11" class="af-card" />
-                <g class="af-src-icon" transform={`translate(60,${srcY(i) + 11}) scale(0.9)`} set:html={icons[s.icon]} />
-                <text x="96" y={srcY(i) + 27} class="af-card-label">{s.label}</text>
-                {/* fan-in: each wire lands on its own port on the fabric edge */}
-                <path id={`af-w${i}`} class="af-wire" d={`M258,${srcY(i) + 22} C 268,${srcY(i) + 22} 264,${206 + i * 18} 276,${206 + i * 18}`} />
-                <circle cx="276" cy={206 + i * 18} r="2.5" class="af-port" />
+                <rect x={srcX(i)} y="56" width="172" height="42" rx="11" class="af-card" />
+                <g class="af-src-icon" transform={`translate(${srcX(i) + 14},66) scale(0.85)`} set:html={icons[s.icon]} />
+                <text x={srcX(i) + 46} y="82" class="af-card-label">{s.label}</text>
+                <path id={`af-w${i}`} class="af-wire" d={`M${srcCX(i)},98 L${srcCX(i)},126`} />
+                <circle cx={srcCX(i)} cy="126" r="2.5" class="af-port" />
               </g>
             ))}
-            <!-- fabric core -->
-            <rect x="276" y="190" width="112" height="120" rx="20" class="af-core" />
-            <g class="af-core-icon" transform="translate(322,204) scale(0.85)" set:html={icons.layers} />
-            <text x="332" y="252" text-anchor="middle" class="af-core-label">Context</text>
-            <text x="332" y="274" text-anchor="middle" class="af-core-label">Fabric</text>
-            <circle cx="332" cy="293" r="3.5" class="af-core-pulse" />
+            <!-- the fabric bar: cross-cutting, like the vault below -->
+            <rect x="44" y="126" width="1112" height="66" rx="18" class="af-vault af-fabricbar" />
+            <line x1="60" y1="127.5" x2="1140" y2="127.5" class="af-sheen" />
+            <g class="af-vault-icon" transform="translate(64,142) scale(0.8)" set:html={icons.layers} />
+            <text x="94" y="152" class="af-vault-label">Context Fabric</text>
+            <text x="94" y="175" class="af-vault-sub">Ownership, conventions, blast radius: ground truth for every stage</text>
+            <text x="1132" y="163" text-anchor="end" class="af-vault-tag">queried by every stage</text>
           </g>
 
-          <!-- ============ PREFLIGHT RAIL ============ -->
+          <!-- ============ PREFLIGHT RAIL (fabric -> agent, once) ============ -->
           <g id="af-preflight" class="af-group" data-reveal>
-            <path id="af-prerail" class="af-rail-pre" d="M388,202 L534,206" marker-end="url(#af-arrow)" />
-            <path class="af-streak" pathLength="100" d="M388,202 L534,206" style="animation-duration:2.6s" />
-            <text x="458" y="186" text-anchor="middle" class="af-rail-label">Preflight context</text>
+            <path id="af-prerail" class="af-rail-pre" d="M118,192 L118,266" marker-end="url(#af-arrow)" />
+            <path class="af-streak" pathLength="100" d="M118,192 L118,266" style="animation-duration:2.6s" />
+            <text x="106" y="224" text-anchor="end" class="af-rail-label">Preflight</text>
+            <text x="106" y="240" text-anchor="end" class="af-rail-label">context</text>
           </g>
 
-          <!-- ============ ACTIVE CONTEXT LOOP (centerpiece) ============ -->
+          <!-- ============ ACTIVE CONTEXT LOOP (fabric <-> agent, continuous) ============ -->
           <g id="af-loop" class="af-group" data-reveal>
-            <path id="af-answer" class="af-loop-path" d="M390,258 C 436,226 506,228 544,246" marker-end="url(#af-arrow)" />
-            <path id="af-query" class="af-loop-path" d="M544,266 C 506,312 436,310 390,282" marker-end="url(#af-arrow)" />
-            <path class="af-streak" pathLength="100" d="M390,258 C 436,226 506,228 544,246" style="animation-duration:1.8s" />
-            <path class="af-streak" pathLength="100" d="M544,266 C 506,312 436,310 390,282" style="animation-duration:1.8s;animation-delay:-0.9s" />
-            <text x="468" y="336" text-anchor="middle" class="af-loop-label">Active context</text>
-            <text x="468" y="356" text-anchor="middle" class="af-loop-sub">continuous · two-way</text>
+            <path id="af-answer" class="af-loop-path" d="M176,192 C 186,214 186,240 178,262" marker-end="url(#af-arrow)" />
+            <path id="af-query" class="af-loop-path" d="M202,284 C 214,252 214,218 204,196" marker-end="url(#af-arrow)" />
+            <path class="af-streak" pathLength="100" d="M176,192 C 186,214 186,240 178,262" style="animation-duration:1.8s" />
+            <path class="af-streak" pathLength="100" d="M202,284 C 214,252 214,218 204,196" style="animation-duration:1.8s;animation-delay:-0.9s" />
+            <text x="226" y="222" class="af-loop-label">Active context</text>
+            <text x="226" y="240" class="af-loop-sub">continuous · two-way</text>
           </g>
 
           <!-- ============ CODING AGENT (always present hub) ============ -->
           <g id="af-agent" class="af-group af-group--base af-reveal">
-            <circle cx="600" cy="240" r="74" class="af-agent-ring" />
-            <circle cx="600" cy="240" r="67" class="af-agent-ticks" />
-            <circle cx="600" cy="240" r="58" class="af-agent-core" />
-            <g class="af-agent-spark" transform="translate(591,198) scale(0.75)" set:html={icons.spark} />
-            <text x="600" y="244" text-anchor="middle" class="af-agent-label">Coding</text>
-            <text x="600" y="266" text-anchor="middle" class="af-agent-label">Agent</text>
+            <circle cx="150" cy="330" r="66" class="af-agent-ring" />
+            <circle cx="150" cy="330" r="59" class="af-agent-ticks" />
+            <circle cx="150" cy="330" r="51" class="af-agent-core" />
+            <g class="af-agent-spark" transform="translate(142,293) scale(0.68)" set:html={icons.spark} />
+            <text x="150" y="334" text-anchor="middle" class="af-agent-label">Coding</text>
+            <text x="150" y="354" text-anchor="middle" class="af-agent-label">Agent</text>
           </g>
 
           <!-- pipeline connectors (the main spine) -->
           <g id="af-c1g" class="af-reveal">
-            <path id="af-c1" class="af-pipe" d="M676,240 L722,240" marker-end="url(#af-arrow)" />
-            <path class="af-streak af-streak--pipe" pathLength="100" d="M676,240 L722,240" style="animation-duration:2.4s" />
+            <path id="af-c1" class="af-pipe" d="M214,312 L266,312" marker-end="url(#af-arrow)" />
+            <path class="af-streak af-streak--pipe" pathLength="100" d="M214,312 L266,312" style="animation-duration:2.4s" />
           </g>
           <g id="af-c2g" class="af-reveal">
-            <path id="af-c2" class="af-pipe" d="M904,250 L936,250" marker-end="url(#af-arrow)" />
-            <path class="af-streak af-streak--pipe" pathLength="100" d="M904,250 L936,250" style="animation-duration:2.4s;animation-delay:0.8s" />
+            <path id="af-c2" class="af-pipe" d="M464,312 L518,312" marker-end="url(#af-arrow)" />
+            <path class="af-streak af-streak--pipe" pathLength="100" d="M464,312 L518,312" style="animation-duration:2.4s;animation-delay:0.6s" />
           </g>
           <g id="af-c3g" class="af-reveal">
-            <path id="af-c3" class="af-pipe" d="M1132,250 C 1142,250 1141,218 1148,218" marker-end="url(#af-arrow)" />
-            <path class="af-streak af-streak--pipe" pathLength="100" d="M1132,250 C 1142,250 1141,218 1148,218" style="animation-duration:2.4s;animation-delay:1.6s" />
+            <path id="af-c3" class="af-pipe" d="M726,312 L780,312" marker-end="url(#af-arrow)" />
+            <path class="af-streak af-streak--pipe" pathLength="100" d="M726,312 L780,312" style="animation-duration:2.4s;animation-delay:1.2s" />
+          </g>
+          <g id="af-c4g" class="af-reveal">
+            <path id="af-c4" class="af-pipe" d="M964,312 L1018,312" marker-end="url(#af-arrow)" />
+            <path class="af-streak af-streak--pipe" pathLength="100" d="M964,312 L1018,312" style="animation-duration:2.4s;animation-delay:1.8s" />
           </g>
 
           <!-- ============ TESTING ============ -->
           <g id="af-testing" class="af-group af-module" data-reveal>
-            <rect x="724" y="158" width="180" height="216" rx="16" class="af-panel" />
-            <line x1="740" y1="159.5" x2="888" y2="159.5" class="af-sheen" />
-            <rect x="730" y="164" width="168" height="26" rx="8" class="af-mhead" />
-            <g class="af-mhead-icon" transform="translate(740,169) scale(0.66)" set:html={icons.flask} />
-            <text x="762" y="182" class="af-mhead-label">Testing</text>
+            <rect x="274" y="244" width="190" height="216" rx="16" class="af-panel" />
+            <line x1="290" y1="245.5" x2="448" y2="245.5" class="af-sheen" />
+            <rect x="280" y="250" width="178" height="26" rx="8" class="af-mhead" />
+            <g class="af-mhead-icon" transform="translate(290,255) scale(0.66)" set:html={icons.flask} />
+            <text x="312" y="268" class="af-mhead-label">Testing</text>
             {testLayers.map((t, i) => (
               <g class="af-test-row">
-                <rect x="734" y={testY(i)} width="160" height="36" rx="8" class="af-chip" />
-                <text x="814" y={testY(i) + 23} text-anchor="middle" class="af-chip-label">{t}</text>
+                <rect x="286" y={testY(i)} width="166" height="36" rx="8" class="af-chip" />
+                <text x="369" y={testY(i) + 23} text-anchor="middle" class="af-chip-label">{t}</text>
               </g>
             ))}
           </g>
 
+          <!-- code review taps the fabric for conventions and ownership -->
+          <g id="af-tap-review" class="af-reveal">
+            <path id="af-tapr" class="af-trace-path" d="M625,192 L625,238" marker-end="url(#af-arrow)" />
+          </g>
+
           <!-- ============ CODE REVIEW (deepening) ============ -->
           <g id="af-review" class="af-group af-module" data-reveal>
-            <rect x="940" y="158" width="192" height="216" rx="16" class="af-panel" />
-            <line x1="956" y1="159.5" x2="1116" y2="159.5" class="af-sheen" />
-            <rect x="946" y="164" width="180" height="26" rx="8" class="af-mhead" />
-            <g class="af-mhead-icon" transform="translate(956,169) scale(0.66)" set:html={icons.eye} />
-            <text x="978" y="182" class="af-mhead-label">Code review</text>
-            <text x="1036" y="394" text-anchor="middle" class="af-depth-label">deeper analysis ↓</text>
+            <rect x="524" y="244" width="202" height="216" rx="16" class="af-panel" />
+            <line x1="540" y1="245.5" x2="710" y2="245.5" class="af-sheen" />
+            <rect x="530" y="250" width="190" height="26" rx="8" class="af-mhead" />
+            <g class="af-mhead-icon" transform="translate(540,255) scale(0.66)" set:html={icons.eye} />
+            <text x="562" y="268" class="af-mhead-label">Code review</text>
             {/* depth gauge: analysis intensity ramps downward */}
-            <rect x="1124" y="196" width="4" height="162" rx="2" fill="url(#af-depth-grad)" />
+            <rect x="716" y="288" width="4" height="162" rx="2" fill="url(#af-depth-grad)" />
             {reviewLevels.map((r, i) => (
               <g class={`af-review-row af-depth-${i}`}>
                 <rect x={revX[i] + revIndent(i)} y={revY(i)} width={revW[i] - revIndent(i)} height="36" rx="8" class="af-review-bar" />
@@ -256,63 +268,62 @@ const revY = (i: number) => 196 + i * 42;
 
           <!-- ============ PR & TRIAGE ============ -->
           <g id="af-triage" class="af-group af-module" data-reveal>
-            <rect x="1142" y="158" width="168" height="216" rx="16" class="af-panel" />
-            <line x1="1158" y1="159.5" x2="1294" y2="159.5" class="af-sheen" />
-            <rect x="1148" y="164" width="156" height="26" rx="8" class="af-mhead" />
-            <g class="af-mhead-icon" transform="translate(1158,169) scale(0.66)" set:html={icons.pr} />
-            <text x="1180" y="182" class="af-mhead-label">PR &amp; triage</text>
+            <rect x="786" y="244" width="178" height="216" rx="16" class="af-panel" />
+            <line x1="802" y1="245.5" x2="948" y2="245.5" class="af-sheen" />
+            <rect x="792" y="250" width="166" height="26" rx="8" class="af-mhead" />
+            <g class="af-mhead-icon" transform="translate(802,255) scale(0.66)" set:html={icons.pr} />
+            <text x="824" y="268" class="af-mhead-label">PR &amp; triage</text>
 
-            <rect x="1154" y="198" width="144" height="42" rx="10" class="af-pr" />
-            <text x="1226" y="224" text-anchor="middle" class="af-pr-label">Pull Request</text>
+            <rect x="798" y="286" width="154" height="42" rx="10" class="af-pr" />
+            <text x="875" y="312" text-anchor="middle" class="af-pr-label">Pull Request</text>
 
             <!-- fork: trivial drops straight, risk routes along the panel edge -->
-            <path class="af-branch af-branch--green" d="M1226,240 L1226,250" marker-end="url(#af-arrow)" />
-            <path class="af-branch af-branch--risk" d="M1226,240 C 1226,248 1148,250 1148,278 L1148,326 Q1148,334 1154,335" marker-end="url(#af-arrow)" />
+            <path class="af-branch af-branch--green" d="M875,328 L875,336" marker-end="url(#af-arrow)" />
+            <path class="af-branch af-branch--risk" d="M875,328 C 875,338 790,340 790,366 L790,408 Q790,415 796,416" marker-end="url(#af-arrow)" />
 
             <g class="af-triage-node af-triage-node--green">
-              <rect x="1154" y="256" width="144" height="46" rx="10" class="af-card af-card--green" />
-              <text x="1168" y="276" class="af-card-label af-card-label--green">Green · trivial</text>
-              <text x="1168" y="293" class="af-card-sub">agent auto-fixes</text>
+              <rect x="798" y="342" width="154" height="46" rx="10" class="af-card af-card--green" />
+              <text x="812" y="362" class="af-card-label af-card-label--green">Green · trivial</text>
+              <text x="812" y="379" class="af-card-sub">agent auto-fixes</text>
             </g>
             <g class="af-triage-node af-triage-node--risk">
-              <rect x="1154" y="314" width="144" height="46" rx="10" class="af-card af-card--risk" />
-              <text x="1192" y="334" class="af-card-label af-card-label--risk">High-risk</text>
-              <text x="1192" y="351" class="af-card-sub">human approval</text>
-              <g class="af-human" transform="translate(1172,332)">
+              <rect x="798" y="396" width="154" height="46" rx="10" class="af-card af-card--risk" />
+              <text x="838" y="416" class="af-card-label af-card-label--risk">High-risk</text>
+              <text x="838" y="433" class="af-card-sub">human approval</text>
+              <g class="af-human" transform="translate(818,414)">
                 <circle cx="0" cy="-4" r="5" class="af-human-mark" />
                 <path d="M-8,10 a8,9 0 0 1 16,0" class="af-human-mark" />
               </g>
             </g>
 
-            <!-- auto-fix loop back to the agent: leaves the triage top, arcs clear above the panels -->
-            <path id="af-autofix" class="af-autofix-path" d="M1226,152 C 1020,34 770,40 608,154" marker-end="url(#af-arrow)" />
-            <path class="af-streak af-streak--soft" pathLength="100" d="M1226,152 C 1020,34 770,40 608,154" style="animation-duration:3.6s" />
-            <text x="915" y="44" text-anchor="middle" class="af-autofix-label">auto-fix → back to agent</text>
+            <!-- auto-fix loop back to the agent: arcs through the band under the fabric -->
+            <path id="af-autofix" class="af-autofix-path" d="M875,240 C 780,198 300,198 158,262" marker-end="url(#af-arrow)" />
+            <path class="af-streak af-streak--soft" pathLength="100" d="M875,240 C 780,198 300,198 158,262" style="animation-duration:3.6s" />
+            <text x="470" y="204" text-anchor="middle" class="af-autofix-label">auto-fix → back to agent</text>
           </g>
 
           <!-- ============ SHIP TO PRODUCTION (the joyful finale, end of the line) ============ -->
           <g id="af-ship" class="af-group" data-reveal>
-            <path class="af-pipe" d="M1310,232 L1322,232" marker-end="url(#af-arrow)" />
-            <rect x="1326" y="206" width="130" height="52" rx="12" class="af-ship-box" />
-            <g class="af-ship-icon" transform="translate(1336,221) scale(0.9)" set:html={icons.rocket} />
-            <text x="1364" y="228" class="af-ship-label">Production</text>
-            <text x="1364" y="246" class="af-ship-sub">all gates green</text>
+            <rect x="1024" y="286" width="132" height="52" rx="12" class="af-ship-box" />
+            <g class="af-ship-icon" transform="translate(1034,301) scale(0.9)" set:html={icons.rocket} />
+            <text x="1062" y="308" class="af-ship-label">Production</text>
+            <text x="1062" y="326" class="af-ship-sub">all gates green</text>
             <!-- passed seal -->
-            <circle cx="1452" cy="210" r="11" class="af-seal" />
-            <g class="af-seal-check" transform="translate(1444,202) scale(0.66)" set:html={icons.check} />
+            <circle cx="1152" cy="290" r="11" class="af-seal" />
+            <g class="af-seal-check" transform="translate(1144,282) scale(0.66)" set:html={icons.check} />
             <!-- confetti: the only multi-colour moment in the whole diagram -->
             <g class="af-confetti" aria-hidden="true">
               {[
-                { x: 1334, y: 198, c: 1, d: 0 },
-                { x: 1358, y: 192, c: 2, d: 0.3 },
-                { x: 1382, y: 196, c: 3, d: 0.6 },
-                { x: 1408, y: 190, c: 4, d: 0.15 },
-                { x: 1430, y: 197, c: 1, d: 0.45 },
-                { x: 1318, y: 218, c: 3, d: 0.7 },
-                { x: 1448, y: 232, c: 2, d: 0.2 },
-                { x: 1346, y: 186, c: 4, d: 0.55 },
-                { x: 1420, y: 184, c: 2, d: 0.85 },
-                { x: 1450, y: 194, c: 1, d: 1.0 },
+                { x: 1032, y: 278, c: 1, d: 0 },
+                { x: 1056, y: 272, c: 2, d: 0.3 },
+                { x: 1080, y: 276, c: 3, d: 0.6 },
+                { x: 1106, y: 270, c: 4, d: 0.15 },
+                { x: 1128, y: 277, c: 1, d: 0.45 },
+                { x: 1016, y: 298, c: 3, d: 0.7 },
+                { x: 1146, y: 312, c: 2, d: 0.2 },
+                { x: 1044, y: 266, c: 4, d: 0.55 },
+                { x: 1118, y: 264, c: 2, d: 0.85 },
+                { x: 1148, y: 274, c: 1, d: 1.0 },
               ].map((p) => (
                 <rect x={p.x} y={p.y} width="5" height="5" rx="1.5" class={`af-conf af-conf--${p.c}`} style={`animation-delay:${p.d}s`} />
               ))}
@@ -432,12 +443,8 @@ const revY = (i: number) => 196 + i * 42;
   .af-card-sub { fill: var(--color-text-secondary); font: 500 12.5px var(--font-body); }
   .af-src-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 
-  .af-stage-title { fill: var(--color-text-secondary); font: 700 14px var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; }
-  .af-title-tick { stroke: var(--vmm-accent); stroke-width: 2.5; }
-
-  .af-core { fill: var(--vmm-accent-soft); stroke: var(--vmm-accent); stroke-width: 1.75; }
-  .af-core-label { fill: var(--color-text); font: 700 17px var(--font-heading); }
-  .af-core-pulse { fill: var(--vmm-accent); animation: af-pulse 2.4s ease-in-out infinite; }
+  /* the fabric bar mirrors the vault but earns the accent: it is the spine of the thesis */
+  .af-fabricbar { stroke: color-mix(in oklab, var(--vmm-accent) 35%, var(--color-border)); }
 
   .af-wire, .af-trace-path {
     fill: none;
@@ -650,23 +657,23 @@ const revY = (i: number) => 196 + i * 42;
       ['#af-preflight', '#af-agent'],
       ['#af-loop'],
       ['#af-testing', '#af-c1g'],
-      ['#af-review', '#af-c2g'],
+      ['#af-review', '#af-c2g', '#af-tap-review'],
       ['#af-triage', '#af-c3g'],
-      ['#af-tracevault', '#af-t0', '#af-t1', '#af-t2', '#af-t3', '#af-t4'],
-      ['#af-ship', '#af-t5'],
+      ['#af-tracevault', '#af-t0', '#af-t1', '#af-t2', '#af-t3'],
+      ['#af-ship', '#af-c4g', '#af-t4'],
     ].map((sels) => sels.flatMap((s) => Array.from(document.querySelectorAll(s))));
     const allTargets = reveal.flat();
 
     // HUD reticle target boxes per stage (viewBox coordinates)
     const RETICLE = [
-      { x: 268, y: 182, w: 128, h: 136 },
-      { x: 382, y: 168, w: 168, h: 52 },
-      { x: 376, y: 220, w: 184, h: 146 },
-      { x: 716, y: 150, w: 196, h: 232 },
-      { x: 932, y: 150, w: 208, h: 232 },
-      { x: 1134, y: 150, w: 184, h: 232 },
-      { x: 36, y: 454, w: 1388, h: 94 },
-      { x: 1318, y: 198, w: 146, h: 68 },
+      { x: 36, y: 118, w: 1128, h: 82 },
+      { x: 44, y: 196, w: 146, h: 84 },
+      { x: 162, y: 186, w: 172, h: 112 },
+      { x: 266, y: 236, w: 206, h: 232 },
+      { x: 516, y: 236, w: 218, h: 232 },
+      { x: 778, y: 236, w: 194, h: 232 },
+      { x: 36, y: 480, w: 1128, h: 84 },
+      { x: 1016, y: 258, w: 148, h: 90 },
     ];
     const corners = {
       tl: document.getElementById('af-ret-tl'),
