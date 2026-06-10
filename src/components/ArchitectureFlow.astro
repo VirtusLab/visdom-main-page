@@ -53,14 +53,14 @@ const triageBranches = [
 ];
 
 const captions = [
-  { n: '01', t: 'Context Fabric', d: 'We pull Jira, code history, discussions, repos and docs into one place the agent can actually query.' },
-  { n: '02', t: 'Preflight context', d: 'Before it writes a line, the agent is loaded with the context the task needs.' },
-  { n: '03', t: 'Active context', d: 'As it works, the agent keeps asking the Fabric and getting answers back. Context flows both ways, without stopping.' },
-  { n: '04', t: 'Testing layer', d: 'Gates AI cannot self-confirm: architecture rules, property-based tests and mutation testing.' },
-  { n: '05', t: 'Code review · VCR', d: 'VCR reviews every PR in CI: linting, deterministic checks, then LLM passes tuned to your conventions.' },
-  { n: '06', t: 'Triage', d: 'Inside the pull request, every finding is sorted by risk. Trivial ones the agent fixes itself; critical ones stop for a human.' },
-  { n: '07', t: 'TraceVault', d: 'Every decision, test and review is recorded to TraceVault, one audit trail across the whole system.' },
-  { n: '08', t: 'Ship to production', d: 'Every gate is green, so the change ships. Deliberate, safe, and worth celebrating: this is what all that quality buys you.' },
+  { n: '01', t: 'Context Fabric', d: 'Jira tickets, git history, old debates, buried docs: everything your team knows, woven into one fabric the agent can actually ask.' },
+  { n: '02', t: 'Preflight context', d: 'No cold starts. Before the first line of code, the agent already knows the task, the owners, and the landmines.' },
+  { n: '03', t: 'Active context', d: 'Who owns this? What breaks if it changes? The agent keeps asking, the Fabric keeps answering. Context never stops flowing.' },
+  { n: '04', t: 'Testing layer', d: 'Agents love tests that pass. These gates do not care: architecture rules, property-based inputs and mutation testing expose what green CI hides.' },
+  { n: '05', t: 'Code review · VCR', d: 'VCR reads every PR before any human does: lint, deterministic checks, then LLM passes that know how your repo is actually written.' },
+  { n: '06', t: 'Triage', d: 'Not every bug deserves a meeting. Trivial ones the agent fixes on the spot; the risky ones stop and wait for a human.' },
+  { n: '07', t: 'TraceVault', d: 'Every prompt, decision and test lands in a signed, hash-chained ledger. When the auditor asks, the answer already exists.' },
+  { n: '08', t: 'Ship to production', d: 'All gates green. The change rolls out with receipts: tested, reviewed, traced. Ship it and enjoy the moment.' },
 ];
 
 // Ambient particles. Each rides an SVG path (by id) via GSAP MotionPath.
