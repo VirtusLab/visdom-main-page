@@ -1,0 +1,300 @@
+---
+// Orchestrator use cases (prototype section): six business scenarios where a
+// semi-autonomous agentic SDLC pays off. Each card is a mini incident feed:
+// trigger -> orchestrated work -> payoff, with the outcome as the punchline.
+
+const icons: Record<string, string> = {
+  alert: '<path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  activity: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+  bug: '<path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6z"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+  scale: '<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
+  plug: '<path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/>',
+};
+
+const cases = [
+  {
+    icon: 'alert',
+    tag: 'Incident response',
+    title: 'Prod throws 500s at 2 a.m.',
+    steps: [
+      { t: '02:14', d: 'Alerts fire: error rate spikes on production.' },
+      { t: '02:31', d: 'Logs correlated, root cause pinned, fix drafted and run through every gate.' },
+      { t: '08:00', d: 'Morning standup reviews a green, fully traced pull request.' },
+    ],
+    outcome: 'A pull request, not a Zendesk ticket',
+  },
+  {
+    icon: 'activity',
+    tag: 'Regression hunt',
+    title: 'Error rate doubles on the API',
+    steps: [
+      { t: '11:02', d: 'The checkout API starts failing twice as often.' },
+      { t: '11:04', d: 'Events correlated across services; the deploy that broke it identified.' },
+      { t: '11:27', d: 'A proposed fix waits for one click of approval.' },
+    ],
+    outcome: 'Root cause before the war room',
+  },
+  {
+    icon: 'bug',
+    tag: 'Bug reproduction',
+    title: 'A customer hits the same bug, twice',
+    steps: [
+      { t: '14:50', d: 'Support escalates a recurring, hard-to-pin failure.' },
+      { t: '15:12', d: 'Replayed from logs and telemetry; a failing test now reproduces it.' },
+      { t: '16:05', d: 'The fix ships with a regression test bolted on.' },
+    ],
+    outcome: 'Reproduced, fixed, locked for good',
+  },
+  {
+    icon: 'shield',
+    tag: 'Security patch',
+    title: 'A CVE lands in a core library',
+    steps: [
+      { t: '06:00', d: 'A new vulnerability drops in a dependency you run.' },
+      { t: '06:18', d: 'Affected components mapped, dependency bumped, full gate suite run.' },
+      { t: '07:02', d: 'A verified upgrade sits ready to merge.' },
+    ],
+    outcome: 'Patched in hours, not sprints',
+  },
+  {
+    icon: 'scale',
+    tag: 'Compliance',
+    title: 'A new regulation drops',
+    steps: [
+      { t: '10:00', d: 'Legal forwards a requirement your code must meet.' },
+      { t: '10:40', d: 'Codebase scanned, every touchpoint flagged, changes drafted with tests.' },
+      { t: '15:30', d: 'Implementation lands with its own audit trail.' },
+    ],
+    outcome: 'Compliance, with receipts',
+  },
+  {
+    icon: 'plug',
+    tag: 'Delivery',
+    title: 'Client wants a new integration',
+    steps: [
+      { t: '13:15', d: 'Sales promises an integration nobody scoped.' },
+      { t: '13:30', d: 'Work split into stages; plan and implementation skeletons generated.' },
+      { t: '14:00', d: 'Your team gets a short list of decisions only a human can make.' },
+    ],
+    outcome: 'Agents do the legwork, you make the calls',
+  },
+];
+---
+<section class="uc section" id="use-cases" aria-labelledby="uc-title">
+  <div class="container">
+    <div class="fade-up">
+      <p class="section-label">§ 02 · Orchestrator at work <span class="uc-proto">concept preview</span></p>
+      <h2 id="uc-title" class="section-title">The orchestrator takes the <span class="serif-accent uc-accent">night shift</span></h2>
+      <p class="section-subtitle">
+        One orchestrator runs every flow above end to end: it watches, correlates, plans and prepares.
+        The same gates, the same approvals, the same audit trail. People step in only where judgment matters.
+        Six places that pays off on day one:
+      </p>
+    </div>
+
+    <div class="uc-grid">
+      {cases.map((c) => (
+        <article class="uc-card fade-up">
+          <header class="uc-head">
+            <span class="uc-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={icons[c.icon]} />
+            </span>
+            <span class="uc-tag">{c.tag}</span>
+          </header>
+          <h3 class="uc-title">{c.title}</h3>
+          <ol class="uc-steps">
+            {c.steps.map((s, i) => (
+              <li class={`uc-step${i === c.steps.length - 1 ? ' uc-step--payoff' : ''}`}>
+                <span class="uc-time">{s.t}</span>
+                <p class="uc-desc">{s.d}</p>
+              </li>
+            ))}
+          </ol>
+          <p class="uc-outcome">{c.outcome}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .uc {
+    background: var(--color-surface);
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  .uc-proto {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    border: 1px dashed color-mix(in oklab, var(--vmm-accent) 45%, var(--color-border));
+    color: var(--color-text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+
+  .uc-accent { color: var(--vmm-accent); }
+
+  .uc .section-subtitle { margin-top: 0.75rem; max-width: 720px; }
+
+  .uc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 1024px) {
+    .uc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 640px) {
+    .uc-grid { grid-template-columns: 1fr; }
+    .uc { padding-top: 4rem; padding-bottom: 4rem; }
+  }
+
+  .uc-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .uc-card:hover {
+    border-color: color-mix(in oklab, var(--vmm-accent) 55%, var(--color-border));
+    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.10), 0 2px 8px rgba(0, 0, 0, 0.04);
+    transform: translateY(-3px);
+  }
+
+  .uc-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.9rem;
+  }
+
+  .uc-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--vmm-accent-soft);
+    color: var(--vmm-accent);
+  }
+
+  .uc-icon svg { width: 18px; height: 18px; }
+
+  .uc-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .uc-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.3;
+    margin-bottom: 1.1rem;
+  }
+
+  /* mini commit-graph timeline */
+  .uc-steps {
+    list-style: none;
+    margin: 0 0 1.1rem;
+    padding: 0;
+    flex: 1;
+  }
+
+  .uc-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 10px;
+    padding: 0 0 1rem 18px;
+  }
+
+  .uc-step:last-child { padding-bottom: 0; }
+
+  /* rail + node */
+  .uc-step::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 12px;
+    bottom: -6px;
+    width: 1.5px;
+    background: color-mix(in oklab, var(--vmm-accent) 25%, var(--color-border));
+  }
+
+  .uc-step:last-child::before { display: none; }
+
+  .uc-step::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 9px;
+    height: 9px;
+    border-radius: 9999px;
+    background: var(--card);
+    border: 2px solid color-mix(in oklab, var(--vmm-accent) 45%, var(--color-border));
+  }
+
+  .uc-step--payoff::after {
+    background: var(--vmm-accent);
+    border-color: var(--vmm-accent);
+    box-shadow: 0 0 0 4px var(--vmm-accent-soft);
+  }
+
+  .uc-time {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    padding-top: 1px;
+  }
+
+  .uc-step--payoff .uc-time { color: var(--vmm-accent); }
+
+  .uc-desc {
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+  }
+
+  .uc-step--payoff .uc-desc { color: var(--color-text); font-weight: 500; }
+
+  .uc-outcome {
+    margin: 0;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--color-border-light);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--color-emerald-dark);
+  }
+
+  .uc-outcome::before {
+    content: '→ ';
+    color: var(--vmm-accent);
+  }
+</style>
