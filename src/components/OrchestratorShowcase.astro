@@ -1,0 +1,475 @@
+---
+// Orchestrator showcase: an Apple-style product moment. A self-running,
+// looping choreography: a Jira ticket lands, the orchestrator assembles a
+// team of specialized agents, they scan their sources in parallel, findings
+// merge into one decision, a human approves, a pull request rolls out.
+
+const agents = [
+  {
+    icon: '<path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/>',
+    name: 'Code agent',
+    sources: ['repos', 'conventions'],
+  },
+  {
+    icon: '<circle cx="12" cy="12" r="3"/><path d="M3 12h6M15 12h6"/>',
+    name: 'History agent',
+    sources: ['git log', 'blame'],
+  },
+  {
+    icon: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+    name: 'Prod signals agent',
+    sources: ['metrics', 'logs'],
+  },
+  {
+    icon: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+    name: 'Security agent',
+    sources: ['scans', 'alerts'],
+  },
+];
+
+const captions = [
+  'A ticket lands. No human has seen it yet.',
+  'The orchestrator reads it and picks its team.',
+  'Four agents, four sources, all in parallel.',
+  'Findings merge into one decision.',
+  'One question to a human, exactly when it matters.',
+  'A pull request, ready to review. That is the whole loop.',
+];
+
+const triggers = ['Jira', 'Alert', 'Schedule', 'Webhook', 'CVE feed'];
+---
+<section class="os" id="orchestrator" aria-labelledby="os-title">
+  <div class="container">
+    <div class="os-head fade-up">
+      <p class="section-label">§ 02 · The Orchestrator</p>
+      <h2 id="os-title" class="os-title">One ticket in.<br />One <span class="serif-accent os-accent">pull request</span> out.</h2>
+      <p class="os-sub">
+        Every block above is really a specialized agent. The Orchestrator hires them per task,
+        runs them in parallel, merges what they find, and asks a human only when it matters.
+      </p>
+    </div>
+
+    <div class="os-stagewrap fade-up">
+      <div class="os-stage" id="os-stage">
+        <!-- ============ IN: trigger ============ -->
+        <div class="os-col os-col--in">
+          <div class="os-ticket" id="os-ticket">
+            <span class="os-ticket-key">PAY-2417</span>
+            <span class="os-ticket-title">Refunds intermittently fail</span>
+            <span class="os-ticket-meta">P1 · production</span>
+          </div>
+          <div class="os-triggers" aria-label="Trigger types">
+            {triggers.map((t, i) => (
+              <span class={`os-trigger${i === 0 ? ' os-trigger--active' : ''}`}>{t}</span>
+            ))}
+          </div>
+        </div>
+
+        <div class="os-wire os-wire--in" id="os-wire-in" aria-hidden="true"></div>
+
+        <!-- ============ CENTER: hub + agents ============ -->
+        <div class="os-col os-col--center">
+          <div class="os-hub" id="os-hub">
+            <span class="os-hub-ring" aria-hidden="true"></span>
+            <span class="os-hub-core">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></svg>
+              Orchestrator
+            </span>
+          </div>
+
+          <svg class="os-fan" viewBox="0 0 520 56" preserveAspectRatio="none" aria-hidden="true">
+            {[70, 195, 325, 450].map((x) => (
+              <>
+                <path class="os-fan-base" d={`M260,0 C 260,30 ${x},26 ${x},56`} />
+                <path class="os-fan-streak" pathLength="100" d={`M260,0 C 260,30 ${x},26 ${x},56`} />
+              </>
+            ))}
+          </svg>
+
+          <div class="os-agents">
+            {agents.map((a) => (
+              <div class="os-agent">
+                <span class="os-agent-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={a.icon} />
+                </span>
+                <span class="os-agent-name">{a.name}</span>
+                <span class="os-agent-srcs">{a.sources.join(' · ')}</span>
+                <span class="os-agent-scan" aria-hidden="true"></span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="os-wire os-wire--out" id="os-wire-out" aria-hidden="true"></div>
+
+        <!-- ============ OUT: human + PR ============ -->
+        <div class="os-col os-col--out">
+          <div class="os-human" id="os-human">
+            <span class="os-human-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            </span>
+            <span class="os-human-name">Human in the loop</span>
+            <span class="os-human-state">
+              <span class="os-human-q">approve?</span>
+              <span class="os-human-ok">approved ✓</span>
+            </span>
+          </div>
+          <div class="os-prwire" aria-hidden="true"></div>
+          <div class="os-pr" id="os-pr">
+            <span class="os-pr-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6"/><path d="M13 6h2a3 3 0 0 1 3 3v6"/></svg>
+            </span>
+            <span class="os-pr-title">PR #4231 · refund retry fix</span>
+            <span class="os-pr-meta">all gates green · fully traced</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- narration -->
+      <div class="os-captions" aria-live="polite">
+        {captions.map((c, i) => (
+          <p class={`os-caption${i === 0 ? ' is-active' : ''}`} data-i={i}>{c}</p>
+        ))}
+      </div>
+    </div>
+
+    <div class="os-cta fade-up">
+      <p class="os-cta-line">Want to see the Orchestrator on your stack?</p>
+      <a href="#contact" class="btn-pill btn-primary">Book a demo -&gt;</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .os { padding: 7rem 0 5rem; position: relative; overflow: hidden; }
+
+  .os-head { max-width: 760px; margin: 0 auto 3.5rem; text-align: center; }
+  .os-head .section-label { justify-content: center; }
+  .os-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.4rem, 5.4vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.06;
+    color: var(--color-text);
+    margin: 0.6rem 0 1.2rem;
+  }
+  .os-accent { color: var(--vmm-accent); }
+  .os-sub {
+    font-size: 1.1rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  /* ---- stage ---- */
+  .os-stagewrap { max-width: 1100px; margin: 0 auto; }
+  .os-stage {
+    display: grid;
+    grid-template-columns: minmax(170px, 0.8fr) 24px minmax(420px, 2fr) 24px minmax(190px, 0.9fr);
+    align-items: start;
+    gap: 0;
+    padding: 2.5rem 1.5rem 2rem;
+    border: 1px solid var(--color-border);
+    border-radius: 24px;
+    background:
+      radial-gradient(60% 80% at 50% 0%, var(--vmm-accent-soft), transparent 70%),
+      var(--color-surface);
+    position: relative;
+  }
+
+  .os-col { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .os-col--in { padding-top: 34px; }
+  .os-col--out { padding-top: 18px; }
+
+  /* ticket */
+  .os-ticket {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+    max-width: 200px;
+    padding: 12px 14px;
+    background: var(--card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+  }
+  .os-ticket-key { font: 700 11px var(--font-mono); color: var(--color-blue); letter-spacing: 0.06em; }
+  .os-ticket-title { font: 600 13.5px var(--font-body); color: var(--color-text); line-height: 1.3; }
+  .os-ticket-meta { font: 500 10.5px var(--font-mono); color: var(--color-text-muted); }
+
+  .os-triggers { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 210px; }
+  .os-trigger {
+    font: 600 10px var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    padding: 3px 9px;
+  }
+  .os-trigger--active { color: var(--vmm-accent); border-color: color-mix(in oklab, var(--vmm-accent) 55%, var(--color-border)); }
+
+  /* wires between columns */
+  .os-wire {
+    height: 2px;
+    margin-top: 64px;
+    background: linear-gradient(90deg, transparent, var(--vmm-accent), transparent);
+    background-size: 200% 100%;
+    border-radius: 2px;
+    opacity: 0.25;
+  }
+  .is-scanning .os-wire--in,
+  .is-human .os-wire--out { opacity: 1; animation: os-wireflow 1.2s linear infinite; }
+  @keyframes os-wireflow { from { background-position: 120% 0; } to { background-position: -80% 0; } }
+
+  /* hub */
+  .os-hub { position: relative; display: grid; place-items: center; height: 128px; }
+  .os-hub-ring {
+    position: absolute;
+    width: 118px;
+    height: 118px;
+    border-radius: 9999px;
+    border: 1.5px dashed color-mix(in oklab, var(--vmm-accent) 55%, transparent);
+    animation: os-spin 26s linear infinite;
+  }
+  .os-hub-core {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100px;
+    height: 100px;
+    border-radius: 9999px;
+    background: radial-gradient(circle at 35% 30%, var(--vmm-accent-2), var(--vmm-accent));
+    color: #fff;
+    font: 700 12.5px var(--font-heading);
+    letter-spacing: 0.01em;
+    box-shadow: 0 10px 36px color-mix(in oklab, var(--vmm-accent) 36%, transparent);
+  }
+  :global(.dark) .os-hub-core { color: #06281a; }
+  .os-hub-core svg { width: 18px; height: 18px; }
+  .is-merging .os-hub-core { box-shadow: 0 10px 48px color-mix(in oklab, var(--vmm-accent) 60%, transparent); }
+  @keyframes os-spin { to { transform: rotate(360deg); } }
+
+  /* fan */
+  .os-fan { width: 100%; height: 56px; overflow: visible; }
+  .os-fan-base { fill: none; stroke: color-mix(in oklab, var(--vmm-accent) 30%, var(--color-border)); stroke-width: 1.5; }
+  .os-fan-streak {
+    fill: none;
+    stroke: var(--vmm-accent-2);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 16 84;
+    stroke-dashoffset: 100;
+    opacity: 0;
+    filter: drop-shadow(0 0 3px var(--vmm-accent));
+  }
+  .is-scanning .os-fan-streak { opacity: 1; animation: os-streak-down 1.5s linear infinite; }
+  .is-merging .os-fan-streak { opacity: 1; animation: os-streak-up 1.1s linear infinite; }
+  @keyframes os-streak-down { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+  @keyframes os-streak-up { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -100; } }
+
+  /* agents */
+  .os-agents { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; width: 100%; }
+  .os-agent {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 12px 12px 14px;
+    background: var(--card);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  .os-agent-icon {
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--vmm-accent-soft);
+    color: var(--vmm-accent);
+    margin-bottom: 3px;
+  }
+  .os-agent-icon svg { width: 15px; height: 15px; }
+  .os-agent-name { font: 650 12.5px var(--font-body); color: var(--color-text); }
+  .os-agent-srcs { font: 500 10.5px var(--font-mono); color: var(--color-text-muted); }
+  .os-agent-scan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2.5px;
+    background: linear-gradient(90deg, transparent, var(--vmm-accent), transparent);
+    background-size: 60% 100%;
+    background-repeat: no-repeat;
+    opacity: 0;
+  }
+  .is-scanning .os-agent-scan { opacity: 1; animation: os-scan 1.1s ease-in-out infinite; }
+  .os-agent:nth-child(2) .os-agent-scan { animation-delay: 0.2s; }
+  .os-agent:nth-child(3) .os-agent-scan { animation-delay: 0.4s; }
+  .os-agent:nth-child(4) .os-agent-scan { animation-delay: 0.6s; }
+  @keyframes os-scan { 0% { background-position: -60% 0; } 100% { background-position: 160% 0; } }
+
+  /* human */
+  .os-human {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    max-width: 200px;
+    padding: 14px;
+    background: var(--card);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+  .is-human .os-human { border-color: var(--color-amber); box-shadow: 0 8px 28px rgba(245, 158, 11, 0.18); }
+  .is-approved .os-human { border-color: var(--vmm-accent); box-shadow: 0 8px 28px color-mix(in oklab, var(--vmm-accent) 25%, transparent); }
+  .os-human-icon {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: var(--color-surface-light);
+    color: var(--color-text-secondary);
+  }
+  .os-human-icon svg { width: 16px; height: 16px; }
+  .os-human-name { font: 650 12.5px var(--font-body); color: var(--color-text); }
+  .os-human-state { font: 600 10.5px var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; }
+  .os-human-q { color: var(--color-amber); display: none; }
+  .os-human-ok { color: var(--vmm-accent); display: none; }
+  .is-human .os-human-q { display: inline; }
+  .is-approved .os-human-q { display: none; }
+  .is-approved .os-human-ok { display: inline; }
+
+  .os-prwire { width: 2px; height: 26px; background: color-mix(in oklab, var(--vmm-accent) 35%, var(--color-border)); border-radius: 2px; }
+
+  .os-pr {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+    max-width: 200px;
+    padding: 12px 14px;
+    background: var(--card);
+    border: 1.5px solid var(--vmm-accent);
+    border-radius: 12px;
+    box-shadow: 0 10px 32px color-mix(in oklab, var(--vmm-accent) 22%, transparent);
+  }
+  .os-pr-icon { color: var(--vmm-accent); }
+  .os-pr-icon svg { width: 16px; height: 16px; }
+  .os-pr-title { font: 650 12.5px var(--font-body); color: var(--color-text); }
+  .os-pr-meta { font: 600 10px var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--vmm-accent); }
+
+  /* captions */
+  .os-captions { position: relative; height: 2.2em; margin-top: 1.4rem; text-align: center; }
+  .os-caption {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    font: 500 1.05rem var(--font-body);
+    color: var(--color-text-secondary);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  .os-caption.is-active { opacity: 1; transform: none; }
+
+  /* CTA */
+  .os-cta { display: flex; flex-direction: column; align-items: center; gap: 0.9rem; margin-top: 3rem; }
+  .os-cta-line { margin: 0; font-size: 1.05rem; color: var(--color-text-secondary); }
+
+  /* ---- responsive: stack vertically ---- */
+  @media (max-width: 900px) {
+    .os { padding: 4.5rem 0 3.5rem; }
+    .os-stage { grid-template-columns: 1fr; gap: 18px; padding: 1.75rem 1.25rem; }
+    .os-col--in, .os-col--out { padding-top: 0; }
+    .os-wire { width: 2px; height: 26px; margin: 0 auto; background: linear-gradient(180deg, transparent, var(--vmm-accent), transparent); }
+    .os-agents { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .os-fan { display: none; }
+    .os-captions { height: 3.4em; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .os-hub-ring, .os-fan-streak, .os-agent-scan, .os-wire { animation: none !important; }
+    .os-fan-streak { opacity: 0 !important; }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+
+  const stage = document.getElementById('os-stage');
+  if (stage) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const captions = Array.from(document.querySelectorAll('.os-caption'));
+    const setCaption = (i) => captions.forEach((c, j) => c.classList.toggle('is-active', j === i));
+    const ticket = '#os-ticket';
+    const agentsEls = stage.querySelectorAll('.os-agent');
+    const states = ['is-scanning', 'is-merging', 'is-human', 'is-approved'];
+
+    if (reduce) {
+      // static: final state, everything visible, closing caption
+      stage.classList.add('is-approved');
+      setCaption(captions.length - 1);
+    } else {
+      const resetClasses = () => states.forEach((s) => stage.classList.remove(s));
+
+      const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.4 });
+
+      // initial states
+      tl.set(ticket, { x: -28, opacity: 0 });
+      tl.set(agentsEls, { y: 14, opacity: 0, scale: 0.95 });
+      tl.set('#os-human, .os-prwire', { opacity: 0.35 });
+      tl.set('#os-pr', { y: 14, opacity: 0, scale: 0.96 });
+      tl.call(resetClasses);
+      tl.call(() => setCaption(0));
+
+      // 1. the ticket lands
+      tl.to(ticket, { x: 0, opacity: 1, duration: 0.7, ease: 'power3.out' });
+
+      // 2. orchestrator picks its team
+      tl.call(() => setCaption(1), null, '+=0.9');
+      tl.to('.os-hub-core', { scale: 1.07, duration: 0.35, yoyo: true, repeat: 1, ease: 'power2.inOut' }, '<');
+      tl.to(agentsEls, { y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.12, ease: 'back.out(1.5)' }, '+=0.2');
+
+      // 3. parallel scan
+      tl.call(() => { setCaption(2); stage.classList.add('is-scanning'); }, null, '+=0.4');
+      tl.to({}, { duration: 3.0 });
+
+      // 4. findings merge
+      tl.call(() => { setCaption(3); stage.classList.remove('is-scanning'); stage.classList.add('is-merging'); });
+      tl.to('.os-hub-core', { scale: 1.1, duration: 0.5, ease: 'power2.out' });
+      tl.to({}, { duration: 1.3 });
+      tl.to('.os-hub-core', { scale: 1, duration: 0.4 });
+
+      // 5. human in the loop
+      tl.call(() => { setCaption(4); stage.classList.remove('is-merging'); stage.classList.add('is-human'); });
+      tl.to('#os-human, .os-prwire', { opacity: 1, duration: 0.4 });
+      tl.to({}, { duration: 1.6 });
+      tl.call(() => stage.classList.add('is-approved'));
+
+      // 6. the pull request
+      tl.call(() => setCaption(5), null, '+=0.3');
+      tl.to('#os-pr', { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.4)' });
+      tl.to({}, { duration: 2.6 });
+
+      // soft reset
+      tl.to(stage, { opacity: 0, duration: 0.45, ease: 'power1.in' });
+      tl.call(resetClasses);
+      tl.set(stage, { opacity: 1 }, '+=0.15');
+    }
+  }
+</script>
