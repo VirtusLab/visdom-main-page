@@ -34,10 +34,10 @@ const icons: Record<string, string> = {
 };
 
 const testLayers = [
-  'Classic tests',
-  'Mutation testing',
-  'Architecture testing',
-  'Property-based',
+  'Unit & E2E',
+  'ArchUnit gates',
+  'Property-based · jqwik',
+  'Mutation score · PIT',
 ];
 
 const reviewLevels = [
@@ -56,8 +56,8 @@ const captions = [
   { n: '01', t: 'Context Fabric', d: 'We pull Jira, code history, discussions, repos and docs into one place the agent can actually query.' },
   { n: '02', t: 'Preflight context', d: 'Before it writes a line, the agent is loaded with the context the task needs.' },
   { n: '03', t: 'Active context', d: 'As it works, the agent keeps asking the Fabric and getting answers back. Context flows both ways, without stopping.' },
-  { n: '04', t: 'Testing layer', d: 'Finished code runs a quality gate: classic, mutation, architecture and property-based tests.' },
-  { n: '05', t: 'Multi-level code review', d: 'Four levels, each deeper than the last: linting, deterministic, single-pass LLM, then deep LLM.' },
+  { n: '04', t: 'Testing layer', d: 'Gates AI cannot self-confirm: ArchUnit architecture rules, jqwik property-based tests, PIT mutation testing.' },
+  { n: '05', t: 'Code review · VCR', d: 'VCR reviews every PR in CI for about $0.10: linting, deterministic checks, then LLM passes tuned to your conventions.' },
   { n: '06', t: 'Triage', d: 'Inside the pull request, every finding is sorted by risk. Trivial ones the agent fixes itself; critical ones stop for a human.' },
   { n: '07', t: 'TraceVault', d: 'Every decision, test and review is recorded to TraceVault, one audit trail across the whole system.' },
   { n: '08', t: 'Ship to production', d: 'Every gate is green, so the change ships. Deliberate, safe, and worth celebrating: this is what all that quality buys you.' },
@@ -85,10 +85,10 @@ const particleStages = [...new Set(particles.map((p) => p.stage))];
 // layout helpers: sources run horizontally, fabric is a bar like the vault
 const srcX = (i: number) => 44 + i * 188;
 const srcCX = (i: number) => 130 + i * 188;
-const testY = (i: number) => 288 + i * 42;
+const testY = (i: number) => 284 + i * 40;
 const revW = [178, 178, 178, 178];
 const revX = [536, 536, 536, 536];
-const revY = (i: number) => 288 + i * 42;
+const revY = (i: number) => 284 + i * 40;
 ---
 
 <section class="af" id="how-it-works" aria-labelledby="af-title">
@@ -159,7 +159,7 @@ const revY = (i: number) => 288 + i * 42;
           </g>
 
           <!-- trace-drop paths (stage bottom -> vault) -->
-          <path id="af-t0" class="af-trace-path af-reveal" d="M150,400 L150,538" />
+          <path id="af-t0" class="af-trace-path af-reveal" d="M150,428 L150,538" />
           <path id="af-t1" class="af-trace-path af-reveal" d="M369,466 L369,538" />
           <path id="af-t2" class="af-trace-path af-reveal" d="M625,466 L625,538" />
           <path id="af-t3" class="af-trace-path af-reveal" d="M875,522 L875,538" />
@@ -181,7 +181,7 @@ const revY = (i: number) => 288 + i * 42;
             <line x1="60" y1="127.5" x2="1140" y2="127.5" class="af-sheen" />
             <g class="af-vault-icon" transform="translate(64,142) scale(0.8)" set:html={icons.layers} />
             <text x="94" y="152" class="af-vault-label">Context Fabric</text>
-            <text x="94" y="175" class="af-vault-sub">Ownership, conventions, blast radius: ground truth for every stage</text>
+            <text x="94" y="175" class="af-vault-sub">System · Code · Organizational · Historical: ownership, conventions and blast radius as deterministic answers</text>
             <text x="1132" y="163" text-anchor="end" class="af-vault-tag">queried by every stage</text>
           </g>
 
@@ -200,7 +200,7 @@ const revY = (i: number) => 288 + i * 42;
             <path class="af-streak" pathLength="100" d="M176,192 C 186,214 186,240 178,262" style="animation-duration:1.8s" />
             <path class="af-streak" pathLength="100" d="M202,284 C 214,252 214,218 204,196" style="animation-duration:1.8s;animation-delay:-0.9s" />
             <text x="244" y="222" class="af-loop-label">Active context</text>
-            <text x="244" y="240" class="af-loop-sub">continuous · two-way</text>
+            <text x="244" y="240" class="af-loop-sub">continuous · two-way · MCP</text>
           </g>
 
           <!-- ============ CODING AGENT (always present hub) ============ -->
@@ -211,6 +211,9 @@ const revY = (i: number) => 288 + i * 42;
             <g class="af-agent-spark" transform="translate(142,293) scale(0.68)" set:html={icons.spark} />
             <text x="150" y="334" text-anchor="middle" class="af-agent-label">Coding</text>
             <text x="150" y="354" text-anchor="middle" class="af-agent-label">Agent</text>
+            <!-- the agent runs contained: Sandcat sandbox tag -->
+            <rect x="97" y="404" width="106" height="18" rx="9" class="af-sandbox-tag" />
+            <text x="150" y="416.5" text-anchor="middle" class="af-sandbox-label">Sandcat sandbox</text>
           </g>
 
           <!-- pipeline connectors (the main spine) -->
@@ -240,10 +243,11 @@ const revY = (i: number) => 288 + i * 42;
             <text x="312" y="268" class="af-mhead-label">Testing</text>
             {testLayers.map((t, i) => (
               <g class="af-test-row">
-                <rect x="286" y={testY(i)} width="166" height="36" rx="8" class="af-chip" />
-                <text x="369" y={testY(i) + 23} text-anchor="middle" class="af-chip-label">{t}</text>
+                <rect x="286" y={testY(i)} width="166" height="34" rx="8" class="af-chip" />
+                <text x="369" y={testY(i) + 22} text-anchor="middle" class="af-chip-label">{t}</text>
               </g>
             ))}
+            <text x="369" y="452" text-anchor="middle" class="af-mfoot">catches what green CI hides</text>
           </g>
 
           <!-- code review taps the fabric for conventions and ownership -->
@@ -264,14 +268,15 @@ const revY = (i: number) => 288 + i * 42;
             <line x1="540" y1="245.5" x2="710" y2="245.5" class="af-sheen" />
             <rect x="530" y="250" width="190" height="26" rx="8" class="af-mhead" />
             <g class="af-mhead-icon" transform="translate(540,255) scale(0.66)" set:html={icons.eye} />
-            <text x="562" y="268" class="af-mhead-label">Code review</text>
+            <text x="562" y="268" class="af-mhead-label">Code review · VCR</text>
             {reviewLevels.map((r, i) => (
               <g class={`af-review-row af-depth-${i}`}>
-                <rect x={revX[i]} y={revY(i)} width={revW[i]} height="36" rx="8" class="af-review-bar" />
-                <text x={revX[i] + 13} y={revY(i) + 23} class="af-review-n">{r.n}</text>
-                <text x={revX[i] + 36} y={revY(i) + 23} class="af-review-label">{r.label}</text>
+                <rect x={revX[i]} y={revY(i)} width={revW[i]} height="34" rx="8" class="af-review-bar" />
+                <text x={revX[i] + 13} y={revY(i) + 22} class="af-review-n">{r.n}</text>
+                <text x={revX[i] + 36} y={revY(i) + 22} class="af-review-label">{r.label}</text>
               </g>
             ))}
+            <text x="625" y="452" text-anchor="middle" class="af-mfoot">~$0.10 per PR · in your CI</text>
           </g>
 
           <!-- ============ TRIAGE (its own block: it owns the gating) ============ -->
@@ -284,13 +289,14 @@ const revY = (i: number) => 288 + i * 42;
 
             <rect x="798" y="286" width="154" height="42" rx="10" class="af-pr" />
             <text x="875" y="312" text-anchor="middle" class="af-pr-label">Risk gate</text>
+            <text x="875" y="340" text-anchor="middle" class="af-mfoot">path · diff size · coverage</text>
 
             <!-- fork below the panel: trivial loops back, risk stops at the human gate.
                  the risk drop, the gate and its trace share one axis: PR -> gate -> vault -->
-            <path class="af-branch af-branch--risk" d="M875,328 L875,464" marker-end="url(#af-arrow-amber)" />
+            <path class="af-branch af-branch--risk" d="M875,350 L875,464" marker-end="url(#af-arrow-amber)" />
             <g class="af-triage-node af-triage-node--green">
-              <path id="af-autofix" class="af-autofix-path" d="M840,328 C 840,430 790,498 700,498 L320,498 C 252,498 206,442 200,374" marker-end="url(#af-arrow)" />
-              <path class="af-streak af-streak--soft" pathLength="100" d="M840,328 C 840,430 790,498 700,498 L320,498 C 252,498 206,442 200,374" style="animation-duration:3.6s" />
+              <path id="af-autofix" class="af-autofix-path" d="M840,350 C 840,440 790,498 700,498 L320,498 C 252,498 206,442 200,374" marker-end="url(#af-arrow)" />
+              <path class="af-streak af-streak--soft" pathLength="100" d="M840,350 C 840,440 790,498 700,498 L320,498 C 252,498 206,442 200,374" style="animation-duration:3.6s" />
               <text x="826" y="378" text-anchor="end" class="af-autofix-label">green · trivial</text>
               <text x="470" y="488" text-anchor="middle" class="af-autofix-label">auto-fix → back to agent</text>
             </g>
@@ -414,6 +420,11 @@ const revY = (i: number) => 288 + i * 42;
 
   /* module header chip */
   .af-mhead { fill: var(--color-surface-light); }
+  /* concrete-detail footers inside modules */
+  .af-mfoot { fill: var(--color-text-muted); font: 600 10.5px var(--font-mono); letter-spacing: 0.04em; }
+  /* the agent runs inside Sandcat */
+  .af-sandbox-tag { fill: var(--color-surface-light); stroke: var(--color-border); stroke-width: 1; }
+  .af-sandbox-label { fill: var(--color-text-secondary); font: 600 9.5px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
   .af-mhead-label { fill: var(--color-text); font: 600 12px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
   .af-mhead-icon, .af-core-icon, .af-vault-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
