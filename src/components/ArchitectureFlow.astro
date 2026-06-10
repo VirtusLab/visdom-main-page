@@ -88,7 +88,6 @@ const srcCX = (i: number) => 130 + i * 188;
 const testY = (i: number) => 288 + i * 42;
 const revW = [178, 178, 178, 178];
 const revX = [536, 536, 536, 536];
-const revIndent = (i: number) => i * 9; // nested look = increasing depth
 const revY = (i: number) => 288 + i * 42;
 ---
 
@@ -200,8 +199,8 @@ const revY = (i: number) => 288 + i * 42;
             <path id="af-query" class="af-loop-path" d="M202,284 C 214,252 214,218 204,196" marker-end="url(#af-arrow)" />
             <path class="af-streak" pathLength="100" d="M176,192 C 186,214 186,240 178,262" style="animation-duration:1.8s" />
             <path class="af-streak" pathLength="100" d="M202,284 C 214,252 214,218 204,196" style="animation-duration:1.8s;animation-delay:-0.9s" />
-            <text x="226" y="222" class="af-loop-label">Active context</text>
-            <text x="226" y="240" class="af-loop-sub">continuous · two-way</text>
+            <text x="244" y="222" class="af-loop-label">Active context</text>
+            <text x="244" y="240" class="af-loop-sub">continuous · two-way</text>
           </g>
 
           <!-- ============ CODING AGENT (always present hub) ============ -->
@@ -268,9 +267,9 @@ const revY = (i: number) => 288 + i * 42;
             <text x="562" y="268" class="af-mhead-label">Code review</text>
             {reviewLevels.map((r, i) => (
               <g class={`af-review-row af-depth-${i}`}>
-                <rect x={revX[i] + revIndent(i)} y={revY(i)} width={revW[i] - revIndent(i)} height="36" rx="8" class="af-review-bar" />
-                <text x={revX[i] + revIndent(i) + 13} y={revY(i) + 23} class="af-review-n">{r.n}</text>
-                <text x={revX[i] + revIndent(i) + 36} y={revY(i) + 23} class="af-review-label">{r.label}</text>
+                <rect x={revX[i]} y={revY(i)} width={revW[i]} height="36" rx="8" class="af-review-bar" />
+                <text x={revX[i] + 13} y={revY(i) + 23} class="af-review-n">{r.n}</text>
+                <text x={revX[i] + 36} y={revY(i) + 23} class="af-review-label">{r.label}</text>
               </g>
             ))}
           </g>
