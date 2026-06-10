@@ -104,7 +104,7 @@ const revY = (i: number) => 288 + i * 42;
   <div class="af-track">
     <div class="af-viewport">
       <div class="af-stage">
-        <svg viewBox="0 0 1200 592" role="img" aria-labelledby="af-svg-title" class="af-svg" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 1200 640" role="img" aria-labelledby="af-svg-title" class="af-svg" preserveAspectRatio="xMidYMid meet">
           <title id="af-svg-title">Visdom architecture: Context Fabric, Coding Agent, Testing, Code Review, PR triage and TraceVault.</title>
 
           <defs>
@@ -126,41 +126,41 @@ const revY = (i: number) => 288 + i * 42;
           </defs>
 
           <!-- blueprint substrate: dot grid + corner registration marks -->
-          <rect x="36" y="40" width="1128" height="524" fill="url(#af-grid)" class="af-bp" aria-hidden="true" />
+          <rect x="36" y="40" width="1128" height="572" fill="url(#af-grid)" class="af-bp" aria-hidden="true" />
           <g class="af-fid" aria-hidden="true">
-            {[[40, 44], [1160, 44], [40, 568], [1160, 568]].map(([x, y]) => (
+            {[[40, 44], [1160, 44], [40, 618], [1160, 618]].map(([x, y]) => (
               <path d={`M${x - 5},${y} H${x + 5} M${x},${y - 5} V${y + 5}`} />
             ))}
           </g>
 
           <!-- ============ TRACEVAULT (baseplate, spans everything) ============ -->
           <g id="af-tracevault" class="af-group" data-reveal>
-            <rect x="44" y="488" width="1112" height="68" rx="18" class="af-vault" />
-            <line x1="60" y1="489.5" x2="1140" y2="489.5" class="af-sheen" />
-            <g class="af-vault-icon" transform="translate(64,505) scale(0.8)" set:html={icons.link} />
-            <text x="94" y="515" class="af-vault-label">TraceVault</text>
-            <text x="94" y="538" class="af-vault-sub">Signed, hash-chained record across every step</text>
+            <rect x="44" y="538" width="1112" height="68" rx="18" class="af-vault" />
+            <line x1="60" y1="539.5" x2="1140" y2="539.5" class="af-sheen" />
+            <g class="af-vault-icon" transform="translate(64,555) scale(0.8)" set:html={icons.link} />
+            <text x="94" y="565" class="af-vault-label">TraceVault</text>
+            <text x="94" y="588" class="af-vault-sub">Signed, hash-chained record across every step</text>
             {/* hash-chain motif: linked blocks, append-only */}
             <g class="af-chain" aria-hidden="true">
               {[940, 968, 996, 1024].map((x, i) => (
                 <>
-                  <rect x={x} y="508" width="14" height="14" rx="3" class={`af-chain-block${i === 3 ? ' af-chain-block--head' : ''}`} />
-                  {i < 3 && <line x1={x + 14} y1="515" x2={x + 28} y2="515" class="af-chain-link" />}
+                  <rect x={x} y="558" width="14" height="14" rx="3" class={`af-chain-block${i === 3 ? ' af-chain-block--head' : ''}`} />
+                  {i < 3 && <line x1={x + 14} y1="565" x2={x + 28} y2="565" class="af-chain-link" />}
                 </>
               ))}
             </g>
-            <text x="1132" y="520" text-anchor="end" class="af-vault-tag">Ed25519</text>
-            {[150, 369, 625, 875, 1089].map((x) => (
-              <circle cx={x} cy="488" r="3.5" class="af-vault-mark" />
+            <text x="1132" y="570" text-anchor="end" class="af-vault-tag">Ed25519</text>
+            {[150, 369, 625, 875, 1076].map((x) => (
+              <circle cx={x} cy="538" r="3.5" class="af-vault-mark" />
             ))}
           </g>
 
           <!-- trace-drop paths (stage bottom -> vault) -->
-          <path id="af-t0" class="af-trace-path af-reveal" d="M150,400 L150,488" />
-          <path id="af-t1" class="af-trace-path af-reveal" d="M369,466 L369,488" />
-          <path id="af-t2" class="af-trace-path af-reveal" d="M625,466 L625,488" />
-          <path id="af-t3" class="af-trace-path af-reveal" d="M875,466 L875,488" />
-          <path id="af-t4" class="af-trace-path af-reveal" d="M1089,344 L1089,488" />
+          <path id="af-t0" class="af-trace-path af-reveal" d="M150,400 L150,538" />
+          <path id="af-t1" class="af-trace-path af-reveal" d="M369,466 L369,538" />
+          <path id="af-t2" class="af-trace-path af-reveal" d="M625,466 L625,538" />
+          <path id="af-t3" class="af-trace-path af-reveal" d="M875,522 L875,538" />
+          <path id="af-t4" class="af-trace-path af-reveal" d="M1076,366 L1076,538" />
 
           <!-- ============ CONTEXT FABRIC: sources row + cross-cutting bar ============ -->
           <g id="af-context" class="af-group" data-reveal>
@@ -224,8 +224,8 @@ const revY = (i: number) => 288 + i * 42;
             <path class="af-streak af-streak--pipe" pathLength="100" d="M726,312 L780,312" style="animation-duration:2.4s;animation-delay:1.2s" />
           </g>
           <g id="af-c4g" class="af-reveal">
-            <path id="af-c4" class="af-pipe" d="M964,312 L1018,312" marker-end="url(#af-arrow)" />
-            <path class="af-streak af-streak--pipe" pathLength="100" d="M964,312 L1018,312" style="animation-duration:2.4s;animation-delay:1.8s" />
+            <path id="af-c4" class="af-pipe" d="M964,312 L990,312" marker-end="url(#af-arrow)" />
+            <path class="af-streak af-streak--pipe" pathLength="100" d="M964,312 L990,312" style="animation-duration:2.4s;animation-delay:1.8s" />
           </g>
 
           <!-- ============ TESTING ============ -->
@@ -266,9 +266,9 @@ const revY = (i: number) => 288 + i * 42;
             ))}
           </g>
 
-          <!-- ============ PR & TRIAGE ============ -->
+          <!-- ============ PR & TRIAGE (outcomes route along the bottom band) ============ -->
           <g id="af-triage" class="af-group af-module" data-reveal>
-            <rect x="786" y="244" width="178" height="216" rx="16" class="af-panel" />
+            <rect x="786" y="244" width="178" height="104" rx="16" class="af-panel" />
             <line x1="802" y1="245.5" x2="948" y2="245.5" class="af-sheen" />
             <rect x="792" y="250" width="166" height="26" rx="8" class="af-mhead" />
             <g class="af-mhead-icon" transform="translate(802,255) scale(0.66)" set:html={icons.pr} />
@@ -277,53 +277,50 @@ const revY = (i: number) => 288 + i * 42;
             <rect x="798" y="286" width="154" height="42" rx="10" class="af-pr" />
             <text x="875" y="312" text-anchor="middle" class="af-pr-label">Pull Request</text>
 
-            <!-- fork: trivial drops straight, risk routes along the panel edge -->
-            <path class="af-branch af-branch--green" d="M875,328 L875,336" marker-end="url(#af-arrow)" />
-            <path class="af-branch af-branch--risk" d="M875,328 C 875,338 790,340 790,366 L790,408 Q790,415 796,416" marker-end="url(#af-arrow)" />
-
+            <!-- fork below the panel: trivial loops back, risk stops at the human gate -->
+            <path class="af-branch af-branch--risk" d="M910,328 L910,464" marker-end="url(#af-arrow)" />
             <g class="af-triage-node af-triage-node--green">
-              <rect x="798" y="342" width="154" height="46" rx="10" class="af-card af-card--green" />
-              <text x="812" y="362" class="af-card-label af-card-label--green">Green · trivial</text>
-              <text x="812" y="379" class="af-card-sub">agent auto-fixes</text>
+              <path id="af-autofix" class="af-autofix-path" d="M840,328 C 840,430 790,498 700,498 L268,498 C 196,498 124,462 121,392" marker-end="url(#af-arrow)" />
+              <path class="af-streak af-streak--soft" pathLength="100" d="M840,328 C 840,430 790,498 700,498 L268,498 C 196,498 124,462 121,392" style="animation-duration:3.6s" />
+              <text x="826" y="378" text-anchor="end" class="af-autofix-label">green · trivial</text>
+              <text x="470" y="488" text-anchor="middle" class="af-autofix-label">auto-fix → back to agent</text>
             </g>
             <g class="af-triage-node af-triage-node--risk">
-              <rect x="798" y="396" width="154" height="46" rx="10" class="af-card af-card--risk" />
-              <text x="838" y="416" class="af-card-label af-card-label--risk">High-risk</text>
-              <text x="838" y="433" class="af-card-sub">human approval</text>
-              <g class="af-human" transform="translate(818,414)">
+              <rect x="798" y="470" width="154" height="46" rx="10" class="af-card af-card--risk" />
+              <text x="838" y="490" class="af-card-label af-card-label--risk">High-risk</text>
+              <text x="838" y="507" class="af-card-sub">human approval gate</text>
+              <g class="af-human" transform="translate(818,488)">
                 <circle cx="0" cy="-4" r="5" class="af-human-mark" />
                 <path d="M-8,10 a8,9 0 0 1 16,0" class="af-human-mark" />
               </g>
+              <!-- approved: the human waves it through to production -->
+              <path class="af-branch af-branch--risk" d="M952,490 C 1010,488 1030,424 1030,366" marker-end="url(#af-arrow)" />
             </g>
-
-            <!-- auto-fix loop back to the agent: arcs through the band under the fabric -->
-            <path id="af-autofix" class="af-autofix-path" d="M875,240 C 780,198 300,198 158,262" marker-end="url(#af-arrow)" />
-            <path class="af-streak af-streak--soft" pathLength="100" d="M875,240 C 780,198 300,198 158,262" style="animation-duration:3.6s" />
-            <text x="470" y="204" text-anchor="middle" class="af-autofix-label">auto-fix → back to agent</text>
           </g>
 
           <!-- ============ SHIP TO PRODUCTION (the joyful finale, end of the line) ============ -->
           <g id="af-ship" class="af-group" data-reveal>
-            <rect x="1024" y="286" width="132" height="52" rx="12" class="af-ship-box" />
-            <g class="af-ship-icon" transform="translate(1034,301) scale(0.9)" set:html={icons.rocket} />
-            <text x="1062" y="308" class="af-ship-label">Production</text>
-            <text x="1062" y="326" class="af-ship-sub">all gates green</text>
+            <rect x="996" y="264" width="160" height="96" rx="16" class="af-ship-box" />
+            <line x1="1012" y1="265.5" x2="1140" y2="265.5" class="af-sheen" />
+            <g class="af-ship-icon" transform="translate(1014,296) scale(1.15)" set:html={icons.rocket} />
+            <text x="1052" y="306" class="af-ship-label">Production</text>
+            <text x="1052" y="328" class="af-ship-sub">all gates green</text>
             <!-- passed seal -->
-            <circle cx="1152" cy="290" r="11" class="af-seal" />
-            <g class="af-seal-check" transform="translate(1144,282) scale(0.66)" set:html={icons.check} />
+            <circle cx="1148" cy="272" r="11" class="af-seal" />
+            <g class="af-seal-check" transform="translate(1140,264) scale(0.66)" set:html={icons.check} />
             <!-- confetti: the only multi-colour moment in the whole diagram -->
             <g class="af-confetti" aria-hidden="true">
               {[
-                { x: 1032, y: 278, c: 1, d: 0 },
-                { x: 1056, y: 272, c: 2, d: 0.3 },
-                { x: 1080, y: 276, c: 3, d: 0.6 },
-                { x: 1106, y: 270, c: 4, d: 0.15 },
-                { x: 1128, y: 277, c: 1, d: 0.45 },
-                { x: 1016, y: 298, c: 3, d: 0.7 },
-                { x: 1146, y: 312, c: 2, d: 0.2 },
-                { x: 1044, y: 266, c: 4, d: 0.55 },
-                { x: 1118, y: 264, c: 2, d: 0.85 },
-                { x: 1148, y: 274, c: 1, d: 1.0 },
+                { x: 1004, y: 250, c: 1, d: 0 },
+                { x: 1028, y: 244, c: 2, d: 0.3 },
+                { x: 1052, y: 248, c: 3, d: 0.6 },
+                { x: 1078, y: 242, c: 4, d: 0.15 },
+                { x: 1102, y: 249, c: 1, d: 0.45 },
+                { x: 988, y: 268, c: 3, d: 0.7 },
+                { x: 1162, y: 296, c: 2, d: 0.2 },
+                { x: 1016, y: 236, c: 4, d: 0.55 },
+                { x: 1086, y: 232, c: 2, d: 0.85 },
+                { x: 1146, y: 246, c: 1, d: 1.0 },
               ].map((p) => (
                 <rect x={p.x} y={p.y} width="5" height="5" rx="1.5" class={`af-conf af-conf--${p.c}`} style={`animation-delay:${p.d}s`} />
               ))}
@@ -528,14 +525,11 @@ const revY = (i: number) => 288 + i * 42;
   .af-chain-block--head { fill: color-mix(in oklab, var(--vmm-accent) 30%, var(--card)); stroke: var(--vmm-accent); }
   .af-chain-link { stroke: color-mix(in oklab, var(--vmm-accent) 40%, var(--color-border)); stroke-width: 1.5; stroke-dasharray: 2 3; }
 
-  /* ---- ship to production: the joyful finale ---- */
-  .af-ship-box { fill: url(#af-agent-grad); }
-  .af-ship-icon { fill: none; stroke: rgba(255, 255, 255, 0.95); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
-  .af-ship-label { fill: var(--primary-foreground, #fff); font: 700 15px var(--font-heading); }
-  .af-ship-sub { fill: rgba(255, 255, 255, 0.85); font: 600 9.5px var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; }
-  :global(.dark) .af-ship-label { fill: #062b1c; }
-  :global(.dark) .af-ship-sub { fill: rgba(6, 43, 28, 0.8); }
-  :global(.dark) .af-ship-icon { stroke: rgba(6, 43, 28, 0.95); }
+  /* ---- ship to production: the joyful finale, dressed like the other modules ---- */
+  .af-ship-box { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 1.5; }
+  .af-ship-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .af-ship-label { fill: var(--color-text); font: 700 17px var(--font-heading); }
+  .af-ship-sub { fill: var(--color-emerald-dark); font: 600 10.5px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
   .af-seal { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 1.75; }
   .af-seal-check { fill: none; stroke: var(--vmm-accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
   .af-group.is-active .af-ship-box { filter: drop-shadow(0 0 14px var(--vmm-accent-soft)) drop-shadow(0 0 5px var(--vmm-accent)); }
@@ -671,9 +665,9 @@ const revY = (i: number) => 288 + i * 42;
       { x: 162, y: 186, w: 172, h: 112 },
       { x: 266, y: 236, w: 206, h: 232 },
       { x: 516, y: 236, w: 218, h: 232 },
-      { x: 778, y: 236, w: 194, h: 232 },
-      { x: 36, y: 480, w: 1128, h: 84 },
-      { x: 1016, y: 258, w: 148, h: 90 },
+      { x: 778, y: 236, w: 194, h: 290 },
+      { x: 36, y: 530, w: 1128, h: 84 },
+      { x: 988, y: 256, w: 176, h: 112 },
     ];
     const corners = {
       tl: document.getElementById('af-ret-tl'),
