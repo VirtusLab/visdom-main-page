@@ -29,6 +29,7 @@ const icons: Record<string, string> = {
   link: '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
   spark: '<path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/>',
   rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+  funnel: '<path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/>',
   check: '<path d="M20 6 9 17l-5-5"/>',
 };
 
@@ -57,7 +58,7 @@ const captions = [
   { n: '03', t: 'Active context', d: 'As it works, the agent keeps asking the Fabric and getting answers back. Context flows both ways, without stopping.' },
   { n: '04', t: 'Testing layer', d: 'Finished code runs a quality gate: classic, mutation, architecture and property-based tests.' },
   { n: '05', t: 'Multi-level code review', d: 'Four levels, each deeper than the last: linting, deterministic, single-pass LLM, then deep LLM.' },
-  { n: '06', t: 'PR & triage', d: 'A pull request sorts every bug by risk. Trivial ones the agent fixes itself; critical ones stop for a human.' },
+  { n: '06', t: 'Triage', d: 'Inside the pull request, every finding is sorted by risk. Trivial ones the agent fixes itself; critical ones stop for a human.' },
   { n: '07', t: 'TraceVault', d: 'Every decision, test and review is recorded to TraceVault, one audit trail across the whole system.' },
   { n: '08', t: 'Ship to production', d: 'Every gate is green, so the change ships. Deliberate, safe, and worth celebrating: this is what all that quality buys you.' },
 ];
@@ -251,6 +252,13 @@ const revY = (i: number) => 288 + i * 42;
             <path id="af-tapr" class="af-trace-path" d="M625,192 L625,238" marker-end="url(#af-arrow)" />
           </g>
 
+          <!-- the pull request: a soft envelope, review and triage happen inside it -->
+          <g id="af-pr-env" class="af-reveal">
+            <rect x="508" y="214" width="470" height="248" rx="20" class="af-prenv" />
+            <g class="af-prenv-icon" transform="translate(524,221) scale(0.6)" set:html={icons.pr} />
+            <text x="544" y="234" class="af-prenv-label">Pull Request</text>
+          </g>
+
           <!-- ============ CODE REVIEW (deepening) ============ -->
           <g id="af-review" class="af-group af-module" data-reveal>
             <rect x="524" y="244" width="202" height="216" rx="16" class="af-panel" />
@@ -269,16 +277,16 @@ const revY = (i: number) => 288 + i * 42;
             ))}
           </g>
 
-          <!-- ============ PR & TRIAGE (outcomes route along the bottom band) ============ -->
+          <!-- ============ TRIAGE (its own block: it owns the gating) ============ -->
           <g id="af-triage" class="af-group af-module" data-reveal>
             <rect x="786" y="244" width="178" height="104" rx="16" class="af-panel" />
             <line x1="802" y1="245.5" x2="948" y2="245.5" class="af-sheen" />
             <rect x="792" y="250" width="166" height="26" rx="8" class="af-mhead" />
-            <g class="af-mhead-icon" transform="translate(802,255) scale(0.66)" set:html={icons.pr} />
-            <text x="824" y="268" class="af-mhead-label">PR &amp; triage</text>
+            <g class="af-mhead-icon" transform="translate(802,255) scale(0.66)" set:html={icons.funnel} />
+            <text x="824" y="268" class="af-mhead-label">Triage</text>
 
             <rect x="798" y="286" width="154" height="42" rx="10" class="af-pr" />
-            <text x="875" y="312" text-anchor="middle" class="af-pr-label">Pull Request</text>
+            <text x="875" y="312" text-anchor="middle" class="af-pr-label">Risk gate</text>
 
             <!-- fork below the panel: trivial loops back, risk stops at the human gate.
                  the risk drop, the gate and its trace share one axis: PR -> gate -> vault -->
@@ -447,6 +455,17 @@ const revY = (i: number) => 288 + i * 42;
 
   /* the fabric bar mirrors the vault but earns the accent: it is the spine of the thesis */
   .af-fabricbar { stroke: color-mix(in oklab, var(--vmm-accent) 35%, var(--color-border)); }
+
+  /* the pull request envelope: a soft mist around review + triage */
+  .af-prenv {
+    fill: color-mix(in oklab, var(--vmm-accent) 3.5%, transparent);
+    stroke: color-mix(in oklab, var(--vmm-accent) 24%, var(--color-border));
+    stroke-width: 1;
+    stroke-dasharray: 6 6;
+  }
+  :global(.dark) .af-prenv { fill: color-mix(in oklab, var(--vmm-accent) 6%, transparent); }
+  .af-prenv-icon { fill: none; stroke: var(--color-text-muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .af-prenv-label { fill: var(--color-text-muted); font: 600 11.5px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
 
   .af-wire, .af-trace-path {
     fill: none;
@@ -658,7 +677,7 @@ const revY = (i: number) => 288 + i * 42;
       ['#af-preflight', '#af-agent'],
       ['#af-loop'],
       ['#af-testing', '#af-c1g'],
-      ['#af-review', '#af-c2g', '#af-tap-review'],
+      ['#af-pr-env', '#af-review', '#af-c2g', '#af-tap-review'],
       ['#af-triage', '#af-c3g'],
       ['#af-tracevault', '#af-t0', '#af-t1', '#af-t2', '#af-t3'],
       ['#af-ship', '#af-c4g', '#af-t4'],
