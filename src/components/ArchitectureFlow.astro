@@ -34,10 +34,10 @@ const icons: Record<string, string> = {
 };
 
 const testLayers = [
-  'Unit & E2E',
-  'ArchUnit gates',
-  'Property-based · jqwik',
-  'Mutation score · PIT',
+  'Classic tests',
+  'Architecture testing',
+  'Property-based',
+  'Mutation testing',
 ];
 
 const reviewLevels = [
@@ -56,8 +56,8 @@ const captions = [
   { n: '01', t: 'Context Fabric', d: 'We pull Jira, code history, discussions, repos and docs into one place the agent can actually query.' },
   { n: '02', t: 'Preflight context', d: 'Before it writes a line, the agent is loaded with the context the task needs.' },
   { n: '03', t: 'Active context', d: 'As it works, the agent keeps asking the Fabric and getting answers back. Context flows both ways, without stopping.' },
-  { n: '04', t: 'Testing layer', d: 'Gates AI cannot self-confirm: ArchUnit architecture rules, jqwik property-based tests, PIT mutation testing.' },
-  { n: '05', t: 'Code review · VCR', d: 'VCR reviews every PR in CI for about $0.10: linting, deterministic checks, then LLM passes tuned to your conventions.' },
+  { n: '04', t: 'Testing layer', d: 'Gates AI cannot self-confirm: architecture rules, property-based tests and mutation testing.' },
+  { n: '05', t: 'Code review · VCR', d: 'VCR reviews every PR in CI: linting, deterministic checks, then LLM passes tuned to your conventions.' },
   { n: '06', t: 'Triage', d: 'Inside the pull request, every finding is sorted by risk. Trivial ones the agent fixes itself; critical ones stop for a human.' },
   { n: '07', t: 'TraceVault', d: 'Every decision, test and review is recorded to TraceVault, one audit trail across the whole system.' },
   { n: '08', t: 'Ship to production', d: 'Every gate is green, so the change ships. Deliberate, safe, and worth celebrating: this is what all that quality buys you.' },
@@ -276,7 +276,7 @@ const revY = (i: number) => 284 + i * 40;
                 <text x={revX[i] + 36} y={revY(i) + 22} class="af-review-label">{r.label}</text>
               </g>
             ))}
-            <text x="625" y="452" text-anchor="middle" class="af-mfoot">~$0.10 per PR · in your CI</text>
+            <text x="625" y="452" text-anchor="middle" class="af-mfoot">tuned to your conventions</text>
           </g>
 
           <!-- ============ TRIAGE (its own block: it owns the gating) ============ -->
