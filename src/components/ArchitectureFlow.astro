@@ -249,7 +249,7 @@ const revY = (i: number) => 288 + i * 42;
 
           <!-- code review taps the fabric for conventions and ownership -->
           <g id="af-tap-review" class="af-reveal">
-            <path id="af-tapr" class="af-trace-path" d="M625,192 L625,238" marker-end="url(#af-arrow)" />
+            <path id="af-tapr" class="af-trace-path" d="M665,192 L665,240" marker-end="url(#af-arrow)" />
           </g>
 
           <!-- the pull request: a soft envelope, review and triage happen inside it -->
@@ -266,8 +266,6 @@ const revY = (i: number) => 288 + i * 42;
             <rect x="530" y="250" width="190" height="26" rx="8" class="af-mhead" />
             <g class="af-mhead-icon" transform="translate(540,255) scale(0.66)" set:html={icons.eye} />
             <text x="562" y="268" class="af-mhead-label">Code review</text>
-            {/* depth gauge: analysis intensity ramps downward */}
-            <rect x="716" y="288" width="4" height="162" rx="2" fill="url(#af-depth-grad)" />
             {reviewLevels.map((r, i) => (
               <g class={`af-review-row af-depth-${i}`}>
                 <rect x={revX[i] + revIndent(i)} y={revY(i)} width={revW[i] - revIndent(i)} height="36" rx="8" class="af-review-bar" />
@@ -292,15 +290,15 @@ const revY = (i: number) => 288 + i * 42;
                  the risk drop, the gate and its trace share one axis: PR -> gate -> vault -->
             <path class="af-branch af-branch--risk" d="M875,328 L875,464" marker-end="url(#af-arrow-amber)" />
             <g class="af-triage-node af-triage-node--green">
-              <path id="af-autofix" class="af-autofix-path" d="M840,328 C 840,430 790,498 700,498 L268,498 C 196,498 124,462 121,392" marker-end="url(#af-arrow)" />
-              <path class="af-streak af-streak--soft" pathLength="100" d="M840,328 C 840,430 790,498 700,498 L268,498 C 196,498 124,462 121,392" style="animation-duration:3.6s" />
+              <path id="af-autofix" class="af-autofix-path" d="M840,328 C 840,430 790,498 700,498 L320,498 C 252,498 206,442 200,374" marker-end="url(#af-arrow)" />
+              <path class="af-streak af-streak--soft" pathLength="100" d="M840,328 C 840,430 790,498 700,498 L320,498 C 252,498 206,442 200,374" style="animation-duration:3.6s" />
               <text x="826" y="378" text-anchor="end" class="af-autofix-label">green · trivial</text>
               <text x="470" y="488" text-anchor="middle" class="af-autofix-label">auto-fix → back to agent</text>
             </g>
             <g class="af-triage-node af-triage-node--risk">
               <rect x="798" y="470" width="154" height="46" rx="10" class="af-card af-card--risk" />
               <text x="838" y="490" class="af-card-label af-card-label--risk">High-risk</text>
-              <text x="838" y="507" class="af-card-sub">human approval gate</text>
+              <text x="838" y="507" class="af-card-sub">human approval</text>
               <g class="af-human" transform="translate(818,488)">
                 <circle cx="0" cy="-4" r="5" class="af-human-mark" />
                 <path d="M-8,10 a8,9 0 0 1 16,0" class="af-human-mark" />
@@ -334,8 +332,10 @@ const revY = (i: number) => 288 + i * 42;
                 { x: 1016, y: 236, c: 4, d: 0.55 },
                 { x: 1086, y: 232, c: 2, d: 0.85 },
                 { x: 1146, y: 246, c: 1, d: 1.0 },
+                { x: 1064, y: 254, c: 1, d: 1.2 },
+                { x: 1124, y: 250, c: 3, d: 0.95 },
               ].map((p) => (
-                <rect x={p.x} y={p.y} width="5" height="5" rx="1.5" class={`af-conf af-conf--${p.c}`} style={`animation-delay:${p.d}s`} />
+                <rect x={p.x} y={p.y} width="6" height="6" rx="1.8" class={`af-conf af-conf--${p.c}`} style={`animation-delay:${p.d}s`} />
               ))}
             </g>
           </g>
@@ -533,8 +533,8 @@ const revY = (i: number) => 288 + i * 42;
   .af-human-mark { fill: none; stroke: var(--color-amber); stroke-width: 1.6; }
   .af-approved-label { fill: var(--color-amber); font: 600 10.5px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
 
-  .af-autofix-path { fill: none; stroke: color-mix(in oklab, var(--vmm-accent) 60%, transparent); stroke-width: 1.75; stroke-dasharray: 4 6; }
-  .af-autofix-label { fill: var(--color-emerald-dark); font: 600 13px var(--font-body); }
+  .af-autofix-path { fill: none; stroke: color-mix(in oklab, var(--vmm-accent) 65%, transparent); stroke-width: 1.75; stroke-dasharray: 4 6; }
+  .af-autofix-label { fill: var(--vmm-accent); font: 600 13px var(--font-body); }
 
   /* ---- vault ---- */
   .af-vault {
@@ -555,9 +555,9 @@ const revY = (i: number) => 288 + i * 42;
   .af-ship-box { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 1.5; }
   .af-ship-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
   .af-ship-label { fill: var(--color-text); font: 700 17px var(--font-heading); }
-  .af-ship-sub { fill: var(--color-emerald-dark); font: 600 10.5px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
-  .af-seal { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 1.75; }
-  .af-seal-check { fill: none; stroke: var(--vmm-accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .af-ship-sub { fill: var(--vmm-accent); font: 600 10.5px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  .af-seal { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 2; }
+  .af-seal-check { fill: none; stroke: var(--vmm-accent); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
   .af-group.is-active .af-ship-box { filter: drop-shadow(0 0 14px var(--vmm-accent-soft)) drop-shadow(0 0 5px var(--vmm-accent)); }
 
   .af-conf { transform-box: fill-box; transform-origin: center; animation: af-confetti 2.6s ease-out infinite; opacity: 0; }
@@ -566,9 +566,9 @@ const revY = (i: number) => 288 + i * 42;
   .af-conf--3 { fill: var(--color-blue); }
   .af-conf--4 { fill: var(--color-purple); }
   @keyframes af-confetti {
-    0% { opacity: 0; transform: translateY(6px) rotate(0deg) scale(0.6); }
+    0% { opacity: 0; transform: translateY(8px) rotate(0deg) scale(0.5); }
     18% { opacity: 1; }
-    100% { opacity: 0; transform: translateY(-16px) rotate(140deg) scale(1); }
+    100% { opacity: 0; transform: translateY(-22px) rotate(170deg) scale(1.05); }
   }
 
   /* dark bg is near-black: the vault needs a stronger tint to read as a layer */
