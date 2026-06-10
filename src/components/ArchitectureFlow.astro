@@ -70,9 +70,9 @@ const captions = [
 // traces down). Lines that carry flow use CSS light streaks instead.
 const particles = [
   ...sources.map((_, i) => ({ path: `af-w${i}`, dur: 3.0, delay: i * 0.55, pause: 1.8, tone: 'ctx', stage: 0 })),
-  ...[0, 1, 2, 3].map((i) => ({ path: `af-t${i}`, dur: 1.4, delay: i * 0.5, pause: 1.8, tone: 'trace', stage: 6 })),
-  // production docks onto the vault: its trace belongs to the ship stage
-  { path: 'af-t4', dur: 0.8, delay: 0.4, pause: 2.0, tone: 'trace', stage: 7 },
+  ...[0, 1, 2, 3, 4].map((i) => ({ path: `af-t${i}`, dur: 1.4, delay: i * 0.5, pause: 1.8, tone: 'trace', stage: 6 })),
+  // production drops its own trace: belongs to the ship stage
+  { path: 'af-t5', dur: 1.6, delay: 0.4, pause: 2.0, tone: 'trace', stage: 7 },
 ];
 const particleStages = [...new Set(particles.map((p) => p.stage))];
 
@@ -98,7 +98,7 @@ const revY = (i: number) => 196 + i * 42;
   <div class="af-track">
     <div class="af-viewport">
       <div class="af-stage">
-        <svg viewBox="0 0 1320 552" role="img" aria-labelledby="af-svg-title" class="af-svg" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 1460 552" role="img" aria-labelledby="af-svg-title" class="af-svg" preserveAspectRatio="xMidYMid meet">
           <title id="af-svg-title">Visdom architecture: Context Fabric, Coding Agent, Testing, Code Review, PR triage and TraceVault.</title>
 
           <defs>
@@ -120,31 +120,31 @@ const revY = (i: number) => 196 + i * 42;
           </defs>
 
           <!-- blueprint substrate: dot grid + corner registration marks -->
-          <rect x="36" y="40" width="1248" height="504" fill="url(#af-grid)" class="af-bp" aria-hidden="true" />
+          <rect x="36" y="40" width="1388" height="504" fill="url(#af-grid)" class="af-bp" aria-hidden="true" />
           <g class="af-fid" aria-hidden="true">
-            {[[40, 44], [1280, 44], [40, 540], [1280, 540]].map(([x, y]) => (
+            {[[40, 44], [1420, 44], [40, 540], [1420, 540]].map(([x, y]) => (
               <path d={`M${x - 5},${y} H${x + 5} M${x},${y - 5} V${y + 5}`} />
             ))}
           </g>
 
           <!-- ============ TRACEVAULT (baseplate, spans everything) ============ -->
           <g id="af-tracevault" class="af-group" data-reveal>
-            <rect x="44" y="462" width="1232" height="78" rx="18" class="af-vault" />
-            <line x1="60" y1="463.5" x2="1260" y2="463.5" class="af-sheen" />
+            <rect x="44" y="462" width="1372" height="78" rx="18" class="af-vault" />
+            <line x1="60" y1="463.5" x2="1400" y2="463.5" class="af-sheen" />
             <g class="af-vault-icon" transform="translate(66,482) scale(0.8)" set:html={icons.link} />
             <text x="96" y="492" class="af-vault-label">TraceVault</text>
             <text x="96" y="516" class="af-vault-sub">Signed, hash-chained record across every step</text>
             {/* hash-chain motif: linked blocks, append-only */}
             <g class="af-chain" aria-hidden="true">
-              {[1128, 1156, 1184, 1212].map((x, i) => (
+              {[1268, 1296, 1324, 1352].map((x, i) => (
                 <>
                   <rect x={x} y="484" width="14" height="14" rx="3" class={`af-chain-block${i === 3 ? ' af-chain-block--head' : ''}`} />
                   {i < 3 && <line x1={x + 14} y1="491" x2={x + 28} y2="491" class="af-chain-link" />}
                 </>
               ))}
             </g>
-            <text x="1252" y="521" text-anchor="end" class="af-vault-tag">Ed25519 · append-only</text>
-            {[332, 600, 814, 1036, 1226].map((x) => (
+            <text x="1392" y="521" text-anchor="end" class="af-vault-tag">Ed25519 · append-only</text>
+            {[332, 600, 814, 1036, 1226, 1391].map((x) => (
               <circle cx={x} cy="462" r="3.5" class="af-vault-mark" />
             ))}
           </g>
@@ -154,7 +154,8 @@ const revY = (i: number) => 196 + i * 42;
           <path id="af-t1" class="af-trace-path af-reveal" d="M600,320 L600,462" />
           <path id="af-t2" class="af-trace-path af-reveal" d="M814,380 L814,462" />
           <path id="af-t3" class="af-trace-path af-reveal" d="M1036,380 L1036,462" />
-          <path id="af-t4" class="af-trace-path af-reveal" d="M1226,448 L1226,462" />
+          <path id="af-t4" class="af-trace-path af-reveal" d="M1226,380 L1226,462" />
+          <path id="af-t5" class="af-trace-path af-reveal" d="M1391,264 L1391,462" />
 
           <!-- ============ CONTEXT FABRIC ============ -->
           <g id="af-context" class="af-group" data-reveal>
@@ -289,29 +290,29 @@ const revY = (i: number) => 196 + i * 42;
             <text x="915" y="44" text-anchor="middle" class="af-autofix-label">auto-fix → back to agent</text>
           </g>
 
-          <!-- ============ SHIP TO PRODUCTION (the joyful finale) ============ -->
+          <!-- ============ SHIP TO PRODUCTION (the joyful finale, end of the line) ============ -->
           <g id="af-ship" class="af-group" data-reveal>
-            <path class="af-pipe" d="M1226,374 L1226,386" marker-end="url(#af-arrow)" />
-            <rect x="1154" y="392" width="144" height="52" rx="12" class="af-ship-box" />
-            <g class="af-ship-icon" transform="translate(1166,406) scale(0.95)" set:html={icons.rocket} />
-            <text x="1196" y="414" class="af-ship-label">Production</text>
-            <text x="1196" y="432" class="af-ship-sub">all gates green</text>
+            <path class="af-pipe" d="M1310,232 L1322,232" marker-end="url(#af-arrow)" />
+            <rect x="1326" y="206" width="130" height="52" rx="12" class="af-ship-box" />
+            <g class="af-ship-icon" transform="translate(1336,221) scale(0.9)" set:html={icons.rocket} />
+            <text x="1364" y="228" class="af-ship-label">Production</text>
+            <text x="1364" y="246" class="af-ship-sub">all gates green</text>
             <!-- passed seal -->
-            <circle cx="1294" cy="396" r="11" class="af-seal" />
-            <g class="af-seal-check" transform="translate(1286,388) scale(0.66)" set:html={icons.check} />
+            <circle cx="1452" cy="210" r="11" class="af-seal" />
+            <g class="af-seal-check" transform="translate(1444,202) scale(0.66)" set:html={icons.check} />
             <!-- confetti: the only multi-colour moment in the whole diagram -->
             <g class="af-confetti" aria-hidden="true">
               {[
-                { x: 1162, y: 384, c: 1, d: 0 },
-                { x: 1188, y: 378, c: 2, d: 0.3 },
-                { x: 1214, y: 382, c: 3, d: 0.6 },
-                { x: 1242, y: 376, c: 4, d: 0.15 },
-                { x: 1268, y: 383, c: 1, d: 0.45 },
-                { x: 1146, y: 404, c: 3, d: 0.7 },
-                { x: 1306, y: 416, c: 2, d: 0.2 },
-                { x: 1176, y: 372, c: 4, d: 0.55 },
-                { x: 1256, y: 370, c: 2, d: 0.85 },
-                { x: 1304, y: 380, c: 1, d: 1.0 },
+                { x: 1334, y: 198, c: 1, d: 0 },
+                { x: 1358, y: 192, c: 2, d: 0.3 },
+                { x: 1382, y: 196, c: 3, d: 0.6 },
+                { x: 1408, y: 190, c: 4, d: 0.15 },
+                { x: 1430, y: 197, c: 1, d: 0.45 },
+                { x: 1318, y: 218, c: 3, d: 0.7 },
+                { x: 1448, y: 232, c: 2, d: 0.2 },
+                { x: 1346, y: 186, c: 4, d: 0.55 },
+                { x: 1420, y: 184, c: 2, d: 0.85 },
+                { x: 1450, y: 194, c: 1, d: 1.0 },
               ].map((p) => (
                 <rect x={p.x} y={p.y} width="5" height="5" rx="1.5" class={`af-conf af-conf--${p.c}`} style={`animation-delay:${p.d}s`} />
               ))}
@@ -480,11 +481,17 @@ const revY = (i: number) => 196 + i * 42;
   .af-chip-label { fill: var(--color-text); font: 600 13.5px var(--font-body); }
 
   /* depth ramp: fill saturation grows, only L4 earns the accent border */
-  .af-review-bar { stroke: color-mix(in oklab, var(--vmm-accent) 20%, var(--color-border)); stroke-width: 1.25; }
-  .af-depth-0 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 5%, var(--card)); }
-  .af-depth-1 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 11%, var(--card)); }
-  .af-depth-2 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 18%, var(--card)); }
-  .af-depth-3 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 27%, var(--card)); stroke: var(--vmm-accent); }
+  .af-review-bar { stroke: color-mix(in oklab, var(--vmm-accent) 20%, var(--color-border)); stroke-width: 1.25; animation: af-gate 3.8s ease-in-out infinite; }
+  .af-depth-0 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 5%, var(--card)); animation-delay: 0s; }
+  .af-depth-1 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 11%, var(--card)); animation-delay: 0.45s; }
+  .af-depth-2 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 18%, var(--card)); animation-delay: 0.9s; }
+  .af-depth-3 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 27%, var(--card)); stroke: var(--vmm-accent); animation-delay: 1.35s; }
+
+  /* gate scan: a soft highlight sweeps L1 to L4, the analysis deepening on loop */
+  @keyframes af-gate {
+    0%, 24%, 100% { filter: none; }
+    9% { filter: brightness(1.35) drop-shadow(0 0 5px var(--vmm-accent-soft)); }
+  }
   .af-review-n { fill: var(--color-emerald-dark); font: 700 12px var(--font-mono); }
   .af-review-label { fill: var(--color-text); font: 600 13px var(--font-body); }
   .af-depth-label { fill: var(--color-text-secondary); font: 600 12.5px var(--font-body); }
@@ -610,7 +617,7 @@ const revY = (i: number) => 196 + i * 42;
   @media (prefers-reduced-motion: reduce) {
     .js .af-group[data-reveal],
     .js .af-reveal { opacity: 1; }
-    .af-core-pulse, .af-agent-ring, .af-agent-ticks, .af-streak, .af-conf { animation: none; }
+    .af-core-pulse, .af-agent-ring, .af-agent-ticks, .af-streak, .af-conf, .af-review-bar { animation: none; }
     .af-streak, .af-particle, .af-confetti, #af-reticle { display: none; }
     .af-step { opacity: 1; }
     /* no scrub: stack descriptions so they do not overlap */
@@ -645,8 +652,8 @@ const revY = (i: number) => 196 + i * 42;
       ['#af-testing', '#af-c1g'],
       ['#af-review', '#af-c2g'],
       ['#af-triage', '#af-c3g'],
-      ['#af-tracevault', '#af-t0', '#af-t1', '#af-t2', '#af-t3'],
-      ['#af-ship', '#af-t4'],
+      ['#af-tracevault', '#af-t0', '#af-t1', '#af-t2', '#af-t3', '#af-t4'],
+      ['#af-ship', '#af-t5'],
     ].map((sels) => sels.flatMap((s) => Array.from(document.querySelectorAll(s))));
     const allTargets = reveal.flat();
 
@@ -658,8 +665,8 @@ const revY = (i: number) => 196 + i * 42;
       { x: 716, y: 150, w: 196, h: 232 },
       { x: 932, y: 150, w: 208, h: 232 },
       { x: 1134, y: 150, w: 184, h: 232 },
-      { x: 36, y: 454, w: 1248, h: 94 },
-      { x: 1144, y: 382, w: 164, h: 72 },
+      { x: 36, y: 454, w: 1388, h: 94 },
+      { x: 1318, y: 198, w: 146, h: 68 },
     ];
     const corners = {
       tl: document.getElementById('af-ret-tl'),
@@ -726,6 +733,13 @@ const revY = (i: number) => 196 + i * 42;
       // tweens never fight the scroll tween over the same property.
       gsap.set(allTargets, { opacity: 0, y: 14 });
       gsap.set('.af-pgroup', { opacity: 0 });
+      // gates cascade in one by one inside their stage
+      const cascades = {
+        3: '#af-testing .af-test-row',
+        4: '#af-review .af-review-row',
+        5: '#af-triage .af-triage-node',
+      };
+      Object.values(cascades).forEach((sel) => gsap.set(sel, { opacity: 0, y: 10 }));
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -739,6 +753,9 @@ const revY = (i: number) => 196 + i * 42;
 
       reveal.forEach((els, i) => {
         tl.to(els, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, i);
+        if (cascades[i]) {
+          tl.to(cascades[i], { opacity: 1, y: 0, duration: 0.35, stagger: 0.18, ease: 'power2.out' }, i + 0.12);
+        }
         const grp = document.querySelector(`.af-pgroup[data-stage="${i}"]`);
         if (grp) tl.to(grp, { opacity: 1, duration: 0.5 }, i + 0.25);
       });
