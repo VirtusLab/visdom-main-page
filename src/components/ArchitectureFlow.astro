@@ -200,7 +200,8 @@ const revY = (i: number) => 284 + i * 40;
             <path id="af-query" class="af-loop-path" d="M202,284 C 214,252 214,218 204,196" marker-end="url(#af-arrow)" />
             <path class="af-streak" pathLength="100" d="M176,192 C 186,214 186,240 178,262" style="animation-duration:1.8s" />
             <path class="af-streak" pathLength="100" d="M202,284 C 214,252 214,218 204,196" style="animation-duration:1.8s;animation-delay:-0.9s" />
-            <text x="244" y="222" class="af-loop-label">Active context</text>
+            <text x="244" y="232" class="af-loop-label">Active</text>
+            <text x="244" y="250" class="af-loop-label">context</text>
           </g>
 
           <!-- ============ CODING AGENT (always present hub) ============ -->
@@ -305,9 +306,12 @@ const revY = (i: number) => 284 + i * 40;
                 <circle cx="0" cy="-4" r="5" class="af-human-mark" />
                 <path d="M-8,10 a8,9 0 0 1 16,0" class="af-human-mark" />
               </g>
-              <!-- approved: the human waves it through, orthogonal elbow up to production -->
-              <path class="af-branch af-branch--risk" d="M952,493 L1022,493 Q1038,493 1038,477 L1038,368" marker-end="url(#af-arrow-amber)" />
-              <text x="962" y="485" class="af-approved-label">approved</text>
+              <!-- approved: the human waves it through, orthogonal elbow up to production.
+                   revealed with the ship stage so the arrow never points at empty space -->
+              <g id="af-approved">
+                <path class="af-branch af-branch--risk" d="M952,493 L1022,493 Q1038,493 1038,477 L1038,368" marker-end="url(#af-arrow-amber)" />
+                <text x="962" y="485" class="af-approved-label">approved</text>
+              </g>
             </g>
           </g>
 
@@ -707,7 +711,7 @@ const revY = (i: number) => 284 + i * 40;
       ['#af-pr-env', '#af-review', '#af-c2g', '#af-tap-review'],
       ['#af-triage', '#af-c3g'],
       ['#af-tracevault', '#af-t0', '#af-t1', '#af-t2', '#af-t3'],
-      ['#af-ship', '#af-c4g', '#af-t4'],
+      ['#af-ship', '#af-c4g', '#af-t4', '#af-approved'],
     ].map((sels) => sels.flatMap((s) => Array.from(document.querySelectorAll(s))));
     const allTargets = reveal.flat();
 
