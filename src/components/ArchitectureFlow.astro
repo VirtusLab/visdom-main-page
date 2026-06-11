@@ -184,18 +184,18 @@ const revY = (i: number) => 284 + i * 40;
 
           <!-- ============ PREFLIGHT RAIL (fabric -> agent, once) ============ -->
           <g id="af-preflight" class="af-group" data-reveal>
-            <path id="af-prerail" class="af-rail-pre" d="M64,192 L64,312 Q64,330 86,330" />
-            <path class="af-streak" pathLength="100" d="M64,192 L64,312 Q64,330 86,330" style="animation-duration:2.6s" />
+            <path id="af-prerail" class="af-rail-pre" d="M64,192 L64,312 Q64,330 92,330" />
+            <path class="af-streak" pathLength="100" d="M64,192 L64,312 Q64,330 92,330" style="animation-duration:2.6s" />
             <text x="84" y="230" class="af-rail-label">Preflight</text>
             <text x="84" y="246" class="af-rail-label">context</text>
           </g>
 
           <!-- ============ ACTIVE CONTEXT LOOP (fabric <-> agent, continuous) ============ -->
           <g id="af-loop" class="af-group" data-reveal>
-            <path id="af-answer" class="af-loop-path" d="M160,192 C 168,216 168,244 161,270" />
-            <path id="af-query" class="af-loop-path" d="M177,275 C 186,248 186,214 182,196" />
-            <path class="af-streak" pathLength="100" d="M160,192 C 168,216 168,244 161,270" style="animation-duration:1.8s" />
-            <path class="af-streak" pathLength="100" d="M177,275 C 186,248 186,214 182,196" style="animation-duration:1.8s;animation-delay:-0.9s" />
+            <path id="af-answer" class="af-loop-path" d="M160,192 C 168,216 168,244 161,273" />
+            <path id="af-query" class="af-loop-path" d="M177,275 C 186,248 186,214 182,192" />
+            <path class="af-streak" pathLength="100" d="M160,192 C 168,216 168,244 161,273" style="animation-duration:1.8s" />
+            <path class="af-streak" pathLength="100" d="M177,275 C 186,248 186,214 182,192" style="animation-duration:1.8s;animation-delay:-0.9s" />
             <text x="208" y="224" class="af-loop-label">Active</text>
             <text x="208" y="242" class="af-loop-label">context</text>
           </g>
@@ -216,20 +216,20 @@ const revY = (i: number) => 284 + i * 40;
 
           <!-- pipeline connectors (the main spine) -->
           <g id="af-c1g" class="af-reveal">
-            <path id="af-c1" class="af-pipe" d="M212,312 L266,312" />
-            <path class="af-streak af-streak--pipe" pathLength="100" d="M212,312 L266,312" style="animation-duration:2.4s" />
+            <path id="af-c1" class="af-pipe" d="M212,312 L274,312" />
+            <path class="af-streak af-streak--pipe" pathLength="100" d="M212,312 L274,312" style="animation-duration:2.4s" />
           </g>
           <g id="af-c2g" class="af-reveal">
-            <path id="af-c2" class="af-pipe" d="M464,312 L518,312" />
-            <path class="af-streak af-streak--pipe" pathLength="100" d="M464,312 L518,312" style="animation-duration:2.4s;animation-delay:0.6s" />
+            <path id="af-c2" class="af-pipe" d="M464,312 L524,312" />
+            <path class="af-streak af-streak--pipe" pathLength="100" d="M464,312 L524,312" style="animation-duration:2.4s;animation-delay:0.6s" />
           </g>
           <g id="af-c3g" class="af-reveal">
-            <path id="af-c3" class="af-pipe" d="M726,312 L780,312" />
-            <path class="af-streak af-streak--pipe" pathLength="100" d="M726,312 L780,312" style="animation-duration:2.4s;animation-delay:1.2s" />
+            <path id="af-c3" class="af-pipe" d="M726,312 L786,312" />
+            <path class="af-streak af-streak--pipe" pathLength="100" d="M726,312 L786,312" style="animation-duration:2.4s;animation-delay:1.2s" />
           </g>
           <g id="af-c4g" class="af-reveal">
-            <path id="af-c4" class="af-pipe" d="M936,312 L990,312" />
-            <path class="af-streak af-streak--pipe" pathLength="100" d="M936,312 L990,312" style="animation-duration:2.4s;animation-delay:1.8s" />
+            <path id="af-c4" class="af-pipe" d="M936,312 L996,312" />
+            <path class="af-streak af-streak--pipe" pathLength="100" d="M936,312 L996,312" style="animation-duration:2.4s;animation-delay:1.8s" />
           </g>
 
           <!-- ============ TESTING ============ -->
@@ -249,7 +249,7 @@ const revY = (i: number) => 284 + i * 40;
 
           <!-- code review taps the fabric for conventions and ownership -->
           <g id="af-tap-review" class="af-reveal">
-            <path id="af-tapr" class="af-trace-path" d="M665,192 L665,240" />
+            <path id="af-tapr" class="af-trace-path" d="M665,192 L665,244" />
           </g>
 
           <!-- the pull request: a soft envelope, review and triage happen inside it -->
@@ -501,7 +501,7 @@ const revY = (i: number) => 284 + i * 40;
 
   /* dashes drift along the path direction: constant, legible direction cue */
   .af-loop-path { fill: none; stroke: color-mix(in oklab, var(--vmm-accent) 55%, transparent); stroke-width: 2; stroke-dasharray: 5 5; }
-  .af-loop-label { fill: var(--color-emerald-dark); font: 700 15px var(--font-body); }
+  .af-loop-label { fill: var(--color-emerald-dark); font: 600 14px var(--font-body); }
 
   .af-agent-ring { fill: none; stroke: var(--vmm-accent); stroke-width: 2; opacity: 0.5; transform-box: fill-box; transform-origin: center; animation: af-ring 2.8s ease-out infinite; }
   /* dial: slowly rotating tick ring around the agent */
