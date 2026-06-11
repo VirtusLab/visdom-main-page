@@ -786,11 +786,14 @@ const revY = (i: number) => 284 + i * 40;
       root.querySelectorAll('.af-step-btn').forEach((b) => b.setAttribute('tabindex', '-1'));
     } else {
       const steps = reveal.length;
-      // start fully hidden, then unveil one cluster per scroll step.
+      // unveil one cluster per scroll step. stage one is on stage from the
+      // first frame: an empty canvas under an active step 01 reads as broken.
       // particles are gated via their stage GROUP, so the per-dot ambient
       // tweens never fight the scroll tween over the same property.
       gsap.set(allTargets, { opacity: 0, y: 14 });
+      gsap.set(reveal[0], { opacity: 1, y: 0 });
       gsap.set('.af-pgroup', { opacity: 0 });
+      gsap.set('.af-pgroup[data-stage="0"]', { opacity: 1 });
       // gates cascade in one by one inside their stage
       const cascades = {
         3: '#af-testing .af-test-row',
@@ -810,6 +813,7 @@ const revY = (i: number) => 284 + i * 40;
       });
 
       reveal.forEach((els, i) => {
+        if (i === 0) return; // already visible at the start
         tl.to(els, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, i);
         if (cascades[i]) {
           tl.to(cascades[i], { opacity: 1, y: 0, duration: 0.35, stagger: 0.18, ease: 'power2.out' }, i + 0.12);
