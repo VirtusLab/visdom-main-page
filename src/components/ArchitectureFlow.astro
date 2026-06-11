@@ -775,6 +775,8 @@ const revY = (i: number) => 284 + i * 40;
       gsap.set('.af-pgroup', { opacity: 1 });
       gsap.set('#af-reticle', { display: 'none' });
       captions.forEach((c) => c.classList.add('is-active'));
+      // static mode has no scrub to jump to, take the inert buttons out of the tab order
+      root.querySelectorAll('.af-step-btn').forEach((b) => b.setAttribute('tabindex', '-1'));
     } else {
       const steps = reveal.length;
       // start fully hidden, then unveil one cluster per scroll step.
