@@ -142,19 +142,18 @@ const revY = (i: number) => 284 + i * 40;
           <g id="af-tracevault" class="af-group" data-reveal>
             <rect x="44" y="538" width="1112" height="68" rx="18" class="af-vault" />
             <line x1="60" y1="539.5" x2="1140" y2="539.5" class="af-sheen" />
-            <g class="af-vault-icon" transform="translate(64,555) scale(0.8)" set:html={icons.link} />
-            <text x="94" y="565" class="af-vault-label">TraceVault</text>
-            <text x="94" y="588" class="af-vault-sub">Signed, hash-chained record across every step</text>
+            <g class="af-vault-icon" transform="translate(64,562) scale(0.8)" set:html={icons.link} />
+            <text x="94" y="579" class="af-vault-label">TraceVault</text>
             {/* hash-chain motif: linked blocks, append-only */}
             <g class="af-chain" aria-hidden="true">
               {[940, 968, 996, 1024].map((x, i) => (
                 <>
-                  <rect x={x} y="558" width="14" height="14" rx="3" class={`af-chain-block${i === 3 ? ' af-chain-block--head' : ''}`} />
-                  {i < 3 && <line x1={x + 14} y1="565" x2={x + 28} y2="565" class="af-chain-link" />}
+                  <rect x={x} y="565" width="14" height="14" rx="3" class={`af-chain-block${i === 3 ? ' af-chain-block--head' : ''}`} />
+                  {i < 3 && <line x1={x + 14} y1="572" x2={x + 28} y2="572" class="af-chain-link" />}
                 </>
               ))}
             </g>
-            <text x="1132" y="570" text-anchor="end" class="af-vault-tag">Ed25519</text>
+            <text x="1132" y="576" text-anchor="end" class="af-vault-tag">Ed25519</text>
             {[150, 369, 625, 875, 1076].map((x) => (
               <circle cx={x} cy="538" r="3.5" class="af-vault-mark" />
             ))}
@@ -563,7 +562,6 @@ const revY = (i: number) => 284 + i * 40;
   }
   .af-vault-rule { stroke: color-mix(in oklab, var(--vmm-accent) 20%, var(--color-border)); stroke-width: 1; opacity: 0.7; }
   .af-vault-label { fill: var(--color-text); font: 700 19px var(--font-heading); }
-  .af-vault-sub { fill: var(--color-text-secondary); font: 500 13.5px var(--font-body); }
   .af-vault-tag { fill: var(--color-text-secondary); font: 600 11px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
   .af-vault-mark { fill: var(--vmm-accent); }
   .af-chain-block { fill: var(--vmm-accent-soft); stroke: color-mix(in oklab, var(--vmm-accent) 45%, var(--color-border)); stroke-width: 1.25; }
