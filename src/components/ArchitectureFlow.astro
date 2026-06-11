@@ -110,13 +110,6 @@ const revY = (i: number) => 284 + i * 40;
           <title id="af-svg-title">Visdom architecture: Context Fabric, Coding Agent, Testing, Code Review, PR triage and TraceVault.</title>
 
           <defs>
-            <!-- sharp dart: long tip, concave tail -->
-            <marker id="af-arrow" viewBox="0 0 12 9" refX="11" refY="4.5" markerWidth="7" markerHeight="5.25" orient="auto-start-reverse">
-              <path d="M0,0.5 L12,4.5 L0,8.5 L3.2,4.5 Z" class="af-arrowhead" />
-            </marker>
-            <marker id="af-arrow-amber" viewBox="0 0 12 9" refX="11" refY="4.5" markerWidth="7" markerHeight="5.25" orient="auto-start-reverse">
-              <path d="M0,0.5 L12,4.5 L0,8.5 L3.2,4.5 Z" class="af-arrowhead--amber" />
-            </marker>
             <radialGradient id="af-agent-grad" cx="38%" cy="32%" r="78%">
               <stop offset="0%" stop-color="var(--vmm-accent-2)" />
               <stop offset="100%" stop-color="var(--vmm-accent)" />
@@ -187,7 +180,7 @@ const revY = (i: number) => 284 + i * 40;
 
           <!-- ============ PREFLIGHT RAIL (fabric -> agent, once) ============ -->
           <g id="af-preflight" class="af-group" data-reveal>
-            <path id="af-prerail" class="af-rail-pre" d="M64,192 L64,312 Q64,330 86,330" marker-end="url(#af-arrow)" />
+            <path id="af-prerail" class="af-rail-pre" d="M64,192 L64,312 Q64,330 86,330" />
             <path class="af-streak" pathLength="100" d="M64,192 L64,312 Q64,330 86,330" style="animation-duration:2.6s" />
             <text x="84" y="230" class="af-rail-label">Preflight</text>
             <text x="84" y="246" class="af-rail-label">context</text>
@@ -195,8 +188,8 @@ const revY = (i: number) => 284 + i * 40;
 
           <!-- ============ ACTIVE CONTEXT LOOP (fabric <-> agent, continuous) ============ -->
           <g id="af-loop" class="af-group" data-reveal>
-            <path id="af-answer" class="af-loop-path" d="M160,192 C 168,216 168,244 161,270" marker-end="url(#af-arrow)" />
-            <path id="af-query" class="af-loop-path" d="M177,275 C 186,248 186,214 182,196" marker-end="url(#af-arrow)" />
+            <path id="af-answer" class="af-loop-path" d="M160,192 C 168,216 168,244 161,270" />
+            <path id="af-query" class="af-loop-path" d="M177,275 C 186,248 186,214 182,196" />
             <path class="af-streak" pathLength="100" d="M160,192 C 168,216 168,244 161,270" style="animation-duration:1.8s" />
             <path class="af-streak" pathLength="100" d="M177,275 C 186,248 186,214 182,196" style="animation-duration:1.8s;animation-delay:-0.9s" />
             <text x="208" y="224" class="af-loop-label">Active</text>
@@ -219,19 +212,19 @@ const revY = (i: number) => 284 + i * 40;
 
           <!-- pipeline connectors (the main spine) -->
           <g id="af-c1g" class="af-reveal">
-            <path id="af-c1" class="af-pipe" d="M212,312 L266,312" marker-end="url(#af-arrow)" />
+            <path id="af-c1" class="af-pipe" d="M212,312 L266,312" />
             <path class="af-streak af-streak--pipe" pathLength="100" d="M212,312 L266,312" style="animation-duration:2.4s" />
           </g>
           <g id="af-c2g" class="af-reveal">
-            <path id="af-c2" class="af-pipe" d="M464,312 L518,312" marker-end="url(#af-arrow)" />
+            <path id="af-c2" class="af-pipe" d="M464,312 L518,312" />
             <path class="af-streak af-streak--pipe" pathLength="100" d="M464,312 L518,312" style="animation-duration:2.4s;animation-delay:0.6s" />
           </g>
           <g id="af-c3g" class="af-reveal">
-            <path id="af-c3" class="af-pipe" d="M726,312 L780,312" marker-end="url(#af-arrow)" />
+            <path id="af-c3" class="af-pipe" d="M726,312 L780,312" />
             <path class="af-streak af-streak--pipe" pathLength="100" d="M726,312 L780,312" style="animation-duration:2.4s;animation-delay:1.2s" />
           </g>
           <g id="af-c4g" class="af-reveal">
-            <path id="af-c4" class="af-pipe" d="M936,312 L990,312" marker-end="url(#af-arrow)" />
+            <path id="af-c4" class="af-pipe" d="M936,312 L990,312" />
             <path class="af-streak af-streak--pipe" pathLength="100" d="M936,312 L990,312" style="animation-duration:2.4s;animation-delay:1.8s" />
           </g>
 
@@ -252,7 +245,7 @@ const revY = (i: number) => 284 + i * 40;
 
           <!-- code review taps the fabric for conventions and ownership -->
           <g id="af-tap-review" class="af-reveal">
-            <path id="af-tapr" class="af-trace-path" d="M665,192 L665,240" marker-end="url(#af-arrow)" />
+            <path id="af-tapr" class="af-trace-path" d="M665,192 L665,240" />
           </g>
 
           <!-- the pull request: a soft envelope, review and triage happen inside it -->
@@ -293,9 +286,9 @@ const revY = (i: number) => 284 + i * 40;
 
             <!-- fork below the panel: trivial loops back, risk stops at the human gate.
                  the risk drop, the gate and its trace share one axis: PR -> gate -> vault -->
-            <path class="af-branch af-branch--risk" d="M861,350 L861,464" marker-end="url(#af-arrow-amber)" />
+            <path class="af-branch af-branch--risk" d="M861,350 L861,464" />
             <g class="af-triage-node af-triage-node--green">
-              <path id="af-autofix" class="af-autofix-path" d="M840,350 C 840,440 790,498 700,498 L320,498 C 252,498 206,442 194,369" marker-end="url(#af-arrow)" />
+              <path id="af-autofix" class="af-autofix-path" d="M840,350 C 840,440 790,498 700,498 L320,498 C 252,498 206,442 194,369" />
               <path class="af-streak af-streak--soft" pathLength="100" d="M840,350 C 840,440 790,498 700,498 L320,498 C 252,498 206,442 194,369" style="animation-duration:3.6s" />
               <text x="470" y="488" text-anchor="middle" class="af-autofix-label">green · trivial: auto-fix → back to agent</text>
             </g>
@@ -310,7 +303,7 @@ const revY = (i: number) => 284 + i * 40;
               <!-- approved: the human waves it through, orthogonal elbow up to production.
                    revealed with the ship stage so the arrow never points at empty space -->
               <g id="af-approved">
-                <path class="af-branch af-branch--risk" d="M938,493 L1022,493 Q1038,493 1038,477 L1038,368" marker-end="url(#af-arrow-amber)" />
+                <path class="af-branch af-branch--risk" d="M938,493 L1022,493 Q1038,493 1038,477 L1038,368" />
                 <text x="948" y="485" class="af-approved-label">approved</text>
               </g>
             </g>
@@ -497,8 +490,6 @@ const revY = (i: number) => 284 + i * 40;
 
   /* the main spine reads as THE flow: solid, accent, thicker */
   .af-pipe { fill: none; stroke: var(--vmm-accent); stroke-width: 2.5; opacity: 0.85; }
-  .af-arrowhead { fill: var(--vmm-accent); }
-  .af-arrowhead--amber { fill: var(--color-amber); }
 
   .af-rail-pre { fill: none; stroke: var(--vmm-accent); stroke-width: 2.5; }
   .af-rail-label { fill: var(--color-text); font: 600 14px var(--font-body); }
