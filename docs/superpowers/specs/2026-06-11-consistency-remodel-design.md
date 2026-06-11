@@ -91,6 +91,10 @@ Applies to: Hero, OrchestratorShowcase, AiRadar, BlogSeries, CtaSection (and any
 - Delete unused wrappers `SolutionCard.astro` and `SeriesCard.astro` (not referenced by any page; `Terminal.astro` IS used inside Solutions and stays).
 - Serif accent rule, codified: at most one serif accent per section, only inside the h2. Current usages already comply; fix any violation found during implementation.
 
+### 7. Clickable ArchitectureFlow stepper (added 2026-06-11, user request)
+
+The 8-item stepper below the ArchitectureFlow diagram (01 Context Fabric ... 08 Ship to production) becomes clickable. Clicking step N scrolls the window to the scrub position of that stage (the diagram is driven by a GSAP ScrollTrigger scrub), so the diagram reveals to that stage and the step highlights. Steps get button semantics (keyboard accessible) and a hover affordance. In reduced-motion/compact mode all steps are already expanded and there is no scrub, so clicks are inert there by design.
+
 ## Out of Scope
 
 - AI Radar visual theme (stays dark).
