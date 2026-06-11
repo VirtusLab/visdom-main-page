@@ -96,8 +96,10 @@ const revY = (i: number) => 284 + i * 40;
     <p class="section-label">How a change flows</p>
     <h2 id="af-title" class="section-title">One architecture, end to end</h2>
     <p class="section-subtitle">
-      Context Fabric feeds the Coding Agent and keeps answering it as it works. The code then runs
-      testing, multi-level review, and risk triage, while TraceVault records every step.
+      Context Fabric feeds the agent system, code, organizational and historical context over MCP, both ways, continuously.
+      The change then clears <a href="https://virtuslab.github.io/visdom-testing/" target="_blank" rel="noopener">testing</a>,
+      <a href="https://virtuslab.github.io/visdom-code-review/" target="_blank" rel="noopener">multi-level review</a> and risk triage;
+      <a href="https://virtuslab.github.io/visdom-governance/" target="_blank" rel="noopener">TraceVault</a> signs every step.
     </p>
   </div>
 
@@ -181,7 +183,6 @@ const revY = (i: number) => 284 + i * 40;
             <line x1="60" y1="127.5" x2="1140" y2="127.5" class="af-sheen" />
             <g class="af-vault-icon" transform="translate(64,142) scale(0.8)" set:html={icons.layers} />
             <text x="94" y="152" class="af-vault-label">Context Fabric</text>
-            <text x="94" y="175" class="af-vault-sub">System · Code · Organizational · Historical: ownership, conventions and blast radius as deterministic answers</text>
             <text x="1132" y="163" text-anchor="end" class="af-vault-tag">queried by every stage</text>
           </g>
 
@@ -200,7 +201,6 @@ const revY = (i: number) => 284 + i * 40;
             <path class="af-streak" pathLength="100" d="M176,192 C 186,214 186,240 178,262" style="animation-duration:1.8s" />
             <path class="af-streak" pathLength="100" d="M202,284 C 214,252 214,218 204,196" style="animation-duration:1.8s;animation-delay:-0.9s" />
             <text x="244" y="222" class="af-loop-label">Active context</text>
-            <text x="244" y="240" class="af-loop-sub">continuous · two-way · MCP</text>
           </g>
 
           <!-- ============ CODING AGENT (always present hub) ============ -->
@@ -385,6 +385,14 @@ const revY = (i: number) => 284 + i * 40;
   .af { position: relative; padding: 4rem 0 2rem; }
   .af-head { max-width: 48rem; margin-bottom: 2rem; }
   .af-head .section-subtitle { margin-top: 0.75rem; }
+  .af-head .section-subtitle a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--color-emerald);
+    transition: color 0.2s ease;
+  }
+  .af-head .section-subtitle a:hover { color: var(--color-emerald-dark); }
 
   /* tall track -> sticky viewport for the scrubbed scene */
   .af-track { position: relative; height: 470vh; }
@@ -495,7 +503,6 @@ const revY = (i: number) => 284 + i * 40;
   /* dashes drift along the path direction: constant, legible direction cue */
   .af-loop-path { fill: none; stroke: color-mix(in oklab, var(--vmm-accent) 55%, transparent); stroke-width: 2; stroke-dasharray: 5 5; }
   .af-loop-label { fill: var(--color-emerald-dark); font: 700 15px var(--font-body); }
-  .af-loop-sub { fill: var(--color-text-secondary); font: 500 12.5px var(--font-body); }
 
   .af-agent-ring { fill: none; stroke: var(--vmm-accent); stroke-width: 2; opacity: 0.5; transform-box: fill-box; transform-origin: center; animation: af-ring 2.8s ease-out infinite; }
   /* dial: slowly rotating tick ring around the agent */
