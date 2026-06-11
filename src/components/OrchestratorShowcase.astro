@@ -12,6 +12,9 @@ const signals = [
   { icon: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>', key: 'CVE feed', title: 'openssl advisory', tone: 'amber' },
 ];
 
+// what the orchestrator works through, chip by chip
+const work = ['Context Fabric', 'reading code', 'git history', 'prod logs', 'drafting fix', 'tests · VCR · triage'];
+
 const captions = [
   'Signals stream in: errors, tickets, events, advisories.',
   'The orchestrator picks one up and does the legwork.',
@@ -55,16 +58,19 @@ const captions = [
 
         <!-- CENTER: hub + status line -->
         <div class="os-col">
-          <div class="os-hub">
-            <span class="os-hub-ring" aria-hidden="true"></span>
-            <span class="os-hub-core">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></svg>
-              Orchestrator
-              <span class="os-hub-status" aria-live="polite">
-                <span class="os-hub-dot" aria-hidden="true"></span>
-                <span id="os-ticker-text">idle</span>
+          <div class="os-hub" id="os-hub">
+            <div class="os-hub-head">
+              <span class="os-hub-spark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></svg>
               </span>
-            </span>
+              <span class="os-hub-name">Orchestrator</span>
+              <span class="os-hub-dot" aria-hidden="true"></span>
+            </div>
+            <div class="os-hub-chips" aria-live="polite">
+              {work.map((w) => (
+                <span class="os-chip">{w}</span>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -208,59 +214,67 @@ const captions = [
   .is-human .os-wire--out { opacity: 1; animation: os-wireflow 1.4s linear infinite; }
   @keyframes os-wireflow { from { background-position: 120% 0; } to { background-position: -80% 0; } }
 
-  /* hub: the status line lives inside the sphere */
-  .os-hub { position: relative; display: grid; place-items: center; height: 172px; }
-  .os-hub-ring {
-    position: absolute;
-    width: 158px;
-    height: 158px;
-    border-radius: 9999px;
-    border: 1.5px dashed color-mix(in oklab, var(--vmm-accent) 55%, transparent);
-    animation: os-spin 28s linear infinite;
+  /* hub: a module panel with task chips inside */
+  .os-hub {
+    width: 100%;
+    max-width: 280px;
+    padding: 14px 16px 16px;
+    background: var(--card);
+    border: 1.5px solid color-mix(in oklab, var(--vmm-accent) 50%, var(--color-border));
+    border-radius: 16px;
+    box-shadow: 0 10px 36px color-mix(in oklab, var(--vmm-accent) 18%, transparent);
   }
-  .os-hub-core {
-    display: flex;
-    flex-direction: column;
+  .os-hub-head { display: flex; align-items: center; gap: 9px; margin-bottom: 11px; }
+  .os-hub-spark {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    width: 138px;
-    height: 138px;
-    border-radius: 9999px;
+    border-radius: 9px;
     background: radial-gradient(circle at 35% 30%, var(--vmm-accent-2), var(--vmm-accent));
     color: #fff;
-    font: 700 13.5px var(--font-heading);
-    box-shadow: 0 10px 36px color-mix(in oklab, var(--vmm-accent) 36%, transparent);
+    box-shadow: 0 4px 14px color-mix(in oklab, var(--vmm-accent) 35%, transparent);
   }
-  :global(.dark) .os-hub-core { color: #06281a; }
-  .os-hub-core svg { width: 19px; height: 19px; }
-  @keyframes os-spin { to { transform: rotate(360deg); } }
-
-  /* the whole machinery, one quiet build-log line inside the core */
-  .os-hub-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    max-width: 118px;
-    min-height: 14px;
-    font: 600 9.5px var(--font-mono);
-    letter-spacing: 0.02em;
-    color: rgba(255, 255, 255, 0.88);
-    text-align: center;
-  }
-  :global(.dark) .os-hub-status { color: rgba(6, 40, 26, 0.85); }
+  :global(.dark) .os-hub-spark { color: #06281a; }
+  .os-hub-spark svg { width: 15px; height: 15px; }
+  .os-hub-name { font: 700 14.5px var(--font-heading); color: var(--color-text); flex: 1; }
   .os-hub-dot {
-    width: 5px;
-    height: 5px;
+    width: 7px;
+    height: 7px;
     border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.55);
-    flex-shrink: 0;
+    background: var(--color-text-muted);
+    opacity: 0.5;
   }
-  :global(.dark) .os-hub-dot { background: rgba(6, 40, 26, 0.5); }
-  .is-working .os-hub-dot { background: #fff; animation: os-blink 1.1s ease-in-out infinite; }
-  :global(.dark) .is-working .os-hub-dot { background: #06281a; }
-  .is-risk .os-hub-dot { background: var(--color-amber); animation: none; }
+  .is-working .os-hub-dot { background: var(--vmm-accent); opacity: 1; animation: os-blink 1.1s ease-in-out infinite; }
+  .is-risk .os-hub-dot { background: var(--color-amber); opacity: 1; animation: none; }
   @keyframes os-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* task chips: light up one by one as the orchestrator works */
+  .os-hub-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .os-chip {
+    font: 600 10px var(--font-mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    padding: 3px 9px;
+    opacity: 0.55;
+    transition: color 0.35s ease, border-color 0.35s ease, background 0.35s ease, opacity 0.35s ease;
+  }
+  .os-chip.is-on {
+    opacity: 1;
+    color: var(--vmm-accent);
+    border-color: color-mix(in oklab, var(--vmm-accent) 55%, var(--color-border));
+    background: var(--vmm-accent-soft);
+  }
+  .os-chip.is-risk {
+    opacity: 1;
+    color: var(--color-amber);
+    border-color: color-mix(in oklab, var(--color-amber) 60%, var(--color-border));
+    background: color-mix(in oklab, var(--color-amber) 10%, transparent);
+  }
 
   /* human */
   .os-human {
@@ -358,35 +372,18 @@ const captions = [
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const captions = Array.from(document.querySelectorAll('.os-caption'));
     const setCaption = (i) => captions.forEach((c, j) => c.classList.toggle('is-active', j === i));
-    const tickerText = document.getElementById('os-ticker-text');
-    const workItems = [
-      'Context Fabric',
-      'reading code',
-      'git history',
-      'prod logs',
-      'drafting fix',
-      'tests · VCR · triage',
-    ];
+    const chips = Array.from(stage.querySelectorAll('.os-chip'));
     const states = ['is-working', 'is-risk', 'is-human', 'is-approved'];
-
-    const setTicker = (text) => {
-      if (!tickerText) return;
-      gsap.to(tickerText, {
-        opacity: 0,
-        duration: 0.18,
-        onComplete: () => {
-          tickerText.textContent = text;
-          gsap.to(tickerText, { opacity: 1, duration: 0.25 });
-        },
-      });
-    };
 
     if (reduce) {
       stage.classList.add('is-approved');
-      if (tickerText) tickerText.textContent = 'all gates green';
+      chips.forEach((c) => c.classList.add('is-on'));
       setCaption(captions.length - 1);
     } else {
-      const resetClasses = () => states.forEach((s) => stage.classList.remove(s));
+      const resetClasses = () => {
+        states.forEach((s) => stage.classList.remove(s));
+        chips.forEach((c) => c.classList.remove('is-on', 'is-risk'));
+      };
 
       const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.6 });
 
@@ -394,7 +391,7 @@ const captions = [
       tl.set('.os-signal', { x: -20, autoAlpha: 0 });
       tl.set('#os-human, .os-prwire', { opacity: 0.45 });
       tl.set('#os-pr', { y: 14, opacity: 0, scale: 0.96 });
-      tl.call(() => { resetClasses(); setCaption(0); if (tickerText) tickerText.textContent = 'idle'; });
+      tl.call(() => { resetClasses(); setCaption(0); });
 
       // 1. signals stream in (then hand opacity back to CSS so the picked
       // one can brighten via class state)
@@ -402,11 +399,11 @@ const captions = [
       tl.set('.os-signal', { clearProps: 'opacity,visibility' });
       tl.to({}, { duration: 1.5 });
 
-      // 2. the orchestrator picks one up and does the legwork
+      // 2. the orchestrator picks one up: chips light up one by one
       tl.call(() => { setCaption(1); stage.classList.add('is-working'); });
-      workItems.forEach((w) => {
-        tl.call(() => setTicker(w));
-        tl.to({}, { duration: 1.7 });
+      chips.forEach((c) => {
+        tl.call(() => c.classList.add('is-on'));
+        tl.to({}, { duration: 1.5 });
       });
 
       // 3. triage says high-risk: human signs off
@@ -414,25 +411,27 @@ const captions = [
         setCaption(2);
         stage.classList.remove('is-working');
         stage.classList.add('is-risk', 'is-human');
-        setTicker('triage: high-risk');
+        const last = chips[chips.length - 1];
+        if (last) { last.classList.remove('is-on'); last.classList.add('is-risk'); }
       });
       tl.to('#os-human, .os-prwire', { opacity: 1, duration: 0.4 });
       tl.to({}, { duration: 2.4 });
       tl.call(() => stage.classList.add('is-approved'));
       tl.to({}, { duration: 0.8 });
 
-      // 4. the pull request
+      // 4. the pull request: the gate clears
       tl.call(() => {
         setCaption(3);
         stage.classList.remove('is-risk');
-        setTicker('all gates green');
+        const last = chips[chips.length - 1];
+        if (last) { last.classList.remove('is-risk'); last.classList.add('is-on'); }
       });
       tl.to('#os-pr', { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.4)' });
       tl.to({}, { duration: 3.2 });
 
       // soft reset: restore the full initial state while the stage is hidden
       tl.to(stage, { opacity: 0, duration: 0.5, ease: 'power1.in' });
-      tl.call(() => { resetClasses(); setCaption(0); if (tickerText) tickerText.textContent = 'idle'; });
+      tl.call(() => { resetClasses(); setCaption(0); });
       tl.set('.os-signal', { x: -20, autoAlpha: 0 });
       tl.set('#os-human, .os-prwire', { opacity: 0.45 });
       tl.set('#os-pr', { y: 14, opacity: 0, scale: 0.96 });
