@@ -367,10 +367,12 @@ const revY = (i: number) => 284 + i * 40;
       <ol class="af-steps" role="list">
         {captions.map((c, i) => (
           <li class={`af-step${i === 0 ? ' is-active' : ''}`} data-step={i}>
-            <span class="af-step-head">
-              <span class="af-step-n">{c.n}</span>
-              <span class="af-step-t">{c.t}</span>
-            </span>
+            <button type="button" class="af-step-btn" aria-label={`Show step ${c.n}: ${c.t}`}>
+              <span class="af-step-head">
+                <span class="af-step-n">{c.n}</span>
+                <span class="af-step-t">{c.t}</span>
+              </span>
+            </button>
             <span class="af-step-d">{c.d}</span>
           </li>
         ))}
@@ -609,6 +611,19 @@ const revY = (i: number) => 284 + i * 40;
     transition: opacity 0.3s ease, border-color 0.3s ease;
   }
   .af-step.is-active { opacity: 1; border-top-color: var(--vmm-accent); }
+  .af-step-btn {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .af-step:hover { opacity: 1; }
   .af-step-head { display: flex; flex-direction: column; gap: 3px; }
   .af-step-n { font: 700 12px var(--font-mono); color: var(--vmm-accent); }
   .af-step-t { font: 600 15px var(--font-heading); color: var(--color-text); line-height: 1.25; }
@@ -795,6 +810,17 @@ const revY = (i: number) => 284 + i * 40;
       });
       // tail room so the last stage fully lands before the scroll ends
       tl.to({}, { duration: 0.8 });
+
+      // clicking a step scrolls the page to that stage of the scrub
+      captions.forEach((c, i) => {
+        const btn = c.querySelector('.af-step-btn');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+          const st = tl.scrollTrigger;
+          const target = st.start + (st.end - st.start) * ((i + 0.5) / steps);
+          window.scrollTo({ top: target, behavior: 'smooth' });
+        });
+      });
 
       setActive(0);
       moveReticle(0, true);
