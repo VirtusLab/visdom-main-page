@@ -1,6 +1,15 @@
 ---
 import { MaturityRef as MaturityRefReact } from '@virtuslab/visdom-ui';
 ---
+<section class="matrix-head" aria-label="Maturity model">
+  <div class="container">
+    <p class="section-label">Maturity model</p>
+    <p class="matrix-head-lead">
+      The framework we scope every engagement with: it shows where your SDLC stands today, and what the first two weeks should target.
+    </p>
+  </div>
+</section>
+
 <MaturityRefReact
   assessmentHref="https://visdom-ai-maturity-matrix.pages.dev/workshop"
   matrixHref="https://visdom-ai-maturity-matrix.pages.dev/matrix/development"
@@ -31,6 +40,20 @@ import { MaturityRef as MaturityRefReact } from '@virtuslab/visdom-ui';
 </section>
 
 <style>
+  .matrix-head {
+    padding: 4rem 0 0;
+    background: var(--color-bg);
+    text-align: center;
+  }
+
+  .matrix-head-lead {
+    margin: 0 auto;
+    max-width: 38rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
   .matrix-publication {
     padding: 0 0 4rem;
     background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-bg) 100%);
