@@ -247,7 +247,6 @@ const revY = (i: number) => 284 + i * 40;
                 <text x="369" y={testY(i) + 22} text-anchor="middle" class="af-chip-label">{t}</text>
               </g>
             ))}
-            <text x="369" y="452" text-anchor="middle" class="af-mfoot">catches what green CI hides</text>
           </g>
 
           <!-- code review taps the fabric for conventions and ownership -->
@@ -276,7 +275,6 @@ const revY = (i: number) => 284 + i * 40;
                 <text x={revX[i] + 36} y={revY(i) + 22} class="af-review-label">{r.label}</text>
               </g>
             ))}
-            <text x="625" y="452" text-anchor="middle" class="af-mfoot">tuned to your conventions</text>
           </g>
 
           <!-- ============ TRIAGE (its own block: it owns the gating) ============ -->
