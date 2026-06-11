@@ -110,6 +110,10 @@ const revY = (i: number) => 284 + i * 40;
           <title id="af-svg-title">Visdom architecture: Context Fabric, Coding Agent, Testing, Code Review, PR triage and TraceVault.</title>
 
           <defs>
+            <!-- arrowheads only on the amber human-gate paths, green flow relies on the streaks -->
+            <marker id="af-arrow-amber" viewBox="0 0 12 9" refX="11" refY="4.5" markerWidth="7" markerHeight="5.25" orient="auto-start-reverse">
+              <path d="M0,0.5 L12,4.5 L0,8.5 L3.2,4.5 Z" class="af-arrowhead--amber" />
+            </marker>
             <radialGradient id="af-agent-grad" cx="38%" cy="32%" r="78%">
               <stop offset="0%" stop-color="var(--vmm-accent-2)" />
               <stop offset="100%" stop-color="var(--vmm-accent)" />
@@ -286,7 +290,7 @@ const revY = (i: number) => 284 + i * 40;
 
             <!-- fork below the panel: trivial loops back, risk stops at the human gate.
                  the risk drop, the gate and its trace share one axis: PR -> gate -> vault -->
-            <path class="af-branch af-branch--risk" d="M861,350 L861,464" />
+            <path class="af-branch af-branch--risk" d="M861,350 L861,464" marker-end="url(#af-arrow-amber)" />
             <g class="af-triage-node af-triage-node--green">
               <path id="af-autofix" class="af-autofix-path" d="M840,350 C 840,440 790,498 700,498 L320,498 C 252,498 206,442 194,369" />
               <path class="af-streak af-streak--soft" pathLength="100" d="M840,350 C 840,440 790,498 700,498 L320,498 C 252,498 206,442 194,369" style="animation-duration:3.6s" />
@@ -303,7 +307,7 @@ const revY = (i: number) => 284 + i * 40;
               <!-- approved: the human waves it through, orthogonal elbow up to production.
                    revealed with the ship stage so the arrow never points at empty space -->
               <g id="af-approved">
-                <path class="af-branch af-branch--risk" d="M938,493 L1022,493 Q1038,493 1038,477 L1038,368" />
+                <path class="af-branch af-branch--risk" d="M938,493 L1022,493 Q1038,493 1038,477 L1038,368" marker-end="url(#af-arrow-amber)" />
                 <text x="948" y="485" class="af-approved-label">approved</text>
               </g>
             </g>
@@ -492,6 +496,7 @@ const revY = (i: number) => 284 + i * 40;
   .af-pipe { fill: none; stroke: var(--vmm-accent); stroke-width: 2.5; opacity: 0.85; }
 
   .af-rail-pre { fill: none; stroke: var(--vmm-accent); stroke-width: 2.5; }
+  .af-arrowhead--amber { fill: var(--color-amber); }
   .af-rail-label { fill: var(--color-text); font: 600 14px var(--font-body); }
 
   /* dashes drift along the path direction: constant, legible direction cue */
