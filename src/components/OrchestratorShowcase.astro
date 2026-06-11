@@ -13,14 +13,14 @@ const signals = [
 ];
 
 // what the orchestrator works through, chip by chip: live actions
-const work = ['querying fabric', 'reading code', 'tracing history', 'scanning logs', 'drafting fix', 'running gates'];
+const work = ['querying fabric', 'reading code', 'tracing history', 'scanning logs', 'drafting fix', 'code review', 'deployment'];
 
 const captions = [
   'Signals stream in: errors, tickets, events, advisories.',
   'The orchestrator picks one up and does the legwork.',
   'Mid-flow it pings a human: one quick question, answered.',
-  'A gate turns red. The human is back in the loop.',
-  'Fix adjusted, gates rerun, green. A pull request rolls out.',
+  'Code review turns red. The human is back in the loop.',
+  'Review green, deployment done. A pull request rolls out.',
 ];
 ---
 <section class="os" id="orchestrator" aria-labelledby="os-title">
@@ -37,6 +37,24 @@ const captions = [
 
     <div class="os-stagewrap fade-up">
       <div class="os-stage" id="os-stage">
+        <!-- TOP: the human, a side channel hovering over the whole process -->
+        <div class="os-human-wrap">
+          <div class="os-human" id="os-human">
+            <span class="os-human-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            </span>
+            <span class="os-human-name">Human in the loop</span>
+            <span class="os-human-state">
+              <span class="os-human-idle">on call · every step</span>
+              <span class="os-human-ask">quick question</span>
+              <span class="os-human-ans">answered ✓</span>
+              <span class="os-human-call">review red · deciding</span>
+              <span class="os-human-res">resolved ✓</span>
+            </span>
+          </div>
+          <div class="os-vwire" aria-hidden="true"></div>
+        </div>
+
         <!-- IN: nothing but input signals -->
         <div class="os-col">
           <span class="os-col-label">Incoming signals</span>
@@ -77,22 +95,8 @@ const captions = [
 
         <div class="os-wire os-wire--out" aria-hidden="true"></div>
 
-        <!-- OUT: human + PR -->
+        <!-- OUT: the result, end of the line -->
         <div class="os-col">
-          <div class="os-human" id="os-human">
-            <span class="os-human-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-            </span>
-            <span class="os-human-name">Human in the loop</span>
-            <span class="os-human-state">
-              <span class="os-human-idle">on call · every step</span>
-              <span class="os-human-ask">quick question</span>
-              <span class="os-human-ans">answered ✓</span>
-              <span class="os-human-call">gate red · deciding</span>
-              <span class="os-human-res">resolved ✓</span>
-            </span>
-          </div>
-          <div class="os-prwire" aria-hidden="true"></div>
           <div class="os-pr" id="os-pr">
             <span class="os-pr-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6"/><path d="M13 6h2a3 3 0 0 1 3 3v6"/></svg>
@@ -144,9 +148,10 @@ const captions = [
   .os-stagewrap { max-width: 980px; margin: 0 auto; }
   .os-stage {
     display: grid;
-    grid-template-columns: minmax(180px, 1fr) 40px minmax(220px, 1.2fr) 40px minmax(200px, 1fr);
+    grid-template-columns: minmax(180px, 1fr) 40px minmax(240px, 1.3fr) 40px minmax(200px, 1fr);
+    grid-template-rows: auto auto;
     align-items: center;
-    padding: 3rem 2rem;
+    padding: 2rem 2rem 3rem;
     border: 1px solid var(--color-border);
     border-radius: 24px;
     background:
@@ -154,7 +159,27 @@ const captions = [
       var(--color-surface);
   }
 
-  .os-col { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .os-col { display: flex; flex-direction: column; align-items: center; gap: 14px; grid-row: 2; }
+
+  /* the human hovers over the process, wired to the orchestrator below */
+  .os-human-wrap {
+    grid-column: 3;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .os-vwire {
+    width: 2px;
+    height: 30px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, transparent, var(--vmm-accent), transparent);
+    background-size: 100% 200%;
+    opacity: 0.3;
+  }
+  .is-ask .os-vwire,
+  .is-called .os-vwire { opacity: 1; animation: os-wireflow-v 1.3s linear infinite; }
+  @keyframes os-wireflow-v { from { background-position: 0 120%; } to { background-position: 0 -80%; } }
 
   /* input signals: the only thing on the left */
   .os-col-label {
@@ -208,14 +233,14 @@ const captions = [
   /* wires */
   .os-wire {
     height: 2px;
+    grid-row: 2;
     background: linear-gradient(90deg, transparent, var(--vmm-accent), transparent);
     background-size: 200% 100%;
     border-radius: 2px;
     opacity: 0.25;
   }
   .is-working .os-wire--in { opacity: 1; animation: os-wireflow 1.4s linear infinite; }
-  .is-ask .os-wire--out,
-  .is-called .os-wire--out { opacity: 1; animation: os-wireflow 1.4s linear infinite; }
+  .is-ship .os-wire--out { opacity: 1; animation: os-wireflow 1.4s linear infinite; }
   @keyframes os-wireflow { from { background-position: 120% 0; } to { background-position: -80% 0; } }
 
   /* hub: a module panel with task chips inside */
@@ -324,8 +349,6 @@ const captions = [
   .is-called .os-human-call { display: inline; }
   .is-resolved .os-human-res { display: inline; }
 
-  .os-prwire { width: 2px; height: 24px; background: color-mix(in oklab, var(--vmm-accent) 35%, var(--color-border)); border-radius: 2px; }
-
   .os-pr {
     display: flex;
     flex-direction: column;
@@ -364,7 +387,14 @@ const captions = [
   /* ---- responsive ---- */
   @media (max-width: 860px) {
     .os { padding: 4.5rem 0 3.5rem; }
-    .os-stage { grid-template-columns: 1fr; gap: 18px; padding: 1.75rem 1.25rem; }
+    .os-stage { grid-template-columns: 1fr; grid-template-rows: none; gap: 18px; padding: 1.75rem 1.25rem; }
+    .os-col, .os-wire { grid-row: auto; }
+    .os-human-wrap { grid-column: 1; grid-row: auto; order: 4; flex-direction: column-reverse; }
+    .os-col:nth-of-type(1) { order: 1; }
+    .os-wire--in { order: 2; }
+    .os-col:nth-of-type(2) { order: 3; }
+    .os-wire--out { order: 5; }
+    .os-col:nth-of-type(3) { order: 6; }
     .os-wire { width: 2px; height: 26px; margin: 0 auto; background: linear-gradient(180deg, transparent, var(--vmm-accent), transparent); }
     .os-captions { height: 3.4em; }
   }
@@ -383,7 +413,7 @@ const captions = [
     const captions = Array.from(document.querySelectorAll('.os-caption'));
     const setCaption = (i) => captions.forEach((c, j) => c.classList.toggle('is-active', j === i));
     const chips = Array.from(stage.querySelectorAll('.os-chip'));
-    const states = ['is-working', 'is-ask', 'is-answered', 'is-called', 'is-resolved'];
+    const states = ['is-working', 'is-ask', 'is-answered', 'is-called', 'is-resolved', 'is-ship'];
 
     if (reduce) {
       chips.forEach((c) => c.classList.add('is-on'));
@@ -402,7 +432,7 @@ const captions = [
 
       // initial state
       tl.set('.os-signal', { x: -20, autoAlpha: 0 });
-      tl.set('#os-human, .os-prwire', { opacity: 0.45 });
+      tl.set('#os-human, .os-vwire', { opacity: 0.45 });
       tl.set('#os-pr', { y: 14, opacity: 0, scale: 0.96 });
       tl.call(() => { resetClasses(); setCaption(0); });
 
@@ -412,7 +442,8 @@ const captions = [
       tl.set('.os-signal', { clearProps: 'opacity,visibility' });
       tl.to({}, { duration: 1.5 });
 
-      const lastChip = chips[chips.length - 1];
+      const reviewChip = chips[chips.length - 2];
+      const deployChip = chips[chips.length - 1];
 
       // 2. the orchestrator picks one up: first chips light up
       tl.call(() => { setCaption(1); stage.classList.add('is-working'); });
@@ -421,7 +452,7 @@ const captions = [
         tl.to({}, { duration: 1.3 });
       });
 
-      // 3. mid-flow side note: a quick question to the human
+      // 3. mid-flow side note: a quick question to the human above
       tl.call(() => { setCaption(2); swapState(null, 'is-ask'); });
       tl.to('#os-human', { opacity: 1, duration: 0.3 });
       tl.to({}, { duration: 1.7 });
@@ -431,15 +462,17 @@ const captions = [
       tl.to('#os-human', { opacity: 0.7, duration: 0.4 });
 
       // ...and the work just continues
-      chips.slice(3).forEach((c) => {
+      chips.slice(3, 5).forEach((c) => {
         tl.call(() => c.classList.add('is-on'));
         tl.to({}, { duration: 1.3 });
       });
 
-      // 4. a gate turns red: the human is back in the loop
+      // 4. code review turns red: the human is back in the loop
+      tl.call(() => { if (reviewChip) reviewChip.classList.add('is-on'); });
+      tl.to({}, { duration: 0.9 });
       tl.call(() => {
         setCaption(3);
-        if (lastChip) { lastChip.classList.remove('is-on'); lastChip.classList.add('is-fail'); }
+        if (reviewChip) { reviewChip.classList.remove('is-on'); reviewChip.classList.add('is-fail'); }
         swapState(null, 'is-called');
       });
       tl.to('#os-human', { opacity: 1, duration: 0.3 });
@@ -447,15 +480,16 @@ const captions = [
       tl.call(() => swapState('is-called', 'is-resolved'));
       tl.to({}, { duration: 1.0 });
 
-      // 5. fix adjusted, gates rerun, green: the pull request rolls out
+      // 5. review green, deployment, the pull request rolls out
       tl.call(() => {
         setCaption(4);
-        if (lastChip) lastChip.classList.remove('is-fail');
+        if (reviewChip) { reviewChip.classList.remove('is-fail'); reviewChip.classList.add('is-on'); }
+        swapState('is-resolved', null);
       });
-      tl.to({}, { duration: 0.5 });
-      tl.call(() => { if (lastChip) lastChip.classList.add('is-on'); swapState('is-resolved', null); });
       tl.to('#os-human', { opacity: 0.7, duration: 0.4 }, '<');
-      tl.to('.os-prwire', { opacity: 1, duration: 0.3 });
+      tl.to({}, { duration: 0.8 });
+      tl.call(() => { if (deployChip) deployChip.classList.add('is-on'); stage.classList.add('is-ship'); });
+      tl.to({}, { duration: 0.9 });
       tl.to('#os-pr', { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.4)' });
       tl.to({}, { duration: 3.2 });
 
@@ -463,7 +497,7 @@ const captions = [
       tl.to(stage, { opacity: 0, duration: 0.5, ease: 'power1.in' });
       tl.call(() => { resetClasses(); setCaption(0); });
       tl.set('.os-signal', { x: -20, autoAlpha: 0 });
-      tl.set('#os-human, .os-prwire', { opacity: 0.45 });
+      tl.set('#os-human, .os-vwire', { opacity: 0.45 });
       tl.set('#os-pr', { y: 14, opacity: 0, scale: 0.96 });
       tl.set(stage, { opacity: 1 }, '+=0.1');
     }
