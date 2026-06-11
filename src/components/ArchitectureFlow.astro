@@ -188,39 +188,39 @@ const revY = (i: number) => 284 + i * 40;
 
           <!-- ============ PREFLIGHT RAIL (fabric -> agent, once) ============ -->
           <g id="af-preflight" class="af-group" data-reveal>
-            <path id="af-prerail" class="af-rail-pre" d="M64,192 L64,312 Q64,330 78,330" marker-end="url(#af-arrow)" />
-            <path class="af-streak" pathLength="100" d="M64,192 L64,312 Q64,330 78,330" style="animation-duration:2.6s" />
+            <path id="af-prerail" class="af-rail-pre" d="M64,192 L64,312 Q64,330 86,330" marker-end="url(#af-arrow)" />
+            <path class="af-streak" pathLength="100" d="M64,192 L64,312 Q64,330 86,330" style="animation-duration:2.6s" />
             <text x="76" y="230" class="af-rail-label">Preflight</text>
             <text x="76" y="246" class="af-rail-label">context</text>
           </g>
 
           <!-- ============ ACTIVE CONTEXT LOOP (fabric <-> agent, continuous) ============ -->
           <g id="af-loop" class="af-group" data-reveal>
-            <path id="af-answer" class="af-loop-path" d="M160,192 C 168,214 168,240 162,262" marker-end="url(#af-arrow)" />
-            <path id="af-query" class="af-loop-path" d="M180,268 C 188,244 188,214 182,196" marker-end="url(#af-arrow)" />
-            <path class="af-streak" pathLength="100" d="M160,192 C 168,214 168,240 162,262" style="animation-duration:1.8s" />
-            <path class="af-streak" pathLength="100" d="M180,268 C 188,244 188,214 182,196" style="animation-duration:1.8s;animation-delay:-0.9s" />
+            <path id="af-answer" class="af-loop-path" d="M160,192 C 168,216 168,244 161,270" marker-end="url(#af-arrow)" />
+            <path id="af-query" class="af-loop-path" d="M177,275 C 186,248 186,214 182,196" marker-end="url(#af-arrow)" />
+            <path class="af-streak" pathLength="100" d="M160,192 C 168,216 168,244 161,270" style="animation-duration:1.8s" />
+            <path class="af-streak" pathLength="100" d="M177,275 C 186,248 186,214 182,196" style="animation-duration:1.8s;animation-delay:-0.9s" />
             <text x="208" y="224" class="af-loop-label">Active</text>
             <text x="208" y="242" class="af-loop-label">context</text>
           </g>
 
           <!-- ============ CODING AGENT (always present hub) ============ -->
           <g id="af-agent" class="af-group af-group--base af-reveal">
-            <circle cx="150" cy="330" r="66" class="af-agent-ring" />
-            <circle cx="150" cy="330" r="59" class="af-agent-ticks" />
-            <circle cx="150" cy="330" r="51" class="af-agent-core" />
-            <g class="af-agent-spark" transform="translate(142,293) scale(0.68)" set:html={icons.spark} />
+            <circle cx="150" cy="330" r="58" class="af-agent-ring" />
+            <circle cx="150" cy="330" r="51" class="af-agent-ticks" />
+            <circle cx="150" cy="330" r="44" class="af-agent-core" />
+            <g class="af-agent-spark" transform="translate(142,298) scale(0.68)" set:html={icons.spark} />
             <text x="150" y="334" text-anchor="middle" class="af-agent-label">Coding</text>
             <text x="150" y="354" text-anchor="middle" class="af-agent-label">Agent</text>
             <!-- the agent runs contained: Sandcat sandbox tag -->
-            <rect x="97" y="404" width="106" height="18" rx="9" class="af-sandbox-tag" />
-            <text x="150" y="416.5" text-anchor="middle" class="af-sandbox-label">Sandcat sandbox</text>
+            <rect x="97" y="396" width="106" height="18" rx="9" class="af-sandbox-tag" />
+            <text x="150" y="408.5" text-anchor="middle" class="af-sandbox-label">Sandcat sandbox</text>
           </g>
 
           <!-- pipeline connectors (the main spine) -->
           <g id="af-c1g" class="af-reveal">
-            <path id="af-c1" class="af-pipe" d="M214,312 L266,312" marker-end="url(#af-arrow)" />
-            <path class="af-streak af-streak--pipe" pathLength="100" d="M214,312 L266,312" style="animation-duration:2.4s" />
+            <path id="af-c1" class="af-pipe" d="M208,312 L266,312" marker-end="url(#af-arrow)" />
+            <path class="af-streak af-streak--pipe" pathLength="100" d="M208,312 L266,312" style="animation-duration:2.4s" />
           </g>
           <g id="af-c2g" class="af-reveal">
             <path id="af-c2" class="af-pipe" d="M464,312 L518,312" marker-end="url(#af-arrow)" />
@@ -295,8 +295,8 @@ const revY = (i: number) => 284 + i * 40;
                  the risk drop, the gate and its trace share one axis: PR -> gate -> vault -->
             <path class="af-branch af-branch--risk" d="M875,350 L875,464" marker-end="url(#af-arrow-amber)" />
             <g class="af-triage-node af-triage-node--green">
-              <path id="af-autofix" class="af-autofix-path" d="M840,350 C 840,440 790,498 700,498 L320,498 C 252,498 206,442 200,374" marker-end="url(#af-arrow)" />
-              <path class="af-streak af-streak--soft" pathLength="100" d="M840,350 C 840,440 790,498 700,498 L320,498 C 252,498 206,442 200,374" style="animation-duration:3.6s" />
+              <path id="af-autofix" class="af-autofix-path" d="M840,350 C 840,440 790,498 700,498 L320,498 C 252,498 206,442 194,369" marker-end="url(#af-arrow)" />
+              <path class="af-streak af-streak--soft" pathLength="100" d="M840,350 C 840,440 790,498 700,498 L320,498 C 252,498 206,442 194,369" style="animation-duration:3.6s" />
               <text x="470" y="488" text-anchor="middle" class="af-autofix-label">green · trivial: auto-fix → back to agent</text>
             </g>
             <g class="af-triage-node af-triage-node--risk">
