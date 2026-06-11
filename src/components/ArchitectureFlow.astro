@@ -804,6 +804,10 @@ const revY = (i: number) => 284 + i * 40;
       };
       Object.values(cascades).forEach((sel) => gsap.set(sel, { opacity: 0, y: 10 }));
 
+      // the HUD frame stays hidden until the reader actually reaches the
+      // pinned diagram, a highlight before any scrolling reads as noise
+      gsap.set('#af-reticle', { opacity: 0 });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: '.af-track',
@@ -811,6 +815,7 @@ const revY = (i: number) => 284 + i * 40;
           end: 'bottom bottom',
           scrub: 0.6,
           onUpdate: (self) => setActive(Math.min(steps - 1, Math.floor(self.progress * steps))),
+          onToggle: (self) => gsap.to('#af-reticle', { opacity: self.isActive ? 1 : 0, duration: 0.4 }),
         },
       });
 
@@ -839,6 +844,8 @@ const revY = (i: number) => 284 + i * 40;
 
       setActive(0);
       moveReticle(0, true);
+      // page loaded mid-track (refresh while inside the section): show the frame right away
+      if (tl.scrollTrigger && tl.scrollTrigger.isActive) gsap.set('#af-reticle', { opacity: 1 });
     }
 
     ScrollTrigger.refresh();
