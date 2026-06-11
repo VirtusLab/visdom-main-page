@@ -258,8 +258,10 @@ const revY = (i: number) => 284 + i * 40;
           <!-- the pull request: a soft envelope, review and triage happen inside it -->
           <g id="af-pr-env" class="af-reveal">
             <rect x="508" y="214" width="470" height="248" rx="20" class="af-prenv" />
-            <g class="af-prenv-icon" transform="translate(524,221) scale(0.6)" set:html={icons.pr} />
-            <text x="544" y="234" class="af-prenv-label">Pull Request</text>
+            {/* label lives top-right: the top-left corner already stacks the
+                reticle bracket and the review panel, three things is a crowd */}
+            <g class="af-prenv-icon" transform="translate(838,221) scale(0.6)" set:html={icons.pr} />
+            <text x="962" y="234" text-anchor="end" class="af-prenv-label">Pull Request</text>
           </g>
 
           <!-- ============ CODE REVIEW (deepening) ============ -->
