@@ -180,7 +180,7 @@ const phases = [
               The ground truth every other component reads from. Context Fabric captures the four layers an agent cannot infer: system (services, dependencies, contracts, schemas), code (how this repo is actually written, mined from linters and the review comments your seniors keep repeating), organizational (who owns it, who reviews it, who is on call), and historical (the ADRs and postmortems behind why it is like this). Agents and reviewers then ask the same questions, who owns this, what breaks if I change it, where this pattern already exists, and get the same deterministic answers. Refactors stop turning into incident retros; onboarding stops eating your seniors' calendars.
             </p>
             <p class="text-sm text-text-muted mb-6">
-              Powered by <span class="font-semibold text-text">Visdom Developer Intelligence</span>, deterministic code expertise, blast radius analysis, and ownership graphs via MCP.
+              Powered by <span class="font-semibold text-text">ViDIA</span>, deterministic code expertise, blast radius analysis, and ownership graphs via MCP.
             </p>
             <div class="flex gap-3">
               <a href="https://virtuslab.com/blog/ai/the-hard-truth/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">Read: "Your README Is a Lie" -&gt;</a>
@@ -232,7 +232,7 @@ const phases = [
               Agents are great at writing tests that pass, not tests that matter, so coverage climbs while bugs still ship. Visdom adds three layers AI cannot self-confirm: architecture tests (ArchUnit) so the agent cannot quietly break your layering even when every unit test is green, property-based tests that generate the inputs a human reviewer would never think of, and mutation testing that mutates the code to prove your suite is not a placebo. The number on the dashboard starts meaning something again.
             </p>
             <p class="text-sm text-text-muted mb-6">
-              Powered by <span class="font-semibold text-text">Visdom Testing</span>, adaptive test shape tuned to your architecture, with ArchUnit gates that stop AI from drifting.
+              Adaptive test shape tuned to your architecture, with ArchUnit gates that stop AI from drifting.
             </p>
             <div class="flex gap-3">
               <a href="https://virtuslab.github.io/visdom-testing/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">Read the reference -&gt;</a>
