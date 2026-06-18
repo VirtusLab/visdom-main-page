@@ -32,10 +32,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
         env:
-          # PACKAGES_READ_TOKEN: PAT with read:packages scope on @virtuslab/visdom-ui.
-          # GITHUB_TOKEN cannot read cross-repo private packages by default — set the
-          # secret to make first build on master succeed (dev runs use cached deps).
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
+          # The project .npmrc authenticates GitHub Packages via ${GITHUB_TOKEN}, and a
+          # project-level .npmrc overrides the userconfig setup-node writes. The default
+          # GITHUB_TOKEN cannot read the cross-repo @virtuslab/visdom-ui package, so feed
+          # the GITHUB_TOKEN env var from PACKAGES_READ_TOKEN (classic PAT, read:packages).
+          GITHUB_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Build site for custom domain
         run: npm run build
