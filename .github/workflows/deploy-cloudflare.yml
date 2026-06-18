@@ -32,12 +32,17 @@ jobs:
           # tarball from GitHub Packages; without it the download 401s.
           always-auth: true
 
+      - name: DEBUG silly trace (temporary)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          npm config set "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}"
+          npm install --no-save --loglevel=silly "@virtuslab/visdom-ui@0.1.7" 2>&1 \
+            | sed -E 's/ghp_[A-Za-z0-9]+/REDACTED/g; s/gho_[A-Za-z0-9]+/REDACTED/g; s/[A-Fa-f0-9]{40}/REDACTED/g; s/([Aa]uthorization|authToken)[^,}"]*/\1 REDACTED/g' \
+            | grep -iE 'visdom-ui|30[127]|location|401|redirect|http fetch|objects.github|blob' | head -40 || true
+
       - name: Install dependencies
         env:
-          # @virtuslab/visdom-ui is a GitHub Packages npm package from another repo;
-          # PACKAGES_READ_TOKEN is a classic PAT with read:packages. We write the token
-          # value into npm config directly (bash-expanded) so npm authenticates the
-          # tarball download instead of relying on ${NODE_AUTH_TOKEN} expansion.
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           npm config set "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}"
