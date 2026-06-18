@@ -32,7 +32,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # PACKAGES_READ_TOKEN: PAT with read:packages scope on @virtuslab/visdom-ui.
+          # GITHUB_TOKEN cannot read cross-repo private packages by default — set the
+          # secret to make first build on master succeed (dev runs use cached deps).
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Build site for custom domain
         run: npm run build
