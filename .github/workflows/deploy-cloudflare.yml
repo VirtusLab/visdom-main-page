@@ -28,35 +28,15 @@ jobs:
           node-version: 22
           cache: npm
           registry-url: https://npm.pkg.github.com
-          # Required so npm sends the token when downloading the @virtuslab/visdom-ui
-          # tarball from GitHub Packages; without it the download 401s.
-          always-auth: true
-
-      - name: DEBUG config (temporary)
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
-        run: |
-          REDACT='s/ghp_[A-Za-z0-9]+/PAT_REDACTED/g; s/[A-Za-z0-9_-]{30,}/LONG_REDACTED/g'
-          echo "userconfig path: $(npm config get userconfig)"
-          echo "globalconfig path: $(npm config get globalconfig)"
-          echo "=== NPM_CONFIG_USERCONFIG ($NPM_CONFIG_USERCONFIG) BEFORE set ==="
-          sed -E "$REDACT" "$NPM_CONFIG_USERCONFIG" || true
-          npm config set "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}"
-          echo "=== userconfig AFTER npm config set ==="
-          sed -E "$REDACT" "$(npm config get userconfig)" || true
-          echo "=== project .npmrc ==="
-          sed -E "$REDACT" .npmrc 2>/dev/null || true
-          echo "=== global npmrc ==="
-          sed -E "$REDACT" "$(npm config get globalconfig)" 2>/dev/null || true
-          echo "resolved authToken host: [$(npm config get //npm.pkg.github.com/:_authToken)]"
-          echo "resolved @virtuslab:registry: [$(npm config get @virtuslab:registry)]"
 
       - name: Install dependencies
+        run: npm ci
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
-        run: |
-          npm config set "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}"
-          npm ci
+          # The project .npmrc authenticates GitHub Packages via ${GITHUB_TOKEN}, and a
+          # project-level .npmrc overrides the userconfig setup-node writes. The default
+          # GITHUB_TOKEN cannot read the cross-repo @virtuslab/visdom-ui package, so feed
+          # the GITHUB_TOKEN env var from PACKAGES_READ_TOKEN (classic PAT, read:packages).
+          GITHUB_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Build site for custom domain
         run: npm run build
