@@ -32,18 +32,13 @@ jobs:
           # tarball from GitHub Packages; without it the download 401s.
           always-auth: true
 
-      - name: DEBUG auth (temporary)
+      - name: DEBUG npm http trace (temporary)
         env:
-          TOK: ${{ secrets.PACKAGES_READ_TOKEN }}
-          GTOK: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
-          echo "PACKAGES_READ_TOKEN length: ${#TOK}  prefix: ${TOK:0:4}"
-          echo "packument (PAT):  $(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $TOK" 'https://npm.pkg.github.com/@virtuslab%2fvisdom-ui')"
-          echo "tarball   (PAT):  $(curl -s -L -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $TOK" 'https://npm.pkg.github.com/download/@virtuslab/visdom-ui/0.1.7/2aff5f8011ae585ee5e77c5e704a52e22a10d0b4')"
-          echo "tarball   (token scheme): $(curl -s -L -o /dev/null -w '%{http_code}' -H "Authorization: token $TOK" 'https://npm.pkg.github.com/download/@virtuslab/visdom-ui/0.1.7/2aff5f8011ae585ee5e77c5e704a52e22a10d0b4')"
-          echo "tarball   (GITHUB_TOKEN): $(curl -s -L -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $GTOK" 'https://npm.pkg.github.com/download/@virtuslab/visdom-ui/0.1.7/2aff5f8011ae585ee5e77c5e704a52e22a10d0b4')"
-          echo "--- generated npmrc (redacted) ---"
-          sed -E 's/[A-Za-z0-9_-]{20,}/REDACTED/g' "$NPM_CONFIG_USERCONFIG" || true
+          npm ci --loglevel=http 2>&1 \
+            | sed -E 's/ghp_[A-Za-z0-9]+/ghp_REDACTED/g; s/gho_[A-Za-z0-9]+/gho_REDACTED/g; s/(authToken=)[^ ]+/\1REDACTED/g' \
+            | grep -iE 'http|401|download|visdom-ui|registry' | head -50 || true
 
       - name: Install dependencies
         run: npm ci
