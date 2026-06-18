@@ -1,0 +1,505 @@
+---
+// Orchestrator showcase: an Apple-style product moment, kept deliberately
+// simple. A ticket lands, the orchestrator quietly does the legwork (one
+// status line, like a build log), a human signs off when risk demands it,
+// a pull request rolls out. Looping, calm, narrated by four captions.
+
+// input signals: everything that can wake the system up
+const signals = [
+  { icon: '<path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><path d="M12 9v4"/><path d="M12 17h.01"/>', key: '500 spike', title: 'checkout API', tone: 'red' },
+  { icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 7v10M12 7v7M16 7v4"/>', key: 'PAY-2417', title: 'Refunds intermittently fail', tone: 'blue', main: true },
+  { icon: '<path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/>', key: 'webhook', title: 'deploy v2.41 released', tone: 'neutral' },
+  { icon: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>', key: 'CVE feed', title: 'openssl advisory', tone: 'amber' },
+];
+
+// what the orchestrator works through, chip by chip: live actions
+const work = ['querying fabric', 'reading code', 'tracing history', 'scanning logs', 'drafting fix', 'code review', 'deployment'];
+
+const captions = [
+  'Signals stream in: errors, tickets, events, advisories.',
+  'The orchestrator picks one up and does the legwork.',
+  'Mid-flow it pings a human: one quick question, answered.',
+  'Code review turns red. The human is back in the loop.',
+  'Review green, deployment done. A pull request rolls out.',
+];
+---
+<section class="os" id="orchestrator" aria-labelledby="os-title">
+  <div class="container">
+    <div class="os-head fade-up">
+      <p class="section-label">The Orchestrator</p>
+      <h2 id="os-title" class="os-title">One ticket in.<br />One <span class="serif-accent os-accent">pull request</span> out.</h2>
+      <p class="os-sub">
+        Under the hood, every step is a specialized agent. You see none of that.
+        Production errors, Jira tickets, events: signals go in, the orchestrator does the legwork
+        through the same gates you just saw, and a human signs off only when risk demands it.
+      </p>
+    </div>
+
+    <div class="os-stagewrap fade-up">
+      <div class="os-stage" id="os-stage">
+        <!-- TOP: the human, a side channel hovering over the whole process -->
+        <div class="os-human-wrap">
+          <div class="os-human" id="os-human">
+            <span class="os-human-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            </span>
+            <span class="os-human-name">Human in the loop</span>
+            <span class="os-human-state">
+              <span class="os-human-idle">on call · every step</span>
+              <span class="os-human-ask">quick question</span>
+              <span class="os-human-ans">answered ✓</span>
+              <span class="os-human-call">review red · deciding</span>
+              <span class="os-human-res">resolved ✓</span>
+            </span>
+          </div>
+          <div class="os-vwire" aria-hidden="true"></div>
+        </div>
+
+        <!-- IN: nothing but input signals -->
+        <div class="os-col">
+          <span class="os-col-label">Incoming signals</span>
+          <div class="os-signals">
+            {signals.map((s) => (
+              <div class={`os-signal os-signal--${s.tone}${s.main ? ' os-signal--main' : ''}`}>
+                <span class="os-signal-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={s.icon} />
+                </span>
+                <span class="os-signal-body">
+                  <span class="os-signal-key">{s.key}</span>
+                  <span class="os-signal-title">{s.title}</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="os-wire os-wire--in" aria-hidden="true"></div>
+
+        <!-- CENTER: hub + status line -->
+        <div class="os-col">
+          <div class="os-hub" id="os-hub">
+            <div class="os-hub-head">
+              <span class="os-hub-spark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></svg>
+              </span>
+              <span class="os-hub-name">Orchestrator</span>
+              <span class="os-hub-dot" aria-hidden="true"></span>
+            </div>
+            <div class="os-hub-chips" aria-live="polite">
+              {work.map((w) => (
+                <span class="os-chip">{w}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="os-wire os-wire--out" aria-hidden="true"></div>
+
+        <!-- OUT: the result, end of the line -->
+        <div class="os-col">
+          <div class="os-pr" id="os-pr">
+            <span class="os-pr-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6"/><path d="M13 6h2a3 3 0 0 1 3 3v6"/></svg>
+            </span>
+            <span class="os-pr-title">PR #4231 · refund retry fix</span>
+            <span class="os-pr-meta">all gates green · fully traced</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- narration -->
+      <div class="os-captions" aria-live="polite">
+        {captions.map((c, i) => (
+          <p class={`os-caption${i === 0 ? ' is-active' : ''}`} data-i={i}>{c}</p>
+        ))}
+      </div>
+    </div>
+
+    <div class="os-cta fade-up">
+      <p class="os-cta-line">Want to see the Orchestrator on your stack?</p>
+      <a href="#contact" class="btn-pill btn-primary">Book a demo -&gt;</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .os { padding: 7rem 0 5rem; position: relative; overflow: hidden; }
+
+  .os-head { max-width: 760px; margin: 0 auto 3.5rem; text-align: center; }
+  .os-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.4rem, 5.4vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.06;
+    color: var(--color-text);
+    margin: 0.6rem 0 1.2rem;
+  }
+  .os-accent { color: var(--vmm-accent); }
+  .os-sub {
+    font-size: 1.1rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  /* ---- stage ---- */
+  .os-stagewrap { max-width: 980px; margin: 0 auto; }
+  .os-stage {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) 40px minmax(240px, 1.3fr) 40px minmax(200px, 1fr);
+    grid-template-rows: auto auto;
+    align-items: center;
+    padding: 2rem 2rem 3rem;
+    border: 1px solid var(--color-border);
+    border-radius: 24px;
+    background:
+      radial-gradient(60% 80% at 50% 0%, var(--vmm-accent-soft), transparent 70%),
+      var(--color-surface);
+  }
+
+  .os-col { display: flex; flex-direction: column; align-items: center; gap: 14px; grid-row: 2; }
+
+  /* the human hovers over the process, wired to the orchestrator below */
+  .os-human-wrap {
+    grid-column: 3;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .os-vwire {
+    width: 2px;
+    height: 30px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, transparent, var(--vmm-accent), transparent);
+    background-size: 100% 200%;
+    opacity: 0.3;
+  }
+  .is-ask .os-vwire,
+  .is-called .os-vwire { opacity: 1; animation: os-wireflow-v 1.3s linear infinite; }
+  @keyframes os-wireflow-v { from { background-position: 0 120%; } to { background-position: 0 -80%; } }
+
+  /* input signals: the only thing on the left */
+  .os-col-label {
+    font: 600 10.5px var(--font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .os-signals { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 220px; }
+  .os-signal {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    background: var(--card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.04);
+    opacity: 0.6;
+    transition: opacity 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+  }
+  .os-signal-icon {
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--color-surface-light);
+    color: var(--color-text-secondary);
+  }
+  .os-signal-icon svg { width: 14px; height: 14px; }
+  .os-signal--red .os-signal-icon { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+  .os-signal--blue .os-signal-icon { color: var(--color-blue); background: rgba(6, 147, 227, 0.1); }
+  .os-signal--amber .os-signal-icon { color: var(--color-amber); background: rgba(245, 158, 11, 0.1); }
+  .os-signal-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .os-signal-key { font: 700 10.5px var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-secondary); }
+  .os-signal-title { font: 600 12px var(--font-body); color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* the one the orchestrator picks up */
+  .is-working .os-signal--main,
+  .is-risk .os-signal--main,
+  .is-human .os-signal--main,
+  .is-approved .os-signal--main {
+    opacity: 1;
+    border-color: color-mix(in oklab, var(--vmm-accent) 60%, var(--color-border));
+    transform: translateX(4px);
+    box-shadow: 0 6px 22px color-mix(in oklab, var(--vmm-accent) 16%, transparent);
+  }
+
+  /* wires */
+  .os-wire {
+    height: 2px;
+    grid-row: 2;
+    background: linear-gradient(90deg, transparent, var(--vmm-accent), transparent);
+    background-size: 200% 100%;
+    border-radius: 2px;
+    opacity: 0.25;
+  }
+  .is-working .os-wire--in { opacity: 1; animation: os-wireflow 1.4s linear infinite; }
+  .is-ship .os-wire--out { opacity: 1; animation: os-wireflow 1.4s linear infinite; }
+  @keyframes os-wireflow { from { background-position: 120% 0; } to { background-position: -80% 0; } }
+
+  /* hub: a module panel with task chips inside */
+  .os-hub {
+    width: 100%;
+    max-width: 280px;
+    padding: 14px 16px 16px;
+    background: var(--card);
+    border: 1.5px solid color-mix(in oklab, var(--vmm-accent) 50%, var(--color-border));
+    border-radius: 16px;
+    box-shadow: 0 10px 36px color-mix(in oklab, var(--vmm-accent) 18%, transparent);
+  }
+  .os-hub-head { display: flex; align-items: center; gap: 9px; margin-bottom: 11px; }
+  .os-hub-spark {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: radial-gradient(circle at 35% 30%, var(--vmm-accent-2), var(--vmm-accent));
+    color: #fff;
+    box-shadow: 0 4px 14px color-mix(in oklab, var(--vmm-accent) 35%, transparent);
+  }
+  :global(.dark) .os-hub-spark { color: #06281a; }
+  .os-hub-spark svg { width: 15px; height: 15px; }
+  .os-hub-name { font: 700 14.5px var(--font-heading); color: var(--color-text); flex: 1; }
+  .os-hub-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 9999px;
+    background: var(--color-text-muted);
+    opacity: 0.5;
+  }
+  .is-working .os-hub-dot { background: var(--vmm-accent); opacity: 1; animation: os-blink 1.1s ease-in-out infinite; }
+  .is-ask .os-hub-dot { background: var(--color-amber); opacity: 1; }
+  .is-called .os-hub-dot { background: #ef4444; opacity: 1; animation: os-blink 0.8s ease-in-out infinite; }
+  @keyframes os-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* task chips: light up one by one as the orchestrator works */
+  .os-hub-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .os-chip {
+    font: 600 10px var(--font-mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    padding: 3px 9px;
+    opacity: 0.55;
+    transition: color 0.35s ease, border-color 0.35s ease, background 0.35s ease, opacity 0.35s ease;
+  }
+  .os-chip.is-on {
+    opacity: 1;
+    color: var(--vmm-accent);
+    border-color: color-mix(in oklab, var(--vmm-accent) 55%, var(--color-border));
+    background: var(--vmm-accent-soft);
+  }
+  .os-chip.is-fail {
+    opacity: 1;
+    color: #ef4444;
+    border-color: color-mix(in oklab, #ef4444 60%, var(--color-border));
+    background: rgba(239, 68, 68, 0.09);
+  }
+
+  /* human */
+  .os-human {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    max-width: 210px;
+    padding: 15px;
+    background: var(--card);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+  .is-ask .os-human { border-color: var(--color-amber); box-shadow: 0 8px 28px rgba(245, 158, 11, 0.18); }
+  .is-answered .os-human,
+  .is-resolved .os-human { border-color: var(--vmm-accent); box-shadow: 0 8px 28px color-mix(in oklab, var(--vmm-accent) 25%, transparent); }
+  .is-called .os-human { border-color: #ef4444; box-shadow: 0 8px 28px rgba(239, 68, 68, 0.2); }
+  .os-human-icon {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: var(--color-surface-light);
+    color: var(--color-text-secondary);
+  }
+  .os-human-icon svg { width: 16px; height: 16px; }
+  .os-human-name { font: 650 12.5px var(--font-body); color: var(--color-text); }
+  .os-human-state { font: 600 10.5px var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; }
+  .os-human-idle { color: var(--color-text-muted); }
+  .os-human-ask { color: var(--color-amber); display: none; }
+  .os-human-ans { color: var(--vmm-accent); display: none; }
+  .os-human-call { color: #ef4444; display: none; }
+  .os-human-res { color: var(--vmm-accent); display: none; }
+  .is-ask .os-human-idle, .is-answered .os-human-idle, .is-called .os-human-idle, .is-resolved .os-human-idle { display: none; }
+  .is-ask .os-human-ask { display: inline; }
+  .is-answered .os-human-ans { display: inline; }
+  .is-called .os-human-call { display: inline; }
+  .is-resolved .os-human-res { display: inline; }
+
+  .os-pr {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+    max-width: 210px;
+    padding: 13px 15px;
+    background: var(--card);
+    border: 1.5px solid var(--vmm-accent);
+    border-radius: 12px;
+    box-shadow: 0 10px 32px color-mix(in oklab, var(--vmm-accent) 22%, transparent);
+  }
+  .os-pr-icon { color: var(--vmm-accent); }
+  .os-pr-icon svg { width: 16px; height: 16px; }
+  .os-pr-title { font: 650 12.5px var(--font-body); color: var(--color-text); }
+  .os-pr-meta { font: 600 10px var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--vmm-accent); }
+
+  /* captions */
+  .os-captions { position: relative; height: 2.2em; margin-top: 1.4rem; text-align: center; }
+  .os-caption {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    font: 500 1.05rem var(--font-body);
+    color: var(--color-text-secondary);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  .os-caption.is-active { opacity: 1; transform: none; }
+
+  /* CTA */
+  .os-cta { display: flex; flex-direction: column; align-items: center; gap: 0.9rem; margin-top: 3rem; }
+  .os-cta-line { margin: 0; font-size: 1.05rem; color: var(--color-text-secondary); }
+
+  /* ---- responsive ---- */
+  @media (max-width: 860px) {
+    .os { padding: 4.5rem 0 3.5rem; }
+    .os-stage { grid-template-columns: 1fr; grid-template-rows: none; gap: 18px; padding: 1.75rem 1.25rem; }
+    .os-col, .os-wire { grid-row: auto; }
+    .os-human-wrap { grid-column: 1; grid-row: auto; order: 4; flex-direction: column-reverse; }
+    .os-col:nth-of-type(1) { order: 1; }
+    .os-wire--in { order: 2; }
+    .os-col:nth-of-type(2) { order: 3; }
+    .os-wire--out { order: 5; }
+    .os-col:nth-of-type(3) { order: 6; }
+    .os-wire { width: 2px; height: 26px; margin: 0 auto; background: linear-gradient(180deg, transparent, var(--vmm-accent), transparent); }
+    .os-captions { height: 3.4em; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .os-hub-ring, .os-ticker-dot, .os-wire { animation: none !important; }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+
+  const stage = document.getElementById('os-stage');
+  if (stage) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const captions = Array.from(document.querySelectorAll('.os-caption'));
+    const setCaption = (i) => captions.forEach((c, j) => c.classList.toggle('is-active', j === i));
+    const chips = Array.from(stage.querySelectorAll('.os-chip'));
+    const states = ['is-working', 'is-ask', 'is-answered', 'is-called', 'is-resolved', 'is-ship'];
+
+    if (reduce) {
+      chips.forEach((c) => c.classList.add('is-on'));
+      setCaption(captions.length - 1);
+    } else {
+      const resetClasses = () => {
+        states.forEach((s) => stage.classList.remove(s));
+        chips.forEach((c) => c.classList.remove('is-on', 'is-fail'));
+      };
+      const swapState = (from, to) => {
+        if (from) stage.classList.remove(from);
+        if (to) stage.classList.add(to);
+      };
+
+      const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.6 });
+
+      // initial state
+      tl.set('.os-signal', { x: -20, autoAlpha: 0 });
+      tl.set('#os-human, .os-vwire', { opacity: 0.45 });
+      tl.set('#os-pr', { y: 14, opacity: 0, scale: 0.96 });
+      tl.call(() => { resetClasses(); setCaption(0); });
+
+      // 1. signals stream in (then hand opacity back to CSS so the picked
+      // one can brighten via class state)
+      tl.to('.os-signal', { x: 0, autoAlpha: 0.6, duration: 0.55, stagger: 0.18, ease: 'power3.out' });
+      tl.set('.os-signal', { clearProps: 'opacity,visibility' });
+      tl.to({}, { duration: 1.5 });
+
+      const reviewChip = chips[chips.length - 2];
+      const deployChip = chips[chips.length - 1];
+
+      // 2. the orchestrator picks one up: first chips light up
+      tl.call(() => { setCaption(1); stage.classList.add('is-working'); });
+      chips.slice(0, 3).forEach((c) => {
+        tl.call(() => c.classList.add('is-on'));
+        tl.to({}, { duration: 1.3 });
+      });
+
+      // 3. mid-flow side note: a quick question to the human above
+      tl.call(() => { setCaption(2); swapState(null, 'is-ask'); });
+      tl.to('#os-human', { opacity: 1, duration: 0.3 });
+      tl.to({}, { duration: 1.7 });
+      tl.call(() => swapState('is-ask', 'is-answered'));
+      tl.to({}, { duration: 1.1 });
+      tl.call(() => swapState('is-answered', null));
+      tl.to('#os-human', { opacity: 0.7, duration: 0.4 });
+
+      // ...and the work just continues
+      chips.slice(3, 5).forEach((c) => {
+        tl.call(() => c.classList.add('is-on'));
+        tl.to({}, { duration: 1.3 });
+      });
+
+      // 4. code review turns red: the human is back in the loop
+      tl.call(() => { if (reviewChip) reviewChip.classList.add('is-on'); });
+      tl.to({}, { duration: 0.9 });
+      tl.call(() => {
+        setCaption(3);
+        if (reviewChip) { reviewChip.classList.remove('is-on'); reviewChip.classList.add('is-fail'); }
+        swapState(null, 'is-called');
+      });
+      tl.to('#os-human', { opacity: 1, duration: 0.3 });
+      tl.to({}, { duration: 2.2 });
+      tl.call(() => swapState('is-called', 'is-resolved'));
+      tl.to({}, { duration: 1.0 });
+
+      // 5. review green, deployment, the pull request rolls out
+      tl.call(() => {
+        setCaption(4);
+        if (reviewChip) { reviewChip.classList.remove('is-fail'); reviewChip.classList.add('is-on'); }
+        swapState('is-resolved', null);
+      });
+      tl.to('#os-human', { opacity: 0.7, duration: 0.4 }, '<');
+      tl.to({}, { duration: 0.8 });
+      tl.call(() => { if (deployChip) deployChip.classList.add('is-on'); stage.classList.add('is-ship'); });
+      tl.to({}, { duration: 0.9 });
+      tl.to('#os-pr', { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.4)' });
+      tl.to({}, { duration: 3.2 });
+
+      // soft reset: restore the full initial state while the stage is hidden
+      tl.to(stage, { opacity: 0, duration: 0.5, ease: 'power1.in' });
+      tl.call(() => { resetClasses(); setCaption(0); });
+      tl.set('.os-signal', { x: -20, autoAlpha: 0 });
+      tl.set('#os-human, .os-vwire', { opacity: 0.45 });
+      tl.set('#os-pr', { y: 14, opacity: 0, scale: 0.96 });
+      tl.set(stage, { opacity: 1 }, '+=0.1');
+    }
+  }
+</script>
