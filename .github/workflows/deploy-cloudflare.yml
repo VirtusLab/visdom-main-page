@@ -32,14 +32,24 @@ jobs:
           # tarball from GitHub Packages; without it the download 401s.
           always-auth: true
 
-      - name: DEBUG silly trace (temporary)
+      - name: DEBUG config (temporary)
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
+          REDACT='s/ghp_[A-Za-z0-9]+/PAT_REDACTED/g; s/[A-Za-z0-9_-]{30,}/LONG_REDACTED/g'
+          echo "userconfig path: $(npm config get userconfig)"
+          echo "globalconfig path: $(npm config get globalconfig)"
+          echo "=== NPM_CONFIG_USERCONFIG ($NPM_CONFIG_USERCONFIG) BEFORE set ==="
+          sed -E "$REDACT" "$NPM_CONFIG_USERCONFIG" || true
           npm config set "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}"
-          npm install --no-save --loglevel=silly "@virtuslab/visdom-ui@0.1.7" 2>&1 \
-            | sed -E 's/ghp_[A-Za-z0-9]+/REDACTED/g; s/gho_[A-Za-z0-9]+/REDACTED/g; s/[A-Fa-f0-9]{40}/REDACTED/g; s/([Aa]uthorization|authToken)[^,}"]*/\1 REDACTED/g' \
-            | grep -iE 'visdom-ui|30[127]|location|401|redirect|http fetch|objects.github|blob' | head -40 || true
+          echo "=== userconfig AFTER npm config set ==="
+          sed -E "$REDACT" "$(npm config get userconfig)" || true
+          echo "=== project .npmrc ==="
+          sed -E "$REDACT" .npmrc 2>/dev/null || true
+          echo "=== global npmrc ==="
+          sed -E "$REDACT" "$(npm config get globalconfig)" 2>/dev/null || true
+          echo "resolved authToken host: [$(npm config get //npm.pkg.github.com/:_authToken)]"
+          echo "resolved @virtuslab:registry: [$(npm config get @virtuslab:registry)]"
 
       - name: Install dependencies
         env:
