@@ -11,8 +11,8 @@ const differentiators = [
     body: 'Two to four staff engineers inside your repo, your CI, your infrastructure. We ship production code and runbooks, not a deliverable folder for the steering committee.',
   },
   {
-    title: 'We are designed to leave',
-    body: 'From week one we structure the work around your team taking over. By the final phase we are an advisor on call, not a line item on the org chart.',
+    title: 'We build lasting capability',
+    body: 'From week one your team works alongside ours and grows into the platform as we deploy it. As it beds in we move into a strategic partner role: architecture direction, new capabilities, and the next maturity step.',
   },
 ];
 
@@ -20,7 +20,7 @@ const phases = [
   {
     name: 'Phase 1 - Foundation',
     meta: '2 weeks · fixed scope',
-    body: 'On-site or remote. We run your environment through the Visdom Maturity Matrix (60 practices across four perspectives) and leave you with a prioritized roadmap, the pilot team named, and Phase 2 scoped. Stop here and you still keep the roadmap.',
+    body: 'On-site or remote. We run your environment through the Visdom Maturity Matrix (60 practices across four perspectives) and leave you with a prioritized roadmap, the pilot team named, and Phase 2 scoped. That roadmap becomes the shared plan we execute together.',
     accent: 'var(--color-blue)',
   },
   {
@@ -32,13 +32,13 @@ const phases = [
   {
     name: 'Phase 3 - Scale and Transfer',
     meta: '4-8 weeks · advisory',
-    body: 'Your platform team leads the rollout. We stay on for architecture reviews, hard calls, and the awkward exceptions, and step out of day-to-day delivery. By the end, you operate the platform without us.',
+    body: 'Your platform team leads the rollout, with us alongside for architecture reviews, hard calls, and the awkward exceptions. By the end your team owns the day to day and we stay engaged as the platform evolves.',
     accent: 'var(--color-purple)',
   },
   {
     name: 'Phase 4 - Ongoing partnership',
     meta: 'optional · retainer',
-    body: 'A safety net, not a payroll item. Monthly fee covers a named engineer, an SLA, and a pool of hours for architecture reviews, OSS fixes, and the next maturity step. No minimums, no lock-in. You call us when you need us.',
+    body: 'An ongoing partnership, not a payroll item. A monthly engagement covers a named engineer, an SLA, and a pool of hours for architecture reviews, OSS fixes, and the next maturity step. We stay close as your platform and your roadmap keep moving.',
     accent: 'var(--color-amber)',
   },
 ];
@@ -48,9 +48,9 @@ const phases = [
   <div class="container">
     <div id="different" class="fade-up">
       <p class="section-label">Operating model</p>
-      <h2 class="section-title">We built the platform. We deliver the work. You keep the capability.</h2>
+      <h2 class="section-title">We built the platform. We deliver the work. We scale it with your team.</h2>
       <p class="section-subtitle mb-14">
-        Not a license. Not a body-leasing contract. A platform we have shaped over three years of delivery, installed in your stack by the engineers who built it, owned by your team when we leave.
+        Not a license. Not a body-leasing contract. A platform we have shaped over three years of delivery, installed in your stack by the engineers who built it and run alongside your team as a long-term partner.
       </p>
     </div>
 
@@ -67,7 +67,7 @@ const phases = [
       <p class="section-label">Engagement model</p>
       <h2 class="section-title">How we engage</h2>
       <p class="section-subtitle mb-14">
-        Three phases. Each one stops cleanly: you keep what was built so far if you stop there. A fourth phase, retainer-only, is for teams that want a named engineer on call after transfer.
+        Three phases that build on each other, each delivering working capability you can see and use. A fourth phase, an ongoing retainer, keeps a named engineer engaged as your platform grows.
       </p>
     </div>
 
@@ -198,7 +198,7 @@ const phases = [
               <span class="text-base font-normal text-text-muted">VCR</span>
             </h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              Your seniors get their week back. Half your PRs are now agent-authored, and humans rubber-stamp what they have no time to read. VCR reviews every PR in CI before a human sees it, against the failure modes agents reliably ship: defensive over-coding, circular tests that assert what the code does instead of what it should, and convention drift, checked against your real conventions pulled from the Context Fabric, not a generic style guide. Then it routes by risk: a README typo auto-approves, an auth or payments change always lands in front of a named human. ~$0.10 per PR, in your pipeline, no SaaS.
+              Your seniors get their week back. Half your PRs are now agent-authored, and humans rubber-stamp what they have no time to read. VCR reviews every PR in CI before a human sees it, against the failure modes agents reliably ship: defensive over-coding, circular tests that assert what the code does instead of what it should, and convention drift, checked against your real conventions pulled from the Context Fabric, not a generic style guide. Then it routes by risk: a README typo auto-approves, an auth or payments change always lands in front of a named human. Around $0.10 per PR in token cost, running inside your own CI.
             </p>
             <div class="flex gap-3">
               <a href="https://virtuslab.github.io/visdom-code-review/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">Read the reference -&gt;</a>
