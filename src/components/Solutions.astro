@@ -178,7 +178,7 @@ const phases = [
               <span class="tag bg-amber/10 text-amber border border-amber/20 text-xs font-medium normal-case tracking-normal">Coming Soon</span>
             </h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              The ground truth every other component reads from. Context Fabric captures the four layers an agent cannot infer: system (services, dependencies, contracts, schemas), code (how this repo is actually written, mined from linters and the review comments your seniors keep repeating), organizational (who owns it, who reviews it, who is on call), and historical (the ADRs and postmortems behind why it is like this). Agents and reviewers then ask the same questions, who owns this, what breaks if I change it, where this pattern already exists, and get the same deterministic answers. Refactors stop turning into incident retros; onboarding stops eating your seniors' calendars.
+              The ground truth every other component reads from. It indexes the four layers an agent cannot infer: system (services, dependencies, schemas), code (how this repo is actually written, mined from linters and repeated review comments), organizational (owners, reviewers, on-call), and historical (the ADRs and postmortems behind why). Agents and reviewers then ask the same questions, who owns this, what breaks if I change it, where this pattern already exists, and get the same deterministic answers over MCP.
             </p>
             <p class="text-sm text-text-muted mb-6">
               Deterministic code expertise, blast radius analysis, and ownership graphs via MCP.
@@ -199,7 +199,7 @@ const phases = [
               <span class="text-base font-normal text-text-muted">VCR</span>
             </h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              Your seniors get their week back. Half your PRs are now agent-authored, and humans rubber-stamp what they have no time to read. VCR reviews every PR in CI before a human sees it, against the failure modes agents reliably ship: defensive over-coding, circular tests that assert what the code does instead of what it should, and convention drift, checked against your real conventions pulled from the Context Fabric, not a generic style guide. Then it routes by risk: a README typo auto-approves, an auth or payments change always lands in front of a named human. Around $0.10 per PR in token cost, running inside your own CI.
+              Half your PRs are now agent-authored, and humans rubber-stamp what they have no time to read. VCR reviews every PR in CI first, against the failure modes agents reliably ship: defensive over-coding, circular tests that assert what the code does instead of what it should, and convention drift, checked against your real conventions from the Context Fabric, not a generic style guide. Then it routes by risk: a README typo auto-approves, an auth or payments change always lands in front of a named human. Around $0.10 per PR, inside your own CI.
             </p>
             <div class="flex gap-3">
               <a href="https://virtuslab.github.io/visdom-code-review/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm">Read the reference -&gt;</a>
@@ -230,7 +230,7 @@ const phases = [
             <div class="component-number">03</div>
             <h3 class="text-2xl font-bold text-text mt-1 mb-4">Visdom Testing</h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              Agents are great at writing tests that pass, not tests that matter, so coverage climbs while bugs still ship. Visdom adds three layers AI cannot self-confirm: architecture tests (ArchUnit) so the agent cannot quietly break your layering even when every unit test is green, property-based tests that generate the inputs a human reviewer would never think of, and mutation testing that mutates the code to prove your suite is not a placebo. The number on the dashboard starts meaning something again.
+              Agents write tests that pass, not tests that matter, so coverage climbs while bugs still ship. Visdom adds three layers AI cannot self-confirm: architecture tests (ArchUnit) so the agent cannot quietly break your layering, property-based tests (jqwik) that generate inputs a human reviewer would never think of, and mutation testing (PIT) that proves your suite is not a placebo. The number on the dashboard means something again.
             </p>
             <p class="text-sm text-text-muted mb-6">
               Adaptive test shape tuned to your architecture, with ArchUnit gates that stop AI from drifting.
@@ -288,7 +288,7 @@ Layer 2: Mutation (PIT)
             <div class="component-number">04</div>
             <h3 class="text-2xl font-bold text-text mt-1 mb-4">Visdom Governance</h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              Legal stops being the bottleneck. Every agent action (model and version, prompts run, tools called, tokens spent, files edited) is captured with line-level AI attribution, enforced against model allowlists, forbidden paths, and per-team token budgets, then written to an Ed25519-signed, hash-chained, append-only ledger. One altered byte breaks the chain. EU AI Act, SR 11-7, SOX, PCI-DSS, and DORA turn from release blockers into checkbox answers against a record that already exists.
+              Legal stops being the bottleneck. Every agent action (model, prompts, tools, tokens, files edited) is captured with line-level AI attribution, enforced against model allowlists, forbidden paths, and per-team token budgets, then written to an Ed25519-signed, hash-chained ledger where one altered byte breaks the chain. EU AI Act, SR 11-7, SOX, PCI-DSS, and DORA turn from release blockers into checkbox answers against a record that already exists.
             </p>
             <p class="text-sm text-text-muted mb-6">
               Powered by <span class="font-semibold text-text">Visdom AI Tracing</span>, a flight recorder for AI development with Ed25519-signed, hash-chained records and line-by-line AI attribution.
@@ -306,7 +306,7 @@ Layer 2: Mutation (PIT)
             <div class="component-number">05</div>
             <h3 class="text-2xl font-bold text-text mt-1 mb-4">Visdom Security</h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              You would not hand a stranger your laptop, your secrets, and a path to production. An unsandboxed agent has all three. Two layers, one problem (more code, generated faster, by actors that follow instructions literally): Sandcat contains the agent, routing every connection through a transparent proxy and swapping real secrets for placeholders that resolve only on outbound calls to hosts you allowlisted, everything else gets a 403. Aikido scans what it produces (SAST, SCA, DAST, secrets, IaC, CSPM) with reachability-based triage that cuts the alert noise. Move fast, without betting the company on a prompt.
+              You would not hand a stranger your laptop, your secrets, and a path to production. An unsandboxed agent has all three. Sandcat contains it: every connection runs through a transparent proxy, real secrets become placeholders that resolve only on outbound calls to hosts you allowlisted, everything else gets a 403. Aikido scans what the agent produces (SAST, SCA, DAST, secrets, IaC, CSPM) with reachability-based triage that cuts the alert noise. Move fast, without betting the company on a prompt.
             </p>
             <p class="text-sm text-text-muted mb-6">
               Powered by <span class="font-semibold text-text">Sandcat</span> (containment) and <span class="font-semibold text-text">Aikido</span> (AppSec): ephemeral isolated sandboxes with scoped credentials and egress allowlists, plus reachability-based scanning built for agentic workflows.
@@ -403,7 +403,7 @@ Layer 2: Mutation (PIT)
               <span class="tag bg-amber/10 text-amber border border-amber/20 text-xs font-medium normal-case tracking-normal">Coming Soon</span>
             </h3>
             <p class="text-text-secondary leading-relaxed mb-6">
-              A 45-minute CI was painful for humans. For an agent iterating fifty times an hour it is existential: it spends more on tokens waiting for the build than on writing the code. We re-shape build graphs, caching, and test selection until CI runs at agent speed, the same 88% build-time reduction we ship on production JVM fleets, and the difference between an agent that pays for itself and one that burns tokens in a queue.
+              A 45-minute CI was painful for humans. For an agent iterating fifty times an hour it is existential: it spends more on tokens waiting for the build than writing the code. We re-shape build graphs, caching, and test selection until CI runs at agent speed, the same 88% build-time reduction we ship on production JVM fleets.
             </p>
             <p class="text-xs uppercase tracking-wider text-text-muted mb-3">Built on</p>
             <div class="flex flex-wrap items-center gap-3 mb-6">
