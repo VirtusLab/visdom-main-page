@@ -112,7 +112,7 @@ const phases = [
       <div class="platform-block fade-up">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <div class="order-2 lg:order-1">
-            <div class="fabric-diagram" aria-label="Visdom Context Fabric ingests repository, documentation, tickets, and CI data, then exposes deterministic answers to agents">
+            <div class="fabric-diagram" aria-label="Visdom Context Fabric ingests repository, documentation, tickets, and CI data, then answers the questions the orchestrator asks">
               <div class="fabric-column fabric-column--sources">
                 <p class="fabric-column-label">Sources</p>
                 {[
@@ -156,7 +156,7 @@ const phases = [
               </svg>
 
               <div class="fabric-column fabric-column--outputs">
-                <p class="fabric-column-label">Deterministic answers</p>
+                <p class="fabric-column-label">Orchestrator asks</p>
                 {[
                   { name: 'Who owns this?', meta: '@jkowalski · 0.87' },
                   { name: 'What breaks if I change it?', meta: 'blast radius: 12 files' },
@@ -167,6 +167,7 @@ const phases = [
                     <span>{item.meta}</span>
                   </div>
                 ))}
+                <p class="fabric-column-note">Deterministic answers, fed straight to the orchestrator.</p>
               </div>
             </div>
           </div>
@@ -595,6 +596,13 @@ Layer 2: Mutation (PIT)
     margin-bottom: 2px;
   }
 
+  .fabric-column-note {
+    font-size: 0.72rem;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+    margin: 2px 0 0;
+  }
+
   .fabric-node {
     padding: 10px 12px;
     border: 1px solid var(--color-border-light);
@@ -686,7 +694,7 @@ Layer 2: Mutation (PIT)
     margin: 0;
     border-top: 1px dashed rgba(16, 185, 129, 0.3);
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 6px 10px;
     text-align: left;
   }
