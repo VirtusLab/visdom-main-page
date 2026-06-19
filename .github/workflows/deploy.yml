@@ -27,7 +27,10 @@ jobs:
           registry-url: https://npm.pkg.github.com
       - run: npm ci
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The project .npmrc authenticates GitHub Packages via ${GITHUB_TOKEN}; the
+          # default GITHUB_TOKEN cannot read the cross-repo @virtuslab/visdom-ui package,
+          # so feed it from PACKAGES_READ_TOKEN (classic PAT, read:packages).
+          GITHUB_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
       - run: npm run build
         env:
           SITE: https://virtuslab.github.io

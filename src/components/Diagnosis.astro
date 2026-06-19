@@ -1,0 +1,129 @@
+---
+const reasons = [
+  {
+    key: 'Context',
+    copy: 'Prompts live in Slack. Every session starts from zero.',
+  },
+  {
+    key: 'Review',
+    copy: 'Every PR waits for the same two seniors. Agents made the queue longer.',
+  },
+  {
+    key: 'Trust',
+    copy: 'No trail, no attribution. Legal says "not yet" because there is nothing to audit.',
+  },
+];
+---
+<section class="section diagnosis-section">
+  <div class="container">
+    <div class="fade-up diagnosis-head">
+      <p class="section-label">The Diagnosis</p>
+      <h2 class="section-title">The tools changed. The system didn't.</h2>
+      <p class="diagnosis-lead">
+        Every team we meet bought Copilot, Cursor, or a Claude subscription. Commits went up. Lead time barely moved.
+      </p>
+    </div>
+
+    <div class="fade-up diagnosis-body">
+      <p class="diagnosis-kicker" id="diagnosis-reasons-label">Three reasons the number doesn't move:</p>
+      <ul class="diagnosis-reasons" role="list" aria-labelledby="diagnosis-reasons-label">
+        {reasons.map((r, i) => (
+          <li class="diagnosis-reason">
+            <span class="diagnosis-reason-n">{String(i + 1).padStart(2, '0')}</span>
+            <span class="diagnosis-reason-key">{r.key}</span>
+            <p class="diagnosis-reason-copy">{r.copy}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="diagnosis-bridge">Here is the system that moves it. <span aria-hidden="true">&darr;</span></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .diagnosis-section {
+    padding-top: 2.5rem;
+    background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-surface) 100%);
+  }
+
+  .diagnosis-head {
+    max-width: 48rem;
+  }
+
+  .diagnosis-lead {
+    margin-top: 1.25rem;
+    font-size: 1.125rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+  }
+
+  .diagnosis-body {
+    max-width: 46rem;
+    margin-top: 3rem;
+  }
+
+  .diagnosis-kicker {
+    margin: 0 0 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .diagnosis-reasons {
+    display: grid;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .diagnosis-reason {
+    display: grid;
+    grid-template-columns: 2.5rem 7.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+  }
+
+  .diagnosis-reason-n {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+
+  .diagnosis-reason-key {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-amber-dark);
+  }
+
+  .diagnosis-reason-copy {
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--color-text);
+  }
+
+  .diagnosis-bridge {
+    margin: 3rem 0 0;
+    font-size: 1.05rem;
+    color: var(--color-text-secondary);
+  }
+
+  @media (max-width: 640px) {
+    .diagnosis-reason {
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+    }
+
+    .diagnosis-reason-copy {
+      grid-column: 2;
+      margin-top: 0.35rem;
+    }
+  }
+</style>

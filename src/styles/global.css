@@ -10,12 +10,20 @@
   --color-text: #111827;
   --color-text-secondary: #6b7280;
   --color-text-muted: #9ca3af;
-  --color-emerald: #10b981;
-  --color-emerald-dark: #059669;
+  --color-emerald: #059669;
+  --color-emerald-dark: #047857;
   --color-emerald-light: #ecfdf5;
   --color-blue: #0693e3;
   --color-purple: #9b51e0;
   --color-amber: #f59e0b;
+  --color-amber-dark: #b45309;
+
+  /* Maturity Matrix accent system */
+  --vmm-accent: #059669;
+  --vmm-accent-2: #34d399;
+  --vmm-accent-soft: rgba(5, 150, 105, 0.08);
+  --hero-grid: rgba(15, 23, 42, 0.055);
+  --hero-grid-soft: rgba(15, 23, 42, 0.03);
   --color-phase-assess: #3b82f6;
   --color-phase-enable: #8b5cf6;
   --color-phase-build: #10b981;
@@ -46,9 +54,48 @@
   --radius: 0.625rem;
   --radius-xl: calc(var(--radius) + 4px);
 
-  --font-heading: 'Montserrat', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-heading: 'Geist', sans-serif;
+  --font-body: 'Geist', sans-serif;
+  --font-mono: 'Geist Mono', monospace;
+  --font-serif: 'Instrument Serif', serif;
+}
+
+/* ── Dark theme (Maturity Matrix) ── */
+.dark {
+  --color-bg: #060709;
+  --color-surface: #0d1013;
+  --color-surface-light: #16181d;
+  --color-border: rgba(255, 255, 255, 0.10);
+  --color-border-light: rgba(255, 255, 255, 0.06);
+  --color-text: #e5e8eb;
+  --color-text-secondary: #b4b9be;
+  --color-text-muted: #7c8186;
+  --color-emerald: #34d399;
+  --color-emerald-dark: #00c471;
+  --color-emerald-light: rgba(52, 211, 153, 0.12);
+
+  --vmm-accent: #34d399;
+  --vmm-accent-2: #6ee7b7;
+  --vmm-accent-soft: rgba(52, 211, 153, 0.12);
+  --hero-grid: rgba(255, 255, 255, 0.05);
+  --hero-grid-soft: rgba(255, 255, 255, 0.028);
+
+  --background: var(--color-bg);
+  --foreground: var(--color-text);
+  --primary: var(--color-emerald);
+  --primary-foreground: #060709;
+  --muted: var(--color-surface);
+  --muted-foreground: var(--color-text-muted);
+  --accent: var(--color-emerald-light);
+  --accent-foreground: var(--color-emerald);
+  --card: var(--color-surface);
+  --card-foreground: var(--color-text);
+  --card-surface: var(--color-surface-light);
+  --border: var(--color-border);
+  --input: var(--color-border);
+  --ring: var(--color-emerald);
+
+  color-scheme: dark;
 }
 
 h1, h2, h3 {
@@ -65,6 +112,74 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* ── Serif accent (Instrument Serif) ── */
+.serif-accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* ── Ambient aurora background ── */
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aurora::before,
+.aurora::after {
+  content: '';
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.16;
+  mix-blend-mode: multiply;
+}
+
+.dark .aurora::before,
+.dark .aurora::after {
+  mix-blend-mode: screen;
+  opacity: 0.4;
+  filter: blur(110px);
+}
+
+.aurora::before {
+  top: -25%;
+  right: -10%;
+  width: 60%;
+  height: 90%;
+  background: radial-gradient(ellipse at center, var(--vmm-accent) 0%, transparent 65%);
+  animation: aurora-drift-a 20s ease-in-out infinite alternate;
+}
+
+.aurora::after {
+  bottom: -30%;
+  left: -15%;
+  width: 55%;
+  height: 85%;
+  background: radial-gradient(ellipse at center, var(--vmm-accent-2) 0%, transparent 65%);
+  animation: aurora-drift-b 26s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift-a {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-6%, 5%, 0) scale(1.12); }
+}
+
+@keyframes aurora-drift-b {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(5%, -4%, 0) scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora::before,
+  .aurora::after { animation: none; }
 }
 
 /* ── Scroll animations ── */

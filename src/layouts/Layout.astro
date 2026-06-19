@@ -6,7 +6,7 @@ interface Props {
 }
 const {
   title,
-  description = "We embed with enterprise platform teams to build the context, CI, review, and governance infrastructure agents actually need. We bring an open-source kit, deploy it with your team, and hand over the capability.",
+  description = "We embed with enterprise platform teams to build the context, CI, review, and governance infrastructure agents actually need. We bring an open-source platform, deploy it with your team, and stay on as a long-term partner.",
   ogImage,
 } = Astro.props;
 
@@ -36,7 +36,7 @@ const piwikScript = `(function(window, document, dataLayerName, id) { window[dat
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Visdom by VirtusLab: how we build agent-ready SDLC with enterprise teams" />
+    <meta property="og:image:alt" content="Visdom by VirtusLab: how we build the AI-Native SDLC with enterprise teams" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
@@ -46,8 +46,19 @@ const piwikScript = `(function(window, document, dataLayerName, id) { window[dat
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@600;700;800&display=optional" as="style" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@600;700;800&display=optional" rel="stylesheet" />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" as="style" />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var dark = stored ? stored === 'dark' : prefersDark;
+          document.documentElement.classList.toggle('dark', dark);
+        } catch (e) {}
+      })();
+    </script>
 
     <script id="CookieConsent" src="https://policy.app.cookieinformation.com/uc.js" data-culture="EN" data-gcm-version="2.0" type="text/javascript"></script>
   </head>
