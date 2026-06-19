@@ -50,7 +50,7 @@
             {[
               {
                 phase: 'Phase 1',
-                title: 'Foundation',
+                title: 'Assessment',
                 detail: 'We assess your current stack, map the gaps, and name the first pilot team.',
                 accent: 'var(--color-blue)',
               },
@@ -62,9 +62,15 @@
               },
               {
                 phase: 'Phase 3',
-                title: 'Scale and transfer',
+                title: 'Scale and improve',
                 detail: 'Your team leads rollout while we review architecture, unblock edge cases, and step back.',
                 accent: 'var(--color-purple)',
+              },
+              {
+                phase: 'Phase 4',
+                title: 'Support',
+                detail: 'A monthly subscription with an SLA and a pool of hours for reviews and the next maturity step.',
+                accent: 'var(--color-amber)',
               },
             ].map((step) => (
               <div class="hv-row" style={`--row-accent: ${step.accent}`}>
