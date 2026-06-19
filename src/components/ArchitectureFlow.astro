@@ -59,7 +59,7 @@ const captions = [
   { n: '04', t: 'Testing layer', d: 'Agents love tests that pass. These gates do not care: architecture rules, property-based inputs and mutation testing expose what green CI hides.' },
   { n: '05', t: 'Code review · VCR', d: 'VCR reads every PR before any human does: lint, deterministic checks, then LLM passes that know how your repo is actually written.' },
   { n: '06', t: 'Triage', d: 'Not every bug deserves a meeting. The gate scores path, diff and coverage: trivial ones the agent fixes on the spot, the risky ones stop and wait for a human.' },
-  { n: '07', t: 'TraceVault', d: 'Every prompt, decision and test lands in a signed, hash-chained ledger. When the auditor asks, the answer already exists.' },
+  { n: '07', t: 'Visdom AI Tracing', d: 'Every prompt, decision and test lands in a signed, hash-chained ledger. When the auditor asks, the answer already exists.' },
   { n: '08', t: 'Ship to production', d: 'All gates green. The change rolls out with receipts: tested, reviewed, traced. Ship it and enjoy the moment.' },
 ];
 
@@ -99,7 +99,7 @@ const revY = (i: number) => 284 + i * 40;
       Context Fabric feeds the agent system, code, organizational and historical context over MCP, both ways, continuously.
       The change then clears <a href="https://virtuslab.github.io/visdom-testing/" target="_blank" rel="noopener">testing</a>,
       <a href="https://virtuslab.github.io/visdom-code-review/" target="_blank" rel="noopener">multi-level review</a> and risk triage;
-      <a href="https://virtuslab.github.io/visdom-governance/" target="_blank" rel="noopener">TraceVault</a> signs every step.
+      <a href="https://virtuslab.github.io/visdom-governance/" target="_blank" rel="noopener">Visdom AI Tracing</a> signs every step.
     </p>
   </div>
 
@@ -107,7 +107,7 @@ const revY = (i: number) => 284 + i * 40;
     <div class="af-viewport">
       <div class="af-stage">
         <svg viewBox="0 0 1200 640" role="img" aria-labelledby="af-svg-title" class="af-svg" preserveAspectRatio="xMidYMid meet">
-          <title id="af-svg-title">Visdom architecture: Context Fabric, Coding Agent, Testing, Code Review, PR triage and TraceVault.</title>
+          <title id="af-svg-title">Visdom architecture: Context Fabric, Coding Agent, Testing, Code Review, PR triage and Visdom AI Tracing.</title>
 
           <defs>
             <!-- arrowheads only on the amber human-gate paths, green flow relies on the streaks -->
@@ -140,7 +140,7 @@ const revY = (i: number) => 284 + i * 40;
             <rect x="44" y="538" width="1112" height="68" rx="18" class="af-vault" />
             <line x1="60" y1="539.5" x2="1140" y2="539.5" class="af-sheen" />
             <g class="af-vault-icon" transform="translate(64,562) scale(0.8)" set:html={icons.link} />
-            <text x="94" y="579" class="af-vault-label">TraceVault</text>
+            <text x="94" y="579" class="af-vault-label">Visdom AI Tracing</text>
             {/* hash-chain motif: linked blocks, append-only */}
             <g class="af-chain" aria-hidden="true">
               {[940, 968, 996, 1024].map((x, i) => (
