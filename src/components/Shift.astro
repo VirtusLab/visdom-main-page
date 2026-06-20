@@ -1,0 +1,170 @@
+---
+// The shift: AI generation got fast, but the delivery infrastructure around it
+// (context, CI, verification, review) was built for humans typing. Sets up why
+// the platform and the orchestrator matter, before either is shown.
+const unchanged = [
+  {
+    dim: 'Context',
+    text: 'Still lives in someone\'s head, not in the system. Agents see open files, not the dependency and intent graph.',
+  },
+  {
+    dim: 'Execution',
+    text: '45-minute CI built for humans. For an agent iterating fast, more time goes to waiting on the build than writing the code.',
+  },
+  {
+    dim: 'Verification',
+    text: 'Tests written by the same agent that wrote the code. Coverage looks great, bugs still ship.',
+  },
+  {
+    dim: 'Validation',
+    text: 'PR review that still waits on the same seniors. Spec and merge review turn into hollow rituals.',
+  },
+];
+---
+<section class="section shift-section" aria-label="Why AI stalls in human-built delivery infrastructure">
+  <div class="container">
+    <div class="fade-up shift-head">
+      <p class="section-label">The shift</p>
+      <h2 class="section-title">AI got fast. The pipes it runs through did not.</h2>
+      <p class="section-subtitle">
+        You rolled out the assistant. Engineers were excited. Then throughput stalled and the ROI faded. The assistant was never the bottleneck. The delivery infrastructure around it was: pipelines, CI, and review built for humans typing at human speed. Plug an AI into that and it does not get fixed, it exposes every crack.
+      </p>
+    </div>
+
+    <div class="shift-grid fade-up">
+      <div class="shift-card shift-card--changed">
+        <p class="shift-card-label">What changed</p>
+        <p class="shift-changed-lead">AI agents now generate code faster than any human.</p>
+        <p class="shift-changed-body">The constraint moved from writing the code to understanding, validating, and safely shipping it.</p>
+      </div>
+
+      <div class="shift-card shift-card--same">
+        <p class="shift-card-label">What did not change</p>
+        <ul class="shift-list" role="list">
+          {unchanged.map((u) => (
+            <li class="shift-item">
+              <span class="shift-item-dim">{u.dim}</span>
+              <span class="shift-item-text">{u.text}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <p class="shift-bridge fade-up">So we built the infrastructure layer AI actually needs. <span aria-hidden="true">&darr;</span></p>
+  </div>
+</section>
+
+<style>
+  .shift-section {
+    background: var(--color-bg);
+  }
+
+  .shift-head {
+    max-width: 52rem;
+  }
+
+  .shift-head .section-subtitle {
+    margin-top: 1.25rem;
+  }
+
+  .shift-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 1.25rem;
+    margin-top: 3rem;
+  }
+
+  .shift-card {
+    border-radius: var(--radius-xl);
+    padding: 1.75rem;
+    border: 1px solid var(--color-border);
+    background: var(--card);
+  }
+
+  .shift-card--changed {
+    border-color: rgba(16, 185, 129, 0.35);
+    background:
+      linear-gradient(180deg, rgba(16, 185, 129, 0.06), rgba(16, 185, 129, 0.12)),
+      var(--card);
+  }
+
+  .shift-card-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin: 0 0 1rem;
+    color: var(--color-text-muted);
+  }
+
+  .shift-card--changed .shift-card-label {
+    color: var(--color-emerald-dark, #047857);
+  }
+
+  .shift-changed-lead {
+    margin: 0 0 0.6rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--color-text);
+  }
+
+  .shift-changed-body {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  .shift-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .shift-item {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+  }
+
+  .shift-item-dim {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-amber-dark);
+  }
+
+  .shift-item-text {
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+  }
+
+  .shift-bridge {
+    margin: 2.5rem 0 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  @media (max-width: 860px) {
+    .shift-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .shift-item {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+</style>
