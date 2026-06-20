@@ -1,0 +1,107 @@
+---
+// Self-contained analytics + observability unit. Drop this component into any
+// Astro site head (it is intentionally portable, e.g. to the Maturity Matrix app)
+// and it wires up the same stack:
+//   - Google Analytics 4 (page views + the custom events below)
+//   - Conversion tracking via delegated clicks (mailto, Matrix, outbound, CTAs)
+//   - Core Web Vitals (web-vitals lib) reported as GA4 events
+//   - Sentry error tracking (only when PUBLIC_SENTRY_DSN is set)
+//
+// Config via env vars (all optional, each feature stays inert when unset):
+//   PUBLIC_GA_ID      GA4 measurement ID. Defaults to the production property so
+//                     funnels across virtuslab.com subdomains stitch automatically.
+//   PUBLIC_SENTRY_DSN Sentry DSN. When empty, Sentry is not loaded at all.
+const gaId = import.meta.env.PUBLIC_GA_ID ?? 'G-9ZRBC2F0CG';
+const sentryDsn = import.meta.env.PUBLIC_SENTRY_DSN ?? '';
+---
+{gaId && (
+  <>
+    <script
+      is:inline
+      async
+      src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+    ></script>
+    <script is:inline define:vars={{ gaId }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      window.gtag = window.gtag || gtag;
+      gtag('js', new Date());
+      gtag('config', gaId);
+    </script>
+
+    <!-- Conversion tracking: one delegated listener covers every current and
+         future link, so individual CTAs do not need their own handlers. -->
+    <script is:inline>
+      (function () {
+        function send(name, params) {
+          if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
+        }
+        document.addEventListener('click', function (e) {
+          var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+          if (!a) return;
+          var href = a.getAttribute('href') || '';
+          var cta = a.getAttribute('data-cta') || '';
+          var loc = a.getAttribute('data-location') || '';
+
+          if (href.indexOf('mailto:') === 0) {
+            if (cta === 'book_working_session') {
+              send('generate_lead', { method: 'email', cta_id: cta, location: loc });
+            } else {
+              send('contact_email', { link_url: href, location: loc });
+            }
+            return;
+          }
+
+          if (/^https?:\/\//.test(href)) {
+            var host = '';
+            try { host = new URL(href).hostname; } catch (err) {}
+            if (host.indexOf('maturity-matrix') !== -1) {
+              send('matrix_click', { link_url: href, location: loc });
+            } else if (host && host !== window.location.hostname) {
+              send('outbound_click', { link_domain: host, link_url: href });
+            }
+            return;
+          }
+
+          if (href.charAt(0) === '#' && cta) {
+            send('cta_click', { target_section: href.slice(1), cta_id: cta });
+          }
+        }, true);
+      })();
+    </script>
+
+    <!-- Core Web Vitals reported as GA4 events, so RUM correlates with the
+         conversion events above in one property. -->
+    <script>
+      import { onCLS, onINP, onLCP, onTTFB, onFCP } from 'web-vitals';
+      function report(metric) {
+        if (typeof window.gtag !== 'function') return;
+        window.gtag('event', metric.name, {
+          metric_id: metric.id,
+          metric_value: metric.value,
+          metric_rating: metric.rating,
+          value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
+          non_interaction: true,
+        });
+      }
+      onCLS(report);
+      onINP(report);
+      onLCP(report);
+      onTTFB(report);
+      onFCP(report);
+    </script>
+  </>
+)}
+
+{sentryDsn && (
+  <script>
+    import * as Sentry from '@sentry/browser';
+    Sentry.init({
+      dsn: import.meta.env.PUBLIC_SENTRY_DSN,
+      environment: import.meta.env.MODE,
+      // Marketing site: errors only. No performance traces or session replay,
+      // which keeps the bundle small and avoids extra cookies/PII.
+      tracesSampleRate: 0,
+    });
+  </script>
+)}

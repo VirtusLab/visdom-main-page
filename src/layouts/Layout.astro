@@ -1,4 +1,6 @@
 ---
+import Analytics from "../components/Analytics.astro";
+
 interface Props {
   title: string;
   description?: string;
@@ -14,11 +16,6 @@ const siteUrl = import.meta.env.SITE || "https://virtuslab.github.io/visdom-main
 const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 const canonical = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImageUrl = ogImage ?? `${siteUrl}/og-image.png`;
-
-// Google Analytics 4. Defaults to the production measurement ID so tracking works
-// on deploy without per-platform env config. Override with PUBLIC_GA_ID (Vercel
-// project settings or a local .env), or set it to an empty string to disable.
-const gaId = import.meta.env.PUBLIC_GA_ID ?? 'G-9ZRBC2F0CG';
 ---
 <!doctype html>
 <html lang="en">
@@ -26,21 +23,7 @@ const gaId = import.meta.env.PUBLIC_GA_ID ?? 'G-9ZRBC2F0CG';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    {gaId && (
-      <>
-        <script
-          is:inline
-          async
-          src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-        ></script>
-        <script is:inline define:vars={{ gaId }}>
-          window.dataLayer = window.dataLayer || [];
-          function gtag() { dataLayer.push(arguments); }
-          gtag('js', new Date());
-          gtag('config', gaId);
-        </script>
-      </>
-    )}
+    <Analytics />
 
     <title>{title}</title>
     <meta name="description" content={description} />

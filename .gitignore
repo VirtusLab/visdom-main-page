@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # internal reference docs (BMC, meeting recordings) — not for public repo
 docs/
+
+# playwright mcp artifacts
+.playwright-mcp/
