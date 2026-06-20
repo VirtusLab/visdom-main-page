@@ -38,6 +38,16 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
+## 📈 Analytics
+
+The site supports Google Analytics 4. It only loads when a measurement ID is set:
+
+1. Get your GA4 measurement ID (format `G-XXXXXXXXXX`) from the Google Analytics admin.
+2. Set `PUBLIC_GA_ID` in the environment:
+   - Local: copy `.env.example` to `.env` and fill in the value.
+   - Vercel: add `PUBLIC_GA_ID` under Project Settings, Environment Variables.
+3. Redeploy (or restart `npm run dev`). With no ID set, no analytics script loads.
+
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
