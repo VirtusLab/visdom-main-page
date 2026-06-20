@@ -1,21 +1,6 @@
 ---
 import Terminal from './Terminal.astro';
 
-const differentiators = [
-  {
-    title: 'We built the platform',
-    body: 'Components we built and run ourselves. The platform we install is the platform we run on our own delivery.',
-  },
-  {
-    title: 'We embed, not advise',
-    body: 'A small team of staff engineers inside your repo, your CI, your infrastructure. We ship production code and runbooks, not a deliverable folder for the steering committee.',
-  },
-  {
-    title: 'We build lasting capability',
-    body: 'From week one your team works alongside ours and grows into the platform as we deploy it. As it beds in we move into a strategic partner role: architecture direction, new capabilities, and the next maturity step.',
-  },
-];
-
 const phases = [
   {
     name: 'Phase 1 - Assessment',
@@ -46,23 +31,6 @@ const phases = [
 ---
 <section class="section section-alt">
   <div class="container">
-    <div id="different" class="fade-up">
-      <p class="section-label">Operating model</p>
-      <h2 class="section-title">We built the platform. We deliver the work. We scale it with your team.</h2>
-      <p class="section-subtitle mb-14">
-        Not a license. Not a body-leasing contract. A platform shaped by 15 years of building developer tooling, and working with LLMs since day one, installed in your stack by the engineers who built it and run alongside your team as a long-term partner.
-      </p>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-6 mb-24">
-      {differentiators.map((item) => (
-        <article class="card p-8 fade-up">
-          <h3 class="text-xl font-bold text-text mb-4">{item.title}</h3>
-          <p class="text-text-secondary leading-relaxed">{item.body}</p>
-        </article>
-      ))}
-    </div>
-
     <div id="engage" class="fade-up mb-14">
       <p class="section-label">Engagement model</p>
       <h2 class="section-title">How we engage</h2>
