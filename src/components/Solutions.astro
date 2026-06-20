@@ -200,6 +200,10 @@ const phases = [
                     Triage
                   </span>
                   <div class="cmp-riskgate">Risk gate</div>
+                  <div class="cmp-human">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                    <span>Human in the loop</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -296,21 +300,21 @@ const phases = [
             </div>
           </div>
           <div>
-            <div class="sandbox-diagram" aria-label="Sandcat isolates the agent in an ephemeral sandbox, with an egress wall separating it from production">
+            <div class="sandbox-diagram" aria-label="Sandcat runs the agent in an isolated sandbox; only approved traffic crosses the egress wall, so code, data, and secrets stay contained and production is unreachable">
               <div class="sandbox-zone sandbox-zone--inside">
-                <p class="sandbox-zone-label">Sandcat · ephemeral sandbox</p>
+                <p class="sandbox-zone-label">Sandcat · isolated sandbox</p>
                 <div class="sandbox-agent">
                   <span class="sandbox-agent-tag">AGENT</span>
                   <div class="sandbox-agent-body">
-                    <strong>sb-a1b2c3</strong>
+                    <strong>AI agent</strong>
                     <span>execute · test · iterate</span>
                   </div>
                 </div>
-                <ul class="sandbox-props">
-                  <li><span>Scoped token</span><em>2h · read-only</em></li>
-                  <li><span>Repo clone</span><em>from main</em></li>
-                  <li><span>Policy</span><em>strict</em></li>
-                </ul>
+                <div class="sandbox-contain" aria-hidden="true">
+                  <span class="sandbox-barrier"></span>
+                  <span class="sandbox-packet"></span>
+                </div>
+                <p class="sandbox-note">Code and data stay inside. Real secrets never enter the sandbox.</p>
               </div>
 
               <div class="sandbox-wall" aria-hidden="true">
@@ -318,12 +322,9 @@ const phases = [
                 <ul class="sandbox-wall-list sandbox-wall-list--allow">
                   <li><span class="sandbox-mark sandbox-mark--ok">✓</span>npm / PyPI</li>
                   <li><span class="sandbox-mark sandbox-mark--ok">✓</span>LLM APIs</li>
-                  <li><span class="sandbox-mark sandbox-mark--ok">✓</span>test services</li>
                 </ul>
                 <ul class="sandbox-wall-list sandbox-wall-list--deny">
-                  <li><span class="sandbox-mark sandbox-mark--no">✗</span>prod database</li>
-                  <li><span class="sandbox-mark sandbox-mark--no">✗</span>secrets vault</li>
-                  <li><span class="sandbox-mark sandbox-mark--no">✗</span>deploy pipeline</li>
+                  <li><span class="sandbox-mark sandbox-mark--no">✗</span>everything else → 403</li>
                 </ul>
               </div>
 
@@ -513,6 +514,43 @@ const phases = [
     padding: 18px 12px;
     text-align: center;
     font-weight: 700;
+    color: var(--color-text);
+  }
+  .cmp-human {
+    position: relative;
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  /* connector from the risk gate down to the human */
+  .cmp-human::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -18px;
+    width: 1.5px;
+    height: 18px;
+    background: var(--vmm-accent);
+    opacity: 0.5;
+  }
+  .cmp-human svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: var(--vmm-accent);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+  .cmp-human span {
+    font-size: 12px;
+    font-weight: 600;
     color: var(--color-text);
   }
 
@@ -1017,6 +1055,54 @@ const phases = [
     font-style: normal;
     font-size: 0.72rem;
     color: var(--color-text-muted);
+  }
+
+  /* Containment animation: a data packet runs to the egress boundary, is
+     blocked, and bounces back inside. Data never leaves the sandbox. */
+  .sandbox-contain {
+    position: relative;
+    height: 26px;
+    margin: 2px 0;
+    border-radius: 8px;
+    background: rgba(16, 185, 129, 0.05);
+    border: 1px solid var(--color-border-light);
+    overflow: hidden;
+  }
+  .sandbox-barrier {
+    position: absolute;
+    right: 7px;
+    top: 4px;
+    bottom: 4px;
+    width: 2px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(180deg, rgba(251, 146, 60, 0.6) 0 4px, transparent 4px 8px);
+  }
+  .sandbox-packet {
+    position: absolute;
+    top: 50%;
+    left: 9px;
+    width: 9px;
+    height: 9px;
+    margin-top: -4.5px;
+    border-radius: 50%;
+    background: var(--color-emerald);
+    animation: sandbox-contain 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+  @keyframes sandbox-contain {
+    0%   { left: 9px; background: var(--color-emerald); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    42%  { left: calc(100% - 26px); background: var(--color-emerald); }
+    50%  { left: calc(100% - 23px); background: #ef4444; box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.18); }
+    60%  { left: calc(100% - 32px); background: #ef4444; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    100% { left: 9px; background: var(--color-emerald); }
+  }
+  .sandbox-note {
+    margin: 0;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sandbox-packet { animation: none; }
   }
 
   .sandbox-wall {
