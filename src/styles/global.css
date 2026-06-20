@@ -51,6 +51,31 @@
   --border: var(--color-border);
   --input: var(--color-border);
   --ring: var(--color-emerald);
+
+  /*
+   * shadcn/visdom-ui color namespace. The embedded visdom-ui widgets (MaturityRef)
+   * use Tailwind utilities like text-foreground / bg-primary / text-muted-foreground,
+   * which Tailwind only generates when these --color-* tokens exist. The widgets render
+   * on fixed light surfaces, so these are kept light in both themes (see the dark-mode
+   * pin in MaturityRef.astro) to stay legible.
+   */
+  --color-background: #ffffff;
+  --color-foreground: #111827;
+  --color-card: #ffffff;
+  --color-card-foreground: #111827;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #111827;
+  --color-primary: #059669;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f8f9fb;
+  --color-secondary-foreground: #111827;
+  --color-muted: #f8f9fb;
+  --color-muted-foreground: #6b7280;
+  --color-accent: #ecfdf5;
+  --color-accent-foreground: #047857;
+  --color-input: #e5e7eb;
+  --color-ring: #059669;
+
   --radius: 0.625rem;
   --radius-xl: calc(var(--radius) + 4px);
 
