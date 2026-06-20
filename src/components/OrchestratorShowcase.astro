@@ -4,16 +4,15 @@
 // status line, like a build log), a human signs off when risk demands it,
 // a pull request rolls out. Looping, calm, narrated by four captions.
 
-// input signals: everything that can wake the system up
+// input signals: the kinds of events that can wake the system up
 const signals = [
-  { icon: '<path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><path d="M12 9v4"/><path d="M12 17h.01"/>', key: '500 spike', title: 'checkout API', tone: 'red' },
-  { icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 7v10M12 7v7M16 7v4"/>', key: 'PAY-2417', title: 'Refunds intermittently fail', tone: 'blue', main: true },
-  { icon: '<path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/>', key: 'webhook', title: 'deploy v2.41 released', tone: 'neutral' },
-  { icon: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>', key: 'CVE feed', title: 'openssl advisory', tone: 'amber' },
+  { icon: '<path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><path d="M12 9v4"/><path d="M12 17h.01"/>', key: 'production error', title: 'a service starts failing', tone: 'red' },
+  { icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 7v10M12 7v7M16 7v4"/>', key: 'Jira ticket', title: 'a bug lands in the backlog', tone: 'blue', main: true },
+  { icon: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>', key: 'security advisory', title: 'a CVE hits a dependency', tone: 'amber' },
 ];
 
-// what the orchestrator works through, chip by chip: live actions
-const work = ['querying fabric', 'reading code', 'tracing history', 'scanning logs', 'drafting fix', 'code review', 'deployment'];
+// the real gates it works through, the same ones from the architecture above
+const work = ['Context Fabric', 'testing', 'security', 'code review', 'deployment'];
 
 const captions = [
   'Signals stream in: errors, tickets, events, advisories.',
@@ -101,7 +100,7 @@ const captions = [
             <span class="os-pr-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6"/><path d="M13 6h2a3 3 0 0 1 3 3v6"/></svg>
             </span>
-            <span class="os-pr-title">PR #4231 · refund retry fix</span>
+            <span class="os-pr-title">Pull request</span>
             <span class="os-pr-meta">all gates green · fully traced</span>
           </div>
         </div>
@@ -447,7 +446,7 @@ const captions = [
 
       // 2. the orchestrator picks one up: first chips light up
       tl.call(() => { setCaption(1); stage.classList.add('is-working'); });
-      chips.slice(0, 3).forEach((c) => {
+      chips.slice(0, 2).forEach((c) => {
         tl.call(() => c.classList.add('is-on'));
         tl.to({}, { duration: 1.3 });
       });
@@ -462,7 +461,7 @@ const captions = [
       tl.to('#os-human', { opacity: 0.7, duration: 0.4 });
 
       // ...and the work just continues
-      chips.slice(3, 5).forEach((c) => {
+      chips.slice(2, 3).forEach((c) => {
         tl.call(() => c.classList.add('is-on'));
         tl.to({}, { duration: 1.3 });
       });

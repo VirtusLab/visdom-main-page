@@ -7,10 +7,10 @@
 const sources = [
   { label: 'Jira', icon: 'jira' },
   { label: 'Git history', icon: 'git' },
-  { label: 'Discussions', icon: 'chat' },
+  { label: 'Review comments', icon: 'chat' },
   { label: 'Repositories', icon: 'repo' },
-  { label: 'Documentation', icon: 'docs' },
-  { label: 'Org knowledge', icon: 'org' },
+  { label: 'Docs & ADRs', icon: 'docs' },
+  { label: 'Owners & on-call', icon: 'org' },
 ];
 
 // Lucide-style line icons (24x24), drawn via set:html inside the source nodes.
@@ -34,10 +34,9 @@ const icons: Record<string, string> = {
 };
 
 const testLayers = [
-  'Classic tests',
-  'Architecture testing',
-  'Property-based',
-  'Mutation testing',
+  'Architecture · ArchUnit',
+  'Property-based · jqwik',
+  'Mutation · PIT',
 ];
 
 const reviewLevels = [
@@ -85,7 +84,7 @@ const particleStages = [...new Set(particles.map((p) => p.stage))];
 // layout helpers: sources run horizontally, fabric is a bar like the vault
 const srcX = (i: number) => 44 + i * 188;
 const srcCX = (i: number) => 130 + i * 188;
-const testY = (i: number) => 284 + i * 40;
+const testY = (i: number) => 297 + i * 52;
 const revW = [178, 178, 178, 178];
 const revX = [536, 536, 536, 536];
 const revY = (i: number) => 284 + i * 40;
