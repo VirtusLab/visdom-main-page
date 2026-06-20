@@ -10,11 +10,13 @@ import { MaturityRef as MaturityRefReact } from '@virtuslab/visdom-ui';
   </div>
 </section>
 
-<MaturityRefReact
-  assessmentHref="https://visdom-ai-maturity-matrix.pages.dev/workshop"
-  matrixHref="https://visdom-ai-maturity-matrix.pages.dev/matrix/development"
-  client:load
-/>
+<div class="matrix-embed">
+  <MaturityRefReact
+    assessmentHref="https://visdom-ai-maturity-matrix.pages.dev/workshop"
+    matrixHref="https://visdom-ai-maturity-matrix.pages.dev/matrix/development"
+    client:load
+  />
+</div>
 
 <section class="matrix-publication" aria-label="Companion publication to the AI Maturity Matrix">
   <div class="container">
@@ -40,6 +42,33 @@ import { MaturityRef as MaturityRefReact } from '@virtuslab/visdom-ui';
 </section>
 
 <style>
+  /*
+   * The visdom-ui MaturityRef is a light-themed widget: its panels and level
+   * cards use fixed light backgrounds, but a few text nodes (title, lead,
+   * perspective labels, secondary link) read theme foreground tokens that flip
+   * to light in dark mode and disappear on the light surface. Pin the widget to
+   * light-theme tokens in dark mode so the whole thing stays coherent and legible.
+   */
+  :global(.dark) .matrix-embed {
+    --color-background: #ffffff;
+    --color-foreground: #111827;
+    --color-card: #ffffff;
+    --color-card-foreground: #111827;
+    --color-popover: #ffffff;
+    --color-popover-foreground: #111827;
+    --color-primary: #059669;
+    --color-primary-foreground: #ffffff;
+    --color-secondary: #f8f9fb;
+    --color-secondary-foreground: #111827;
+    --color-muted: #f8f9fb;
+    --color-muted-foreground: #6b7280;
+    --color-accent: #ecfdf5;
+    --color-accent-foreground: #047857;
+    --color-border: #e5e7eb;
+    --color-input: #e5e7eb;
+    --color-ring: #059669;
+  }
+
   .matrix-head {
     padding: 4rem 0 0;
     background: var(--color-bg);

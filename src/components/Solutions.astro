@@ -4,11 +4,11 @@ import Terminal from './Terminal.astro';
 const differentiators = [
   {
     title: 'We built the platform',
-    body: 'Six components we built and run ourselves. The platform we install is the platform we run on our own delivery.',
+    body: 'Components we built and run ourselves. The platform we install is the platform we run on our own delivery.',
   },
   {
     title: 'We embed, not advise',
-    body: 'Two to four staff engineers inside your repo, your CI, your infrastructure. We ship production code and runbooks, not a deliverable folder for the steering committee.',
+    body: 'A small team of staff engineers inside your repo, your CI, your infrastructure. We ship production code and runbooks, not a deliverable folder for the steering committee.',
   },
   {
     title: 'We build lasting capability',
@@ -50,7 +50,7 @@ const phases = [
       <p class="section-label">Operating model</p>
       <h2 class="section-title">We built the platform. We deliver the work. We scale it with your team.</h2>
       <p class="section-subtitle mb-14">
-        Not a license. Not a body-leasing contract. A platform we have shaped over three years of delivery, installed in your stack by the engineers who built it and run alongside your team as a long-term partner.
+        Not a license. Not a body-leasing contract. A platform shaped by 15 years of building developer tooling and working with LLMs from day zero, installed in your stack by the engineers who built it and run alongside your team as a long-term partner.
       </p>
     </div>
 
@@ -98,13 +98,18 @@ const phases = [
         <span class="transfer-step-label">Phase 3</span>
         <strong>Your team leads</strong>
       </div>
+      <div class="transfer-arrow" aria-hidden="true"></div>
+      <div class="transfer-step">
+        <span class="transfer-step-label">Phase 4</span>
+        <strong>We stay on call</strong>
+      </div>
     </div>
 
     <div id="kit" class="fade-up mt-24">
       <p class="section-label">Platform components</p>
       <h2 class="section-title">The platform we bring</h2>
       <p class="section-subtitle mb-14">
-        Six components, one spine: the Context Fabric. Review, testing, security, and governance all read the same ground truth, so agents and reviewers answer the same questions the same way. The components are open. Composing, hardening, and integrating them into a regulated enterprise stack is what teams hire us for, because we have already done it more than once.
+        One spine: the Context Fabric. Review, testing, security, and governance all read the same ground truth, so agents and reviewers answer the same questions the same way. Composing, hardening, and integrating them into a regulated enterprise stack is what teams hire us for, because we have already done it more than once.
       </p>
     </div>
 
@@ -495,7 +500,7 @@ Layer 2: Mutation (PIT)
 
   .transfer-signal {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 120px minmax(0, 1fr) 120px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) 80px minmax(0, 1fr) 80px minmax(0, 1fr) 80px minmax(0, 1fr);
     gap: 1rem;
     align-items: center;
     padding: 1.5rem 1.75rem;
