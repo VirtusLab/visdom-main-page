@@ -420,8 +420,8 @@ body {
 .section-subtitle {
   font-size: 1.125rem;
   color: var(--color-text-secondary);
-  max-width: 600px;
-  line-height: 1.7;
+  max-width: 780px;
+  line-height: 1.65;
 }
 
 .section-label {
