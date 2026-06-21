@@ -300,44 +300,39 @@ const phases = [
             </div>
           </div>
           <div>
-            <div class="sandbox-diagram" aria-label="Sandcat runs the agent in an isolated sandbox; only approved traffic crosses the egress wall, so code, data, and secrets stay contained and production is unreachable">
-              <div class="sandbox-zone sandbox-zone--inside">
-                <p class="sandbox-zone-label">Sandcat · isolated sandbox</p>
-                <div class="sandbox-agent">
-                  <span class="sandbox-agent-tag">AGENT</span>
-                  <div class="sandbox-agent-body">
-                    <strong>AI agent</strong>
-                    <span>execute · test · iterate</span>
-                  </div>
-                </div>
-                <div class="sandbox-contain" aria-hidden="true">
-                  <span class="sandbox-barrier"></span>
-                  <span class="sandbox-packet"></span>
-                </div>
-                <p class="sandbox-note">Code and data stay inside. Real secrets never enter the sandbox.</p>
-              </div>
-
-              <div class="sandbox-wall" aria-hidden="true">
-                <span class="sandbox-wall-label">EGRESS WALL</span>
-                <ul class="sandbox-wall-list sandbox-wall-list--allow">
-                  <li><span class="sandbox-mark sandbox-mark--ok">✓</span>npm / PyPI</li>
-                  <li><span class="sandbox-mark sandbox-mark--ok">✓</span>LLM APIs</li>
-                </ul>
-                <ul class="sandbox-wall-list sandbox-wall-list--deny">
-                  <li><span class="sandbox-mark sandbox-mark--no">✗</span>everything else → 403</li>
-                </ul>
-              </div>
-
-              <div class="sandbox-zone sandbox-zone--outside">
-                <p class="sandbox-zone-label">Production</p>
-                <div class="sandbox-prod">
-                  <span class="sandbox-prod-lock" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="4" y="10" width="16" height="11" rx="2" />
-                      <path d="M8 10 V7 a4 4 0 1 1 8 0 v3" />
-                    </svg>
+            <div class="cmp-frame">
+              <div class="cmp-sec" aria-label="Sandcat runs the agent in an isolated sandbox; only approved traffic crosses the egress wall, so data stays contained and production is unreachable">
+                <div class="cmp-panel">
+                  <span class="cmp-panel-head">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>
+                    Sandcat sandbox
                   </span>
-                  <div>
+                  <div class="cmp-sec-agent">
+                    <span class="cmp-sec-tag">Agent</span>
+                    <span>runs contained · execute · test · iterate</span>
+                  </div>
+                  <div class="sandbox-contain" aria-hidden="true">
+                    <span class="sandbox-barrier"></span>
+                    <span class="sandbox-packet"></span>
+                  </div>
+                  <p class="sandbox-note">Code and data stay inside. Real secrets never enter the sandbox.</p>
+                </div>
+
+                <div class="cmp-panel">
+                  <span class="cmp-panel-head">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Egress wall
+                  </span>
+                  <div class="cmp-sec-row cmp-sec-row--ok"><span class="sandbox-mark sandbox-mark--ok">✓</span>npm / PyPI · LLM APIs</div>
+                  <div class="cmp-sec-row cmp-sec-row--no"><span class="sandbox-mark sandbox-mark--no">✗</span>everything else → 403</div>
+                </div>
+
+                <div class="cmp-panel">
+                  <span class="cmp-panel-head">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10 V7 a4 4 0 1 1 8 0 v3"/></svg>
+                    Production
+                  </span>
+                  <div class="cmp-sec-prod">
                     <strong>Unreachable by default</strong>
                     <span>No standing credentials, no direct path.</span>
                   </div>
@@ -569,6 +564,56 @@ const phases = [
     font-weight: 600;
     font-size: 14px;
     color: var(--color-text);
+  }
+
+  /* 05 Security: Sandcat containment as horizontal blocks, same panel style */
+  .cmp-sec {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .cmp-sec-agent,
+  .cmp-sec-row,
+  .cmp-sec-prod {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 9px;
+    padding: 10px 12px;
+  }
+  .cmp-sec-agent {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
+    color: var(--color-text);
+  }
+  .cmp-sec-tag {
+    flex-shrink: 0;
+    font: 700 10px var(--font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--vmm-accent);
+    background: var(--vmm-accent-soft);
+    border: 1px solid var(--vmm-accent);
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+  .cmp-sec-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font: 500 12.5px var(--font-mono);
+    color: var(--color-text-secondary);
+  }
+  .cmp-sec-prod strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+  .cmp-sec-prod span {
+    font-size: 12px;
+    color: var(--color-text-muted);
   }
 
   @media (max-width: 520px) {
