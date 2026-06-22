@@ -70,9 +70,23 @@ import { MaturityRef as MaturityRefReact } from '@virtuslab/visdom-ui';
   }
 
   .matrix-head {
-    padding: 4rem 0 0;
+    position: relative;
+    padding: 3rem 0 3.5rem;
     background: var(--color-bg);
     text-align: center;
+  }
+
+  /* Bridge the hard edge into the visdom-ui hero band, which starts on a
+     hardcoded #eff6ff and would otherwise meet our white head as a sharp line. */
+  .matrix-head::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2.5rem;
+    background: linear-gradient(180deg, rgba(239, 246, 255, 0) 0%, #eff6ff 100%);
+    pointer-events: none;
   }
 
   .matrix-head-lead {
