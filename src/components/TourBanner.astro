@@ -11,15 +11,15 @@ const tourHref = 'https://virtuslab.com/lp/visdom-tour-2026';
 >
   <span class="tour-banner-tag">Visdom AI Tour</span>
   <span class="tour-banner-text">
-    <span class="tour-stop"><span class="tour-flag">🇵🇱</span>Kraków</span>
+    <span class="tour-stop tour-stop--upcoming"><span class="tour-flag">🇨🇭</span>Zurich <span class="tour-month">May</span></span>
     <span class="tour-sep" aria-hidden="true">·</span>
-    <span class="tour-stop"><span class="tour-flag">🇵🇱</span>Warsaw</span>
+    <span class="tour-stop tour-stop--upcoming"><span class="tour-flag">🇺🇸</span>New York <span class="tour-month">June</span></span>
     <span class="tour-sep" aria-hidden="true">·</span>
-    <span class="tour-stop"><span class="tour-flag">🇨🇭</span>Zurich</span>
+    <span class="tour-stop tour-stop--next"><span class="tour-flag">🇬🇧</span><strong>London</strong> <span class="tour-next-badge">Next stop: 23-24 June</span></span>
     <span class="tour-sep" aria-hidden="true">·</span>
-    <span class="tour-stop"><span class="tour-flag">🇺🇸</span>New York</span>
+    <span class="tour-stop tour-stop--upcoming"><span class="tour-flag">🇺🇸</span>New York <span class="tour-month">September</span></span>
     <span class="tour-sep" aria-hidden="true">·</span>
-    <span class="tour-stop"><span class="tour-flag">🇬🇧</span><strong>London</strong></span>
+    <span class="tour-stop tour-stop--upcoming"><span class="tour-flag">🇺🇸</span>San Francisco <span class="tour-month">October</span></span>
   </span>
   <span class="tour-banner-cta" aria-hidden="true">
     Learn more
@@ -88,6 +88,45 @@ const tourHref = 'https://virtuslab.com/lp/visdom-tour-2026';
 
   .tour-sep {
     opacity: 0.55;
+  }
+
+  .tour-stop--upcoming {
+    color: color-mix(in oklab, #0f172a 62%, transparent);
+  }
+
+  .tour-stop--next {
+    font-weight: 700;
+  }
+
+  .tour-next-badge {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 1px;
+    padding: 1px 8px;
+    border-radius: 9999px;
+    background: var(--color-emerald, #10b981);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .tour-month {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 1px;
+    padding: 1px 7px;
+    border-radius: 9999px;
+    background: color-mix(in oklab, var(--color-emerald, #10b981) 14%, transparent);
+    color: var(--color-emerald-dark, #047857);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   .tour-banner-cta {
