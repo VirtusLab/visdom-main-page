@@ -11,7 +11,15 @@ const tourHref = 'https://virtuslab.com/lp/visdom-tour-2026';
 >
   <span class="tour-banner-tag">Visdom AI Tour</span>
   <span class="tour-banner-text">
-    🇵🇱 Kraków · 🇵🇱 Warsaw · 🇨🇭 Zurich · 🇺🇸 New York · <strong>🇬🇧 London</strong>
+    <span class="tour-stop"><span class="tour-flag">🇵🇱</span>Kraków</span>
+    <span class="tour-sep" aria-hidden="true">·</span>
+    <span class="tour-stop"><span class="tour-flag">🇵🇱</span>Warsaw</span>
+    <span class="tour-sep" aria-hidden="true">·</span>
+    <span class="tour-stop"><span class="tour-flag">🇨🇭</span>Zurich</span>
+    <span class="tour-sep" aria-hidden="true">·</span>
+    <span class="tour-stop"><span class="tour-flag">🇺🇸</span>New York</span>
+    <span class="tour-sep" aria-hidden="true">·</span>
+    <span class="tour-stop"><span class="tour-flag">🇬🇧</span><strong>London</strong></span>
   </span>
   <span class="tour-banner-cta" aria-hidden="true">
     Learn more
@@ -27,8 +35,9 @@ const tourHref = 'https://virtuslab.com/lp/visdom-tour-2026';
     flex-wrap: wrap;
     gap: 10px;
     padding: 9px 20px;
-    background: linear-gradient(90deg, var(--color-emerald, #10b981), color-mix(in oklab, var(--color-emerald, #10b981) 78%, #2563eb));
-    color: #fff;
+    background: linear-gradient(90deg, #ecfdf5, #eff6ff);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-emerald, #10b981) 22%, transparent);
+    color: #0f172a;
     text-decoration: none;
     font-size: 0.9rem;
     line-height: 1.3;
@@ -37,14 +46,15 @@ const tourHref = 'https://virtuslab.com/lp/visdom-tour-2026';
   }
 
   .tour-banner:hover {
-    filter: brightness(1.05);
+    filter: brightness(0.98);
   }
 
   .tour-banner-tag {
     flex-shrink: 0;
     padding: 2px 9px;
     border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.22);
+    background: var(--color-emerald, #10b981);
+    color: #fff;
     font-family: var(--font-mono);
     font-size: 0.66rem;
     font-weight: 700;
@@ -52,8 +62,32 @@ const tourHref = 'https://virtuslab.com/lp/visdom-tour-2026';
     text-transform: uppercase;
   }
 
+  .tour-banner-text {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 12px;
+  }
+
   .tour-banner-text strong {
     font-weight: 700;
+  }
+
+  .tour-stop {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+  }
+
+  .tour-flag {
+    font-size: 1.05em;
+    line-height: 1;
+  }
+
+  .tour-sep {
+    opacity: 0.55;
   }
 
   .tour-banner-cta {
