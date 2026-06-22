@@ -4,8 +4,7 @@ const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') || '/';
 const links = [
   { label: 'Platform', href: '#kit' },
   { label: 'Insights', href: '#thesis' },
-  { label: 'AI Radar', href: '#radar' },
-  { label: 'Matrix', href: 'https://visdom-maturity-matrix.virtuslab.com/', external: true },
+  { label: 'Maturity Matrix', href: 'https://visdom-maturity-matrix.virtuslab.com/', external: true },
 ];
 ---
 
@@ -32,14 +31,6 @@ const links = [
   </nav>
 
   <div class="site-header-right">
-    <a
-      href="https://visdom-maturity-matrix.virtuslab.com/"
-      target="_blank"
-      rel="noopener"
-      class="site-header-external"
-    >
-      Maturity Matrix <span class="site-header-arrow" aria-hidden="true">&#8599;</span>
-    </a>
     <a href="#contact" class="site-header-cta">Get in Touch</a>
 
     <button
@@ -169,36 +160,6 @@ const links = [
     display: flex;
     align-items: center;
     gap: 6px;
-  }
-
-  .site-header-external {
-    display: none;
-    align-items: center;
-    gap: 4px;
-    padding: 7px 12px;
-    border-radius: 9999px;
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    transition: color 0.2s ease;
-  }
-
-  .site-header-external:hover {
-    color: var(--color-text);
-  }
-
-  .site-header-arrow {
-    display: inline-block;
-    transition: transform 0.18s ease;
-  }
-
-  .site-header-external:hover .site-header-arrow {
-    transform: translate(2px, -2px);
-  }
-
-  @media (min-width: 640px) {
-    .site-header-external { display: inline-flex; }
   }
 
   .site-header-cta {
