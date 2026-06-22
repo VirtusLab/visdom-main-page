@@ -83,7 +83,7 @@ const phases = [
       <div class="platform-block fade-up">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <div class="order-2 lg:order-1">
-            <div class="fabric-diagram" aria-label="Visdom Context Fabric ingests repository, documentation, tickets, and CI data, then answers the questions the orchestrator asks">
+            <div class="fabric-diagram" aria-label="Visdom Context Fabric ingests repository, documentation, tickets, and CI data, then exposes deterministic ground truth that the Coding Agent, Code Review, and Testing components read over MCP">
               <div class="fabric-column fabric-column--sources">
                 <p class="fabric-column-label">Sources</p>
                 {[
@@ -127,18 +127,18 @@ const phases = [
               </svg>
 
               <div class="fabric-column fabric-column--outputs">
-                <p class="fabric-column-label">Orchestrator asks</p>
+                <p class="fabric-column-label">Components reading it</p>
                 {[
-                  { name: 'Who owns this?', meta: '@jkowalski · 0.87' },
-                  { name: 'What breaks if I change it?', meta: 'blast radius: 12 files' },
-                  { name: 'Where does this pattern exist?', meta: '3 precedents · src/auth/*' },
+                  { name: 'Coding Agent', meta: 'context · conventions' },
+                  { name: 'Code Review', meta: 'ownership · blast radius' },
+                  { name: 'Testing', meta: 'conventions · risk' },
                 ].map((item) => (
                   <div class="fabric-node fabric-node--output">
                     <strong>{item.name}</strong>
                     <span>{item.meta}</span>
                   </div>
                 ))}
-                <p class="fabric-column-note">Deterministic answers, fed straight to the orchestrator.</p>
+                <p class="fabric-column-note">Every Visdom component reads the same ground truth.</p>
               </div>
             </div>
           </div>
