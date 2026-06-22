@@ -112,12 +112,6 @@ const phases = [
                 <span class="fabric-core-tag">VISDOM</span>
                 <strong>Context Fabric</strong>
                 <p>Ingest · normalize · index the organization's ground truth.</p>
-                <ul>
-                  <li>Ownership graph</li>
-                  <li>Dependency &amp; blast radius</li>
-                  <li>Convention index</li>
-                  <li>Expertise ranking</li>
-                </ul>
               </div>
 
               <svg class="fabric-wires fabric-wires--out" viewBox="0 0 80 320" preserveAspectRatio="none" aria-hidden="true">
@@ -154,7 +148,7 @@ const phases = [
               Deterministic code expertise, blast radius analysis, and ownership graphs via MCP.
             </p>
             <div class="flex gap-3">
-              <a href="https://virtuslab.com/blog/ai/the-hard-truth/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>Read: "Your README Is a Lie"</a>
+              <a href="https://virtuslab.com/blog/ai/the-hard-truth/" target="_blank" rel="noopener" class="read-link"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>Read: "Your README Is a Lie"</a>
             </div>
           </div>
         </div>
@@ -392,7 +386,7 @@ const phases = [
               </a>
             </div>
             <div class="flex gap-3">
-              <a href="https://virtuslab.com/blog/ai/the-fallacy/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>Read: "The Ferrari Engine in a Fiat 500"</a>
+              <a href="https://virtuslab.com/blog/ai/the-fallacy/" target="_blank" rel="noopener" class="read-link"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>Read: "The Ferrari Engine in a Fiat 500"</a>
             </div>
           </div>
         </div>
@@ -821,6 +815,24 @@ const phases = [
     line-height: 1.4;
     color: var(--color-text-muted);
     margin: 2px 0 0;
+  }
+
+  .read-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-emerald-dark, var(--color-emerald));
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    transition: color 0.2s ease;
+  }
+
+  .read-link:hover {
+    color: var(--color-emerald);
+    text-decoration-thickness: 2px;
   }
 
   .fabric-node {
