@@ -4,9 +4,27 @@ import { MaturityRef as MaturityRefReact } from '@virtuslab/visdom-ui';
 <section class="matrix-head" aria-label="Maturity model">
   <div class="container">
     <p class="section-label">Maturity model</p>
+    <h2 class="matrix-head-title">The AI Maturity Matrix</h2>
     <p class="matrix-head-lead">
-      The framework we scope every engagement with: it shows where your SDLC stands today, and what the first two weeks should target.
+      The framework we scope every engagement with. It shows where your SDLC stands today, and what the first two weeks should target.
     </p>
+    <a
+      class="matrix-shot"
+      href="https://visdom-maturity-matrix.virtuslab.com/matrix/development"
+      target="_blank"
+      rel="noopener"
+      aria-label="Open the AI Maturity Matrix"
+    >
+      <img
+        src="/matrix-development.png"
+        width="2000"
+        height="1128"
+        loading="lazy"
+        decoding="async"
+        alt="The AI Maturity Matrix for Development: capabilities scored across five levels from Ad-hoc to Autonomous, with L4 Optimized as the target."
+      />
+      <span class="matrix-shot-hint">Explore the live matrix</span>
+    </a>
   </div>
 </section>
 
@@ -89,12 +107,62 @@ import { MaturityRef as MaturityRefReact } from '@virtuslab/visdom-ui';
     pointer-events: none;
   }
 
+  .matrix-head-title {
+    margin: 0.75rem auto 0.85rem;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--color-text);
+  }
+
   .matrix-head-lead {
     margin: 0 auto;
     max-width: 50rem;
     font-size: 1.05rem;
     line-height: 1.6;
     color: var(--color-text-secondary);
+  }
+
+  .matrix-shot {
+    position: relative;
+    display: block;
+    max-width: 60rem;
+    margin: 2.75rem auto 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.1);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .matrix-shot:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 50px rgba(16, 185, 129, 0.18);
+  }
+
+  .matrix-shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .matrix-shot-hint {
+    position: absolute;
+    right: 0.85rem;
+    bottom: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.8rem;
+    border-radius: 9999px;
+    background: var(--color-emerald, #10b981);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
   }
 
   .matrix-publication {
