@@ -57,9 +57,10 @@ const piwikScript = `(function(window, document, dataLayerName, id) { window[dat
     <script is:inline>
       (function () {
         try {
+          // Default to the dark (green) theme. Only an explicit saved 'light'
+          // choice opts out. We never consult prefers-color-scheme.
           var stored = localStorage.getItem('theme');
-          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          var dark = stored ? stored === 'dark' : prefersDark;
+          var dark = stored !== 'light';
           document.documentElement.classList.toggle('dark', dark);
         } catch (e) {}
       })();
