@@ -107,7 +107,7 @@ const revY = (i: number) => 284 + i * 40;
     <div class="af-viewport">
       <div class="af-stage">
         <svg viewBox="0 0 1200 640" role="img" aria-labelledby="af-svg-title" class="af-svg" preserveAspectRatio="xMidYMid meet">
-          <title id="af-svg-title">Visdom architecture: Context Fabric, Coding Agent, Testing, Code Review, PR triage and Visdom AI Tracing.</title>
+          <title id="af-svg-title">Visdom architecture: Context Fabric, Coding Agent (Cursor, Claude, Codex), Testing, Code Review, PR triage and Visdom AI Tracing.</title>
 
           <defs>
             <!-- arrowheads only on the amber human-gate paths, green flow relies on the streaks -->
@@ -212,6 +212,29 @@ const revY = (i: number) => 284 + i * 40;
             <rect x="116" y="396" width="68" height="32" rx="10" class="af-sandbox-tag" />
             <text x="150" y="409" text-anchor="middle" class="af-sandbox-label">Sandcat</text>
             <text x="150" y="421" text-anchor="middle" class="af-sandbox-label">sandbox</text>
+            <!-- the coding agents that plug in here: Cursor, Claude, Codex -->
+            <g class="af-agent-brands" transform="translate(0,438)">
+              <g class="af-brand">
+                <title>Cursor</title>
+                <rect x="114" y="0" width="20" height="20" rx="6" class="af-brand-chip" />
+                <path class="af-brand-mark" d="M119 4 L129 9.5 L124 12 L121.5 16.5 Z" />
+              </g>
+              <g class="af-brand">
+                <title>Claude</title>
+                <rect x="140" y="0" width="20" height="20" rx="6" class="af-brand-chip" />
+                <g class="af-brand-mark af-brand-mark--stroke" transform="translate(150,10)">
+                  <line x1="0" y1="-6" x2="0" y2="6" />
+                  <line x1="-6" y1="0" x2="6" y2="0" />
+                  <line x1="-4.2" y1="-4.2" x2="4.2" y2="4.2" />
+                  <line x1="-4.2" y1="4.2" x2="4.2" y2="-4.2" />
+                </g>
+              </g>
+              <g class="af-brand">
+                <title>Codex</title>
+                <rect x="166" y="0" width="20" height="20" rx="6" class="af-brand-chip" />
+                <path class="af-brand-mark af-brand-mark--ring" d="M176 4 a6 6 0 1 0 0.01 0 M176 7.5 a2.5 2.5 0 1 0 0.01 0" />
+              </g>
+            </g>
           </g>
 
           <!-- pipeline connectors (the main spine) -->
@@ -433,6 +456,12 @@ const revY = (i: number) => 284 + i * 40;
   /* the agent runs inside Sandcat */
   .af-sandbox-tag { fill: var(--color-surface-light); stroke: var(--color-border); stroke-width: 1; }
   .af-sandbox-label { fill: var(--color-text-secondary); font: 600 9.5px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  /* the coding agents that can run inside the sandbox */
+  .af-brand-chip { fill: var(--color-surface-light); stroke: var(--color-border); stroke-width: 1; }
+  .af-brand-mark { fill: var(--color-text-secondary); }
+  .af-brand-mark--stroke { stroke: var(--color-text-secondary); stroke-width: 1.4; stroke-linecap: round; }
+  .af-brand-mark--stroke line { stroke: var(--color-text-secondary); }
+  .af-brand-mark--ring { fill: none; stroke: var(--color-text-secondary); stroke-width: 1.4; }
   .af-mhead-label { fill: var(--color-text); font: 600 12px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
   .af-mhead-icon, .af-core-icon, .af-vault-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
