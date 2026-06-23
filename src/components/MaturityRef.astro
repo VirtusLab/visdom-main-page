@@ -1,6 +1,7 @@
 ---
 import { MaturityRef as MaturityRefReact } from '@virtuslab/visdom-ui';
 ---
+<div class="maturity-island">
 <section class="matrix-head" aria-label="Maturity model">
   <div class="container">
     <p class="section-label">Maturity model</p>
@@ -58,8 +59,30 @@ import { MaturityRef as MaturityRefReact } from '@virtuslab/visdom-ui';
     </a>
   </div>
 </section>
+</div>
 
 <style>
+  /*
+   * The visdom-ui MaturityRef widget is hardcoded light and can't follow our
+   * dark theme. Rather than float a light widget on a dark page (which left the
+   * screenshot, head, and publication card clashing as harsh dark/light bands),
+   * pin our own semantic tokens to their light values across the whole maturity
+   * block in dark mode, so the entire section reads as one coherent light island.
+   */
+  :global(.dark) .maturity-island {
+    --color-bg: #ffffff;
+    --color-surface: #f8f9fb;
+    --color-surface-light: #f1f3f5;
+    --color-border: #e5e7eb;
+    --color-border-light: #f0f0f0;
+    --color-text: #111827;
+    --color-text-secondary: #6b7280;
+    --color-text-muted: #9ca3af;
+    --color-emerald: #059669;
+    --color-emerald-dark: #047857;
+    --color-emerald-light: #ecfdf5;
+  }
+
   /*
    * The visdom-ui MaturityRef is a light-themed widget: its panels and level
    * cards use fixed light backgrounds, but a few text nodes (title, lead,
