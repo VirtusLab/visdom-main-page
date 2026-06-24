@@ -63,51 +63,59 @@ import { MaturityRef as MaturityRefReact } from '@virtuslab/visdom-ui';
 
 <style>
   /*
-   * The visdom-ui MaturityRef widget is hardcoded light and can't follow our
-   * dark theme. Rather than float a light widget on a dark page (which left the
-   * screenshot, head, and publication card clashing as harsh dark/light bands),
-   * pin our own semantic tokens to their light values across the whole maturity
-   * block in dark mode, so the entire section reads as one coherent light island.
-   */
-  :global(.dark) .maturity-island {
-    --color-bg: #ffffff;
-    --color-surface: #f8f9fb;
-    --color-surface-light: #f1f3f5;
-    --color-border: #e5e7eb;
-    --color-border-light: #f0f0f0;
-    --color-text: #111827;
-    --color-text-secondary: #6b7280;
-    --color-text-muted: #9ca3af;
-    --color-emerald: #059669;
-    --color-emerald-dark: #047857;
-    --color-emerald-light: #ecfdf5;
-  }
-
-  /*
-   * The visdom-ui MaturityRef is a light-themed widget: its panels and level
-   * cards use fixed light backgrounds, but a few text nodes (title, lead,
-   * perspective labels, secondary link) read theme foreground tokens that flip
-   * to light in dark mode and disappear on the light surface. Pin the widget to
-   * light-theme tokens in dark mode so the whole thing stays coherent and legible.
+   * The visdom-ui MaturityRef widget ships its own light token set and does not
+   * inherit our page .dark theme, so on a dark page its text nodes stay dark and
+   * vanish. Pin the widget's semantic tokens to OUR dark values so every
+   * token-driven surface (heading, lead, perspective pills, secondary button,
+   * borders) reads correctly dark. The widget's few hardcoded inline colors (the
+   * light hero band and the five level cards) are recolored separately below.
    */
   :global(.dark) .matrix-embed {
-    --color-background: #ffffff;
-    --color-foreground: #111827;
-    --color-card: #ffffff;
-    --color-card-foreground: #111827;
-    --color-popover: #ffffff;
-    --color-popover-foreground: #111827;
+    --color-background: #060709;
+    --color-foreground: #e5e8eb;
+    --color-card: #0d1013;
+    --color-card-foreground: #e5e8eb;
+    --color-popover: #0d1013;
+    --color-popover-foreground: #e5e8eb;
     --color-primary: #059669;
     --color-primary-foreground: #ffffff;
-    --color-secondary: #f8f9fb;
-    --color-secondary-foreground: #111827;
-    --color-muted: #f8f9fb;
-    --color-muted-foreground: #6b7280;
-    --color-accent: #ecfdf5;
-    --color-accent-foreground: #047857;
-    --color-border: #e5e7eb;
-    --color-input: #e5e7eb;
-    --color-ring: #059669;
+    --color-secondary: #16181d;
+    --color-secondary-foreground: #e5e8eb;
+    --color-muted: #0d1013;
+    --color-muted-foreground: #b4b9be;
+    --color-accent: rgba(52, 211, 153, 0.12);
+    --color-accent-foreground: #34d399;
+    --color-border: rgba(255, 255, 255, 0.1);
+    --color-input: rgba(255, 255, 255, 0.1);
+    --color-ring: #34d399;
+  }
+
+  /* The widget's "Where does your organization stand?" band is a hardcoded light
+     gradient (#eff6ff to #fff) with a mint border-top. Neutralize it so the band
+     sits flush on the dark page. The widget's nodes are React-rendered and carry
+     no Astro scope id, so these selectors must be fully :global(). */
+  :global(.dark .matrix-embed section) {
+    background: transparent !important;
+    border-top-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  /* The five level cards carry hardcoded inline light backgrounds (a neutral L1
+     stepping up to bright green L5). Remap that same ramp onto dark with
+     translucent green tints so the progression survives on a dark surface. */
+  :global(.dark .matrix-embed div[class*="rounded-lg"][style*="#f4f4f5"]) {
+    background: rgba(255, 255, 255, 0.06) !important;
+  }
+  :global(.dark .matrix-embed div[class*="rounded-lg"][style*="#ccfbf1"]) {
+    background: rgba(45, 212, 191, 0.16) !important;
+  }
+  :global(.dark .matrix-embed div[class*="rounded-lg"][style*="#d1fae5"]) {
+    background: rgba(52, 211, 153, 0.2) !important;
+  }
+  :global(.dark .matrix-embed div[class*="rounded-lg"][style*="#dcfce7"]) {
+    background: rgba(52, 211, 153, 0.26) !important;
+  }
+  :global(.dark .matrix-embed div[class*="rounded-lg"][style*="#bbf7d0"]) {
+    background: rgba(52, 211, 153, 0.34) !important;
   }
 
   .matrix-head {
@@ -128,6 +136,11 @@ import { MaturityRef as MaturityRefReact } from '@virtuslab/visdom-ui';
     height: 5rem;
     background: linear-gradient(180deg, rgba(239, 246, 255, 0) 0%, rgba(239, 246, 255, 0.5) 60%, #eff6ff 100%);
     pointer-events: none;
+  }
+
+  /* In dark mode the section is uniformly dark, so the light bridge is dropped. */
+  :global(.dark) .matrix-head::after {
+    display: none;
   }
 
   .matrix-head-title {
