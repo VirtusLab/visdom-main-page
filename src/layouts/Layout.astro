@@ -30,8 +30,9 @@ const piwikScript = `(function(window, document, dataLayerName, id) { window[dat
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/x-icon" sizes="32x32" href={`/favicon.ico`} />
-    <link rel="apple-touch-icon" href={`/favicon.ico`} />
+    <link rel="icon" href={`${base}/favicon.ico`} sizes="any" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="apple-touch-icon" href={`${base}/apple-touch-icon.png`} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Visdom by VirtusLab" />
