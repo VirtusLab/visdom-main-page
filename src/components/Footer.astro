@@ -1,4 +1,28 @@
 ---
 import { Footer as FooterReact } from '@virtuslab/visdom-ui';
 ---
-<FooterReact client:load />
+<div class="site-footer">
+  <FooterReact client:load />
+</div>
+
+<style>
+  /*
+   * The visdom-ui Footer ships its own light token set, so on our dark page its
+   * "Visdom" wordmark (text-foreground/80) renders dark and disappears. Pin the
+   * widget's semantic tokens to our dark values in dark mode so the whole footer
+   * stays legible. Light mode is left untouched.
+   */
+  :global(.dark) .site-footer {
+    --color-background: #060709;
+    --color-foreground: #e5e8eb;
+    --color-muted: #0d1013;
+    --color-muted-foreground: #b4b9be;
+    --color-card: #0d1013;
+    --color-card-foreground: #e5e8eb;
+    --color-border: rgba(255, 255, 255, 0.1);
+    --color-primary: #34d399;
+    --color-primary-foreground: #060709;
+    --color-accent: rgba(52, 211, 153, 0.12);
+    --color-accent-foreground: #34d399;
+  }
+</style>
