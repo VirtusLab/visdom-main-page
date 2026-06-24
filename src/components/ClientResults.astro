@@ -42,6 +42,18 @@ const results = [
         </article>
       ))}
     </div>
+
+    <figure class="results-photo fade-up">
+      <img
+        src={`${(import.meta.env.BASE_URL || '/').replace(/\/$/, '')}/track-record-tour.jpg`}
+        width="2000"
+        height="1431"
+        loading="lazy"
+        decoding="async"
+        alt="VirtusLab engineers at an AI infrastructure conference, in Can Your AI Agents Actually Ship shirts."
+      />
+      <figcaption>Out in the field on the Visdom AI Tour.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -112,6 +124,34 @@ const results = [
     margin: 0.5rem 0 0;
     font-size: 0.85rem;
     line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+
+  .results-photo {
+    margin: 1.75rem 0 0;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  .results-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 460px;
+    object-fit: cover;
+    object-position: center 32%;
+  }
+
+  .results-photo figcaption {
+    padding: 0.7rem 1rem;
+    background: var(--card);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
     color: var(--color-text-muted);
   }
 
