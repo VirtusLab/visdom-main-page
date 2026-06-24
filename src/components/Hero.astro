@@ -1,5 +1,6 @@
 ---
 import emblemSvg from '../icons/visdom-emblem.svg?raw';
+import vlLogoSvg from '../icons/virtuslab-logo.svg?raw';
 ---
 <section class="hero">
   <div class="aurora" aria-hidden="true"></div>
@@ -7,16 +8,18 @@ import emblemSvg from '../icons/visdom-emblem.svg?raw';
   <div class="container">
     <div class="hero-brand fade-up">
       <div class="hero-brand-logo">
-        <img src={`${(import.meta.env.BASE_URL || '/').replace(/\/$/, '')}/virtuslab-logo.svg`} alt="VirtusLab" class="hero-vl-logo" />
+        <div class="hero-vl-logo" set:html={vlLogoSvg} role="img" aria-label="VirtusLab"></div>
       </div>
       <div class="hero-lockup">
-        <div class="hero-emblem" set:html={emblemSvg} aria-hidden="true"></div>
-        <div class="hero-brand-line">
-          <span class="hero-brand-name">Visdom</span>
-          <span class="hero-brand-version">2.0</span>
+        <div class="hero-brand-text">
+          <div class="hero-brand-line">
+            <span class="hero-brand-name">Visdom</span>
+            <span class="hero-brand-version">2.0</span>
+          </div>
+          <div class="hero-brand-tagline">AI-Native SDLC Platform</div>
         </div>
+        <div class="hero-emblem" set:html={emblemSvg} aria-hidden="true"></div>
       </div>
-      <div class="hero-brand-tagline">AI-Native SDLC Platform</div>
     </div>
 
     <div class="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] gap-12 lg:gap-16 items-center mt-12 lg:mt-16">
@@ -138,10 +141,13 @@ import emblemSvg from '../icons/visdom-emblem.svg?raw';
   }
 
   .hero-vl-logo {
+    display: inline-block;
+    color: var(--color-text-secondary);
+  }
+
+  .hero-vl-logo :global(svg) {
     height: 20px;
     width: auto;
-    color: var(--color-text-muted);
-    margin: 0 auto;
     display: block;
   }
 
@@ -153,26 +159,34 @@ import emblemSvg from '../icons/visdom-emblem.svg?raw';
     margin-bottom: 12px;
   }
 
-  /* emblem + wordmark sit side by side as one horizontal lockup */
+  /* the wordmark + tagline stack, with the emblem alongside it on the right */
   .hero-lockup {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: clamp(14px, 2.6vw, 30px);
-    flex-wrap: wrap;
+    gap: clamp(16px, 3vw, 36px);
   }
 
-  /* the Visdom crystal emblem, to the left of the wordmark; currentColor lets it
-     track the theme (near-white on dark, ink on light) */
+  .hero-brand-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* the Visdom crystal emblem, to the right of the text, roughly the height of
+     the whole wordmark + tagline stack; currentColor tracks the theme. The SVG
+     carries its own aspect-ratio so the flex row reserves real width for it and
+     the lockup (with the VirtusLab mark centered above) sits on one center axis. */
   .hero-emblem {
+    flex: 0 0 auto;
     color: var(--color-text);
-    flex-shrink: 0;
     filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.35));
   }
 
   .hero-emblem :global(svg) {
-    height: clamp(4.5rem, 12vw, 7rem);
+    height: clamp(6rem, 12vw, 8.75rem);
     width: auto;
+    aspect-ratio: 332 / 912;
     display: block;
   }
 
