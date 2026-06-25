@@ -417,7 +417,7 @@ const phases = [
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font: 600 12px var(--font-mono);
+    font: 600 var(--fs-xs) var(--font-mono);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-text);
@@ -455,7 +455,7 @@ const phases = [
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font: 600 10.5px var(--font-mono);
+    font: 600 var(--fs-2xs) var(--font-mono);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-text-muted);
@@ -484,12 +484,12 @@ const phases = [
     padding: 9px 12px;
   }
   .cmp-level b {
-    font: 700 11px var(--font-mono);
+    font: 700 var(--fs-2xs) var(--font-mono);
     color: var(--vmm-accent);
     min-width: 18px;
   }
   .cmp-level span {
-    font-size: 13px;
+    font-size: var(--fs-sm);
     color: var(--color-text);
   }
   .cmp-level--deep {
@@ -538,7 +538,7 @@ const phases = [
     flex-shrink: 0;
   }
   .cmp-human span {
-    font-size: 12px;
+    font-size: var(--fs-xs);
     font-weight: 600;
     color: var(--color-text);
   }
@@ -556,7 +556,7 @@ const phases = [
     padding: 12px 14px;
     text-align: center;
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--fs-md);
     color: var(--color-text);
   }
 
@@ -578,12 +578,12 @@ const phases = [
     display: flex;
     align-items: center;
     gap: 9px;
-    font-size: 13px;
+    font-size: var(--fs-sm);
     color: var(--color-text);
   }
   .cmp-sec-tag {
     flex-shrink: 0;
-    font: 700 10px var(--font-mono);
+    font: 700 var(--fs-3xs) var(--font-mono);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--vmm-accent);
@@ -596,23 +596,23 @@ const phases = [
     display: flex;
     align-items: center;
     gap: 9px;
-    font: 500 12.5px var(--font-mono);
+    font: 500 var(--fs-sm) var(--font-mono);
     color: var(--color-text-secondary);
   }
   .cmp-sec-prod strong {
     display: block;
-    font-size: 13px;
+    font-size: var(--fs-sm);
     font-weight: 700;
     color: var(--color-text);
   }
   .cmp-sec-prod span {
-    font-size: 12px;
+    font-size: var(--fs-xs);
     color: var(--color-text-muted);
   }
   .cmp-sec-caption {
     margin: 0;
     text-align: center;
-    font: 600 10.5px var(--font-mono);
+    font: 600 var(--fs-2xs) var(--font-mono);
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-text-muted);
@@ -623,7 +623,7 @@ const phases = [
     gap: 6px;
   }
   .cmp-sec-chip {
-    font: 600 11px var(--font-mono);
+    font: 600 var(--fs-2xs) var(--font-mono);
     letter-spacing: 0.02em;
     color: var(--color-text);
     background: var(--color-surface);
@@ -676,20 +676,20 @@ const phases = [
     border-radius: 9999px;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
-    font-size: 0.8rem;
+    font-size: var(--fs-sm);
     font-weight: 600;
     color: var(--color-text-secondary);
   }
 
   .footprint-line {
-    font-size: 0.95rem;
+    font-size: var(--fs-base);
     color: var(--color-text-secondary);
     text-align: center;
   }
 
   .metric-note {
     margin-top: 0.45rem;
-    font-size: 0.78rem;
+    font-size: var(--fs-xs);
     line-height: 1.45;
     color: var(--color-text-muted);
   }
@@ -698,7 +698,7 @@ const phases = [
     margin-top: 1.25rem;
     padding-top: 1rem;
     border-top: 1px dashed var(--color-border);
-    font-size: 0.78rem;
+    font-size: var(--fs-xs);
     color: var(--color-text-muted);
   }
 
@@ -727,7 +727,7 @@ const phases = [
     display: block;
     margin-bottom: 0.45rem;
     font-family: var(--font-mono);
-    font-size: 0.76rem;
+    font-size: var(--fs-xs);
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -735,7 +735,7 @@ const phases = [
   }
 
   .transfer-step strong {
-    font-size: 1.05rem;
+    font-size: var(--fs-xl);
     color: var(--color-text);
   }
 
@@ -802,7 +802,7 @@ const phases = [
 
   .fabric-column-label {
     font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: var(--fs-2xs);
     font-weight: 700;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -811,7 +811,7 @@ const phases = [
   }
 
   .fabric-column-note {
-    font-size: 0.72rem;
+    font-size: var(--fs-xs);
     line-height: 1.4;
     color: var(--color-text-muted);
     margin: 2px 0 0;
@@ -821,7 +821,7 @@ const phases = [
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    font-size: 14px;
+    font-size: var(--fs-md);
     font-weight: 600;
     color: var(--color-emerald-dark, var(--color-emerald));
     text-decoration: underline;
@@ -847,7 +847,7 @@ const phases = [
   }
 
   .fabric-node strong {
-    font-size: 0.88rem;
+    font-size: var(--fs-md);
     font-weight: 600;
     color: var(--color-text);
     line-height: 1.25;
@@ -855,7 +855,7 @@ const phases = [
 
   .fabric-node span {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: var(--fs-2xs);
     color: var(--color-text-muted);
   }
 
@@ -898,7 +898,7 @@ const phases = [
     background: rgba(16, 185, 129, 0.15);
     border: 1px solid rgba(16, 185, 129, 0.3);
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: var(--fs-3xs);
     font-weight: 700;
     letter-spacing: 0.18em;
     color: var(--color-emerald-dark, #047857);
@@ -907,14 +907,14 @@ const phases = [
 
   .fabric-core strong {
     display: block;
-    font-size: 1.1rem;
+    font-size: var(--fs-2xl);
     font-weight: 700;
     color: var(--color-text);
     margin-bottom: 6px;
   }
 
   .fabric-core p {
-    font-size: 0.82rem;
+    font-size: var(--fs-sm);
     color: var(--color-text-secondary);
     line-height: 1.45;
     margin-bottom: 12px;
@@ -933,7 +933,7 @@ const phases = [
 
   .fabric-core li {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: var(--fs-2xs);
     color: var(--color-text-secondary);
     position: relative;
     padding-left: 12px;
@@ -944,7 +944,7 @@ const phases = [
     position: absolute;
     left: 0;
     color: var(--color-emerald);
-    font-size: 0.55rem;
+    font-size: var(--fs-4xs);
     top: 3px;
   }
 
@@ -997,7 +997,7 @@ const phases = [
   .screenshot-title {
     margin-left: 10px;
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: var(--fs-xs);
     color: rgba(255, 255, 255, 0.55);
   }
 
@@ -1009,7 +1009,7 @@ const phases = [
 
   .screenshot-frame figcaption {
     padding: 10px 14px;
-    font-size: 0.8rem;
+    font-size: var(--fs-sm);
     color: rgba(255, 255, 255, 0.55);
     background: #0b0f17;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -1050,7 +1050,7 @@ const phases = [
 
   .sandbox-zone-label {
     font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: var(--fs-2xs);
     font-weight: 700;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -1074,7 +1074,7 @@ const phases = [
 
   .sandbox-agent-tag {
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: var(--fs-3xs);
     font-weight: 700;
     letter-spacing: 0.18em;
     color: var(--color-emerald-dark, #047857);
@@ -1093,13 +1093,13 @@ const phases = [
 
   .sandbox-agent-body strong {
     font-family: var(--font-mono);
-    font-size: 0.88rem;
+    font-size: var(--fs-md);
     font-weight: 700;
     color: var(--color-text);
   }
 
   .sandbox-agent-body span {
-    font-size: 0.72rem;
+    font-size: var(--fs-xs);
     color: var(--color-text-muted);
   }
 
@@ -1124,7 +1124,7 @@ const phases = [
   }
 
   .sandbox-props span {
-    font-size: 0.8rem;
+    font-size: var(--fs-sm);
     font-weight: 600;
     color: var(--color-text);
   }
@@ -1132,7 +1132,7 @@ const phases = [
   .sandbox-props em {
     font-family: var(--font-mono);
     font-style: normal;
-    font-size: 0.72rem;
+    font-size: var(--fs-xs);
     color: var(--color-text-muted);
   }
 
@@ -1176,7 +1176,7 @@ const phases = [
   }
   .sandbox-note {
     margin: 0;
-    font-size: 0.72rem;
+    font-size: var(--fs-xs);
     line-height: 1.4;
     color: var(--color-text-muted);
   }
@@ -1212,7 +1212,7 @@ const phases = [
 
   .sandbox-wall-label {
     font-family: var(--font-mono);
-    font-size: 0.62rem;
+    font-size: var(--fs-3xs);
     font-weight: 700;
     letter-spacing: 0.18em;
     color: rgba(194, 65, 12, 1);
@@ -1237,7 +1237,7 @@ const phases = [
     align-items: center;
     gap: 6px;
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: var(--fs-xs);
     color: var(--color-text-secondary);
   }
 
@@ -1248,7 +1248,7 @@ const phases = [
     align-items: center;
     justify-content: center;
     border-radius: 999px;
-    font-size: 0.62rem;
+    font-size: var(--fs-3xs);
     font-weight: 700;
     flex-shrink: 0;
   }
@@ -1292,13 +1292,13 @@ const phases = [
 
   .sandbox-prod strong {
     display: block;
-    font-size: 0.88rem;
+    font-size: var(--fs-md);
     font-weight: 700;
     color: var(--color-text);
   }
 
   .sandbox-prod span {
-    font-size: 0.72rem;
+    font-size: var(--fs-xs);
     color: var(--color-text-muted);
     line-height: 1.4;
   }

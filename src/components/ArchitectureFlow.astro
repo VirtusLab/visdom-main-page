@@ -460,12 +460,12 @@ const revY = (i: number) => 284 + i * 40;
   /* concrete-detail footers inside modules */
   /* the agent runs inside Sandcat */
   .af-sandbox-tag { fill: var(--color-surface-light); stroke: var(--color-border); stroke-width: 1; }
-  .af-sandbox-label { fill: var(--color-text-secondary); font: 600 9.5px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  .af-sandbox-label { fill: var(--color-text-secondary); font: 600 var(--fs-3xs) var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
   /* the coding agents that can run inside the sandbox */
-  .af-brands-label { fill: var(--color-text-muted); font: 600 8.5px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
+  .af-brands-label { fill: var(--color-text-muted); font: 600 var(--fs-4xs) var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
   .af-brand-chip { fill: var(--color-surface); stroke: var(--color-border); stroke-width: 1.25; }
   .af-brand-mark { fill: var(--color-text); }
-  .af-mhead-label { fill: var(--color-text); font: 600 12px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
+  .af-mhead-label { fill: var(--color-text); font: 600 var(--fs-xs) var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
   .af-mhead-icon, .af-core-icon, .af-vault-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
   /* light streaks: a glowing segment travels the path (pathLength=100) */
@@ -496,10 +496,10 @@ const revY = (i: number) => 284 + i * 40;
   .af-card { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
   .af-card--green { stroke: var(--vmm-accent); }
   .af-card--risk { stroke: var(--color-amber); }
-  .af-card-label { fill: var(--color-text); font: 600 13px var(--font-body); }
-  .af-card-label--green { fill: var(--color-emerald-dark); font-weight: 700; font-size: 15px; }
-  .af-card-label--risk { fill: var(--color-amber); font-weight: 700; font-size: 15px; }
-  .af-card-sub { fill: var(--color-text-secondary); font: 500 12.5px var(--font-body); }
+  .af-card-label { fill: var(--color-text); font: 600 var(--fs-sm) var(--font-body); }
+  .af-card-label--green { fill: var(--color-emerald-dark); font-weight: 700; font-size: var(--fs-base); }
+  .af-card-label--risk { fill: var(--color-amber); font-weight: 700; font-size: var(--fs-base); }
+  .af-card-sub { fill: var(--color-text-secondary); font: 500 var(--fs-sm) var(--font-body); }
   .af-src-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 
   /* the fabric bar mirrors the vault but earns the accent: it is the spine of the thesis */
@@ -514,7 +514,7 @@ const revY = (i: number) => 284 + i * 40;
   }
   :global(.dark) .af-prenv { fill: color-mix(in oklab, var(--vmm-accent) 6%, transparent); }
   .af-prenv-icon { fill: none; stroke: var(--color-text-muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .af-prenv-label { fill: var(--color-text-muted); font: 600 11.5px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
+  .af-prenv-label { fill: var(--color-text-muted); font: 600 var(--fs-xs) var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
 
   .af-wire, .af-trace-path {
     fill: none;
@@ -529,11 +529,11 @@ const revY = (i: number) => 284 + i * 40;
 
   .af-rail-pre { fill: none; stroke: var(--vmm-accent); stroke-width: 2.5; }
   .af-arrowhead--amber { fill: var(--color-amber); }
-  .af-rail-label { fill: var(--color-text); font: 600 14px var(--font-body); }
+  .af-rail-label { fill: var(--color-text); font: 600 var(--fs-md) var(--font-body); }
 
   /* dashes drift along the path direction: constant, legible direction cue */
   .af-loop-path { fill: none; stroke: color-mix(in oklab, var(--vmm-accent) 55%, transparent); stroke-width: 2; stroke-dasharray: 5 5; }
-  .af-loop-label { fill: var(--color-emerald-dark); font: 600 14px var(--font-body); }
+  .af-loop-label { fill: var(--color-emerald-dark); font: 600 var(--fs-md) var(--font-body); }
 
   .af-agent-ring { fill: none; stroke: var(--vmm-accent); stroke-width: 2; opacity: 0.5; transform-box: fill-box; transform-origin: center; animation: af-ring 2.8s ease-out infinite; }
   /* dial: slowly rotating tick ring around the agent */
@@ -549,12 +549,12 @@ const revY = (i: number) => 284 + i * 40;
   }
   .af-agent-core { fill: url(#af-agent-grad); }
   .af-agent-spark { fill: none; stroke: rgba(255, 255, 255, 0.9); stroke-width: 1.8; stroke-linejoin: round; }
-  .af-agent-label { fill: var(--primary-foreground, #fff); font: 700 17px var(--font-heading); }
+  .af-agent-label { fill: var(--primary-foreground, #fff); font: 700 var(--fs-xl) var(--font-heading); }
   @keyframes af-rotate { to { transform: rotate(360deg); } }
 
   .af-panel { fill: var(--color-surface); stroke: var(--color-border); stroke-width: 1.25; }
   .af-chip { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
-  .af-chip-label { fill: var(--color-text); font: 600 13.5px var(--font-body); }
+  .af-chip-label { fill: var(--color-text); font: 600 var(--fs-md) var(--font-body); }
 
   /* depth ramp: fill saturation grows, only L4 earns the accent border */
   .af-review-bar { stroke: color-mix(in oklab, var(--vmm-accent) 20%, var(--color-border)); stroke-width: 1.25; animation: af-gate 3.8s ease-in-out infinite; }
@@ -568,20 +568,20 @@ const revY = (i: number) => 284 + i * 40;
     0%, 24%, 100% { filter: none; }
     9% { filter: brightness(1.35) drop-shadow(0 0 5px var(--vmm-accent-soft)); }
   }
-  .af-review-n { fill: var(--color-emerald-dark); font: 700 12px var(--font-mono); }
-  .af-review-label { fill: var(--color-text); font: 600 13px var(--font-body); }
-  .af-depth-label { fill: var(--color-text-secondary); font: 600 12.5px var(--font-body); }
+  .af-review-n { fill: var(--color-emerald-dark); font: 700 var(--fs-xs) var(--font-mono); }
+  .af-review-label { fill: var(--color-text); font: 600 var(--fs-sm) var(--font-body); }
+  .af-depth-label { fill: var(--color-text-secondary); font: 600 var(--fs-sm) var(--font-body); }
 
   .af-pr { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 1.75; }
-  .af-pr-label { fill: var(--color-text); font: 700 15px var(--font-body); }
+  .af-pr-label { fill: var(--color-text); font: 700 var(--fs-base) var(--font-body); }
   .af-branch { fill: none; stroke-width: 2; }
   .af-branch--green { stroke: var(--vmm-accent); }
   .af-branch--risk { stroke: var(--color-amber); }
   .af-human-mark { fill: none; stroke: var(--color-amber); stroke-width: 1.6; }
-  .af-approved-label { fill: var(--color-amber); font: 600 10.5px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  .af-approved-label { fill: var(--color-amber); font: 600 var(--fs-2xs) var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
 
   .af-autofix-path { fill: none; stroke: color-mix(in oklab, var(--vmm-accent) 65%, transparent); stroke-width: 1.75; stroke-dasharray: 4 6; }
-  .af-autofix-label { fill: var(--vmm-accent); font: 600 13px var(--font-body); }
+  .af-autofix-label { fill: var(--vmm-accent); font: 600 var(--fs-sm) var(--font-body); }
 
   /* ---- vault ---- */
   .af-vault {
@@ -590,8 +590,8 @@ const revY = (i: number) => 284 + i * 40;
     stroke-width: 1.5;
   }
   .af-vault-rule { stroke: color-mix(in oklab, var(--vmm-accent) 20%, var(--color-border)); stroke-width: 1; opacity: 0.7; }
-  .af-vault-label { fill: var(--color-text); font: 700 19px var(--font-heading); }
-  .af-vault-tag { fill: var(--color-text-secondary); font: 600 11px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
+  .af-vault-label { fill: var(--color-text); font: 700 var(--fs-3xl) var(--font-heading); }
+  .af-vault-tag { fill: var(--color-text-secondary); font: 600 var(--fs-2xs) var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
   .af-vault-mark { fill: var(--vmm-accent); }
   .af-chain-block { fill: var(--vmm-accent-soft); stroke: color-mix(in oklab, var(--vmm-accent) 45%, var(--color-border)); stroke-width: 1.25; }
   .af-chain-block--head { fill: color-mix(in oklab, var(--vmm-accent) 30%, var(--card)); stroke: var(--vmm-accent); }
@@ -600,8 +600,8 @@ const revY = (i: number) => 284 + i * 40;
   /* ---- ship to production: the joyful finale, dressed like the other modules ---- */
   .af-ship-box { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 1.5; }
   .af-ship-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
-  .af-ship-label { fill: var(--color-text); font: 700 17px var(--font-heading); }
-  .af-ship-sub { fill: var(--vmm-accent); font: 600 10.5px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  .af-ship-label { fill: var(--color-text); font: 700 var(--fs-xl) var(--font-heading); }
+  .af-ship-sub { fill: var(--vmm-accent); font: 600 var(--fs-2xs) var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
   .af-seal { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 2; }
   .af-seal-check { fill: none; stroke: var(--vmm-accent); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
   .af-group.is-active .af-ship-box { filter: drop-shadow(0 0 14px var(--vmm-accent-soft)) drop-shadow(0 0 5px var(--vmm-accent)); }
@@ -662,8 +662,8 @@ const revY = (i: number) => 284 + i * 40;
   }
   .af-step:hover { opacity: 1; }
   .af-step-head { display: flex; flex-direction: column; gap: 3px; }
-  .af-step-n { font: 700 12px var(--font-mono); color: var(--vmm-accent); }
-  .af-step-t { font: 600 15px var(--font-heading); color: var(--color-text); line-height: 1.25; }
+  .af-step-n { font: 700 var(--fs-xs) var(--font-mono); color: var(--vmm-accent); }
+  .af-step-t { font: 600 var(--fs-base) var(--font-heading); color: var(--color-text); line-height: 1.25; }
 
   /* description: all share one area at the bottom of the row, only active shows */
   .af-step-d {
@@ -671,7 +671,7 @@ const revY = (i: number) => 284 + i * 40;
     left: 0;
     bottom: 0.3em;
     width: min(64ch, 100%);
-    font: 400 clamp(1rem, 1.35vw, 1.2rem) var(--font-body);
+    font: 400 clamp(var(--fs-lg), 1.35vw, 1.2rem) var(--font-body);
     line-height: 1.55;
     color: var(--color-text-secondary);
     opacity: 0;

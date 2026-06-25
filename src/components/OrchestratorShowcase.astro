@@ -136,7 +136,7 @@ const captions = [
   }
   .os-accent { color: var(--vmm-accent); }
   .os-sub {
-    font-size: 1.1rem;
+    font-size: var(--fs-2xl);
     line-height: 1.65;
     color: var(--color-text-secondary);
     max-width: 760px;
@@ -182,7 +182,7 @@ const captions = [
 
   /* input signals: the only thing on the left */
   .os-col-label {
-    font: 600 10.5px var(--font-mono);
+    font: 600 var(--fs-2xs) var(--font-mono);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-text-muted);
@@ -216,8 +216,8 @@ const captions = [
   .os-signal--blue .os-signal-icon { color: var(--color-blue); background: rgba(6, 147, 227, 0.1); }
   .os-signal--amber .os-signal-icon { color: var(--color-amber); background: rgba(245, 158, 11, 0.1); }
   .os-signal-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-  .os-signal-key { font: 700 10.5px var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-secondary); }
-  .os-signal-title { font: 600 12px var(--font-body); color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .os-signal-key { font: 700 var(--fs-2xs) var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-secondary); }
+  .os-signal-title { font: 600 var(--fs-xs) var(--font-body); color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   /* the one the orchestrator picks up */
   .is-working .os-signal--main,
   .is-risk .os-signal--main,
@@ -266,7 +266,7 @@ const captions = [
   }
   :global(.dark) .os-hub-spark { color: #06281a; }
   .os-hub-spark svg { width: 15px; height: 15px; }
-  .os-hub-name { font: 700 14.5px var(--font-heading); color: var(--color-text); flex: 1; }
+  .os-hub-name { font: 700 var(--fs-base) var(--font-heading); color: var(--color-text); flex: 1; }
   .os-hub-dot {
     width: 7px;
     height: 7px;
@@ -282,7 +282,7 @@ const captions = [
   /* task chips: light up one by one as the orchestrator works */
   .os-hub-chips { display: flex; flex-wrap: wrap; gap: 6px; }
   .os-chip {
-    font: 600 10px var(--font-mono);
+    font: 600 var(--fs-3xs) var(--font-mono);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--color-text-muted);
@@ -335,8 +335,8 @@ const captions = [
     color: var(--color-text-secondary);
   }
   .os-human-icon svg { width: 16px; height: 16px; }
-  .os-human-name { font: 650 12.5px var(--font-body); color: var(--color-text); }
-  .os-human-state { font: 600 10.5px var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; }
+  .os-human-name { font: 650 var(--fs-sm) var(--font-body); color: var(--color-text); }
+  .os-human-state { font: 600 var(--fs-2xs) var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; }
   .os-human-idle { color: var(--color-text-muted); }
   .os-human-ask { color: var(--color-amber); display: none; }
   .os-human-ans { color: var(--vmm-accent); display: none; }
@@ -362,8 +362,8 @@ const captions = [
   }
   .os-pr-icon { color: var(--vmm-accent); }
   .os-pr-icon svg { width: 16px; height: 16px; }
-  .os-pr-title { font: 650 12.5px var(--font-body); color: var(--color-text); }
-  .os-pr-meta { font: 600 10px var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--vmm-accent); }
+  .os-pr-title { font: 650 var(--fs-sm) var(--font-body); color: var(--color-text); }
+  .os-pr-meta { font: 600 var(--fs-3xs) var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--vmm-accent); }
 
   /* captions */
   .os-captions { position: relative; height: 2.2em; margin-top: 1.4rem; text-align: center; }
@@ -371,7 +371,7 @@ const captions = [
     position: absolute;
     inset: 0;
     margin: 0;
-    font: 500 1.05rem var(--font-body);
+    font: 500 var(--fs-xl) var(--font-body);
     color: var(--color-text-secondary);
     opacity: 0;
     transform: translateY(6px);
@@ -381,7 +381,7 @@ const captions = [
 
   /* CTA */
   .os-cta { display: flex; flex-direction: column; align-items: center; gap: 0.9rem; margin-top: 3rem; }
-  .os-cta-line { margin: 0; font-size: 1.05rem; color: var(--color-text-secondary); }
+  .os-cta-line { margin: 0; font-size: var(--fs-xl); color: var(--color-text-secondary); }
 
   /* ---- responsive ---- */
   @media (max-width: 860px) {

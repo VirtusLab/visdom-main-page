@@ -1,6 +1,28 @@
 @import "tailwindcss";
 @source "../../node_modules/@virtuslab/visdom-ui/dist";
 
+/* Type scale (rem, 16px base). Use these tokens instead of ad-hoc font sizes,
+   so text stays on one consistent scale. Responsive display headings keep using
+   clamp(). */
+:root {
+  --fs-4xs: 0.5625rem; /* 9px  */
+  --fs-3xs: 0.625rem;  /* 10px */
+  --fs-2xs: 0.6875rem; /* 11px */
+  --fs-xs: 0.75rem;    /* 12px */
+  --fs-sm: 0.8125rem;  /* 13px */
+  --fs-md: 0.875rem;   /* 14px */
+  --fs-base: 0.9375rem;/* 15px */
+  --fs-lg: 1rem;       /* 16px */
+  --fs-xl: 1.0625rem;  /* 17px */
+  --fs-2xl: 1.125rem;  /* 18px */
+  --fs-3xl: 1.25rem;   /* 20px */
+  --fs-4xl: 1.5rem;    /* 24px */
+  --fs-5xl: 1.875rem;  /* 30px */
+  --fs-6xl: 2.5rem;    /* 40px */
+  --fs-7xl: 3rem;      /* 48px */
+  --fs-8xl: 4rem;      /* 64px */
+}
+
 @theme {
   --color-bg: #ffffff;
   --color-surface: #f8f9fb;
@@ -255,7 +277,7 @@ body {
   border: 1px solid #2a2b3e;
   border-radius: 12px;
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: var(--fs-sm);
   line-height: 1.6;
   padding: 16px 20px;
   overflow-x: auto;
@@ -271,7 +293,7 @@ body {
   gap: 8px;
   padding: 10px 24px;
   border-radius: 9999px;
-  font-size: 14px;
+  font-size: var(--fs-md);
   font-weight: 500;
   font-family: var(--font-body);
   line-height: 1.25;
@@ -323,7 +345,7 @@ body {
   gap: 8px;
   padding: 6px 12px 6px 6px;
   border-radius: 9999px;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   font-weight: 600;
   font-family: var(--font-body);
   color: var(--color-text);
@@ -365,7 +387,7 @@ body {
   overflow: hidden;
   padding: 2px 8px;
   border-radius: 9999px;
-  font-size: 12px;
+  font-size: var(--fs-xs);
   font-weight: 500;
   line-height: 1.4;
   white-space: nowrap;
@@ -410,7 +432,7 @@ body {
 /* ── Section heading ── */
 .section-title {
   font-family: var(--font-heading);
-  font-size: 2.5rem;
+  font-size: var(--fs-6xl);
   font-weight: 700;
   color: var(--color-text);
   margin-bottom: 16px;
@@ -418,14 +440,14 @@ body {
 }
 
 .section-subtitle {
-  font-size: 1.125rem;
+  font-size: var(--fs-2xl);
   color: var(--color-text-secondary);
   max-width: 780px;
   line-height: 1.65;
 }
 
 .section-label {
-  font-size: 13px;
+  font-size: var(--fs-sm);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -449,7 +471,7 @@ body {
 /* ── Component number ── */
 .component-number {
   font-family: var(--font-heading);
-  font-size: 4rem;
+  font-size: var(--fs-8xl);
   font-weight: 800;
   line-height: 1;
   background: linear-gradient(135deg, var(--color-emerald) 0%, var(--color-blue) 100%);
@@ -500,7 +522,7 @@ body {
 /* ── Responsive ── */
 @media (max-width: 640px) {
   .section { padding: 80px 0; }
-  .section-title { font-size: 1.875rem; }
+  .section-title { font-size: var(--fs-5xl); }
   .container { padding: 0 20px; }
-  .component-number { font-size: 3rem; }
+  .component-number { font-size: var(--fs-7xl); }
 }
