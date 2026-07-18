@@ -135,8 +135,8 @@ const revY = (i: number) => 284 + i * 40;
             ))}
           </g>
 
-          <!-- ============ TRACEVAULT (baseplate, spans everything) ============ -->
-          <g id="af-tracevault" class="af-group" data-reveal>
+          <!-- ============ AI TRACING (baseplate, spans everything) ============ -->
+          <g id="af-tracing" class="af-group" data-reveal>
             <rect x="44" y="538" width="1112" height="68" rx="18" class="af-vault" />
             <line x1="60" y1="539.5" x2="1140" y2="539.5" class="af-sheen" />
             <g class="af-vault-icon" transform="translate(64,562) scale(0.8)" set:html={icons.link} />
@@ -726,7 +726,7 @@ const revY = (i: number) => 284 + i * 40;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const compact = window.matchMedia('(max-width: 900px)').matches;
 
-    const groups = ['af-context', 'af-preflight', 'af-loop', 'af-testing', 'af-review', 'af-triage', 'af-tracevault', 'af-ship']
+    const groups = ['af-context', 'af-preflight', 'af-loop', 'af-testing', 'af-review', 'af-triage', 'af-tracing', 'af-ship']
       .map((id) => document.getElementById(id));
     const captions = Array.from(root.querySelectorAll('.af-step'));
 
@@ -738,7 +738,7 @@ const revY = (i: number) => 284 + i * 40;
       ['#af-testing', '#af-c1g'],
       ['#af-pr-env', '#af-review', '#af-c2g', '#af-tap-review'],
       ['#af-triage', '#af-c3g'],
-      ['#af-tracevault', '#af-t0', '#af-t1', '#af-t2', '#af-t3'],
+      ['#af-tracing', '#af-t0', '#af-t1', '#af-t2', '#af-t3'],
       ['#af-ship', '#af-c4g', '#af-t4', '#af-approved'],
     ].map((sels) => sels.flatMap((s) => Array.from(document.querySelectorAll(s))));
     const allTargets = reveal.flat();

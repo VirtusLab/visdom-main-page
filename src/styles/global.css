@@ -271,20 +271,6 @@ body {
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ── Terminal block ── */
-.terminal {
-  background: #1a1b2e;
-  border: 1px solid #2a2b3e;
-  border-radius: 12px;
-  font-family: var(--font-mono);
-  font-size: var(--fs-sm);
-  line-height: 1.6;
-  padding: 16px 20px;
-  overflow-x: auto;
-  color: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 8px 32px rgba(26, 27, 46, 0.25);
-}
-
 /* ── Pill button ── */
 .btn-pill {
   display: inline-flex;
