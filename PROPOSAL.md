@@ -86,7 +86,7 @@ We are not a software vendor selling licenses. We are not a traditional consulta
 
 **We bring the kit**
 
-Six components, MIT-licensed, shaped through real delivery work, and visible in public before we ever step into your environment.
+Six components, source-available, shaped through real delivery work, and visible in public before we ever step into your environment.
 
 **Card 2**
 
@@ -140,7 +140,7 @@ Your platform team leads rollout across the wider organization. We stay close en
 
 **Preamble**
 
-Every engagement uses some combination of these six components. Each one is open source, MIT-licensed, and self-hostable. Most teams still bring us in because composing them, hardening them, and integrating them into a real enterprise stack is the expensive part, and we have already done that work more than once.
+Every engagement uses some combination of these six components. Each one is source-available and self-hostable. Most teams still bring us in because composing them, hardening them, and integrating them into a real enterprise stack is the expensive part, and we have already done that work more than once.
 
 ### ViDIA
 
