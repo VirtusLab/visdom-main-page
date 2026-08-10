@@ -1,9 +1,11 @@
 ---
-const tourHref = 'https://virtuslab.com/lp/visdom-tour-2026';
+// Stops come from src/data/tour.ts so the banner and the webinar page cannot
+// drift apart. Rendered markup is unchanged.
+import { TOUR_STOPS, TOUR_HREF } from '../data/tour';
 ---
 <a
   class="tour-banner"
-  href={tourHref}
+  href={TOUR_HREF}
   target="_blank"
   rel="noopener"
   data-cta="cta_click"
@@ -11,13 +13,22 @@ const tourHref = 'https://virtuslab.com/lp/visdom-tour-2026';
 >
   <span class="tour-banner-tag">Visdom AI Tour</span>
   <span class="tour-banner-text">
-    <span class="tour-stop tour-stop--upcoming"><span class="tour-flag">🇨🇭</span>Zurich <span class="tour-month">May</span></span>
-    <span class="tour-sep" aria-hidden="true">·</span>
-    <span class="tour-stop tour-stop--upcoming"><span class="tour-flag">🇺🇸</span>New York <span class="tour-month">June</span></span>
-    <span class="tour-sep" aria-hidden="true">·</span>
-    <span class="tour-stop tour-stop--next"><span class="tour-flag">🇺🇸</span><strong>New York</strong> <span class="tour-next-badge">Next stop: September</span></span>
-    <span class="tour-sep" aria-hidden="true">·</span>
-    <span class="tour-stop tour-stop--upcoming"><span class="tour-flag">🇺🇸</span>San Francisco <span class="tour-month">October</span></span>
+    {TOUR_STOPS.map((stop, i) => (
+      <>
+        {i > 0 && <span class="tour-sep" aria-hidden="true">·</span>}
+        {stop.status === 'next' ? (
+          <span class="tour-stop tour-stop--next">
+            <span class="tour-flag">{stop.flag}</span><strong>{stop.city}</strong>
+            <span class="tour-next-badge">Next stop: {stop.when}</span>
+          </span>
+        ) : (
+          <span class="tour-stop tour-stop--upcoming">
+            <span class="tour-flag">{stop.flag}</span>{stop.city}
+            <span class="tour-month">{stop.when}</span>
+          </span>
+        )}
+      </>
+    ))}
   </span>
 </a>
 

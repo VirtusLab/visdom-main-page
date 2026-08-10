@@ -1,9 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
+import TourBanner from '../components/TourBanner.astro';
 import Footer from '../components/Footer.astro';
 import { WEBINAR, registrationHref, formatSessionDate, hostInitials } from '../data/webinar';
+import { TOUR_STOPS, TOUR_HREF } from '../data/tour';
 import '../styles/global.css';
+
+const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 
 const href = registrationHref();
 const external = href.startsWith('http');
@@ -62,6 +66,7 @@ const eventJsonLd = WEBINAR.startsAt
     <script type="application/ld+json" is:inline set:html={JSON.stringify(eventJsonLd)} />
   )}
 
+  <TourBanner />
   <Nav />
 
   <main class="webinar">
@@ -207,6 +212,53 @@ const eventJsonLd = WEBINAR.startsAt
             </article>
           ))}
         </div>
+      </div>
+    </section>
+
+    {/* ── ON THE TOUR ────────────────────────────────────────────────────── */}
+    {/* Frames the webinar as one stop on the Visdom AI Tour rather than a
+        standalone online event: the same demo we run on stage, opened up. */}
+    <section class="wb-section">
+      <div class="container">
+        <p class="section-label fade-up">Visdom AI Tour</p>
+        <h2 class="wb-h2 fade-up">This demo normally runs in the room.</h2>
+        <p class="wb-section-lead fade-up">
+          We take it on the road: tech-week talks, conference sessions, and roundtables
+          with engineering teams. The webinar is that same session, opened up to everyone
+          who cannot make a stop in person.
+        </p>
+
+        <figure class="wb-tour-photo fade-up">
+          <img
+            src={`${base}/track-record-tour.jpg`}
+            width="2000"
+            height="1431"
+            loading="lazy"
+            decoding="async"
+            alt="VirtusLab engineers at an AI infrastructure conference, in Can Your AI Agents Actually Ship shirts."
+          />
+          <figcaption>Out in the field on the Visdom AI Tour.</figcaption>
+        </figure>
+
+        <ul class="wb-tour-stops fade-up">
+          {TOUR_STOPS.map((stop) => (
+            <li class={`wb-tour-stop wb-tour-stop-${stop.status}`}>
+              <span class="wb-tour-flag" aria-hidden="true">{stop.flag}</span>
+              <span class="wb-tour-city">{stop.city}</span>
+              <span class="wb-tour-when">{stop.when}</span>
+            </li>
+          ))}
+        </ul>
+
+        <a
+          class="wb-tour-link fade-up"
+          href={TOUR_HREF}
+          target="_blank"
+          rel="noopener"
+          data-cta="webinar_tour"
+        >
+          See the full tour -&gt;
+        </a>
       </div>
     </section>
 
@@ -652,6 +704,109 @@ const eventJsonLd = WEBINAR.startsAt
 
   .wb-cell-accent h3 {
     font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+  }
+
+  /* ── Visdom AI Tour ────────────────────────────────────────────────────── */
+  .wb-tour-photo {
+    max-width: 56rem;
+    margin: 2.5rem 0 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+
+  .wb-tour-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .wb-tour-photo figcaption {
+    padding: 0.75rem 1.1rem;
+    border-top: 1px solid var(--color-border-light);
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .wb-tour-stops {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 1.75rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .wb-tour-stop {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    background: var(--color-surface);
+    font-size: var(--fs-md);
+    color: var(--color-text);
+  }
+
+  .wb-tour-flag {
+    font-size: 0.95em;
+    line-height: 1;
+  }
+
+  .wb-tour-city {
+    font-weight: 600;
+  }
+
+  .wb-tour-when {
+    font-family: var(--font-mono);
+    font-size: var(--fs-3xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* Stops already played read quieter than the ones still to come. */
+  .wb-tour-stop-past {
+    opacity: 0.6;
+  }
+
+  /* Not var(--color-accent): the .dark block overrides --color-emerald-light
+     but leaves --color-accent on its light value, which renders a white pill on
+     the dark page. Mixing off --color-emerald is correct in both themes. */
+  .wb-tour-stop-next {
+    border-color: color-mix(in oklab, var(--color-emerald) 45%, transparent);
+    background: color-mix(in oklab, var(--color-emerald) 14%, transparent);
+  }
+
+  .wb-tour-stop-next .wb-tour-when {
+    color: var(--color-emerald-dark);
+  }
+
+  :global(.dark) .wb-tour-stop-next .wb-tour-when {
+    color: var(--color-emerald);
+  }
+
+  .wb-tour-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--color-emerald-dark);
+    text-decoration: none;
+  }
+
+  :global(.dark) .wb-tour-link {
+    color: var(--color-emerald);
+  }
+
+  .wb-tour-link:hover {
+    text-decoration: underline;
   }
 
   /* ── Host ──────────────────────────────────────────────────────────────── */
