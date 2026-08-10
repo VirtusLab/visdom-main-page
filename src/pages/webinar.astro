@@ -1,0 +1,769 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { WEBINAR, registrationHref, formatSessionDate, hostInitials } from '../data/webinar';
+import '../styles/global.css';
+
+const href = registrationHref();
+const external = href.startsWith('http');
+const sessionDate = formatSessionDate();
+const initials = hostInitials();
+
+// The session agenda, verbatim from the campaign brief. Do not reword these:
+// the copy is the marketing team's. The grid spans are the only editorial
+// decision here (the live demonstration is the accent cell).
+const agenda = [
+  { span: 'span-5', tone: 'raised', text: 'Why AI adoption often stalls after the first wave of excitement.' },
+  { span: 'span-7', tone: 'plain', text: 'What infrastructure is required for AI-native software delivery.' },
+  { span: 'span-8', tone: 'accent', text: 'A live demonstration of AI agents shipping production-ready code safely and at scale.' },
+  { span: 'span-4', tone: 'plain', text: 'Q&A with our expert.' },
+  { span: 'span-12', tone: 'plain', text: 'How Visdom connects AI agents with your SDLC through its core components.' },
+];
+
+const siteUrl = import.meta.env.SITE || 'https://visdom.virtuslab.com';
+
+// Emitted only once the date is known: an Event without a startDate is invalid
+// structured data, and a half-filled block is worse than none.
+const eventJsonLd = WEBINAR.startsAt
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Event',
+      name: WEBINAR.title,
+      description: WEBINAR.subtitle,
+      startDate: WEBINAR.startsAt,
+      endDate: new Date(
+        new Date(WEBINAR.startsAt).getTime() + WEBINAR.durationMinutes * 60_000,
+      ).toISOString(),
+      eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
+      eventStatus: 'https://schema.org/EventScheduled',
+      location: { '@type': 'VirtualLocation', url: `${siteUrl}/webinar` },
+      image: [`${siteUrl}/og-image.png`],
+      organizer: { '@type': 'Organization', name: 'VirtusLab', url: 'https://virtuslab.com' },
+      performer: {
+        '@type': 'Person',
+        name: WEBINAR.host.name,
+        jobTitle: WEBINAR.host.role,
+        worksFor: { '@type': 'Organization', name: WEBINAR.host.company },
+      },
+      offers: {
+        '@type': 'Offer',
+        price: 0,
+        priceCurrency: 'EUR',
+        availability: 'https://schema.org/InStock',
+        url: href,
+      },
+    }
+  : null;
+---
+
+<Layout title={`${WEBINAR.title} | Live webinar | Visdom by VirtusLab`} description={WEBINAR.subtitle}>
+  {eventJsonLd && (
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(eventJsonLd)} />
+  )}
+
+  <Nav />
+
+  <main class="webinar">
+    {/* ── HERO ───────────────────────────────────────────────────────────── */}
+    <section class="wb-hero">
+      <div class="aurora" aria-hidden="true"></div>
+      <div class="container wb-hero-grid">
+        <div class="fade-up">
+          <p class="section-label">Live webinar</p>
+
+          <h1 class="wb-headline">
+            Can your agents <span class="wb-headline-accent">actually ship?</span>
+          </h1>
+
+          <p class="wb-lede">
+            AI coding assistants can write code. But can they actually deliver software?
+          </p>
+
+          <div class="wb-actions">
+            <a
+              class="btn-pill btn-primary"
+              href={href}
+              target={external ? '_blank' : undefined}
+              rel={external ? 'noopener' : undefined}
+              data-cta="webinar_register" data-location="webinar_hero"
+            >
+              Reserve your spot -&gt;
+            </a>
+            <a class="btn-pill btn-outline" href="#agenda" data-cta="webinar_agenda">See the agenda</a>
+          </div>
+        </div>
+
+        {/* Session card: the event's own metadata, standing in as the hero asset. */}
+        <div class="fade-up wb-session card">
+          <div class="wb-session-head">
+            <span class="wb-mono">Session details</span>
+          </div>
+          <dl class="wb-session-rows">
+            <div class="wb-session-row">
+              <dt class="wb-session-k">Date</dt>
+              <dd class="wb-session-v">{sessionDate}</dd>
+            </div>
+            <div class="wb-session-row">
+              <dt class="wb-session-k">Runtime</dt>
+              <dd class="wb-session-v">{WEBINAR.durationMinutes} minutes</dd>
+            </div>
+            <div class="wb-session-row">
+              <dt class="wb-session-k">Format</dt>
+              <dd class="wb-session-v">Live, with Q&amp;A</dd>
+            </div>
+            <div class="wb-session-row">
+              <dt class="wb-session-k">Price</dt>
+              <dd class="wb-session-v wb-session-v-accent">Free</dd>
+            </div>
+          </dl>
+          <div class="wb-session-host">
+            <span class="wb-plate wb-plate-sm" data-initials={initials} aria-hidden="true">
+              <img src={WEBINAR.host.photo} alt="" loading="lazy" onerror="this.remove()" />
+              <span>{initials}</span>
+            </span>
+            <span class="wb-session-host-text">
+              <b>{WEBINAR.host.name}</b>
+              <span>{WEBINAR.host.role}, {WEBINAR.host.company}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ── THE PREMISE ────────────────────────────────────────────────────── */}
+    <section class="wb-section section-alt">
+      <div class="container">
+        <h2 class="wb-h2 fade-up">The real bottleneck isn't the agent.</h2>
+
+        <div class="wb-two-col fade-up">
+          <p>
+            Many engineering organizations discover that the real bottleneck is the
+            delivery infrastructure.
+          </p>
+          <p>
+            Pipelines, CI, code reviews, security gates, and release processes were
+            designed for human speed, not AI.
+          </p>
+        </div>
+
+        <div class="wb-pull fade-up">
+          <span class="wb-pull-rule" aria-hidden="true"></span>
+          <p>
+            Visdom is the <span class="wb-accent">missing layer</span> between AI coding
+            and production.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* ── THE LAYER ──────────────────────────────────────────────────────── */}
+    <section class="wb-section">
+      <div class="container">
+        <h2 class="wb-h2 fade-up">From AI-assisted delivery to an agent-operable SDLC</h2>
+        <p class="wb-section-lead fade-up">
+          Visdom provides the context, validation, governance, and orchestration that AI
+          agents need to ship software safely and at scale.
+        </p>
+
+        <div class="wb-stack fade-up">
+          <div class="wb-layer">
+            <span class="wb-layer-name">Your AI agents</span>
+            <p>AI coding assistants that can write code.</p>
+          </div>
+
+          <div class="wb-layer wb-layer-core">
+            <span class="wb-layer-name">
+              Visdom
+              <em class="wb-mono">The missing layer</em>
+            </span>
+            <div>
+              <div class="wb-chips">
+                {['Context', 'Validation', 'Governance', 'Orchestration'].map((c) => (
+                  <span class="wb-chip">{c}</span>
+                ))}
+              </div>
+              <p>What AI agents need to ship software safely and at scale.</p>
+            </div>
+          </div>
+
+          <div class="wb-layer">
+            <span class="wb-layer-name">Your SDLC</span>
+            <p>Pipelines, CI, code reviews, security gates, and release processes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ── AGENDA ─────────────────────────────────────────────────────────── */}
+    <section class="wb-section section-alt" id="agenda">
+      <div class="container">
+        <h2 class="wb-h2 fade-up">During this live session, we'll cover</h2>
+
+        <div class="wb-agenda fade-up">
+          {agenda.map((item) => (
+            <article class={`wb-cell wb-cell-${item.tone} ${item.span}`}>
+              <h3>{item.text}</h3>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* ── HOST ───────────────────────────────────────────────────────────── */}
+    <section class="wb-section">
+      <div class="container">
+        <p class="section-label fade-up">Your host</p>
+
+        <div class="wb-host fade-up">
+          <span class="wb-plate wb-plate-lg" aria-hidden="true">
+            <img src={WEBINAR.host.photo} alt="" loading="lazy" onerror="this.remove()" />
+            <span>{initials}</span>
+          </span>
+          <div>
+            <h2 class="wb-host-name">{WEBINAR.host.name}</h2>
+            <p class="wb-host-role wb-mono">{WEBINAR.host.role}, {WEBINAR.host.company}</p>
+            <p class="wb-host-bio">
+              Join us for an exclusive webinar with our Head of Application Development,
+              {' '}{WEBINAR.host.name}, who will demonstrate how Visdom transforms
+              AI-assisted software delivery into an agent-operable SDLC. You'll see how AI
+              agents can safely navigate the entire software delivery lifecycle with the
+              context, validation, governance, and orchestration they need to ship
+              production-ready software.
+            </p>
+            {WEBINAR.host.note && <p class="wb-host-note">{WEBINAR.host.note}</p>}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ── REGISTER ───────────────────────────────────────────────────────── */}
+    <section class="wb-final">
+      <div class="aurora" aria-hidden="true"></div>
+      <div class="container">
+        {/* The brief's closing paragraph carries this section. It is the beat, so
+            it is set at display scale rather than under an invented headline. */}
+        <p class="wb-final-statement fade-up">
+          Whether you're exploring AI coding assistants or already introducing them into
+          your engineering organization, this webinar will show what it takes to move
+          beyond code generation and enable AI agents to become productive contributors to
+          your software delivery process.
+        </p>
+        <p class="wb-final-note fade-up">
+          Register to reserve your spot.{!WEBINAR.startsAt && ' Registrants get the invite as soon as the date is set.'}
+        </p>
+        <div class="wb-final-cta fade-up">
+          <a
+            class="btn-pill btn-primary"
+            href={href}
+            target={external ? '_blank' : undefined}
+            rel={external ? 'noopener' : undefined}
+            data-cta="webinar_register" data-location="webinar_final"
+          >
+            Reserve your spot -&gt;
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  /* ── Shared type roles ─────────────────────────────────────────────────── */
+  .wb-mono {
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xs);
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .wb-accent {
+    color: var(--color-emerald-dark);
+  }
+
+  :global(.dark) .wb-accent {
+    color: var(--color-emerald);
+  }
+
+  .wb-section {
+    position: relative;
+    padding: clamp(4rem, 7vw, 6.5rem) 0;
+  }
+
+  .wb-h2 {
+    margin: 0;
+    max-width: 26ch;
+    /* Keeps two-line headings from leaving a single orphan word on line two. */
+    text-wrap: balance;
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+    color: var(--color-text);
+  }
+
+  .wb-section-lead {
+    margin: 1.25rem 0 0;
+    max-width: 62ch;
+    font-size: var(--fs-xl);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  /* ── Hero ──────────────────────────────────────────────────────────────── */
+  .wb-hero {
+    position: relative;
+    padding: clamp(3rem, 6vw, 5.5rem) 0 clamp(3.5rem, 7vw, 6rem);
+    overflow: hidden;
+  }
+
+  .wb-hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.85fr);
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: center;
+  }
+
+  /* The left column is sized to hold "Can your agents" on one line: the
+     headline must never run to three lines at desktop. */
+  .wb-headline {
+    margin: 0.75rem 0 0;
+    font-family: var(--font-heading);
+    font-size: clamp(2.25rem, 4.6vw, 3.75rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.04;
+    color: var(--color-text);
+  }
+
+  /* Emphasis stays in the same family. inline-block plus padding reserves room
+     for the descenders in "actually ship?". */
+  .wb-headline-accent {
+    display: inline-block;
+    font-style: italic;
+    line-height: 1.1;
+    padding-bottom: 0.06em;
+    color: var(--color-emerald-dark);
+  }
+
+  :global(.dark) .wb-headline-accent {
+    color: var(--color-emerald);
+  }
+
+  .wb-lede {
+    margin: 1.5rem 0 0;
+    max-width: 44ch;
+    font-size: var(--fs-2xl);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  .wb-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+  }
+
+  /* ── Session card ──────────────────────────────────────────────────────── */
+  .wb-session {
+    overflow: hidden;
+  }
+
+  .wb-session:hover {
+    /* This card is information, not a link. Suppress the .card lift. */
+    transform: none;
+    border-color: var(--color-border);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+  }
+
+  .wb-session-head {
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .wb-session-rows {
+    margin: 0;
+  }
+
+  .wb-session-row {
+    display: grid;
+    grid-template-columns: 5.25rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .wb-session-k {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--fs-3xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .wb-session-v {
+    margin: 0;
+    font-size: var(--fs-xl);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+  }
+
+  .wb-session-v-accent {
+    color: var(--color-emerald-dark);
+  }
+
+  :global(.dark) .wb-session-v-accent {
+    color: var(--color-emerald);
+  }
+
+  .wb-session-host {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1.25rem;
+    background: var(--color-surface);
+  }
+
+  .wb-session-host-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .wb-session-host-text b {
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .wb-session-host-text span {
+    font-size: var(--fs-xs);
+    color: var(--color-text-secondary);
+  }
+
+  /* ── Host portrait plate ───────────────────────────────────────────────── */
+  /* The img sits over the initials and removes itself when the file is absent,
+     so a missing headshot degrades to a plate instead of a broken image. */
+  .wb-plate {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface-light);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+  }
+
+  .wb-plate img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .wb-plate-sm {
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: var(--fs-sm);
+  }
+
+  .wb-plate-lg {
+    width: 100%;
+    max-width: 17.5rem;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-xl);
+    font-size: var(--fs-6xl);
+  }
+
+  /* ── Premise ───────────────────────────────────────────────────────────── */
+  .wb-two-col {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 3rem;
+    margin-top: 2rem;
+  }
+
+  .wb-two-col p {
+    margin: 0;
+    max-width: 46ch;
+    font-size: var(--fs-lg);
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  .wb-pull {
+    margin-top: clamp(2.5rem, 4vw, 4rem);
+  }
+
+  .wb-pull-rule {
+    display: block;
+    width: 1.75rem;
+    height: 2px;
+    margin-bottom: 0.9rem;
+    background: var(--color-emerald);
+  }
+
+  .wb-pull p {
+    margin: 0;
+    max-width: 30ch;
+    font-size: clamp(1.25rem, 2.1vw, 1.7rem);
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    line-height: 1.35;
+    color: var(--color-text);
+  }
+
+  /* ── Layer stack ───────────────────────────────────────────────────────── */
+  .wb-stack {
+    display: grid;
+    gap: 0.625rem;
+    margin-top: 2.5rem;
+  }
+
+  .wb-layer {
+    display: grid;
+    grid-template-columns: minmax(9.5rem, 14rem) minmax(0, 1fr);
+    gap: clamp(0.75rem, 2vw, 1.75rem);
+    align-items: center;
+    padding: 1.25rem clamp(1.1rem, 2.4vw, 1.75rem);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-xl);
+    background: var(--color-surface);
+  }
+
+  .wb-layer p {
+    margin: 0;
+    font-size: var(--fs-base);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  .wb-layer-name {
+    display: block;
+    font-size: var(--fs-3xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .wb-layer-name em {
+    display: block;
+    margin-top: 0.4rem;
+    font-style: normal;
+  }
+
+  .wb-layer-core {
+    padding-block: clamp(1.5rem, 3vw, 2.15rem);
+    border-color: color-mix(in oklab, var(--color-emerald) 40%, transparent);
+    background:
+      linear-gradient(140deg,
+        color-mix(in oklab, var(--color-emerald) 14%, transparent),
+        color-mix(in oklab, var(--color-emerald) 4%, transparent));
+  }
+
+  .wb-layer-core .wb-layer-name {
+    font-size: clamp(1.5rem, 2.6vw, 1.9rem);
+  }
+
+  .wb-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .wb-chip {
+    display: inline-flex;
+    padding: 0.4rem 0.8rem;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in oklab, var(--color-emerald) 34%, transparent);
+    background: var(--color-bg);
+    font-family: var(--font-mono);
+    font-size: var(--fs-3xs);
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--color-text);
+  }
+
+  .wb-layer-core p {
+    margin-top: 0.85rem;
+  }
+
+  /* ── Agenda grid ───────────────────────────────────────────────────────── */
+  .wb-agenda {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+  }
+
+  .span-4 { grid-column: span 4; }
+  .span-5 { grid-column: span 5; }
+  .span-7 { grid-column: span 7; }
+  .span-8 { grid-column: span 8; }
+  .span-12 { grid-column: span 12; }
+
+  .wb-cell {
+    padding: clamp(1.25rem, 2.3vw, 1.85rem);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-xl);
+    background: var(--color-bg);
+  }
+
+  .wb-cell h3 {
+    margin: 0;
+    font-size: clamp(1.15rem, 1.9vw, 1.4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: var(--color-text);
+  }
+
+  .wb-cell-raised {
+    background: var(--color-surface-light);
+    border-color: var(--color-border);
+  }
+
+  .wb-cell-accent {
+    border-color: color-mix(in oklab, var(--color-emerald) 36%, transparent);
+    background:
+      linear-gradient(150deg,
+        color-mix(in oklab, var(--color-emerald) 15%, transparent),
+        color-mix(in oklab, var(--color-emerald) 3%, transparent));
+  }
+
+  .wb-cell-accent h3 {
+    font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+  }
+
+  /* ── Host ──────────────────────────────────────────────────────────────── */
+  .wb-host {
+    display: grid;
+    grid-template-columns: 17.5rem minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: center;
+    margin-top: 1.75rem;
+  }
+
+  .wb-host-name {
+    margin: 0;
+    font-size: clamp(1.6rem, 3vw, 2.35rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+  }
+
+  .wb-host-role {
+    margin: 0.75rem 0 0;
+    letter-spacing: 0.14em;
+    color: var(--color-emerald-dark);
+  }
+
+  :global(.dark) .wb-host-role {
+    color: var(--color-emerald);
+  }
+
+  .wb-host-bio {
+    margin: 1.25rem 0 0;
+    max-width: 62ch;
+    font-size: var(--fs-lg);
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  .wb-host-note {
+    margin: 0.85rem 0 0;
+    font-size: var(--fs-base);
+    color: var(--color-text-muted);
+  }
+
+  /* ── Closing band ──────────────────────────────────────────────────────── */
+  .wb-final {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(4rem, 8vw, 7rem) 0;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+  }
+
+  .wb-final .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .wb-final-statement {
+    margin: 0 auto;
+    max-width: 44ch;
+    font-size: clamp(1.25rem, 2.2vw, 1.8rem);
+    font-weight: 700;
+    letter-spacing: -0.026em;
+    line-height: 1.32;
+    color: var(--color-text);
+  }
+
+  .wb-final-note {
+    margin: 1.4rem auto 0;
+    max-width: 46ch;
+    font-size: var(--fs-xl);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  .wb-final-cta {
+    margin-top: 2.1rem;
+  }
+
+  /* ── Responsive ────────────────────────────────────────────────────────── */
+  @media (max-width: 1024px) {
+    .wb-hero-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .wb-session {
+      max-width: 30rem;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .wb-agenda {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .span-4, .span-5, .span-7, .span-8, .span-12 {
+      grid-column: auto;
+    }
+
+    .wb-host {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .wb-two-col {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .wb-layer {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.75rem;
+    }
+  }
+</style>
