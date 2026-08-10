@@ -1,11 +1,20 @@
 ---
 const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') || '/';
 
+// The nav points at sections of the home page. On a subpage a bare "#platform"
+// scrolls nowhere, so prefix those anchors with the home path when we are not
+// on the home page.
+const home = baseUrl === '/' ? '' : baseUrl;
+const onHome = Astro.url.pathname.replace(/\/$/, '') === home;
+const anchor = (hash: string) => (onHome ? hash : `${home}/${hash}`);
+
 const links = [
-  { label: 'Platform', href: '#platform' },
-  { label: 'Insights', href: '#thesis' },
+  { label: 'Platform', href: anchor('#platform') },
+  { label: 'Insights', href: anchor('#thesis') },
   { label: 'Maturity Matrix', href: 'https://visdom-maturity-matrix.virtuslab.com/', external: true },
 ];
+
+const contactHref = anchor('#contact');
 ---
 
 <header class="site-header" id="site-header">
@@ -35,7 +44,7 @@ const links = [
   </nav>
 
   <div class="site-header-right">
-    <a href="#contact" class="site-header-cta">Get in Touch</a>
+    <a href={contactHref} class="site-header-cta">Get in Touch</a>
 
     <button
       type="button"
@@ -75,7 +84,7 @@ const links = [
         {link.external && <span aria-hidden="true"> &#8599;</span>}
       </a>
     ))}
-    <a href="#contact" class="site-header-mobile-link site-header-mobile-link--cta">Get in Touch</a>
+    <a href={contactHref} class="site-header-mobile-link site-header-mobile-link--cta">Get in Touch</a>
   </div>
 </header>
 
