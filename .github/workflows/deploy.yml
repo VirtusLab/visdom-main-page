@@ -1,3 +1,20 @@
+# DISABLED in the GitHub UI since 2026-08-11. Do not expect a push to dev to
+# publish anything until someone re-enables it.
+#
+# Why: `npm ci` fails with 401 fetching @virtuslab/visdom-ui from GitHub
+# Packages. The PACKAGES_READ_TOKEN secret exists but the PAT behind it stopped
+# authenticating, so this last deployed successfully on 2026-06-25 and every run
+# after that failed. The workflow itself is fine; only the credential is not.
+#
+# To bring it back, fix the credential and then `gh workflow enable deploy.yml`:
+#   - preferred: grant the visdom-main-page repo read access in the
+#     @virtuslab/visdom-ui package settings, so the default GITHUB_TOKEN is
+#     enough and the secret can be deleted. Nothing expires that way.
+#   - or: mint a new classic PAT with read:packages and
+#     `gh secret set PACKAGES_READ_TOKEN`.
+#
+# Production is unaffected either way: visdom.virtuslab.com is deployed by
+# Vercel on push to master, outside GitHub Actions.
 name: Deploy to GitHub Pages
 
 on:
