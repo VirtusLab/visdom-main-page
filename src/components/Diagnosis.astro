@@ -27,9 +27,8 @@ const pillars = [
     <div class="fade-up diagnosis-body">
       <p class="diagnosis-kicker" id="diagnosis-reasons-label">What defines it:</p>
       <ul class="diagnosis-reasons" role="list" aria-labelledby="diagnosis-reasons-label">
-        {pillars.map((r, i) => (
+        {pillars.map((r) => (
           <li class="diagnosis-reason">
-            <span class="diagnosis-reason-n">{String(i + 1).padStart(2, '0')}</span>
             <span class="diagnosis-reason-key">{r.key}</span>
             <p class="diagnosis-reason-copy">{r.copy}</p>
           </li>
@@ -83,25 +82,30 @@ const pillars = [
 
   .diagnosis-reason {
     display: grid;
-    grid-template-columns: 2.5rem 7.5rem minmax(0, 1fr);
-    gap: 1rem;
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+    gap: 1.5rem;
     align-items: baseline;
   }
 
-  .diagnosis-reason-n {
-    font-family: var(--font-mono);
-    font-size: var(--fs-md);
-    font-weight: 700;
-    color: var(--color-text-muted);
-  }
-
   .diagnosis-reason-key {
+    position: relative;
+    padding-left: 2rem;
     font-family: var(--font-mono);
     font-size: var(--fs-md);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-emerald-dark);
+  }
+
+  .diagnosis-reason-key::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 1.5rem;
+    height: 1px;
+    background: var(--color-emerald);
   }
 
   .diagnosis-reason-copy {
@@ -119,12 +123,8 @@ const pillars = [
 
   @media (max-width: 640px) {
     .diagnosis-reason {
-      grid-template-columns: 2.5rem minmax(0, 1fr);
-    }
-
-    .diagnosis-reason-copy {
-      grid-column: 2;
-      margin-top: 0.35rem;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.6rem;
     }
   }
 </style>

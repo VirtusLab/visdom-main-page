@@ -11,36 +11,109 @@
         </p>
       </div>
 
-      <div class="final-cta-grid">
-        <article class="final-cta-card final-cta-card--primary">
+      <div class="final-cta-layout">
+        <form
+          id="contact-form"
+          class="final-cta-card final-cta-card--primary contact-form"
+          action="mailto:visdom@virtuslab.com"
+          method="post"
+          enctype="text/plain"
+        >
           <p class="final-cta-card-label">Recommended</p>
           <h3>Book a working session</h3>
-          <p>30 minutes with a staff engineer. We review your current stack, name the one pattern that would move your number first, and tell you if Visdom is the wrong fit.</p>
-          <a href="mailto:visdom@virtuslab.com?subject=Working%20session%20request" data-cta="book_working_session" data-location="final_cta" class="btn-pill btn-primary">Book a working session -&gt;</a>
-        </article>
+          <p>30 minutes with a staff engineer. Tell us what you're working on and we come prepared with the one pattern most likely to move your number first.</p>
 
-        <article class="final-cta-card">
-          <p class="final-cta-card-label">Self-serve</p>
-          <h3>Run the Matrix yourself</h3>
-          <p>60 practices across 4 perspectives. Takes 20 minutes. You walk away with a scored baseline and a clear first move to make with us.</p>
-          <p class="final-cta-card-fineprint">Self-assessment is free. Facilitated workshop + diagnosis is a fixed fee - ask for a quote.</p>
-          <a href="https://visdom-maturity-matrix.virtuslab.com/workshop" data-location="final_cta" target="_blank" rel="noopener" class="btn-pill btn-outline">Run the Matrix -&gt;</a>
-        </article>
+          <div class="contact-field-row">
+            <div class="contact-field">
+              <label for="cf-name">Name</label>
+              <input id="cf-name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="contact-field">
+              <label for="cf-company">Company <span>optional</span></label>
+              <input id="cf-company" name="company" type="text" autocomplete="organization" />
+            </div>
+          </div>
 
-        <article class="final-cta-card">
-          <p class="final-cta-card-label">Engineering-first</p>
-          <h3>See how we think</h3>
-          <p>50+ articles on the AI-Native SDLC: context, CI, review, and governance. Read the engineering before you judge the sales deck.</p>
-          <a href="#insights" class="btn-pill btn-outline"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>Read the writing</a>
-        </article>
+          <div class="contact-field">
+            <label for="cf-email">Work email</label>
+            <input id="cf-email" name="email" type="email" autocomplete="email" required />
+          </div>
+
+          <div class="contact-field">
+            <label for="cf-message">What are you trying to ship? <span>optional</span></label>
+            <textarea id="cf-message" name="message" rows="3"></textarea>
+          </div>
+
+          <button type="submit" class="btn-pill btn-primary" data-cta="book_working_session" data-location="final_cta">Book a working session -&gt;</button>
+          <p class="contact-form-status" role="status" aria-live="polite" hidden></p>
+        </form>
+
+        <div class="final-cta-aside">
+          <article class="final-cta-card">
+            <p class="final-cta-card-label">Self-serve</p>
+            <h3>Run the Matrix yourself</h3>
+            <p>60 practices across 4 perspectives. Takes 20 minutes. You walk away with a scored baseline and a clear first move to make with us.</p>
+            <p class="final-cta-card-fineprint">Self-assessment is free. Facilitated workshop + diagnosis is a fixed fee - ask for a quote.</p>
+            <a href="https://visdom-maturity-matrix.virtuslab.com/workshop" data-location="final_cta" target="_blank" rel="noopener" class="btn-pill btn-outline">Run the Matrix -&gt;</a>
+          </article>
+
+          <article class="final-cta-card">
+            <p class="final-cta-card-label">Engineering-first</p>
+            <h3>See how we think</h3>
+            <p>50+ articles on the AI-Native SDLC: context, CI, review, and governance. Read the engineering before you judge the sales deck.</p>
+            <a href="#insights" class="btn-pill btn-outline"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>Read the writing</a>
+          </article>
+        </div>
       </div>
 
       <p class="final-cta-footnote">
-        Prefer email? <a href="mailto:visdom@virtuslab.com">visdom@virtuslab.com</a>. Replies come from an engineer, within one business day.
+        Prefer plain email? <a href="mailto:visdom@virtuslab.com">visdom@virtuslab.com</a>. Replies come from an engineer, within one business day.
       </p>
     </div>
   </div>
 </section>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById('contact-form');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (typeof form.reportValidity === 'function' && !form.reportValidity()) return;
+
+      var data = new FormData(form);
+      var val = function (k) { return (data.get(k) || '').toString().trim(); };
+      var name = val('name');
+      var company = val('company');
+      var email = val('email');
+      var message = val('message');
+
+      var subject = 'Working session request' + (company ? ' - ' + company : '');
+      var lines = [];
+      if (name) lines.push('Name: ' + name);
+      if (company) lines.push('Company: ' + company);
+      if (email) lines.push('Email: ' + email);
+      var body = lines.join('\n') +
+        (message ? '\n\n' + message : '\n\n(Add anything useful about what you are trying to ship.)');
+
+      var mailto = 'mailto:visdom@virtuslab.com?subject=' +
+        encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
+      // Preserve the conversion event the delegated click listener fires for the
+      // old mailto CTA (a button submit is not caught by that a[href] listener).
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'generate_lead', { method: 'email', cta_id: 'book_working_session', location: 'final_cta' });
+      }
+
+      var status = form.querySelector('.contact-form-status');
+      if (status) {
+        status.hidden = false;
+        status.textContent = 'Opening your email client. If nothing opens, write to visdom@virtuslab.com.';
+      }
+      window.location.href = mailto;
+    });
+  })();
+</script>
 
 <style>
   .final-cta-section {
@@ -92,11 +165,17 @@
     margin: 0 auto;
   }
 
-  .final-cta-grid {
+  .final-cta-layout {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1.5fr 1fr;
     gap: 1.25rem;
+    align-items: start;
     margin-bottom: 2rem;
+  }
+
+  .final-cta-aside {
+    display: grid;
+    gap: 1.25rem;
   }
 
   .final-cta-card {
@@ -146,6 +225,9 @@
     color: var(--color-text-secondary);
     line-height: 1.55;
     margin: 0;
+  }
+
+  .final-cta-aside .final-cta-card p {
     flex-grow: 1;
   }
 
@@ -159,6 +241,88 @@
     color: var(--color-text-muted);
     line-height: 1.5;
     flex-grow: 0;
+    margin: 0;
+  }
+
+  /* ── Contact form ── */
+  .contact-form {
+    gap: 1rem;
+  }
+
+  .contact-form > p {
+    margin-bottom: 0.25rem;
+  }
+
+  .contact-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .contact-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .contact-field label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .contact-field label span {
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    opacity: 0.7;
+  }
+
+  .contact-field input,
+  .contact-field textarea {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    font-family: inherit;
+    font-size: var(--fs-base);
+    color: var(--color-text);
+    background: var(--card-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  /* Dark card and input surface sit close together, so lift the field border a
+     touch for a clear edge in dark mode. */
+  :global(.dark) .contact-field input,
+  :global(.dark) .contact-field textarea {
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+
+  .contact-field textarea {
+    resize: vertical;
+    min-height: 3.25rem;
+  }
+
+  .contact-field input:focus-visible,
+  .contact-field textarea:focus-visible {
+    outline: none;
+    border-color: var(--color-emerald);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+  }
+
+  .contact-form .btn-pill {
+    margin-top: 0.25rem;
+  }
+
+  .contact-form-status {
+    font-size: var(--fs-sm);
+    color: var(--color-emerald-dark, var(--color-emerald));
     margin: 0;
   }
 
@@ -177,7 +341,13 @@
   }
 
   @media (max-width: 900px) {
-    .final-cta-grid {
+    .final-cta-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .contact-field-row {
       grid-template-columns: 1fr;
     }
   }

@@ -468,18 +468,28 @@ body {
   border: 0;
 }
 
-/* ── Component number ── */
+/* ── Component index ── */
+/* A quiet position marker for the stacked component list, in the page's mono
+   label voice. Not a sequence: the components are parallel, so this reads as
+   "N of 6" wayfinding, not a ranked order. */
 .component-number {
-  font-family: var(--font-heading);
-  font-size: var(--fs-8xl);
-  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
   line-height: 1;
-  background: linear-gradient(135deg, var(--color-emerald) 0%, var(--color-blue) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  opacity: 0.25;
+  color: var(--color-text-muted);
   user-select: none;
+}
+
+.component-number::before {
+  content: '';
+  width: 1.5rem;
+  height: 1px;
+  background: var(--color-emerald);
 }
 
 /* ── Platform block ── */
@@ -524,5 +534,4 @@ body {
   .section { padding: 80px 0; }
   .section-title { font-size: var(--fs-5xl); }
   .container { padding: 0 20px; }
-  .component-number { font-size: var(--fs-7xl); }
 }
