@@ -333,7 +333,7 @@ const revY = (i: number) => 304 + i * 40;
             <g class="af-mhead-icon" transform="translate(940,275) scale(0.66)" set:html={icons.funnel} />
             <text x="962" y="288" class="af-mhead-label">{d.triage}</text>
 
-            <rect x="930" y="311" width="106" height="42" rx="10" class="af-pr" />
+            <rect x="927" y="311" width="112" height="42" rx="10" class="af-pr" />
             <text x="983" y="337" text-anchor="middle" class="af-pr-label">{d.riskGate}</text>
 
             <!-- fork below the panel: trivial loops back, risk stops at the human gate.
@@ -345,7 +345,7 @@ const revY = (i: number) => 304 + i * 40;
               <text x="530" y="508" text-anchor="middle" class="af-autofix-label">{d.autofix}</text>
             </g>
             <g class="af-triage-node af-triage-node--risk">
-              <rect x="913" y="490" width="140" height="46" rx="10" class="af-card af-card--risk" />
+              <rect x="913" y="490" width="152" height="46" rx="10" class="af-card af-card--risk" />
               <text x="953" y="510" class="af-card-label af-card-label--risk">{d.highRisk}</text>
               <text x="953" y="527" class="af-card-sub">{d.humanApproval}</text>
               <g class="af-human" transform="translate(933,508)">
@@ -355,8 +355,8 @@ const revY = (i: number) => 304 + i * 40;
               <!-- approved: the human waves it through, orthogonal elbow up to production.
                    revealed with the ship stage so the arrow never points at empty space -->
               <g id="af-approved">
-                <path class="af-branch af-branch--risk" d="M1053,513 L1102,513 Q1118,513 1118,497 L1118,388" marker-end="url(#af-arrow-amber)" />
-                <text x="1061" y="529" class="af-approved-label">{d.approved}</text>
+                <path class="af-branch af-branch--risk" d="M1065,513 L1102,513 Q1118,513 1118,497 L1118,388" marker-end="url(#af-arrow-amber)" />
+                <text x="1069" y="529" class="af-approved-label">{d.approved}</text>
               </g>
             </g>
           </g>

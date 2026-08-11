@@ -7,9 +7,10 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "npm run check:i18n && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check:i18n": "tsc --noEmit --strict --target es2022 --module esnext --moduleResolution bundler src/i18n/pl/index.ts"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.3",
@@ -26,5 +27,9 @@
   },
   "overrides": {
     "vite": "^7.3.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.9.3"
   }
 }

@@ -696,6 +696,8 @@ const en = {
   },
 
   footer: {
+    /** The brand line in the footer's left slot, next to the "Visdom" wordmark. */
+    poweredBy: 'Powered by VirtusLab',
     links: [
       { label: 'VirtusLab' },
       { label: 'GitHub' },

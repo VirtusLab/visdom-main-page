@@ -1,11 +1,14 @@
 ---
+import { createElement as h } from 'react';
 import { Footer as FooterReact } from '@virtuslab/visdom-ui';
 import { useI18n } from '../i18n';
 
 const { t } = useI18n(Astro);
 
-// The upstream Footer defaults to English labels. Passing `links` keeps the
-// same destinations while letting each locale name them.
+// The upstream Footer defaults to English for both the link labels and the
+// brand line, and exposes each as a prop. `brand` is a ReactNode, so we rebuild
+// the default three-span lockup here with the tagline coming from the
+// dictionary; the classes match the upstream default so the layout is unchanged.
 const hrefs = [
   'https://virtuslab.com',
   'https://github.com/VirtusLab',
@@ -13,7 +16,13 @@ const hrefs = [
   'https://virtuslab.com/contact',
 ];
 const links = t.footer.links.map((link, i) => ({ label: link.label, href: hrefs[i] }));
+
+const brand = h('div', { className: 'flex items-center gap-2 text-sm text-muted-foreground' }, [
+  h('span', { key: 'name', className: 'font-bold text-foreground/80' }, 'Visdom'),
+  h('span', { key: 'sep' }, '·'),
+  h('span', { key: 'tagline' }, t.footer.poweredBy),
+]);
 ---
 <div class="site-footer">
-  <FooterReact links={links} client:load />
+  <FooterReact brand={brand} links={links} client:load />
 </div>
