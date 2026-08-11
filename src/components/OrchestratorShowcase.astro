@@ -4,34 +4,26 @@
 // status line, like a build log), a human signs off when risk demands it,
 // a pull request rolls out. Looping, calm, narrated by four captions.
 
-// input signals: the kinds of events that can wake the system up
-const signals = [
-  { icon: '<path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><path d="M12 9v4"/><path d="M12 17h.01"/>', key: 'production error', title: 'a service starts failing', tone: 'red' },
-  { icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 7v10M12 7v7M16 7v4"/>', key: 'Jira ticket', title: 'a bug lands in the backlog', tone: 'blue', main: true },
-  { icon: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>', key: 'security advisory', title: 'a CVE hits a dependency', tone: 'amber' },
+import { useI18n } from '../i18n';
+
+const { t } = useI18n(Astro);
+
+// input signals: the kinds of events that can wake the system up. Icons and
+// tones pair with t.orchestrator.signals by position.
+const signalVisuals = [
+  { icon: '<path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><path d="M12 9v4"/><path d="M12 17h.01"/>', tone: 'red' },
+  { icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 7v10M12 7v7M16 7v4"/>', tone: 'blue', main: true },
+  { icon: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>', tone: 'amber' },
 ];
 
-// the real gates it works through, the same ones from the architecture above
-const work = ['Context Fabric', 'testing', 'security', 'code review', 'deployment'];
-
-const captions = [
-  'Signals stream in: errors, tickets, events, advisories.',
-  'The orchestrator picks one up and does the legwork.',
-  'Mid-flow it pings a human: one quick question, answered.',
-  'Code review turns red. The human is back in the loop.',
-  'Review green, deployment done. A pull request rolls out.',
-];
+const signals = t.orchestrator.signals.map((s, i) => ({ ...s, ...signalVisuals[i] }));
 ---
 <section class="os" id="orchestrator" aria-labelledby="os-title">
   <div class="container">
     <div class="os-head fade-up">
-      <p class="section-label">The Orchestrator</p>
-      <h2 id="os-title" class="os-title">One ticket in.<br />One <span class="serif-accent os-accent">pull request</span> out.</h2>
-      <p class="os-sub">
-        Every step is a specialized agent. You see none of that.
-        Production errors, Jira tickets, events: signals go in, the orchestrator does the legwork
-        through the same gates you just saw, and a human signs off only when risk demands it.
-      </p>
+      <p class="section-label">{t.orchestrator.label}</p>
+      <h2 id="os-title" class="os-title">{t.orchestrator.titleFirst}<br />{t.orchestrator.titleSecondBefore} <span class="serif-accent os-accent">{t.orchestrator.titleAccent}</span> {t.orchestrator.titleSecondAfter}</h2>
+      <p class="os-sub">{t.orchestrator.subtitle}</p>
     </div>
 
     <div class="os-stagewrap fade-up">
@@ -42,13 +34,13 @@ const captions = [
             <span class="os-human-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
             </span>
-            <span class="os-human-name">Human in the loop</span>
+            <span class="os-human-name">{t.orchestrator.human.name}</span>
             <span class="os-human-state">
-              <span class="os-human-idle">on call · every step</span>
-              <span class="os-human-ask">quick question</span>
-              <span class="os-human-ans">answered ✓</span>
-              <span class="os-human-call">review red · deciding</span>
-              <span class="os-human-res">resolved ✓</span>
+              <span class="os-human-idle">{t.orchestrator.human.idle}</span>
+              <span class="os-human-ask">{t.orchestrator.human.ask}</span>
+              <span class="os-human-ans">{t.orchestrator.human.answered}</span>
+              <span class="os-human-call">{t.orchestrator.human.called}</span>
+              <span class="os-human-res">{t.orchestrator.human.resolved}</span>
             </span>
           </div>
           <div class="os-vwire" aria-hidden="true"></div>
@@ -56,7 +48,7 @@ const captions = [
 
         <!-- IN: nothing but input signals -->
         <div class="os-col">
-          <span class="os-col-label">Incoming signals</span>
+          <span class="os-col-label">{t.orchestrator.signalsLabel}</span>
           <div class="os-signals">
             {signals.map((s) => (
               <div class={`os-signal os-signal--${s.tone}${s.main ? ' os-signal--main' : ''}`}>
@@ -81,11 +73,11 @@ const captions = [
               <span class="os-hub-spark" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></svg>
               </span>
-              <span class="os-hub-name">Orchestrator</span>
+              <span class="os-hub-name">{t.orchestrator.hubName}</span>
               <span class="os-hub-dot" aria-hidden="true"></span>
             </div>
             <div class="os-hub-chips" aria-live="polite">
-              {work.map((w) => (
+              {t.orchestrator.work.map((w) => (
                 <span class="os-chip">{w}</span>
               ))}
             </div>
@@ -100,23 +92,23 @@ const captions = [
             <span class="os-pr-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6"/><path d="M13 6h2a3 3 0 0 1 3 3v6"/></svg>
             </span>
-            <span class="os-pr-title">Pull request</span>
-            <span class="os-pr-meta">all gates green · fully traced</span>
+            <span class="os-pr-title">{t.orchestrator.prTitle}</span>
+            <span class="os-pr-meta">{t.orchestrator.prMeta}</span>
           </div>
         </div>
       </div>
 
       <!-- narration -->
       <div class="os-captions" aria-live="polite">
-        {captions.map((c, i) => (
+        {t.orchestrator.captions.map((c, i) => (
           <p class={`os-caption${i === 0 ? ' is-active' : ''}`} data-i={i}>{c}</p>
         ))}
       </div>
     </div>
 
     <div class="os-cta fade-up">
-      <p class="os-cta-line">Want to see the Orchestrator on your stack?</p>
-      <a href="#contact" class="btn-pill btn-primary">Book a demo -&gt;</a>
+      <p class="os-cta-line">{t.orchestrator.ctaLine}</p>
+      <a href="#contact" class="btn-pill btn-primary">{t.orchestrator.ctaButton}</a>
     </div>
   </div>
 </section>

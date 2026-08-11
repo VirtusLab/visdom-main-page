@@ -1,43 +1,30 @@
 ---
-const results = [
-  {
-    value: '43%',
-    headline: 'reduction in PR merge time',
-    client: 'Leading investment bank',
-    detail: 'Scala monorepo, managed IntelliJ IDEA solution.',
-  },
-  {
-    value: '15%',
-    headline: 'decrease in pod count for a single workload',
-    client: 'Global hospitality leader',
-    detail: 'Workload right-sizing across the platform footprint.',
-  },
-  {
-    value: '88%',
-    headline: 'reduction in build times',
-    client: 'Global freight forwarder',
-    detail: 'Scala monorepo migrated from sbt to Bazel, 40-60 min down to ~5 min.',
-  },
-];
+import { useI18n } from '../i18n';
+
+const { t } = useI18n(Astro);
+
+// The measured numbers are facts, not copy: they pair with t.results.items by
+// position and never get translated.
+const values = ['43%', '15%', '88%'];
 ---
 <section id="results" class="section client-results-section">
   <div class="container">
     <div class="fade-up mb-10">
-      <p class="section-label">Track record</p>
-      <h2 class="section-title">The experience behind Visdom</h2>
+      <p class="section-label">{t.results.label}</p>
+      <h2 class="section-title">{t.results.title}</h2>
       <p class="section-subtitle">
-        These are VirtusLab's own results from building platform tooling and optimizing delivery, not Visdom product metrics. They are the track record we draw on to build it. Clients under NDA, with full write-ups on the
-        <a href="https://virtuslab.com/success-stories/" target="_blank" rel="noopener" class="results-link">VirtusLab success stories</a>
-        page.
+        {t.results.subtitleBefore}
+        <a href="https://virtuslab.com/success-stories/" target="_blank" rel="noopener" class="results-link">{t.results.subtitleLink}</a>
+        {t.results.subtitleAfter}
       </p>
     </div>
 
     <div class="results-grid">
-      {results.map((r) => (
+      {t.results.items.map((r, i) => (
         <article class="result-card fade-up">
-          <div class="result-badge">{r.value}</div>
+          <div class="result-badge">{values[i]}</div>
           <p class="result-headline">{r.headline}</p>
-          <p class="result-client">for a {r.client.toLowerCase()}</p>
+          <p class="result-client">{r.client}</p>
           <p class="result-detail">{r.detail}</p>
         </article>
       ))}
@@ -50,9 +37,9 @@ const results = [
         height="1431"
         loading="lazy"
         decoding="async"
-        alt="VirtusLab engineers at an AI infrastructure conference, in Can Your AI Agents Actually Ship shirts."
+        alt={t.results.photoAlt}
       />
-      <figcaption>Out in the field on the Visdom AI Tour.</figcaption>
+      <figcaption>{t.results.photoCaption}</figcaption>
     </figure>
   </div>
 </section>

@@ -1,70 +1,78 @@
 ---
+import { useI18n } from '../i18n';
+
+const { locale, t } = useI18n(Astro);
+
 const BASE = 'https://virtuslab.com';
 
+// Series names, article titles, links and cover images are the articles' own
+// identity and stay as published; only the series blurbs and the surrounding
+// chrome come from the dictionary. Dates are stored as ISO and formatted for
+// the reader's locale.
 const series = [
   {
     title: 'VISDOM',
     color: 'var(--color-emerald)',
-    description: 'Field notes on the AI-Native SDLC, context, CI, review, and governance.',
     latest: {
       title: 'AI in the SDLC: Faster or Just Busier?',
-      date: 'Apr 10, 2026',
+      date: '2026-04-10',
       href: `${BASE}/blog/ai/ai-in-the-sdlc-faster-or-just-busier/`,
       image: 'blog-visdom.jpg',
     },
-    linkLabel: 'Read the latest article',
   },
   {
     title: 'GitHub All-Stars',
     color: 'var(--color-blue)',
-    description: 'What we watch on GitHub and why it matters.',
     latest: {
       title: '#16: Project N.O.M.A.D. - Civilization in a Docker Container',
-      date: 'Mar 25, 2026',
+      date: '2026-03-25',
       href: `${BASE}/blog/ai/project-nomad/`,
       image: 'blog-github-all-stars.jpg',
     },
-    linkLabel: 'Read the latest article',
   },
   {
     title: 'AI-Insight',
     color: 'var(--color-purple)',
-    description: 'Technical analysis of models, systems, and engineering patterns.',
     latest: {
       title: 'Interview with Krzysztof Grajek, lead engineer behind Visdom AI Tracing',
-      date: 'Apr 13, 2026',
+      date: '2026-04-13',
       href: `${BASE}/blog/ai/interview-with-krzysztof-grajek-lead-engineer-behind-trace-vault/`,
       image: 'blog-ai-insight.jpg',
     },
-    linkLabel: 'Read the latest article',
   },
 ];
+
+const dateFormat = new Intl.DateTimeFormat(locale, {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+const formatDate = (iso: string) => dateFormat.format(new Date(`${iso}T00:00:00Z`));
 ---
 <section class="section" id="insights">
   <div class="container">
     <div id="thesis" class="fade-up writing-head">
-      <p class="section-label">Writing in the open</p>
-      <h2 class="section-title">We work in the open and share what we learn.</h2>
-      <p class="section-subtitle">
-        50+ articles across three series, written by the engineers building the AI-native SDLC and published openly for the wider community.
-      </p>
+      <p class="section-label">{t.writing.label}</p>
+      <h2 class="section-title">{t.writing.title}</h2>
+      <p class="section-subtitle">{t.writing.subtitle}</p>
     </div>
 
     <div class="writing-grid">
-      {series.map((item) => (
+      {series.map((item, i) => (
         <article class="writing-card fade-up">
           <a href={item.latest.href} target="_blank" rel="noopener" class="writing-thumb" aria-label={item.latest.title}>
             <img src={`${(import.meta.env.BASE_URL || '/').replace(/\/$/, '')}/${item.latest.image}`} alt="" loading="lazy" width="1200" height="627" />
           </a>
           <div class="writing-card-line" style={`background: ${item.color}`}></div>
           <p class="writing-series">{item.title}</p>
-          <p class="writing-description">{item.description}</p>
+          <p class="writing-description">{t.writing.series[i].description}</p>
           <a href={item.latest.href} target="_blank" rel="noopener" class="writing-latest">
-            <span class="writing-latest-label">Latest</span>
+            <span class="writing-latest-label">{t.writing.latestLabel}</span>
             <span class="writing-latest-title">{item.latest.title}</span>
-            <span class="writing-latest-date">{item.latest.date}</span>
+            <time class="writing-latest-date" datetime={item.latest.date}>{formatDate(item.latest.date)}</time>
           </a>
-          <a href={item.latest.href} target="_blank" rel="noopener" class="btn-pill btn-outline writing-link"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>{item.linkLabel}</a>
+          <a href={item.latest.href} target="_blank" rel="noopener" class="btn-pill btn-outline writing-link"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>{t.writing.linkLabel}</a>
         </article>
       ))}
     </div>

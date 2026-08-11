@@ -4,14 +4,13 @@
 // Edit the data arrays below to add/rename sources, tests, review levels,
 // triage branches, or the scroll captions.
 
-const sources = [
-  { label: 'Jira', icon: 'jira' },
-  { label: 'Git history', icon: 'git' },
-  { label: 'Review comments', icon: 'chat' },
-  { label: 'Repositories', icon: 'repo' },
-  { label: 'Docs & ADRs', icon: 'docs' },
-  { label: 'Owners & on-call', icon: 'org' },
-];
+import { useI18n, fill } from '../i18n';
+
+const { t } = useI18n(Astro);
+const d = t.architecture.diagram;
+
+const sourceIcons = ['jira', 'git', 'chat', 'repo', 'docs', 'org'];
+const sources = d.sources.map((label, i) => ({ label, icon: sourceIcons[i] }));
 
 // Lucide-style line icons (24x24), drawn via set:html inside the source nodes.
 const icons: Record<string, string> = {
@@ -36,40 +35,13 @@ const icons: Record<string, string> = {
   waypoints: '<circle cx="12" cy="4.5" r="2.5"/><path d="m10.2 6.3-3.9 3.9"/><circle cx="4.5" cy="12" r="2.5"/><path d="M7 12h10"/><circle cx="19.5" cy="12" r="2.5"/><path d="m13.8 17.7 3.9-3.9"/><circle cx="12" cy="19.5" r="2.5"/>',
 };
 
-const testLayers = [
-  'Classic tests',
-  'Architecture testing',
-  'Property-based',
-  'Mutation testing',
-];
-
-const reviewLevels = [
-  { n: 'L1', label: 'Linting review' },
-  { n: 'L2', label: 'Deterministic review' },
-  { n: 'L3', label: 'Single-pass LLM' },
-  { n: 'L4', label: 'Deep LLM review' },
-];
+const testLayers = d.testLayers;
+const reviewLevels = d.reviewLevels;
 
 // AppSec scans on the same PR, powered by Aikido (reachability-based triage)
-const securityLayers = ['SAST & DAST', 'Dependencies', 'Secrets & IaC'];
+const securityLayers = d.securityLayers;
 
-const triageBranches = [
-  { tone: 'green', label: 'Green · trivial', sub: 'agent auto-fixes' },
-  { tone: 'risk', label: 'High-risk · critical', sub: 'human approval gate' },
-];
-
-const captions = [
-  { n: '01', t: 'Context Fabric', d: 'Jira tickets, git history, old debates, buried docs: everything your team knows, woven into one fabric the agent can actually ask.' },
-  { n: '02', t: 'Orchestrator', d: 'One orchestrator runs the whole engine room: preflight, the coding agent, testing, review and risk triage all happen inside it. It only stops for a human when risk demands it.' },
-  { n: '03', t: 'Preflight context', d: 'No cold starts. Before the first line of code, the agent already knows the task, the owners, and the landmines.' },
-  { n: '04', t: 'Active context', d: 'Who owns this? What breaks if it changes? The agent keeps asking, the Fabric keeps answering. Context never stops flowing.' },
-  { n: '05', t: 'Testing layer', d: 'Agents love tests that pass. These gates do not care: architecture rules, property-based inputs and mutation testing expose what green CI hides.' },
-  { n: '06', t: 'Code review · VCR', d: 'VCR reads every PR in CI before any human does: lint, deterministic checks, then LLM passes that know how your repo is actually written.' },
-  { n: '07', t: 'Security', d: 'Aikido scans the same PR: SAST, DAST, dependencies, secrets and IaC. Reachability analysis mutes what your code never calls; real findings join the risk gate.' },
-  { n: '08', t: 'Triage', d: 'Not every bug deserves a meeting. The gate scores path, diff and coverage: trivial ones the agent fixes on the spot, the risky ones stop and wait for a human.' },
-  { n: '09', t: 'Visdom AI Tracing', d: 'Every prompt, decision and test lands in a signed, hash-chained ledger. When the auditor asks, the answer already exists.' },
-  { n: '10', t: 'Ship to production', d: 'All gates green. The change rolls out with receipts: tested, reviewed, scanned, traced. Ship it and enjoy the moment.' },
-];
+const captions = t.architecture.captions;
 
 // Ambient particles. Each rides an SVG path (by id) via GSAP MotionPath.
 // `stage` ties the particle to the reveal step that owns its path.
@@ -99,14 +71,14 @@ const revY = (i: number) => 304 + i * 40;
 
 <section class="af" id="how-it-works" aria-labelledby="af-title">
   <div class="container af-head">
-    <p class="section-label">How a change flows</p>
-    <h2 id="af-title" class="section-title">One architecture, end to end</h2>
+    <p class="section-label">{t.architecture.label}</p>
+    <h2 id="af-title" class="section-title">{t.architecture.title}</h2>
     <p class="section-subtitle">
-      Context Fabric feeds the agent system, code, organizational and historical context over MCP, both ways, continuously.
-      The change then clears <a href="https://virtuslab.github.io/visdom-testing/" target="_blank" rel="noopener">testing</a>,
-      <a href="https://virtuslab.github.io/visdom-code-review/" target="_blank" rel="noopener">multi-level review</a>,
-      <a href="https://virtuslab.github.io/visdom-security/" target="_blank" rel="noopener">security scanning</a> and risk triage;
-      <a href="https://virtuslab.github.io/visdom-governance/" target="_blank" rel="noopener">Visdom AI Tracing</a> signs every step.
+      {t.architecture.subtitle.lead}
+      {t.architecture.subtitle.beforeLinks} <a href="https://virtuslab.github.io/visdom-testing/" target="_blank" rel="noopener">{t.architecture.subtitle.testing}</a>,
+      <a href="https://virtuslab.github.io/visdom-code-review/" target="_blank" rel="noopener">{t.architecture.subtitle.review}</a>,
+      <a href="https://virtuslab.github.io/visdom-security/" target="_blank" rel="noopener">{t.architecture.subtitle.security}</a> {t.architecture.subtitle.afterLinks}
+      <a href="https://virtuslab.github.io/visdom-governance/" target="_blank" rel="noopener">{t.architecture.subtitle.tracing}</a> {t.architecture.subtitle.tail}
     </p>
   </div>
 
@@ -114,7 +86,7 @@ const revY = (i: number) => 304 + i * 40;
     <div class="af-viewport">
       <div class="af-stage">
         <svg viewBox="0 0 1280 680" role="img" aria-labelledby="af-svg-title" class="af-svg" preserveAspectRatio="xMidYMid meet">
-          <title id="af-svg-title">Visdom architecture: Context Fabric, Orchestrator, Coding Agent (Cursor, Claude, Codex), Testing, Code Review, Security scanning by Aikido, PR triage and Visdom AI Tracing.</title>
+          <title id="af-svg-title">{t.architecture.svgTitle}</title>
 
           <defs>
             <!-- arrowheads only on the amber human-gate paths, green flow relies on the streaks -->
@@ -152,7 +124,7 @@ const revY = (i: number) => 304 + i * 40;
             {/* title as a legend riding the top border */}
             <rect x="439" y="214" width="224" height="28" rx="9" class="af-orch-legend" />
             <g class="af-orch-icon" transform="translate(452,221) scale(0.6)" set:html={icons.waypoints} />
-            <text x="480" y="233" class="af-orch-label">Visdom Orchestrator</text>
+            <text x="480" y="233" class="af-orch-label">{d.orchestrator}</text>
           </g>
 
           <!-- ============ TRACEVAULT (baseplate, spans everything) ============ -->
@@ -160,7 +132,7 @@ const revY = (i: number) => 304 + i * 40;
             <rect x="44" y="578" width="1192" height="68" rx="18" class="af-vault" />
             <line x1="60" y1="579.5" x2="1220" y2="579.5" class="af-sheen" />
             <g class="af-vault-icon" transform="translate(64,602) scale(0.8)" set:html={icons.link} />
-            <text x="94" y="619" class="af-vault-label">Visdom AI Tracing</text>
+            <text x="94" y="619" class="af-vault-label">{d.vault}</text>
             {/* hash-chain motif: linked blocks, append-only */}
             <g class="af-chain" aria-hidden="true">
               {[1020, 1048, 1076, 1104].map((x, i) => (
@@ -199,16 +171,16 @@ const revY = (i: number) => 304 + i * 40;
             <rect x="44" y="126" width="1192" height="66" rx="18" class="af-vault af-fabricbar" />
             <line x1="60" y1="127.5" x2="1220" y2="127.5" class="af-sheen" />
             <g class="af-vault-icon" transform="translate(64,149) scale(0.8)" set:html={icons.layers} />
-            <text x="94" y="166" class="af-vault-label">Visdom Context Fabric</text>
-            <text x="1212" y="163" text-anchor="end" class="af-vault-tag">queried by every stage</text>
+            <text x="94" y="166" class="af-vault-label">{d.fabric}</text>
+            <text x="1212" y="163" text-anchor="end" class="af-vault-tag">{d.fabricTag}</text>
           </g>
 
           <!-- ============ PREFLIGHT RAIL (fabric -> agent, once) ============ -->
           <g id="af-preflight" class="af-group" data-reveal>
             <path id="af-prerail" class="af-rail-pre" d="M64,192 L64,332 Q64,350 92,350" />
             <path class="af-streak" pathLength="100" d="M64,192 L64,332 Q64,350 92,350" style="animation-duration:2.6s" />
-            <text x="84" y="252" class="af-rail-label">Preflight</text>
-            <text x="84" y="268" class="af-rail-label">context</text>
+            <text x="84" y="252" class="af-rail-label">{d.preflight[0]}</text>
+            <text x="84" y="268" class="af-rail-label">{d.preflight[1]}</text>
           </g>
 
           <!-- ============ ACTIVE CONTEXT LOOP (fabric <-> agent, continuous) ============ -->
@@ -217,8 +189,8 @@ const revY = (i: number) => 304 + i * 40;
             <path id="af-query" class="af-loop-path" d="M177,295 C 186,262 186,220 182,192" />
             <path class="af-streak" pathLength="100" d="M160,192 C 168,220 168,254 161,293" style="animation-duration:1.8s" />
             <path class="af-streak" pathLength="100" d="M177,295 C 186,262 186,220 182,192" style="animation-duration:1.8s;animation-delay:-0.9s" />
-            <text x="208" y="252" class="af-loop-label">Active</text>
-            <text x="208" y="270" class="af-loop-label">context</text>
+            <text x="208" y="252" class="af-loop-label">{d.activeContext[0]}</text>
+            <text x="208" y="270" class="af-loop-label">{d.activeContext[1]}</text>
           </g>
 
           <!-- ============ CODING AGENT (always present hub) ============ -->
@@ -227,15 +199,15 @@ const revY = (i: number) => 304 + i * 40;
             <circle cx="150" cy="350" r="51" class="af-agent-ticks" />
             <circle cx="150" cy="350" r="44" class="af-agent-core" />
             <g class="af-agent-spark" transform="translate(142,318) scale(0.68)" set:html={icons.spark} />
-            <text x="150" y="354" text-anchor="middle" class="af-agent-label">Coding</text>
-            <text x="150" y="374" text-anchor="middle" class="af-agent-label">Agent</text>
+            <text x="150" y="354" text-anchor="middle" class="af-agent-label">{d.agent[0]}</text>
+            <text x="150" y="374" text-anchor="middle" class="af-agent-label">{d.agent[1]}</text>
             <!-- the agent runs contained: Sandcat sandbox tag -->
             <rect x="116" y="416" width="68" height="32" rx="10" class="af-sandbox-tag" />
-            <text x="150" y="429" text-anchor="middle" class="af-sandbox-label">Sandcat</text>
-            <text x="150" y="441" text-anchor="middle" class="af-sandbox-label">sandbox</text>
+            <text x="150" y="429" text-anchor="middle" class="af-sandbox-label">{d.sandbox[0]}</text>
+            <text x="150" y="441" text-anchor="middle" class="af-sandbox-label">{d.sandbox[1]}</text>
             <!-- the coding agents that plug in here: Cursor, Claude, Codex (official brand marks, simple-icons CC0, 24x24 fitted into the 28x28 chip with 4px padding) -->
             <g class="af-agent-brands" transform="translate(0,460)">
-              <text x="150" y="9" text-anchor="middle" class="af-brands-label">Runs your agent</text>
+              <text x="150" y="9" text-anchor="middle" class="af-brands-label">{d.runsYourAgent}</text>
               <g class="af-brand" transform="translate(106,18)">
                 <title>Cursor</title>
                 <rect x="0" y="0" width="28" height="28" rx="8" class="af-brand-chip" />
@@ -291,7 +263,7 @@ const revY = (i: number) => 304 + i * 40;
             <line x1="288" y1="265.5" x2="424" y2="265.5" class="af-sheen" />
             <rect x="278" y="270" width="156" height="26" rx="8" class="af-mhead" />
             <g class="af-mhead-icon" transform="translate(288,275) scale(0.66)" set:html={icons.flask} />
-            <text x="310" y="288" class="af-mhead-label">Visdom Testing</text>
+            <text x="310" y="288" class="af-mhead-label">{d.testing}</text>
             {testLayers.map((t, i) => (
               <g class="af-test-row">
                 <rect x="280" y={testY(i)} width="152" height="34" rx="8" class="af-chip" />
@@ -306,7 +278,7 @@ const revY = (i: number) => 304 + i * 40;
           <g id="af-pr-env" class="af-reveal">
             <rect x="462" y="258" width="588" height="226" rx="20" class="af-prenv" />
             <g class="af-prenv-icon" transform="translate(834,470) scale(0.5)" set:html={icons.pr} />
-            <text x="964" y="480" text-anchor="end" class="af-prenv-label">Pull Request</text>
+            <text x="964" y="480" text-anchor="end" class="af-prenv-label">{d.pullRequest}</text>
           </g>
 
           <!-- ============ CODE REVIEW (deepening) ============ -->
@@ -315,7 +287,7 @@ const revY = (i: number) => 304 + i * 40;
             <line x1="490" y1="265.5" x2="660" y2="265.5" class="af-sheen" />
             <rect x="480" y="270" width="190" height="26" rx="8" class="af-mhead" />
             <g class="af-mhead-icon" transform="translate(490,275) scale(0.66)" set:html={icons.eye} />
-            <text x="512" y="288" class="af-mhead-label">Visdom Code Review</text>
+            <text x="512" y="288" class="af-mhead-label">{d.review}</text>
             {reviewLevels.map((r, i) => (
               <g class={`af-review-row af-depth-${i}`}>
                 <rect x={revX[i]} y={revY(i)} width={revW[i]} height="34" rx="8" class="af-review-bar" />
@@ -331,7 +303,7 @@ const revY = (i: number) => 304 + i * 40;
             <line x1="726" y1="265.5" x2="874" y2="265.5" class="af-sheen" />
             <rect x="716" y="270" width="168" height="26" rx="8" class="af-mhead" />
             <g class="af-mhead-icon" transform="translate(726,275) scale(0.66)" set:html={icons.shield} />
-            <text x="748" y="288" class="af-mhead-label">Visdom Security</text>
+            <text x="748" y="288" class="af-mhead-label">{d.security}</text>
             {securityLayers.map((s, i) => (
               <g class="af-sec-row">
                 <rect x="722" y={testY(i)} width="156" height="34" rx="8" class="af-chip" />
@@ -339,7 +311,7 @@ const revY = (i: number) => 304 + i * 40;
               </g>
             ))}
             <g class="af-sec-row">
-              <text x="800" y="433" text-anchor="middle" class="af-brands-label">Powered by</text>
+              <text x="800" y="433" text-anchor="middle" class="af-brands-label">{d.poweredBy}</text>
               <g class="af-brand">
                 <title>Aikido</title>
                 <rect x="760" y="438" width="28" height="28" rx="8" class="af-brand-chip" />
@@ -359,10 +331,10 @@ const revY = (i: number) => 304 + i * 40;
             <line x1="940" y1="265.5" x2="1026" y2="265.5" class="af-sheen" />
             <rect x="930" y="270" width="106" height="26" rx="8" class="af-mhead" />
             <g class="af-mhead-icon" transform="translate(940,275) scale(0.66)" set:html={icons.funnel} />
-            <text x="962" y="288" class="af-mhead-label">Triage</text>
+            <text x="962" y="288" class="af-mhead-label">{d.triage}</text>
 
             <rect x="930" y="311" width="106" height="42" rx="10" class="af-pr" />
-            <text x="983" y="337" text-anchor="middle" class="af-pr-label">Risk gate</text>
+            <text x="983" y="337" text-anchor="middle" class="af-pr-label">{d.riskGate}</text>
 
             <!-- fork below the panel: trivial loops back, risk stops at the human gate.
                  the risk drop, the gate and its trace share one axis: PR -> gate -> vault -->
@@ -370,12 +342,12 @@ const revY = (i: number) => 304 + i * 40;
             <g class="af-triage-node af-triage-node--green">
               <path id="af-autofix" class="af-autofix-path" d="M963,370 C 963,460 913,518 823,518 L320,518 C 252,518 206,462 194,389" />
               <path class="af-streak af-streak--soft" pathLength="100" d="M963,370 C 963,460 913,518 823,518 L320,518 C 252,518 206,462 194,389" style="animation-duration:3.6s" />
-              <text x="530" y="508" text-anchor="middle" class="af-autofix-label">green · trivial: auto-fix → back to agent</text>
+              <text x="530" y="508" text-anchor="middle" class="af-autofix-label">{d.autofix}</text>
             </g>
             <g class="af-triage-node af-triage-node--risk">
               <rect x="913" y="490" width="140" height="46" rx="10" class="af-card af-card--risk" />
-              <text x="953" y="510" class="af-card-label af-card-label--risk">High-risk</text>
-              <text x="953" y="527" class="af-card-sub">human approval</text>
+              <text x="953" y="510" class="af-card-label af-card-label--risk">{d.highRisk}</text>
+              <text x="953" y="527" class="af-card-sub">{d.humanApproval}</text>
               <g class="af-human" transform="translate(933,508)">
                 <circle cx="0" cy="-4" r="5" class="af-human-mark" />
                 <path d="M-8,10 a8,9 0 0 1 16,0" class="af-human-mark" />
@@ -384,7 +356,7 @@ const revY = (i: number) => 304 + i * 40;
                    revealed with the ship stage so the arrow never points at empty space -->
               <g id="af-approved">
                 <path class="af-branch af-branch--risk" d="M1053,513 L1102,513 Q1118,513 1118,497 L1118,388" marker-end="url(#af-arrow-amber)" />
-                <text x="1061" y="529" class="af-approved-label">approved</text>
+                <text x="1061" y="529" class="af-approved-label">{d.approved}</text>
               </g>
             </g>
           </g>
@@ -394,7 +366,7 @@ const revY = (i: number) => 304 + i * 40;
             <rect x="1076" y="284" width="160" height="96" rx="16" class="af-ship-box" />
             <line x1="1092" y1="285.5" x2="1220" y2="285.5" class="af-sheen" />
             <g class="af-ship-icon" transform="translate(1094,319) scale(1.15)" set:html={icons.rocket} />
-            <text x="1132" y="338" class="af-ship-label">Production</text>
+            <text x="1132" y="338" class="af-ship-label">{d.production}</text>
             <!-- passed seal -->
             <circle cx="1228" cy="292" r="11" class="af-seal" />
             <g class="af-seal-check" transform="translate(1220,284) scale(0.66)" set:html={icons.check} />
@@ -444,7 +416,7 @@ const revY = (i: number) => 304 + i * 40;
       <ol class="af-steps" role="list">
         {captions.map((c, i) => (
           <li class={`af-step${i === 0 ? ' is-active' : ''}`} data-step={i}>
-            <button type="button" class="af-step-btn" aria-label={`Show step ${c.n}: ${c.t}`}>
+            <button type="button" class="af-step-btn" aria-label={fill(t.architecture.stepAria, { n: c.n, t: c.t })}>
               <span class="af-step-head">
                 <span class="af-step-n">{c.n}</span>
                 <span class="af-step-t">{c.t}</span>
