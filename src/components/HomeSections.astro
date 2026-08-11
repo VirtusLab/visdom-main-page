@@ -1,0 +1,34 @@
+---
+// The home page body, shared by every locale. Section order lives here and
+// nowhere else, so /pl/ cannot drift out of sync with /.
+import Nav from './Nav.astro';
+import TourBanner from './TourBanner.astro';
+import Hero from './Hero.astro';
+import Shift from './Shift.astro';
+import ArchitectureFlow from './ArchitectureFlow.astro';
+import OrchestratorShowcase from './OrchestratorShowcase.astro';
+import OrchestratorUseCases from './OrchestratorUseCases.astro';
+import Diagnosis from './Diagnosis.astro';
+import Solutions from './Solutions.astro';
+import ClientResults from './ClientResults.astro';
+import BlogSeries from './BlogSeries.astro';
+import MaturityRef from './MaturityRef.astro';
+import CtaSection from './CtaSection.astro';
+import Footer from './Footer.astro';
+---
+<TourBanner />
+<Nav />
+<main>
+  <Hero />
+  <Shift />
+  <Diagnosis />
+  <ArchitectureFlow />
+  <OrchestratorShowcase />
+  <OrchestratorUseCases />
+  <Solutions />
+  <ClientResults />
+  <BlogSeries />
+  <MaturityRef />
+  <CtaSection />
+</main>
+<Footer />
