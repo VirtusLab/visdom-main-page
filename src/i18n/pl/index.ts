@@ -39,7 +39,7 @@ const pl = {
 
   tour: {
     tag: 'Visdom AI Tour',
-    aria: 'Visdom AI Tour 2026, zobacz terminy i zapisz się',
+    aria: 'Visdom AI Tour 2026, zobaczcie terminy i zapiszcie się',
     nextStop: 'Następny przystanek:',
     months: {
       May: 'maj',
@@ -53,8 +53,8 @@ const pl = {
     brandTagline: 'Platforma AI-Native SDLC',
     headlineLead: 'Brakująca warstwa między',
     headlineAccent: 'kodowaniem z AI a produkcją',
-    lead: 'Gotowe na produkcję przepływy AI-Native SDLC, wdrożone razem z waszym zespołem inżynierskim.',
-    cta: 'Zobacz, jak pracujemy ->',
+    lead: 'Workflow AI-Native SDLC gotowe na produkcję, wdrożone razem z waszym zespołem inżynierskim.',
+    cta: 'Zobaczcie, jak pracujemy ->',
     trust: ['W pełni konfigurowalne', 'Zacznijcie od małego, skalujcie szybko'] as [
       string,
       string,
@@ -72,7 +72,7 @@ const pl = {
         phase: 'Faza 2',
         title: 'Wdrożenie pilotażowe',
         detail:
-          'Wdrażamy komponenty w waszych repozytoriach, CI i mechanizmach kontrolnych, z waszymi inżynierami platformowymi w pętli.',
+          'Wdrażamy komponenty w waszych repozytoriach, CI i mechanizmach kontrolnych, razem z waszymi inżynierami platformowymi.',
       },
       {
         phase: 'Faza 3',
@@ -92,13 +92,13 @@ const pl = {
   shift: {
     aria: 'Dlaczego AI grzęźnie w infrastrukturze dostarczania zbudowanej dla ludzi',
     label: 'Zmiana',
-    title: 'AI przyspieszyło. Rury, przez które płynie, nie.',
+    title: "AI przyspieszyło. Pipeline'y, przez które płynie, nie.",
     subtitle:
-      "Wdrożyliście asystenta. Inżynierowie byli podekscytowani. Potem przepustowość stanęła, a ROI wyparowało. Asystent nigdy nie był wąskim gardłem. Była nim infrastruktura dostarczania wokół niego: pipeline'y, CI i review zbudowane dla ludzi piszących w ludzkim tempie. Podłączenie AI tego nie naprawia, tylko obnaża każde pęknięcie.",
+      "Wdrożyliście asystenta. Na starcie było dużo entuzjazmu. Potem tempo stanęło, a ROI wyparowało. Asystent nigdy nie był wąskim gardłem. Była nim infrastruktura dostarczania wokół niego: pipeline'y, CI i review zbudowane dla ludzi piszących w ludzkim tempie. Podłączenie AI tego nie naprawia, tylko obnaża każde pęknięcie.",
     changedLabel: 'Co się zmieniło',
     changedLead: 'Agenty generują dziś kod szybciej niż jakikolwiek człowiek.',
     changedBody:
-      'Ograniczenie przesunęło się z pisania kodu na jego zrozumienie, weryfikację i bezpieczne dowiezienie na produkcję.',
+      'Wąskie gardło przesunęło się z pisania kodu na jego zrozumienie, weryfikację i bezpieczne dowiezienie na produkcję.',
     sameLabel: 'Co się nie zmieniło',
     unchanged: [
       {
@@ -115,39 +115,39 @@ const pl = {
       },
       {
         dim: 'Walidacja',
-        text: "Review pull requestów, które nadal czeka na tych samych seniorów. Przegląd specyfikacji i merge'a zmienia się w pusty rytuał.",
+        text: "Review pull requestów wciąż czeka na tych samych seniorów. Przegląd specyfikacji i merge'a zmienia się w pusty rytuał.",
       },
     ],
-    bridge: 'Więc zbudowaliśmy warstwę infrastruktury, której AI faktycznie potrzebuje.',
+    bridge: 'Zbudowaliśmy więc warstwę infrastruktury, której AI naprawdę potrzebuje.',
   },
 
   diagnosis: {
     label: 'Czym jest Visdom',
-    title: 'Platforma do prowadzenia dostarczania oprogramowania w modelu AI-Native.',
-    lead: 'Visdom to platforma AI-Native SDLC od VirtusLab. AI potrafi już napisać kod; trudność zaczyna się przy dowożeniu go w skali enterprise. Visdom składa system dostarczania wokół agenta (kontekst, code review, testy, governance, security i CI) w jeden nadzorowany pipeline, żeby wasza organizacja przestała pokazywać agenty na demach i zaczęła je realnie eksploatować na produkcji.',
+    title: 'Platforma do dostarczania oprogramowania w modelu AI-Native.',
+    lead: 'Visdom to platforma AI-Native SDLC od VirtusLab. AI potrafi już napisać kod; trudność zaczyna się przy dowożeniu go w skali enterprise. Visdom składa system dostarczania wokół agenta (kontekst, code review, testy, governance, security i CI) w jeden nadzorowany pipeline, żeby wasza organizacja przestała pokazywać agenty na demach i zaczęła ich realnie używać na produkcji.',
     kicker: 'Co go definiuje:',
     pillars: [
       {
-        key: 'Składalny',
-        copy: 'Jedna platforma, składalne komponenty. Zacznijcie od dowolnego, rozszerzajcie we własnym tempie. Kontekst, code review, testy, governance, security i CI, razem albo osobno.',
+        key: 'Kompozytowalny',
+        copy: 'Jedna platforma, kompozytowalne komponenty. Zacznijcie od dowolnego, rozszerzajcie we własnym tempie. Kontekst, code review, testy, governance, security i CI, razem albo osobno.',
       },
       {
         key: 'Nadzorowany',
-        copy: 'Zmiany płyną przez jeden system, z egzekwowaniem polityk i odporną na manipulację ścieżką audytu od początku do końca. Domknięta pętla, a nie szuflada z niepowiązanymi narzędziami.',
+        copy: 'Zmiany płyną przez jeden system, z egzekwowaniem polityk i ścieżką audytu, w której każda ingerencja zostawia ślad. Domknięta pętla, a nie szuflada z niepowiązanymi narzędziami.',
       },
       {
         key: 'Wasz',
-        copy: 'Nasi inżynierowie wdrażają go w waszych repozytoriach, CI i infrastrukturze, a potem przekazują. To wy prowadzicie tę zdolność operacyjną. Nic nie opuszcza waszego środowiska.',
+        copy: 'Nasi inżynierowie wdrażają go w waszych repozytoriach, CI i infrastrukturze, a potem przekazują. Od tego momentu prowadzicie to sami. Nic nie opuszcza waszego środowiska.',
       },
     ],
-    bridge: 'Tak wygląda droga zmiany przez platformę.',
+    bridge: 'Tędy płynie zmiana.',
   },
 
   architecture: {
     label: 'Droga zmiany',
-    title: 'Jedna architektura, od końca do końca',
+    title: 'Jedna architektura, end-to-end',
     subtitle: {
-      lead: 'Context Fabric dostarcza agentowi kontekst systemowy, kodowy, organizacyjny i historyczny przez MCP, w obie strony, w sposób ciągły.',
+      lead: 'Context Fabric dostarcza agentowi kontekst systemu, kodu, organizacji i historii przez MCP, w obie strony i bez przerwy.',
       beforeLinks: 'Zmiana przechodzi następnie przez',
       testing: 'testy',
       review: 'wielopoziomowy code review',
@@ -192,7 +192,7 @@ const pl = {
       ],
       security: 'Visdom Security',
       securityLayers: ['SAST i DAST', 'Zależności', 'Sekrety i IaC'],
-      poweredBy: 'Napędzane przez',
+      poweredBy: 'W oparciu o',
       triage: 'Triage',
       riskGate: 'Bramka ryzyka',
       autofix: 'zielone i trywialne: auto-fix → z powrotem do agenta',
@@ -206,27 +206,27 @@ const pl = {
       {
         n: '01',
         t: 'Context Fabric',
-        d: 'Tickety w Jirze, historia gita, stare dyskusje, zakopana dokumentacja: wszystko, co wie wasz zespół, wplecione w jedną tkankę, o którą agent może realnie zapytać.',
+        d: 'Tickety w Jirze, historia gita, stare dyskusje, zakopana dokumentacja: wszystko, co wie wasz zespół, spięte w jedno źródło, które agent może realnie odpytać.',
       },
       {
         n: '02',
         t: 'Orchestrator',
-        d: 'Jeden orchestrator prowadzi całą maszynownię: preflight, coding agent, testy, review i triage ryzyka dzieją się w środku. Zatrzymuje się po człowieka tylko wtedy, gdy wymaga tego ryzyko.',
+        d: 'Jeden orchestrator prowadzi całą maszynownię: preflight, coding agent, testy, review i triage ryzyka dzieją się w środku. Woła człowieka tylko wtedy, gdy wymaga tego ryzyko.',
       },
       {
         n: '03',
         t: 'Kontekst preflight',
-        d: 'Żadnych zimnych startów. Zanim powstanie pierwsza linia kodu, agent zna już zadanie, ownerów i miny.',
+        d: 'Żadnych zimnych startów. Zanim powstanie pierwsza linia kodu, agent wie już, co ma zrobić, kto za to odpowiada i gdzie są miny.',
       },
       {
         n: '04',
         t: 'Kontekst aktywny',
-        d: 'Kto jest właścicielem? Co się zepsuje, jeśli to zmienić? Agent pyta dalej, Fabric dalej odpowiada. Kontekst płynie bez przerwy.',
+        d: 'Kto jest ownerem? Co się zepsuje, jeśli to zmienić? Agent pyta dalej, Fabric dalej odpowiada. Kontekst płynie bez przerwy.',
       },
       {
         n: '05',
         t: 'Warstwa testów',
-        d: 'Agenty uwielbiają testy, które przechodzą. Tym bramkom to obojętne: reguły architektury, wejścia property-based i mutation testing pokazują to, co ukrywa zielone CI.',
+        d: 'Agenty uwielbiają testy, które przechodzą. Tym bramkom to obojętne: reguły architektury, testy property-based i mutation testing pokazują to, co ukrywa zielone CI.',
       },
       {
         n: '06',
@@ -241,17 +241,17 @@ const pl = {
       {
         n: '08',
         t: 'Triage',
-        d: 'Nie każdy bug zasługuje na spotkanie. Bramka ocenia ścieżkę, diff i pokrycie: trywialne agent poprawia od ręki, ryzykowne zatrzymują się i czekają na człowieka.',
+        d: 'Nie każdy bug zasługuje na spotkanie. Bramka ocenia ścieżkę, diff i pokrycie: trywialne agent poprawia od ręki, ryzykowne trafiają do człowieka.',
       },
       {
         n: '09',
         t: 'Visdom AI Tracing',
-        d: 'Każdy prompt, decyzja i test lądują w podpisanym rejestrze spiętym łańcuchem hashy. Kiedy pyta audytor, odpowiedź już istnieje.',
+        d: 'Prompty, decyzje i testy lądują w podpisanym rejestrze spiętym łańcuchem hashy. Kiedy pyta audytor, odpowiedź już istnieje.',
       },
       {
         n: '10',
         t: 'Wdrożenie na produkcję',
-        d: 'Wszystkie bramki zielone. Zmiana wychodzi z kompletem dowodów: przetestowana, po review, po skanie bezpieczeństwa, z pełnym śladem w tracingu.',
+        d: 'Wszystkie bramki zielone. Zmiana wychodzi z kompletem dowodów: przetestowana, po review, po skanie bezpieczeństwa, z pełnym śladem w AI Tracing.',
       },
     ],
     stepAria: 'Pokaż krok {n}: {t}',
@@ -264,7 +264,7 @@ const pl = {
     titleAccent: 'pull request',
     titleSecondAfter: 'na wyjściu.',
     subtitle:
-      'Każdy krok to wyspecjalizowany agent. Wy nie widzicie z tego nic. Błędy z produkcji, tickety z Jiry, zdarzenia: sygnały wchodzą, orchestrator wykonuje robotę przez te same bramki, które przed chwilą widzieliście, a człowiek zatwierdza tylko wtedy, gdy wymaga tego ryzyko.',
+      'Każdy krok to wyspecjalizowany agent. Wy nie widzicie z tego nic. Błędy z produkcji, tickety z Jiry, zdarzenia: sygnały wchodzą, orchestrator odwala czarną robotę przez te same bramki, które przed chwilą widzieliście, a człowiek zatwierdza tylko wtedy, gdy wymaga tego ryzyko.',
     signalsLabel: 'Sygnały przychodzące',
     signals: [
       { key: 'błąd na produkcji', title: 'usługa zaczyna się sypać' },
@@ -285,13 +285,13 @@ const pl = {
     prMeta: 'wszystkie bramki zielone · pełny trace',
     captions: [
       'Sygnały napływają: błędy, tickety, zdarzenia, advisory.',
-      'Orchestrator bierze jeden z nich i wykonuje robotę.',
+      'Orchestrator bierze jeden z nich i odwala czarną robotę.',
       'W trakcie pinguje człowieka: jedno szybkie pytanie, jedna odpowiedź.',
       'Code review na czerwono. Człowiek wraca do pętli.',
       'Review zielone, deployment gotowy. Wychodzi pull request.',
     ],
     ctaLine: 'Chcecie zobaczyć Orchestratora na waszym stacku?',
-    ctaButton: 'Umów demo ->',
+    ctaButton: 'Umówcie demo ->',
   },
 
   useCases: {
@@ -299,7 +299,7 @@ const pl = {
     titleBefore: 'Orchestrator bierze',
     titleAccent: 'nocną zmianę',
     subtitle:
-      'Jeden orchestrator prowadzi każdy z powyższych przepływów od końca do końca: obserwuje, koreluje, planuje i przygotowuje. Te same bramki, te same akceptacje, ta sama ścieżka audytu. Ludzie wchodzą tylko tam, gdzie liczy się osąd. Gdzie zwraca się to od pierwszego dnia:',
+      'Jeden orchestrator prowadzi każdy z powyższych przepływów end-to-end: obserwuje, koreluje, planuje i przygotowuje. Te same bramki, te same akceptacje, ta sama ścieżka audytu. Ludzie wchodzą tylko tam, gdzie liczy się osąd. Gdzie opłaca się to już pierwszego dnia:',
     cases: [
       {
         tag: 'Reakcja na incydent',
@@ -334,7 +334,7 @@ const pl = {
           { t: '14:50', d: 'Support eskaluje powracającą, trudną do namierzenia awarię.' },
           {
             t: '15:12',
-            d: 'Odtworzona z logów i telemetrii; nieprzechodzący test teraz ją reprodukuje.',
+            d: 'Odtworzona z logów i telemetrii; jest już czerwony test, który ją łapie.',
           },
           { t: '16:05', d: 'Poprawka wychodzi razem z testem regresyjnym.' },
         ],
@@ -347,7 +347,7 @@ const pl = {
           { t: '06:00', d: 'Nowa podatność w zależności, której używacie.' },
           {
             t: '06:18',
-            d: 'Dotknięte komponenty zmapowane, zależność podbita, pełny zestaw bramek przepuszczony.',
+            d: 'Dotknięte komponenty zmapowane, zależność podbita, całość przepuszczona przez pełny zestaw bramek.',
           },
           { t: '07:02', d: 'Zweryfikowana aktualizacja czeka na merge.' },
         ],
@@ -379,7 +379,7 @@ const pl = {
           { t: '16:20', d: 'Flaky test zaczyna blokować co drugi merge.' },
           {
             t: '16:35',
-            d: 'Test odizolowany, historia przebisektowana, race condition namierzony.',
+            d: 'Test odizolowany, historia przeszukana bisectem, race condition namierzony.',
           },
           { t: '17:10', d: "Deterministyczna poprawka wchodzi; kolejka merge'y znów rusza." },
         ],
@@ -392,12 +392,12 @@ const pl = {
     engagementLabel: 'Model współpracy',
     engagementTitle: 'Jak pracujemy',
     engagementSubtitle:
-      'Cztery fazy, które budują na sobie nawzajem, każda dowozi działającą zdolność, którą widać i której da się używać. Dokładny zakres, tempo i skład zespołu ustalamy z wami przy każdym projekcie, nigdy ze sztywnego cennika.',
+      'Cztery fazy, każda kolejna oparta na poprzedniej, każda kończąca się czymś, co działa i z czego da się korzystać. Dokładny zakres, tempo i skład zespołu ustalamy z wami przy każdym projekcie, nigdy ze sztywnego cennika.',
     phases: [
       {
         name: 'Faza 1: Assessment',
         meta: 'stały zakres',
-        body: 'U was albo zdalnie. Przepuszczamy wasze środowisko przez Visdom Maturity Matrix i zostawiamy uporządkowaną priorytetami roadmapę, wskazany zespół pilotażowy i zakres kolejnej fazy. Po waszej stronie niewielkie zaangażowanie. Jeśli chcecie się tu zatrzymać, zostajecie z roadmapą i bez żadnych zobowiązań.',
+        body: 'U was albo zdalnie. Przepuszczamy wasze środowisko przez Visdom Maturity Matrix i zostawiamy roadmapę uporządkowaną priorytetami, wskazany zespół pilotażowy i zakres kolejnej fazy. Po waszej stronie to niewielkie zaangażowanie. Jeśli chcecie się tu zatrzymać, zostajecie z roadmapą i bez żadnych zobowiązań.',
       },
       {
         name: 'Faza 2: Wdrożenie pilotażowe',
@@ -415,7 +415,7 @@ const pl = {
         body: 'Stała współpraca po przekazaniu, a nie pozycja na liście płac. Zostajemy dostępni przy przeglądach architektury, trudnych decyzjach i kolejnym kroku dojrzałości, na warunkach przewidywalnych dla finansów i elastycznych dla inżynierii.',
       },
     ],
-    transferAria: 'Przekazanie zdolności w kolejnych fazach współpracy',
+    transferAria: 'Przekazywanie odpowiedzialności w kolejnych fazach współpracy',
     transfer: [
       { label: 'Faza 1', strong: 'VirtusLab prowadzi' },
       { label: 'Faza 2', strong: 'Ścisła współpraca' },
@@ -426,16 +426,16 @@ const pl = {
     platformLabel: 'Komponenty platformy',
     platformTitle: 'Platforma, którą przynosimy',
     platformSubtitle:
-      'Jeden kręgosłup: Context Fabric. Code review, testy, security i governance czytają tę samą wersję prawdy, więc agenty i recenzenci odpowiadają na te same pytania tak samo. Złożenie ich, utwardzenie i wpięcie w regulowany stack enterprise to jest to, do czego zespoły nas zatrudniają.',
-    readReference: 'Przeczytaj dokumentację',
+      'Jeden kręgosłup: Context Fabric. Code review, testy, security i governance czytają to samo źródło prawdy, więc agenty i reviewerzy odpowiadają na te same pytania tak samo. Zespoły zatrudniają nas właśnie do tego: żeby je złożyć, utwardzić i wpiąć w regulowany stack enterprise.',
+    readReference: 'Przeczytajcie dokumentację',
 
     fabric: {
       title: 'Visdom Context Fabric',
-      body: 'Context Fabric dostarcza dopasowany kontekst waszym agentom planującym, kodującym i recenzującym. Agent nie tylko za każdym razem mniej szuka, ale też dostaje informacje, do których bez szerszego obrazu zwykle nie ma dostępu.',
+      body: 'Context Fabric dostarcza dopasowany kontekst waszym agentom planującym, kodującym i robiącym review. Agent za każdym razem mniej szuka, a przy okazji dostaje informacje, do których bez szerszego obrazu zwykle nie ma dostępu.',
       note: 'Deterministyczna wiedza o kodzie, analiza blast radius i grafy własności przez MCP.',
-      readLink: 'Przeczytaj: „Your README Is a Lie”',
+      readLink: 'Przeczytajcie: „Your README Is a Lie”',
       diagramAria:
-        'Visdom Context Fabric zbiera dane z repozytoriów, dokumentacji, ticketów i CI, a potem udostępnia deterministyczną wersję prawdy, którą komponenty Coding Agent, Code Review i Testing czytają przez MCP',
+        'Visdom Context Fabric zbiera dane z repozytoriów, dokumentacji, ticketów i CI, a potem udostępnia deterministyczne źródło prawdy, które komponenty Coding Agent, Code Review i Testing czytają przez MCP',
       sourcesLabel: 'Źródła',
       sources: [
         { name: 'Repozytorium git', meta: 'kod · historia · blame' },
@@ -445,20 +445,20 @@ const pl = {
         { name: 'CLAUDE.md / reguły', meta: 'konwencje' },
       ],
       coreName: 'Context Fabric',
-      coreDesc: 'Zbieranie · normalizacja · indeksowanie wersji prawdy organizacji.',
+      coreDesc: 'Zbieranie · normalizacja · indeksowanie źródła prawdy organizacji.',
       outputsLabel: 'Komponenty, które to czytają',
       outputs: [
         { name: 'Coding Agent', meta: 'kontekst · konwencje' },
         { name: 'Code Review', meta: 'własność · blast radius' },
         { name: 'Testing', meta: 'konwencje · ryzyko' },
       ],
-      outputsNote: 'Każdy komponent Visdom czyta tę samą wersję prawdy.',
+      outputsNote: 'Każdy komponent Visdom czyta to samo źródło prawdy.',
     },
 
     review: {
       title: 'Visdom Code Review',
       abbr: 'VCR',
-      body: 'Code Review robi automatyczny wstępny przegląd pull requestów pisanych przez AI i przez ludzi. Weryfikując zmiany względem konwencji inżynierskich, wzorców ryzyka i typowych trybów awarii, pozwala recenzentom skupić uwagę tam, gdzie ma to największe znaczenie.',
+      body: 'Code Review robi automatyczny wstępny przegląd pull requestów pisanych przez AI i przez ludzi. Weryfikując zmiany względem konwencji inżynierskich, wzorców ryzyka i znanych klas błędów, pozwala reviewerom skupić się tam, gdzie to naprawdę ważne.',
       diagramAria: 'Wielopoziomowy code review wewnątrz pull requesta, z triage ryzyka',
       prTag: 'Pull request',
       panelHead: 'Visdom Code Review',
@@ -490,14 +490,14 @@ const pl = {
 
     tracing: {
       title: 'Visdom AI Tracing',
-      body: 'Rejestruje interakcje z AI w całym cyklu dostarczania oprogramowania, egzekwuje polityki i daje odporną na manipulację ścieżkę audytu. Czarna skrzynka do eksploatacji systemów AI z rozliczalnością i pełną widocznością.',
+      body: 'Rejestruje interakcje z AI w całym cyklu dostarczania oprogramowania, egzekwuje polityki i prowadzi ścieżkę audytu, w której każda ingerencja zostawia ślad. Czarna skrzynka dla systemów AI: rozliczalność i pełny wgląd.',
       noteStrong: 'Rekordy podpisane Ed25519, spięte łańcuchem hashy',
       noteRest:
         'z atrybucją AI linia po linii, zmapowane na EU AI Act, SR 11-7, SOX, PCI-DSS i DORA.',
       capabilities: [
         {
           label: 'Trace',
-          desc: 'Ślady sesji, zużycie tokenów, wywołania narzędzi, redakcja sekretów',
+          desc: 'Ślady sesji, zużycie tokenów, wywołania narzędzi, maskowanie sekretów',
         },
         { label: 'Enforce', desc: 'Allowlisty modeli, ochrona ścieżek, budżety tokenów' },
         {
@@ -514,25 +514,25 @@ const pl = {
 
     security: {
       title: 'Visdom Security',
-      body: 'Security daje bariery ochronne dla waszych agentów i procesów dostarczania. Agenty mogą działać bezpiecznie, z kontrolowanym dostępem do systemów, poświadczeń i zasobów, a generowane zmiany są na bieżąco weryfikowane względem polityk bezpieczeństwa.',
-      notePoweredBy: 'Napędzane przez',
+      body: 'Security stawia bariery ochronne wokół waszych agentów i procesów dostarczania. Agenty mogą działać bezpiecznie, z kontrolowanym dostępem do systemów, poświadczeń i zasobów, a generowane zmiany są na bieżąco weryfikowane względem polityk bezpieczeństwa.',
+      notePoweredBy: 'W oparciu o',
       noteSandcat: 'Sandcat',
       noteContainment: '(izolacja) i',
       noteAikido: 'Aikido',
       noteRest:
-        '(AppSec): efemeryczne, odizolowane sandboxy z ograniczonymi poświadczeniami i allowlistami ruchu wychodzącego, plus skanowanie oparte na osiągalności, zbudowane pod przepływy agentowe.',
+        '(AppSec): efemeryczne, odizolowane sandboxy z ograniczonymi poświadczeniami i allowlistami ruchu wychodzącego, plus skanowanie oparte na osiągalności, zbudowane pod workflow agentowe.',
       diagramAria:
-        'Sandcat uruchamia agenta w odizolowanym sandboxie; przez ścianę egress przechodzi tylko zatwierdzony ruch, więc dane zostają w środku, a produkcja jest nieosiągalna',
+        'Sandcat uruchamia agenta w odizolowanym sandboxie; przez egress przechodzi tylko zatwierdzony ruch, więc dane zostają w środku, a produkcja jest nieosiągalna',
       caption: 'Dwie warstwy, jeden model ochrony.',
       sandcatHead: 'Sandcat · izolacja runtime',
       agentTag: 'Agent',
       agentDesc: 'odizolowany efemeryczny sandbox · uruchom · testuj · iteruj',
-      egressOk: 'ściana egress przepuszcza: rejestry pakietów · API modeli',
+      egressOk: 'przez egress przechodzą: rejestry pakietów · API modeli',
       egressNo: 'wasze dane · sekrety · produkcja → 403',
       secretsNote:
         'Prawdziwe sekrety zostają poza sandboxem, wstrzykiwane tylko przy zatwierdzonych wywołaniach.',
       aikidoHead: 'Aikido · skanowanie AppSec',
-      aikidoNote: 'Każda zmiana wyprodukowana przez agenta jest skanowana przed mergem:',
+      aikidoNote: 'Każda zmiana od agenta jest skanowana przed mergem:',
       chips: ['SAST · kod', 'SCA · zależności', 'DAST · API', 'Sekrety', 'IaC · chmura'],
       reachability: 'triage osiągalności pokazuje tylko realnie eksploatowalne znaleziska',
     },
@@ -540,9 +540,9 @@ const pl = {
     machineCi: {
       title: 'Visdom Machine CI',
       badge: 'Wkrótce',
-      body: "Machine CI to continuous integration zoptymalizowane pod dostarczanie oprogramowania w modelu AI-Native. Skracając czasy buildów i pętle informacji zwrotnej, pozwala agentom działać w maszynowym tempie, bez ograniczeń klasycznych pipeline'ów CI.",
+      body: "Machine CI to continuous integration zoptymalizowane pod dostarczanie oprogramowania w modelu AI-Native. Skracając czasy buildów i pętle feedbacku, pozwala agentom działać w maszynowym tempie, bez ograniczeń klasycznych pipeline'ów CI.",
       builtOn: 'Zbudowane na',
-      readLink: 'Przeczytaj: „The Ferrari Engine in a Fiat 500”',
+      readLink: 'Przeczytajcie: „The Ferrari Engine in a Fiat 500”',
       metrics: [
         {
           label: 'Skrócenie czasu buildu',
@@ -550,11 +550,11 @@ const pl = {
         },
         {
           label: 'Czas do merge pull requesta',
-          note: 'Bank inwestycyjny, monorepo Scala, zarządzane IntelliJ IDEA.',
+          note: 'Bank inwestycyjny, monorepo Scala, zarządzane środowisko IntelliJ IDEA.',
         },
         {
           label: 'Tempo iteracji agenta (cel)',
-          note: "Docelowa kadencja dla coding agentów, czyli tempo, za którym muszą nadążyć dzisiejsze pipeline'y.",
+          note: "Docelowe tempo dla coding agentów, czyli to, za czym muszą nadążyć dzisiejsze pipeline'y.",
         },
       ],
       footnoteBefore: 'Nazwy klientów objęte NDA. Pełne opisy w',
@@ -567,7 +567,7 @@ const pl = {
     label: 'Dorobek',
     title: 'Doświadczenie stojące za Visdom',
     subtitleBefore:
-      'To są własne wyniki VirtusLab z budowania narzędzi platformowych i optymalizacji dostarczania, a nie metryki produktu Visdom. To dorobek, na którym go budujemy. Klienci objęci NDA, pełne opisy w',
+      'To są własne wyniki VirtusLab z budowania narzędzi platformowych i optymalizacji dostarczania, a nie metryki produktu Visdom. Na tym go budujemy. Klienci objęci NDA, pełne opisy w',
     subtitleLink: 'success stories',
     subtitleAfter: 'VirtusLab.',
     items: [
@@ -598,7 +598,7 @@ const pl = {
     subtitle:
       '50+ artykułów w trzech seriach, pisanych przez inżynierów, którzy budują AI-native SDLC, publikowanych otwarcie dla szerszej społeczności.',
     latestLabel: 'Najnowsze',
-    linkLabel: 'Przeczytaj najnowszy artykuł',
+    linkLabel: 'Przeczytajcie najnowszy artykuł',
     series: [
       {
         description: 'Notatki z pola o AI-Native SDLC: kontekst, CI, code review i governance.',
@@ -613,10 +613,10 @@ const pl = {
     label: 'Model dojrzałości',
     title: 'AI Maturity Matrix',
     lead: 'Framework, którym określamy zakres każdego projektu. Pokazuje, gdzie wasz SDLC stoi dzisiaj i co powinny objąć pierwsze dwa tygodnie.',
-    shotAria: 'Otwórz AI Maturity Matrix',
+    shotAria: 'Otwórzcie AI Maturity Matrix',
     shotAlt:
       'AI Maturity Matrix dla obszaru Development: kompetencje ocenione na pięciu poziomach od Ad-hoc do Autonomous, z L4 Optimized jako celem.',
-    shotHint: 'Zobacz macierz na żywo',
+    shotHint: 'Zobaczcie macierz na żywo',
     ladder: {
       heading: 'Gdzie stoi wasza organizacja?',
       lead: 'Visdom Maturity Matrix mapuje 60 praktyk w 4 perspektywach i na 5 poziomach dojrzałości.',
@@ -628,8 +628,8 @@ const pl = {
         { id: 'L5', name: 'Autonomous' },
       ],
       perspectives: ['Development', 'Delivery', 'Organization', 'Infrastructure'],
-      assessmentCta: 'Zrób self-assessment',
-      matrixCta: 'Zobacz pełną macierz',
+      assessmentCta: 'Zróbcie self-assessment',
+      matrixCta: 'Zobaczcie pełną macierz',
     },
     publicationAria: 'Publikacja towarzysząca AI Maturity Matrix',
     publicationLabel: 'Lektura uzupełniająca',
@@ -637,24 +637,24 @@ const pl = {
     publicationTitle: 'AI Works Great. At Level Four.',
     publicationBlurb:
       'Teza stojąca za Matrixem: dlaczego AI dowozi to, co obiecuje, dopiero gdy infrastruktura wokół niego osiągnie L4, i czego trzeba, żeby tam dojść.',
-    publicationCta: 'Przeczytaj artykuł',
+    publicationCta: 'Przeczytajcie artykuł',
   },
 
   cta: {
     label: 'Następny krok',
     title: 'Odpuśćmy prezentację. Zacznijmy od kodu.',
     subtitle:
-      'Najszybszy sposób, żeby sprawdzić, czy możemy pomóc, to 30-minutowa rozmowa z inżynierami, którzy to zbudowali. Jeśli jest dopasowanie, wspólnie ustalamy zakres Assessmentu. Jeśli nie, wychodzicie ze wskazówkami do naszych tekstów inżynierskich i do Matrixa.',
+      'Najszybszy sposób, żeby sprawdzić, czy możemy pomóc, to 30-minutowa rozmowa z inżynierami, którzy to zbudowali. Jeśli pasujemy do siebie, wspólnie ustalamy zakres Assessmentu. Jeśli nie, wychodzicie z linkami do naszych tekstów inżynierskich i do Matrixa.',
     form: {
       badge: 'Rekomendowane',
-      title: 'Umów sesję roboczą',
-      body: '30 minut ze staff engineerem. Napiszcie, nad czym pracujecie, a przyjdziemy przygotowani z jednym wzorcem, który najszybciej ruszy waszą liczbę.',
+      title: 'Umówcie sesję roboczą',
+      body: '30 minut ze staff engineerem. Napiszcie, nad czym pracujecie, a przyjdziemy przygotowani z jednym wzorcem, który u was najszybciej zrobi różnicę.',
       nameLabel: 'Imię i nazwisko',
       companyLabel: 'Firma',
       emailLabel: 'E-mail służbowy',
       messageLabel: 'Co próbujecie dowieźć?',
       optional: 'opcjonalne',
-      submit: 'Umów sesję roboczą ->',
+      submit: 'Umówcie sesję roboczą ->',
       status:
         'Otwieram klienta poczty. Jeśli nic się nie otworzy, napiszcie na visdom@virtuslab.com.',
       mailSubject: 'Prośba o sesję roboczą',
@@ -666,23 +666,23 @@ const pl = {
     matrix: {
       badge: 'Samoobsługa',
       title: 'Przejdźcie Matrix sami',
-      body: '60 praktyk w 4 perspektywach. Zajmuje 20 minut. Wychodzicie z ocenioną bazą i jasnym pierwszym krokiem do zrobienia razem z nami.',
+      body: '60 praktyk w 4 perspektywach. Zajmuje 20 minut. Wychodzicie z punktem odniesienia i jasnym pierwszym krokiem do zrobienia razem z nami.',
       fineprint:
         'Self-assessment jest bezpłatny. Moderowany warsztat z diagnozą to stała opłata, poproście o wycenę.',
-      cta: 'Przejdź Matrix ->',
+      cta: 'Przejdźcie Matrix ->',
     },
     writing: {
       badge: 'Inżynieria przede wszystkim',
       title: 'Zobaczcie, jak myślimy',
-      body: '50+ artykułów o AI-Native SDLC: kontekst, CI, code review i governance. Przeczytajcie inżynierię, zanim ocenicie prezentację sprzedażową.',
-      cta: 'Przeczytaj teksty',
+      body: '50+ artykułów o AI-Native SDLC: kontekst, CI, code review i governance. Poczytajcie, jak to robimy, zanim ocenicie prezentację sprzedażową.',
+      cta: 'Przeczytajcie teksty',
     },
     footnoteBefore: 'Wolicie zwykłego maila?',
     footnoteAfter: 'Odpowiada inżynier, w ciągu jednego dnia roboczego.',
   },
 
   footer: {
-    poweredBy: 'Napędzane przez VirtusLab',
+    poweredBy: 'Tworzone przez VirtusLab',
     links: [
       { label: 'VirtusLab' },
       { label: 'GitHub' },
