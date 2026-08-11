@@ -1,45 +1,45 @@
 ---
-const phases = [
-  {
-    name: 'Phase 1 - Assessment',
-    meta: 'fixed scope',
-    body: 'On-site or remote. We run your environment through the Visdom Maturity Matrix and leave you with a prioritized roadmap, the pilot team named, and the next phase scoped. A light touch from your side. If you want to stop here, you walk away with the roadmap and nothing locked in.',
-    accent: 'var(--color-blue)',
-  },
-  {
-    name: 'Phase 2 - Pilot Implementation',
-    meta: 'fixed scope',
-    body: 'One pilot team. The components that matter, deployed into your SCM, CI, IdP, and observability stack. A small team of our engineers works alongside your AI champion and platform team. Runbooks, ADRs, and integration code are co-authored from the start. Not as observers, as owners.',
-    accent: 'var(--color-emerald)',
-  },
-  {
-    name: 'Phase 3 - Scale and Improve',
-    meta: 'advisory',
-    body: 'Scale runs two ways: vertically, as more components come online, and horizontally, as adoption spreads across more teams and the wider organization. The components are hardened and improved as that footprint grows, and architecture reviews, the hard calls, and the awkward exceptions get worked through together.',
-    accent: 'var(--color-purple)',
-  },
-  {
-    name: 'Phase 4 - Support',
-    meta: 'ongoing',
-    body: 'An ongoing partnership after transfer, not a payroll line. We stay available for architecture reviews, the hard calls, and the next maturity step, on terms that stay predictable for finance and flexible for engineering.',
-    accent: 'var(--color-amber)',
-  },
+import { useI18n } from '../i18n';
+
+const { t } = useI18n(Astro);
+
+const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+
+// Accents pair with t.solutions.phases by position.
+const phaseAccents = [
+  'var(--color-blue)',
+  'var(--color-emerald)',
+  'var(--color-purple)',
+  'var(--color-amber)',
 ];
 
+// Metric bars: the numbers and widths are measured facts, the labels and notes
+// are copy. Paired with t.solutions.machineCi.metrics by position.
+const metricBars = [
+  { value: '-88%', width: '88%' },
+  { value: '-43%', width: '43%' },
+  { value: '~50x/hr', width: '95%' },
+];
+
+const tracingColors = [
+  'var(--color-emerald)',
+  'var(--color-blue)',
+  'var(--color-purple)',
+  'var(--color-amber)',
+  'var(--color-emerald)',
+];
 ---
 <section class="section section-alt">
   <div class="container">
     <div id="engage" class="fade-up mb-14">
-      <p class="section-label">Engagement model</p>
-      <h2 class="section-title">How we engage</h2>
-      <p class="section-subtitle mb-14">
-        Four phases that build on each other, each delivering working capability you can see and use. Exact scope, pace, and team are agreed with you for every engagement, never off a fixed price list.
-      </p>
+      <p class="section-label">{t.solutions.engagementLabel}</p>
+      <h2 class="section-title">{t.solutions.engagementTitle}</h2>
+      <p class="section-subtitle mb-14">{t.solutions.engagementSubtitle}</p>
     </div>
 
     <div class="space-y-6 mb-10">
-      {phases.map((phase) => (
-        <article class="engagement-card fade-up" style={`--phase-accent: ${phase.accent}`}>
+      {t.solutions.phases.map((phase, i) => (
+        <article class="engagement-card fade-up" style={`--phase-accent: ${phaseAccents[i]}`}>
           <div class="engagement-head">
             <h3 class="text-2xl font-bold text-text">{phase.name}</h3>
             <span class="engagement-meta">{phase.meta}</span>
@@ -49,50 +49,32 @@ const phases = [
       ))}
     </div>
 
-    <div class="transfer-signal fade-up" aria-label="Capability transfer across engagement phases">
-      <div class="transfer-step">
-        <span class="transfer-step-label">Phase 1</span>
-        <strong>VirtusLab leads</strong>
-      </div>
-      <div class="transfer-arrow" aria-hidden="true"></div>
-      <div class="transfer-step">
-        <span class="transfer-step-label">Phase 2</span>
-        <strong>Deep collaboration</strong>
-      </div>
-      <div class="transfer-arrow" aria-hidden="true"></div>
-      <div class="transfer-step">
-        <span class="transfer-step-label">Phase 3</span>
-        <strong>Scaled rollout</strong>
-      </div>
-      <div class="transfer-arrow" aria-hidden="true"></div>
-      <div class="transfer-step">
-        <span class="transfer-step-label">Phase 4</span>
-        <strong>We stay on call</strong>
-      </div>
+    <div class="transfer-signal fade-up" aria-label={t.solutions.transferAria}>
+      {t.solutions.transfer.map((step, i) => (
+        <>
+          {i > 0 && <div class="transfer-arrow" aria-hidden="true"></div>}
+          <div class="transfer-step">
+            <span class="transfer-step-label">{step.label}</span>
+            <strong>{step.strong}</strong>
+          </div>
+        </>
+      ))}
     </div>
 
     <div id="kit" class="fade-up mt-24">
-      <p class="section-label">Platform components</p>
-      <h2 class="section-title">The platform we bring</h2>
-      <p class="section-subtitle mb-14">
-        One spine: the Context Fabric. Review, testing, security, and governance all read the same ground truth, so agents and reviewers answer the same questions the same way. Composing, hardening, and integrating them into a regulated enterprise stack is what teams hire us for.
-      </p>
+      <p class="section-label">{t.solutions.platformLabel}</p>
+      <h2 class="section-title">{t.solutions.platformTitle}</h2>
+      <p class="section-subtitle mb-14">{t.solutions.platformSubtitle}</p>
     </div>
 
     <div class="space-y-12">
       <div class="platform-block fade-up">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <div class="order-2 lg:order-1">
-            <div class="fabric-diagram" aria-label="Visdom Context Fabric ingests repository, documentation, tickets, and CI data, then exposes deterministic ground truth that the Coding Agent, Code Review, and Testing components read over MCP">
+            <div class="fabric-diagram" aria-label={t.solutions.fabric.diagramAria}>
               <div class="fabric-column fabric-column--sources">
-                <p class="fabric-column-label">Sources</p>
-                {[
-                  { name: 'Git repository', meta: 'code · history · blame' },
-                  { name: 'Confluence / Notion', meta: 'ADRs · runbooks' },
-                  { name: 'Jira / Linear', meta: 'tickets · ownership' },
-                  { name: 'CI / Actions', meta: 'builds · artifacts' },
-                  { name: 'CLAUDE.md / rules', meta: 'conventions' },
-                ].map((item) => (
+                <p class="fabric-column-label">{t.solutions.fabric.sourcesLabel}</p>
+                {t.solutions.fabric.sources.map((item) => (
                   <div class="fabric-node">
                     <strong>{item.name}</strong>
                     <span>{item.meta}</span>
@@ -110,8 +92,8 @@ const phases = [
 
               <div class="fabric-core">
                 <span class="fabric-core-tag">VISDOM</span>
-                <strong>Context Fabric</strong>
-                <p>Ingest · normalize · index the organization's ground truth.</p>
+                <strong>{t.solutions.fabric.coreName}</strong>
+                <p>{t.solutions.fabric.coreDesc}</p>
               </div>
 
               <svg class="fabric-wires fabric-wires--out" viewBox="0 0 80 320" preserveAspectRatio="none" aria-hidden="true">
@@ -121,34 +103,26 @@ const phases = [
               </svg>
 
               <div class="fabric-column fabric-column--outputs">
-                <p class="fabric-column-label">Components reading it</p>
-                {[
-                  { name: 'Coding Agent', meta: 'context · conventions' },
-                  { name: 'Code Review', meta: 'ownership · blast radius' },
-                  { name: 'Testing', meta: 'conventions · risk' },
-                ].map((item) => (
+                <p class="fabric-column-label">{t.solutions.fabric.outputsLabel}</p>
+                {t.solutions.fabric.outputs.map((item) => (
                   <div class="fabric-node fabric-node--output">
                     <strong>{item.name}</strong>
                     <span>{item.meta}</span>
                   </div>
                 ))}
-                <p class="fabric-column-note">Every Visdom component reads the same ground truth.</p>
+                <p class="fabric-column-note">{t.solutions.fabric.outputsNote}</p>
               </div>
             </div>
           </div>
           <div class="order-1 lg:order-2">
-            <div class="component-number">01</div>
-            <h3 class="text-2xl font-bold text-text mt-1 mb-4">
-              Visdom Context Fabric
+            <div class="component-number">01 / 06</div>
+            <h3 class="text-2xl font-bold text-text mt-3 mb-4">
+              {t.solutions.fabric.title}
             </h3>
-            <p class="text-text-secondary leading-relaxed mb-6">
-              Context Fabric delivers tailored context for your planning, coding, and review agents. Agents not only have to perform less discovery each time, but they are also provided with information that is often not accessible without having the broader picture.
-            </p>
-            <p class="text-sm text-text-muted mb-6">
-              Deterministic code expertise, blast radius analysis, and ownership graphs via MCP.
-            </p>
+            <p class="text-text-secondary leading-relaxed mb-6">{t.solutions.fabric.body}</p>
+            <p class="text-sm text-text-muted mb-6">{t.solutions.fabric.note}</p>
             <div class="flex gap-3">
-              <a href="https://virtuslab.com/blog/ai/the-hard-truth/" target="_blank" rel="noopener" class="read-link"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>Read: "Your README Is a Lie"</a>
+              <a href="https://virtuslab.com/blog/ai/the-hard-truth/" target="_blank" rel="noopener" class="read-link"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>{t.solutions.fabric.readLink}</a>
             </div>
           </div>
         </div>
@@ -157,46 +131,43 @@ const phases = [
       <div class="platform-block fade-up">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <div class="component-number">02</div>
-            <h3 class="text-2xl font-bold text-text mt-1 mb-4">
-              Visdom Code Review
-              <span class="text-base font-normal text-text-muted">VCR</span>
+            <div class="component-number">02 / 06</div>
+            <h3 class="text-2xl font-bold text-text mt-3 mb-4">
+              {t.solutions.review.title}
+              <span class="text-base font-normal text-text-muted">{t.solutions.review.abbr}</span>
             </h3>
-            <p class="text-text-secondary leading-relaxed mb-6">
-              Code Review provides automated pre-review for AI- and human-authored pull requests. By validating changes against engineering conventions, risk patterns, and common failure modes, reviewers can focus their attention where it matters most.
-            </p>
+            <p class="text-text-secondary leading-relaxed mb-6">{t.solutions.review.body}</p>
             <div class="flex gap-3">
-              <a href="https://virtuslab.github.io/visdom-code-review/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>Read the reference</a>
+              <a href="https://virtuslab.github.io/visdom-code-review/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>{t.solutions.readReference}</a>
             </div>
           </div>
           <div>
             <div class="cmp-frame">
-              <div class="cmp-pr" aria-label="Multi-level code review inside a pull request, with risk triage">
+              <div class="cmp-pr" aria-label={t.solutions.review.diagramAria}>
                 <span class="cmp-pr-tag">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6"/><path d="M13 6h2a3 3 0 0 1 3 3v6"/></svg>
-                  Pull request
+                  {t.solutions.review.prTag}
                 </span>
                 <div class="cmp-panel cmp-panel--review">
                   <span class="cmp-panel-head">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg>
-                    Visdom Code Review
+                    {t.solutions.review.panelHead}
                   </span>
                   <div class="cmp-levels">
-                    <div class="cmp-level"><b>L1</b><span>Linting review</span></div>
-                    <div class="cmp-level"><b>L2</b><span>Deterministic review</span></div>
-                    <div class="cmp-level"><b>L3</b><span>Single-pass LLM</span></div>
-                    <div class="cmp-level cmp-level--deep"><b>L4</b><span>Deep LLM review</span></div>
+                    {t.solutions.review.levels.map((level, i) => (
+                      <div class={`cmp-level${i === 3 ? ' cmp-level--deep' : ''}`}><b>{level.n}</b><span>{level.label}</span></div>
+                    ))}
                   </div>
                 </div>
                 <div class="cmp-panel cmp-panel--triage">
                   <span class="cmp-panel-head">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
-                    Triage
+                    {t.solutions.review.triageHead}
                   </span>
-                  <div class="cmp-riskgate">Risk gate</div>
+                  <div class="cmp-riskgate">{t.solutions.review.riskGate}</div>
                   <div class="cmp-human">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-                    <span>Human in the loop</span>
+                    <span>{t.solutions.review.human}</span>
                   </div>
                 </div>
               </div>
@@ -208,30 +179,25 @@ const phases = [
       <div class="platform-block fade-up">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <div class="component-number">03</div>
-            <h3 class="text-2xl font-bold text-text mt-1 mb-4">Visdom Testing</h3>
-            <p class="text-text-secondary leading-relaxed mb-6">
-              Testing introduces validation layers that go beyond traditional unit tests and coverage metrics. By combining architecture testing, property-based testing, and mutation testing, it uncovers defects that conventional testing approaches often miss.
-            </p>
-            <p class="text-sm text-text-muted mb-6">
-              Adaptive test shape tuned to your architecture, with architecture gates that stop AI from drifting.
-            </p>
+            <div class="component-number">03 / 06</div>
+            <h3 class="text-2xl font-bold text-text mt-3 mb-4">{t.solutions.testing.title}</h3>
+            <p class="text-text-secondary leading-relaxed mb-6">{t.solutions.testing.body}</p>
+            <p class="text-sm text-text-muted mb-6">{t.solutions.testing.note}</p>
             <div class="flex gap-3">
-              <a href="https://virtuslab.github.io/visdom-testing/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>Read the reference</a>
+              <a href="https://virtuslab.github.io/visdom-testing/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>{t.solutions.readReference}</a>
             </div>
           </div>
           <div>
             <div class="cmp-frame">
-              <div class="cmp-panel cmp-panel--testing" aria-label="Visdom Testing techniques: classic, architecture, property-based, and mutation testing">
+              <div class="cmp-panel cmp-panel--testing" aria-label={t.solutions.testing.diagramAria}>
                 <span class="cmp-panel-head">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v5L5 16a3 3 0 0 0 2.6 4.5h8.8A3 3 0 0 0 19 16l-5-8V3"/><path d="M7.5 14h9"/></svg>
-                  Visdom Testing
+                  {t.solutions.testing.panelHead}
                 </span>
                 <div class="cmp-techniques">
-                  <div class="cmp-technique">Classic tests</div>
-                  <div class="cmp-technique">Architecture testing</div>
-                  <div class="cmp-technique">Property-based</div>
-                  <div class="cmp-technique">Mutation testing</div>
+                  {t.solutions.testing.techniques.map((technique) => (
+                    <div class="cmp-technique">{technique}</div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -244,15 +210,9 @@ const phases = [
           <div class="order-2 lg:order-1">
             <div class="card accent-card p-8">
               <div class="space-y-5">
-                {[
-                  { label: 'Trace', desc: 'Session traces, token usage, tool calls, secret redaction', color: 'var(--color-emerald)' },
-                  { label: 'Enforce', desc: 'Model allowlists, path protection, token budgets', color: 'var(--color-blue)' },
-                  { label: 'Audit', desc: 'Ed25519 signatures, hash-chained records, SOX/PCI-DSS', color: 'var(--color-purple)' },
-                  { label: 'Evaluate', desc: 'Auto-evaluation, model distribution, adoption patterns', color: 'var(--color-amber)' },
-                  { label: 'Attribute', desc: 'Line-by-line AI code attribution via tree-sitter', color: 'var(--color-emerald)' },
-                ].map(item => (
+                {t.solutions.tracing.capabilities.map((item, i) => (
                   <div class="flex items-start gap-3 group">
-                    <span class="w-2 h-2 rounded-full mt-1.5 shrink-0 transition-transform group-hover:scale-150" style={`background: ${item.color}`}></span>
+                    <span class="w-2 h-2 rounded-full mt-1.5 shrink-0 transition-transform group-hover:scale-150" style={`background: ${tracingColors[i]}`}></span>
                     <div>
                       <span class="text-sm font-semibold text-text">{item.label}</span>
                       <span class="text-xs text-text-muted ml-2">{item.desc}</span>
@@ -263,16 +223,14 @@ const phases = [
             </div>
           </div>
           <div class="order-1 lg:order-2">
-            <div class="component-number">04</div>
-            <h3 class="text-2xl font-bold text-text mt-1 mb-4">Visdom AI Tracing</h3>
-            <p class="text-text-secondary leading-relaxed mb-6">
-              Captures AI interactions across the software delivery lifecycle, enforces policies, and provides a tamper-evident audit trail. The flight recorder for operating AI systems with accountability and full visibility.
-            </p>
+            <div class="component-number">04 / 06</div>
+            <h3 class="text-2xl font-bold text-text mt-3 mb-4">{t.solutions.tracing.title}</h3>
+            <p class="text-text-secondary leading-relaxed mb-6">{t.solutions.tracing.body}</p>
             <p class="text-sm text-text-muted mb-6">
-              <span class="font-semibold text-text">Ed25519-signed, hash-chained records</span> with line-by-line AI attribution, mapped to EU AI Act, SR 11-7, SOX, PCI-DSS, and DORA.
+              <span class="font-semibold text-text">{t.solutions.tracing.noteStrong}</span> {t.solutions.tracing.noteRest}
             </p>
             <div class="flex gap-3">
-              <a href="https://virtuslab.github.io/visdom-governance/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>Read the reference</a>
+              <a href="https://virtuslab.github.io/visdom-governance/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>{t.solutions.readReference}</a>
             </div>
           </div>
         </div>
@@ -281,55 +239,51 @@ const phases = [
       <div class="platform-block fade-up">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <div class="component-number">05</div>
-            <h3 class="text-2xl font-bold text-text mt-1 mb-4">Visdom Security</h3>
-            <p class="text-text-secondary leading-relaxed mb-6">
-              Security provides guardrails for your AI agents and delivery workflows. Agents can operate safely with controlled access to systems, credentials, and resources while generated changes are continuously validated against security policies.
-            </p>
+            <div class="component-number">05 / 06</div>
+            <h3 class="text-2xl font-bold text-text mt-3 mb-4">{t.solutions.security.title}</h3>
+            <p class="text-text-secondary leading-relaxed mb-6">{t.solutions.security.body}</p>
             <p class="text-sm text-text-muted mb-6">
-              Powered by <span class="font-semibold text-text">Sandcat</span> (containment) and <span class="font-semibold text-text">Aikido</span> (AppSec): ephemeral isolated sandboxes with scoped credentials and egress allowlists, plus reachability-based scanning built for agentic workflows.
+              {t.solutions.security.notePoweredBy} <span class="font-semibold text-text">{t.solutions.security.noteSandcat}</span> {t.solutions.security.noteContainment} <span class="font-semibold text-text">{t.solutions.security.noteAikido}</span> {t.solutions.security.noteRest}
             </p>
             <div class="flex gap-3">
-              <a href="https://virtuslab.github.io/visdom-security/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>Read the reference</a>
+              <a href="https://virtuslab.github.io/visdom-security/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>{t.solutions.readReference}</a>
             </div>
           </div>
           <div>
             <div class="cmp-frame">
-              <div class="cmp-sec" aria-label="Sandcat runs the agent in an isolated sandbox; only approved traffic crosses the egress wall, so data stays contained and production is unreachable">
-                <p class="cmp-sec-caption">Two layers, one protection model.</p>
+              <div class="cmp-sec" aria-label={t.solutions.security.diagramAria}>
+                <p class="cmp-sec-caption">{t.solutions.security.caption}</p>
 
                 <div class="cmp-panel">
                   <span class="cmp-panel-head">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>
-                    Sandcat · runtime containment
+                    {t.solutions.security.sandcatHead}
                   </span>
                   <div class="cmp-sec-agent">
-                    <span class="cmp-sec-tag">Agent</span>
-                    <span>isolated ephemeral sandbox · execute · test · iterate</span>
+                    <span class="cmp-sec-tag">{t.solutions.security.agentTag}</span>
+                    <span>{t.solutions.security.agentDesc}</span>
                   </div>
                   <div class="sandbox-contain" aria-hidden="true">
                     <span class="sandbox-barrier"></span>
                     <span class="sandbox-packet"></span>
                   </div>
-                  <div class="cmp-sec-row cmp-sec-row--ok"><span class="sandbox-mark sandbox-mark--ok">✓</span>egress wall lets out: package registries · LLM APIs</div>
-                  <div class="cmp-sec-row cmp-sec-row--no"><span class="sandbox-mark sandbox-mark--no">✗</span>your data · secrets · production → 403</div>
-                  <p class="sandbox-note">Real secrets stay outside the sandbox, injected only on approved calls.</p>
+                  <div class="cmp-sec-row cmp-sec-row--ok"><span class="sandbox-mark sandbox-mark--ok">✓</span>{t.solutions.security.egressOk}</div>
+                  <div class="cmp-sec-row cmp-sec-row--no"><span class="sandbox-mark sandbox-mark--no">✗</span>{t.solutions.security.egressNo}</div>
+                  <p class="sandbox-note">{t.solutions.security.secretsNote}</p>
                 </div>
 
                 <div class="cmp-panel">
                   <span class="cmp-panel-head">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    Aikido · AppSec scanning
+                    {t.solutions.security.aikidoHead}
                   </span>
-                  <p class="sandbox-note">Every change the agent produces is scanned before it merges:</p>
+                  <p class="sandbox-note">{t.solutions.security.aikidoNote}</p>
                   <div class="cmp-sec-chips">
-                    <span class="cmp-sec-chip">SAST · code</span>
-                    <span class="cmp-sec-chip">SCA · dependencies</span>
-                    <span class="cmp-sec-chip">DAST · APIs</span>
-                    <span class="cmp-sec-chip">Secrets</span>
-                    <span class="cmp-sec-chip">IaC · cloud</span>
+                    {t.solutions.security.chips.map((chip) => (
+                      <span class="cmp-sec-chip">{chip}</span>
+                    ))}
                   </div>
-                  <div class="cmp-sec-row cmp-sec-row--ok"><span class="sandbox-mark sandbox-mark--ok">✓</span>reachability triage surfaces only exploitable findings</div>
+                  <div class="cmp-sec-row cmp-sec-row--ok"><span class="sandbox-mark sandbox-mark--ok">✓</span>{t.solutions.security.reachability}</div>
                 </div>
               </div>
             </div>
@@ -342,40 +296,34 @@ const phases = [
           <div class="order-2 lg:order-1">
             <div class="card accent-card p-8">
               <div class="space-y-6">
-                {[
-                  { label: 'Build time reduction', value: '-88%', width: '88%', note: 'Global logistics, Scala monorepo, sbt -> Bazel. 40-60 min -> 5 min.' },
-                  { label: 'PR merge time', value: '-43%', width: '43%', note: 'Investment bank, Scala monorepo, managed IntelliJ IDEA.' },
-                  { label: 'Agent iteration speed (target)', value: '~50x/hr', width: '95%', note: 'Target cadence for coding agents - the speed today\'s pipelines need to keep up with.' },
-                ].map(item => (
+                {t.solutions.machineCi.metrics.map((item, i) => (
                   <div>
                     <div class="flex justify-between text-sm mb-2">
                       <span class="text-text-secondary">{item.label}</span>
-                      <span class="font-semibold text-emerald">{item.value}</span>
+                      <span class="font-semibold text-emerald">{metricBars[i].value}</span>
                     </div>
                     <div class="h-2.5 bg-surface-light rounded-full overflow-hidden">
-                      <div class="h-full rounded-full progress-bar" style={`width: ${item.width}; background: linear-gradient(90deg, var(--color-emerald), var(--color-blue))`}></div>
+                      <div class="h-full rounded-full progress-bar" style={`width: ${metricBars[i].width}; background: linear-gradient(90deg, var(--color-emerald), var(--color-blue))`}></div>
                     </div>
                     <p class="metric-note">{item.note}</p>
                   </div>
                 ))}
               </div>
               <p class="metric-footnote">
-                Client names under NDA. Full write-ups on the
-                <a href="https://virtuslab.com/success-stories/" target="_blank" rel="noopener">VirtusLab success stories</a>
-                page.
+                {t.solutions.machineCi.footnoteBefore}
+                <a href="https://virtuslab.com/success-stories/" target="_blank" rel="noopener">{t.solutions.machineCi.footnoteLink}</a>
+                {t.solutions.machineCi.footnoteAfter}
               </p>
             </div>
           </div>
           <div class="order-1 lg:order-2">
-            <div class="component-number">06</div>
-            <h3 class="text-2xl font-bold text-text mt-1 mb-4 flex items-center gap-3 flex-wrap">
-              Visdom Machine CI
-              <span class="tag bg-amber/10 text-amber border border-amber/20 text-xs font-medium normal-case tracking-normal">Coming Soon</span>
+            <div class="component-number">06 / 06</div>
+            <h3 class="text-2xl font-bold text-text mt-3 mb-4 flex items-center gap-3 flex-wrap">
+              {t.solutions.machineCi.title}
+              <span class="tag bg-amber/10 text-amber border border-amber/20 text-xs font-medium normal-case tracking-normal">{t.solutions.machineCi.badge}</span>
             </h3>
-            <p class="text-text-secondary leading-relaxed mb-6">
-              Machine CI provides continuous integration optimized for AI-native software delivery. By reducing build times and feedback cycles, it enables agents to operate at machine speed without being constrained by traditional CI pipelines.
-            </p>
-            <p class="text-xs uppercase tracking-wider text-text-muted mb-3">Built on</p>
+            <p class="text-text-secondary leading-relaxed mb-6">{t.solutions.machineCi.body}</p>
+            <p class="text-xs uppercase tracking-wider text-text-muted mb-3">{t.solutions.machineCi.builtOn}</p>
             <div class="flex flex-wrap items-center gap-3 mb-6">
               <a href="https://bazel.build/" target="_blank" rel="noopener" class="logo-chip" aria-label="Bazel">
                 <img src={`${(import.meta.env.BASE_URL || '/').replace(/\/$/, '')}/bazel-logo.svg`} alt="" width="22" height="22" />
@@ -386,7 +334,7 @@ const phases = [
               </a>
             </div>
             <div class="flex gap-3">
-              <a href="https://virtuslab.com/blog/ai/the-fallacy/" target="_blank" rel="noopener" class="read-link"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>Read: "The Ferrari Engine in a Fiat 500"</a>
+              <a href="https://virtuslab.com/blog/ai/the-fallacy/" target="_blank" rel="noopener" class="read-link"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>{t.solutions.machineCi.readLink}</a>
             </div>
           </div>
         </div>

@@ -1,0 +1,158 @@
+---
+/**
+ * The maturity ladder band: L1 to L5, the four perspectives, and the two ways
+ * into the live Matrix.
+ *
+ * This used to be the MaturityRef widget from @virtuslab/visdom-ui. That widget
+ * hardcodes its heading and lead in English with no prop to override them, and
+ * ships a light-only palette that needed a stack of !important overrides to
+ * survive on our dark page. Drawing it here costs about forty lines, translates
+ * cleanly, and drops both problems.
+ */
+import { useI18n } from '../i18n';
+
+const { t } = useI18n(Astro);
+const ladder = t.maturity.ladder;
+
+const ASSESSMENT_HREF = 'https://visdom-maturity-matrix.virtuslab.com/workshop';
+const MATRIX_HREF = 'https://visdom-maturity-matrix.virtuslab.com/matrix/development';
+---
+<section class="ladder" aria-labelledby="ladder-title">
+  <div class="container">
+    <h2 id="ladder-title" class="ladder-title">{ladder.heading}</h2>
+    <p class="ladder-lead">{ladder.lead}</p>
+
+    <ol class="ladder-steps" role="list">
+      {ladder.levels.map((level, i) => (
+        <li class="ladder-step" style={`--step: ${i}`}>
+          <span class="ladder-step-id">{level.id}</span>
+          <span class="ladder-step-name">{level.name}</span>
+        </li>
+      ))}
+    </ol>
+
+    <ul class="ladder-perspectives" role="list">
+      {ladder.perspectives.map((perspective) => (
+        <li class="ladder-perspective">{perspective}</li>
+      ))}
+    </ul>
+
+    <div class="ladder-actions">
+      <a href={ASSESSMENT_HREF} target="_blank" rel="noopener" class="btn-pill btn-primary">{ladder.assessmentCta}</a>
+      <a href={MATRIX_HREF} target="_blank" rel="noopener" class="btn-pill btn-outline">{ladder.matrixCta}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ladder {
+    padding: 5rem 0 6rem;
+    border-top: 1px solid var(--color-border-light);
+    background: var(--color-bg);
+    text-align: center;
+  }
+
+  .ladder-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+  }
+
+  .ladder-lead {
+    max-width: 36rem;
+    margin: 1rem auto 0;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  /* One accent, stepped in strength, so the ramp reads the same in both themes
+     instead of needing a second hardcoded palette for dark. */
+  .ladder-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 3rem 0 2.5rem;
+    padding-bottom: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .ladder-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    flex: 0 0 auto;
+    min-width: 84px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: color-mix(
+      in srgb,
+      var(--color-emerald) calc(6% + var(--step) * 7%),
+      var(--color-surface)
+    );
+  }
+
+  .ladder-step:first-child {
+    background: var(--color-surface);
+  }
+
+  .ladder-step + .ladder-step::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    width: clamp(24px, 4vw, 40px);
+    height: 2px;
+    transform: translateY(-50%);
+    background: var(--color-emerald);
+    opacity: 0.35;
+  }
+
+  .ladder-step {
+    position: relative;
+    margin-left: clamp(24px, 4vw, 40px);
+  }
+
+  .ladder-step:first-child {
+    margin-left: 0;
+  }
+
+  .ladder-step-id {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .ladder-step-name {
+    font-size: var(--fs-2xs);
+    color: var(--color-text-secondary);
+  }
+
+  .ladder-perspectives {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 2.5rem;
+  }
+
+  .ladder-perspective {
+    padding: 6px 16px;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .ladder-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+</style>

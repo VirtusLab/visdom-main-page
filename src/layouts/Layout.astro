@@ -1,14 +1,19 @@
 ---
 import Analytics from "../components/Analytics.astro";
+import { useI18n, alternatesFor, LOCALE_META } from "../i18n";
 
 interface Props {
-  title: string;
+  title?: string;
   description?: string;
   ogImage?: string;
 }
+
+const { locale, t } = useI18n(Astro);
+const meta = LOCALE_META[locale];
+
 const {
-  title,
-  description = "We embed with enterprise platform teams to build the context, CI, review, and governance infrastructure agents actually need. We bring a platform we built, deploy it with your team, and stay on as a long-term partner.",
+  title = t.meta.title,
+  description = t.meta.description,
   ogImage,
 } = Astro.props;
 
@@ -17,10 +22,20 @@ const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 const canonical = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImageUrl = ogImage ?? `${siteUrl}/og-image.png`;
 
+// Empty on pages that exist in one locale only: an hreflang pointing at a URL
+// that does not exist is worse than shipping none at all.
+const alternates = alternatesFor(Astro.url.pathname).map((alt) => ({
+  ...alt,
+  href: new URL(alt.path, siteUrl).toString(),
+}));
+const alternateLocales = alternates
+  .filter((alt) => alt.hreflang !== 'x-default' && alt.locale !== locale)
+  .map((alt) => LOCALE_META[alt.locale].ogLocale);
+
 const piwikScript = `(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://virtuslab.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', 'bc10b3c8-70d2-4d9b-8ceb-d2b7454546b7');`;
 ---
 <!doctype html>
-<html lang="en">
+<html lang={meta.lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,19 +45,26 @@ const piwikScript = `(function(window, document, dataLayerName, id) { window[dat
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {alternates.map((alt) => (
+      <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+    ))}
     <link rel="icon" href={`${base}/favicon.ico`} sizes="any" />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
     <link rel="apple-touch-icon" href={`${base}/apple-touch-icon.png`} />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Visdom by VirtusLab" />
+    <meta property="og:site_name" content={t.meta.siteName} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={meta.ogLocale} />
+    {alternateLocales.map((ogLocale) => (
+      <meta property="og:locale:alternate" content={ogLocale} />
+    ))}
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Visdom by VirtusLab: how we build the AI-Native SDLC with enterprise teams" />
+    <meta property="og:image:alt" content={t.meta.ogImageAlt} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
@@ -67,7 +89,7 @@ const piwikScript = `(function(window, document, dataLayerName, id) { window[dat
       })();
     </script>
 
-    <script id="CookieConsent" src="https://policy.app.cookieinformation.com/uc.js" data-culture="EN" data-gcm-version="2.0" type="text/javascript"></script>
+    <script id="CookieConsent" src="https://policy.app.cookieinformation.com/uc.js" data-culture={meta.cookieCulture} data-gcm-version="2.0" type="text/javascript"></script>
   </head>
   <body class="min-h-screen">
     <slot />

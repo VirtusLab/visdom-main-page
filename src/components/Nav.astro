@@ -1,24 +1,40 @@
 ---
-const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') || '/';
+import {
+  useI18n,
+  alternatesFor,
+  localePath,
+  LOCALE_META,
+} from '../i18n';
 
-// The nav points at sections of the home page. On a subpage a bare "#platform"
-// scrolls nowhere, so prefix those anchors with the home path when we are not
-// on the home page.
-const home = baseUrl === '/' ? '' : baseUrl;
-const onHome = Astro.url.pathname.replace(/\/$/, '') === home;
-const anchor = (hash: string) => (onHome ? hash : `${home}/${hash}`);
+const { locale, t } = useI18n(Astro);
+
+// The nav points at sections of the home page for the current locale. On a
+// subpage a bare "#platform" scrolls nowhere, so prefix those anchors with the
+// localized home path when we are not on it.
+const home = localePath(locale, '/');
+const onHome = Astro.url.pathname.replace(/\/$/, '') === home.replace(/\/$/, '');
+const anchor = (hash: string) => (onHome ? hash : `${home}${hash}`);
 
 const links = [
-  { label: 'Platform', href: anchor('#platform') },
-  { label: 'Insights', href: anchor('#thesis') },
-  { label: 'Maturity Matrix', href: 'https://visdom-maturity-matrix.virtuslab.com/', external: true },
+  { label: t.nav.platform, href: anchor('#platform') },
+  { label: t.nav.insights, href: anchor('#thesis') },
+  { label: t.nav.maturityMatrix, href: 'https://visdom-maturity-matrix.virtuslab.com/', external: true },
 ];
 
 const contactHref = anchor('#contact');
+
+// Only rendered where the current page actually exists in the other locale.
+const languages = alternatesFor(Astro.url.pathname)
+  .filter((alt) => alt.hreflang !== 'x-default')
+  .map((alt) => ({
+    ...alt,
+    meta: LOCALE_META[alt.locale],
+    current: alt.locale === locale,
+  }));
 ---
 
 <header class="site-header" id="site-header">
-  <a class="site-header-brand" href={baseUrl}>
+  <a class="site-header-brand" href={home}>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 125 50" fill="none" class="site-header-vl" aria-label="VirtusLab">
       <path d="M65.377 8.966a1.07 1.07 0 0 0-.82-.387h-4.077c-.213 0-.42.066-.592.189l-5.682 4.084-6.559-12.078a1.074 1.074 0 0 0-1.708-.726L33.113 3.354c-1.577.407-2.859 1.52-3.447 2.995L15.699 41.356l-5.055-10.867a1.072 1.072 0 0 0-.783-.56L1.118 28.862a1.074 1.074 0 0 0-.965.44 1.074 1.074 0 0 0 .004.593v.04l12.41 18.772c.367.556 1.002.89 1.684.89h3.176c.352 0 .678-.181.857-.476L40.606 12.652l7.624 5.236c.533.366 1.158.586 1.81.637l5.778.45h.08c.264 0 .517-.102.706-.285l8.68-8.473c.339-.33.392-.858.093-1.253zM13.479 46.919 2.975 31.03l6.085.742 5.632 12.107-1.213 3.04zm1.67 1.156L31.54 6.99c.346-.867 1.099-1.52 2.026-1.76l10.935-2.818L17.092 47.687a.715.715 0 0 1-.698.387h-1.245zm26.467-37.09 4.919-8.124 6.055 11.153-3.209 2.307-7.765-5.335zm13.902 5.079-3.405-.264 8.696-6.25h1.384l-6.675 6.514z" fill="currentColor"/>
       <path d="M37.73 29.961l2.88 7.618 2.746-7.618h2.314l-3.8 10.388h-2.521l-3.932-10.388h2.314zM47.541 29.961h2.182v10.388h-2.182V29.961zM52.293 29.961h5.08c1.505 0 3.198.565 3.198 3.135 0 1.767-.509 3.007-1.75 3.244l2.258 4.009h-2.37l-1.995-3.81c-.357-.035-2.22-.2-2.238-.218v4.028h-2.183V29.961zm4.929 4.902c.583 0 1.166-.237 1.166-1.658 0-1.295-.884-1.385-1.166-1.385h-2.747v3.043h2.747zM62.404 29.961h8.654v1.987h-3.236v8.401h-2.182v-8.401h-3.236v-1.987zM73.017 29.961h2.202v5.65c0 2.423.77 2.843 2.426 2.843 1.487 0 2.333-.437 2.333-2.843v-5.65h2.201v5.65c0 4.245-2.257 4.83-4.534 4.83-2.558 0-4.647-.474-4.628-4.83v-5.65zM84.352 32.658c0-1.53.64-2.752 2.784-2.752.979 0 3.8.146 5.21.401v1.55s-2.934-.11-4.872-.11c-.752 0-.94.455-.94.948v.766c0 .801.357.82.94.82h2.803c1.9 0 2.578 1.184 2.578 2.643v1.02c0 2.096-1.298 2.588-2.578 2.588-.903 0-4.797-.11-5.513-.42v-1.513s3.18.073 5.042.073c.658 0 .865-.766.865-.766v-.911c0-.529-.226-.783-.865-.783h-2.728c-1.976 0-2.728-.856-2.728-2.606v-.948zM95.29 29.961h2.182v7.654c-.019.747.377.747.979.747h4.421v1.987h-5.568c-1.166 0-2.013-.638-2.013-1.95v-8.438zM108.602 29.961h2.502l3.706 10.388h-2.314l-.884-2.35h-3.744l-.94 2.35h-2.314l3.989-10.388zm2.464 6.233-1.222-3.536-1.354 3.536h2.577zM116.684 29.942h5.023c2.333 0 3.237 1.222 3.237 2.789 0 1.403-.565 2.059-1.374 2.314.715.201 1.43.93 1.43 2.351 0 1.877-.922 2.953-3.293 2.953h-5.023V29.942zm4.892 4.192c.94 0 1.185-.347 1.185-1.222 0-.947-.659-1.111-1.185-1.111h-2.709v2.333h2.709zm0 4.338c.545 0 1.222-.128 1.222-1.295 0-.82-.282-1.366-1.222-1.366h-2.709v2.661h2.709z" fill="currentColor"/>
@@ -30,7 +46,7 @@ const contactHref = anchor('#contact');
     </span>
   </a>
 
-  <nav class="site-header-nav" aria-label="Primary">
+  <nav class="site-header-nav" aria-label={t.nav.ariaPrimary}>
     {links.map((link) => (
       <a
         href={link.href}
@@ -44,12 +60,29 @@ const contactHref = anchor('#contact');
   </nav>
 
   <div class="site-header-right">
-    <a href={contactHref} class="site-header-cta">Get in Touch</a>
+    <a href={contactHref} class="site-header-cta">{t.nav.contact}</a>
+
+    {languages.length > 1 && (
+      <nav class="site-header-lang" aria-label={t.nav.languageLabel}>
+        {languages.map((lang) => (
+          <a
+            href={lang.path}
+            hreflang={lang.hreflang}
+            lang={lang.meta.lang}
+            class="site-header-lang-link"
+            aria-current={lang.current ? 'true' : undefined}
+          >
+            <span aria-hidden="true">{lang.meta.label}</span>
+            <span class="sr-only">{lang.meta.name}</span>
+          </a>
+        ))}
+      </nav>
+    )}
 
     <button
       type="button"
       class="site-header-theme-toggle"
-      aria-label="Toggle color theme"
+      aria-label={t.nav.themeToggle}
     >
       <svg class="theme-icon theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
@@ -62,7 +95,7 @@ const contactHref = anchor('#contact');
     <button
       type="button"
       class="site-header-mobile-toggle"
-      aria-label="Open menu"
+      aria-label={t.nav.openMenu}
       aria-expanded="false"
       aria-controls="site-header-mobile-menu"
     >
@@ -84,7 +117,22 @@ const contactHref = anchor('#contact');
         {link.external && <span aria-hidden="true"> &#8599;</span>}
       </a>
     ))}
-    <a href={contactHref} class="site-header-mobile-link site-header-mobile-link--cta">Get in Touch</a>
+    <a href={contactHref} class="site-header-mobile-link site-header-mobile-link--cta">{t.nav.contact}</a>
+    {languages.length > 1 && (
+      <div class="site-header-mobile-lang" role="group" aria-label={t.nav.languageLabel}>
+        {languages.map((lang) => (
+          <a
+            href={lang.path}
+            hreflang={lang.hreflang}
+            lang={lang.meta.lang}
+            class="site-header-mobile-lang-link"
+            aria-current={lang.current ? 'true' : undefined}
+          >
+            {lang.meta.name}
+          </a>
+        ))}
+      </div>
+    )}
   </div>
 </header>
 
@@ -224,6 +272,66 @@ const contactHref = anchor('#contact');
 
   .site-header-cta:hover {
     opacity: 0.88;
+  }
+
+  /* language switcher: a segmented pill, same visual family as the nav pill */
+  .site-header-lang {
+    display: none;
+    align-items: center;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    background: color-mix(in oklab, var(--color-surface) 70%, transparent);
+  }
+
+  @media (min-width: 640px) {
+    .site-header-lang { display: inline-flex; }
+  }
+
+  .site-header-lang-link {
+    padding: 3px 9px;
+    border-radius: 9999px;
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xs);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .site-header-lang-link:hover {
+    color: var(--color-text);
+  }
+
+  .site-header-lang-link[aria-current='true'] {
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .site-header-mobile-lang {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .site-header-mobile-lang-link {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    text-align: center;
+    text-decoration: none;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+  }
+
+  .site-header-mobile-lang-link[aria-current='true'] {
+    border-color: var(--color-emerald);
+    color: var(--color-text);
   }
 
   .site-header-theme-toggle {

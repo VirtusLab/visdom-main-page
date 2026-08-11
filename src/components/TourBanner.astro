@@ -2,6 +2,13 @@
 // Stops come from src/data/tour.ts so the banner and the webinar page cannot
 // drift apart. Rendered markup is unchanged.
 import { TOUR_STOPS, TOUR_HREF } from '../data/tour';
+import { useI18n } from '../i18n';
+
+const { t } = useI18n(Astro);
+
+// tour.ts stores month labels in English. Anything without a translation (a
+// full date, say) falls through as written rather than disappearing.
+const when = (label: string) => t.tour.months[label] ?? label;
 ---
 <a
   class="tour-banner"
@@ -9,9 +16,9 @@ import { TOUR_STOPS, TOUR_HREF } from '../data/tour';
   target="_blank"
   rel="noopener"
   data-cta="cta_click"
-  aria-label="Visdom AI Tour 2026, see the dates and register"
+  aria-label={t.tour.aria}
 >
-  <span class="tour-banner-tag">Visdom AI Tour</span>
+  <span class="tour-banner-tag">{t.tour.tag}</span>
   <span class="tour-banner-text">
     {TOUR_STOPS.map((stop, i) => (
       <>
@@ -19,12 +26,12 @@ import { TOUR_STOPS, TOUR_HREF } from '../data/tour';
         {stop.status === 'next' ? (
           <span class="tour-stop tour-stop--next">
             <span class="tour-flag">{stop.flag}</span><strong>{stop.city}</strong>
-            <span class="tour-next-badge">Next stop: {stop.when}</span>
+            <span class="tour-next-badge">{t.tour.nextStop} {when(stop.when)}</span>
           </span>
         ) : (
           <span class="tour-stop tour-stop--upcoming">
             <span class="tour-flag">{stop.flag}</span>{stop.city}
-            <span class="tour-month">{stop.when}</span>
+            <span class="tour-month">{when(stop.when)}</span>
           </span>
         )}
       </>

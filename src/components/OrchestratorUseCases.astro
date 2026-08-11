@@ -2,6 +2,9 @@
 // Orchestrator use cases (prototype section): six business scenarios where a
 // semi-autonomous agentic SDLC pays off. Each card is a mini incident feed:
 // trigger -> orchestrated work -> payoff, with the outcome as the punchline.
+import { useI18n } from '../i18n';
+
+const { t } = useI18n(Astro);
 
 const icons: Record<string, string> = {
   alert: '<path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
@@ -12,85 +15,16 @@ const icons: Record<string, string> = {
   shuffle: '<path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.8-1.1 2-1.7 3.3-1.7H22"/><path d="m18 2 4 4-4 4"/><path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/><path d="m18 14 4 4-4 4"/>',
 };
 
-const cases = [
-  {
-    icon: 'alert',
-    tag: 'Incident response',
-    title: 'Prod throws 500s at 2 a.m.',
-    steps: [
-      { t: '02:14', d: 'Alerts fire: error rate spikes on production.' },
-      { t: '02:31', d: 'Logs correlated, root cause pinned, fix drafted and run through every gate.' },
-      { t: '08:00', d: 'Morning standup reviews a green, fully traced pull request.' },
-    ],
-    outcome: 'A pull request, not a Zendesk ticket',
-  },
-  {
-    icon: 'activity',
-    tag: 'Regression hunt',
-    title: 'Error rate doubles on the API',
-    steps: [
-      { t: '11:02', d: 'The checkout API starts failing twice as often.' },
-      { t: '11:04', d: 'Events correlated across services; the deploy that broke it identified.' },
-      { t: '11:27', d: 'A proposed fix waits for one click of approval.' },
-    ],
-    outcome: 'Root cause before the war room',
-  },
-  {
-    icon: 'bug',
-    tag: 'Bug reproduction',
-    title: 'A customer hits the same bug, twice',
-    steps: [
-      { t: '14:50', d: 'Support escalates a recurring, hard-to-pin failure.' },
-      { t: '15:12', d: 'Replayed from logs and telemetry; a failing test now reproduces it.' },
-      { t: '16:05', d: 'The fix ships with a regression test bolted on.' },
-    ],
-    outcome: 'Reproduced, fixed, locked for good',
-  },
-  {
-    icon: 'shield',
-    tag: 'Security patch',
-    title: 'A CVE lands in a core library',
-    steps: [
-      { t: '06:00', d: 'A new vulnerability drops in a dependency you run.' },
-      { t: '06:18', d: 'Affected components mapped, dependency bumped, full gate suite run.' },
-      { t: '07:02', d: 'A verified upgrade sits ready to merge.' },
-    ],
-    outcome: 'Patched in hours, not sprints',
-  },
-  {
-    icon: 'refresh',
-    tag: 'Migration',
-    title: 'A deprecated API, used in 214 places',
-    steps: [
-      { t: '09:00', d: 'The framework flags an API for removal; your repo calls it everywhere.' },
-      { t: '09:30', d: 'Call sites mapped, the mechanical 95% migrated, gates run on every change.' },
-      { t: '11:45', d: 'Humans review the six call sites that actually needed judgment.' },
-    ],
-    outcome: '214 call sites, six human decisions',
-  },
-  {
-    icon: 'shuffle',
-    tag: 'CI hygiene',
-    title: 'CI fails every third run',
-    steps: [
-      { t: '16:20', d: 'A flaky test starts blocking every other merge.' },
-      { t: '16:35', d: 'The test is quarantined, history bisected, the race condition pinned.' },
-      { t: '17:10', d: 'A deterministic fix lands; the merge queue moves again.' },
-    ],
-    outcome: 'A test suite you can trust again',
-  },
-];
+// Icons pair with t.useCases.cases by position.
+const caseIcons = ['alert', 'activity', 'bug', 'shield', 'refresh', 'shuffle'];
+const cases = t.useCases.cases.map((c, i) => ({ ...c, icon: caseIcons[i] }));
 ---
 <section class="uc section" id="use-cases" aria-labelledby="uc-title">
   <div class="container">
     <div class="fade-up">
-      <p class="section-label">Orchestrator at work</p>
-      <h2 id="uc-title" class="section-title">The orchestrator takes the <span class="serif-accent uc-accent">night shift</span></h2>
-      <p class="section-subtitle">
-        One orchestrator runs every flow above end to end: it watches, correlates, plans and prepares.
-        The same gates, the same approvals, the same audit trail. People step in only where judgment matters.
-        Where it pays off on day one:
-      </p>
+      <p class="section-label">{t.useCases.label}</p>
+      <h2 id="uc-title" class="section-title">{t.useCases.titleBefore} <span class="serif-accent uc-accent">{t.useCases.titleAccent}</span></h2>
+      <p class="section-subtitle">{t.useCases.subtitle}</p>
     </div>
 
     <div class="uc-grid">

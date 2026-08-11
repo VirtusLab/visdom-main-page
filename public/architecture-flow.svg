@@ -1,0 +1,399 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 680" role="img" aria-labelledby="af-svg-title" preserveAspectRatio="xMidYMid meet" font-family="Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="af-svg-title">Visdom architecture: Context Fabric, Orchestrator, Coding Agent (Cursor, Claude, Codex), Testing, Code Review, Security scanning by Aikido, PR triage and Visdom AI Tracing.</title>
+
+  <style>
+    .af-svg-bg { fill: #ffffff; }
+    text { fill: #111827; }
+    /* blueprint substrate */
+    .af-grid-dot { fill: #9ca3af; opacity: 0.35; }
+    .af-bp { opacity: 0.5; }
+    .af-fid path { stroke: #e5e7eb; stroke-width: 1.25; fill: none; }
+    .af-sheen { stroke: rgba(255,255,255,0.5); stroke-width: 1; opacity: 0.5; }
+
+    /* module header chip */
+    .af-mhead { fill: #f1f3f5; }
+    .af-mhead-label { fill: #111827; font: 600 12px 'Geist Mono', ui-monospace, monospace; letter-spacing: 0.12em; text-transform: uppercase; }
+    .af-mhead-icon, .af-vault-icon { fill: none; stroke: #059669; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* sandbox + brands */
+    .af-sandbox-tag { fill: #f1f3f5; stroke: #e5e7eb; stroke-width: 1; }
+    .af-sandbox-label { fill: #6b7280; font: 600 10px 'Geist Mono', ui-monospace, monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+    .af-brands-label { fill: #9ca3af; font: 600 9px 'Geist Mono', ui-monospace, monospace; letter-spacing: 0.1em; text-transform: uppercase; }
+    .af-brand-chip { fill: #ffffff; stroke: #e5e7eb; stroke-width: 1.25; }
+    .af-brand-mark { fill: #111827; }
+
+    /* cards */
+    .af-card { fill: #ffffff; stroke: #e5e7eb; stroke-width: 1.25; }
+    .af-card--risk { stroke: #f59e0b; }
+    .af-card-label { fill: #111827; font: 600 15px 'Geist', sans-serif; }
+    .af-card-label--risk { fill: #f59e0b; font-weight: 700; font-size: 15px; }
+    .af-card-sub { fill: #6b7280; font: 500 13px 'Geist', sans-serif; }
+    .af-src-icon { fill: none; stroke: #059669; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* fabric bar */
+    .af-fabricbar { stroke: #97cabe; }
+
+    /* orchestrator enclosure */
+    .af-orch-box { fill: rgba(5,150,105,0.03); stroke: #9dcdc1; stroke-width: 1.5; }
+    .af-orch-legend { fill: #f8f9fb; stroke: #8bc6b7; stroke-width: 1.25; }
+    .af-orch-icon { fill: none; stroke: #059669; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .af-orch-label { fill: #111827; font: 700 16px 'Geist', sans-serif; }
+
+    /* pull request envelope */
+    .af-prenv { fill: rgba(5,150,105,0.035); stroke: #afd4cc; stroke-width: 1; stroke-dasharray: 6 6; }
+    .af-prenv-icon { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .af-prenv-label { fill: #9ca3af; font: 600 12px 'Geist Mono', ui-monospace, monospace; letter-spacing: 0.12em; text-transform: uppercase; }
+
+    /* wires / pipes / rails */
+    .af-wire, .af-trace-path { fill: none; stroke: #a2cfc4; stroke-width: 1.75; }
+    .af-trace-path { stroke-dasharray: 3 7; opacity: 0.6; }
+    .af-port { fill: #059669; opacity: 0.8; }
+    .af-pipe { fill: none; stroke: #059669; stroke-width: 2.5; opacity: 0.85; }
+    .af-rail-pre { fill: none; stroke: #059669; stroke-width: 2.5; }
+    .af-rail-label { fill: #111827; font: 600 14px 'Geist', sans-serif; }
+    .af-loop-path { fill: none; stroke: rgba(5,150,105,0.55); stroke-width: 2; stroke-dasharray: 5 5; }
+    .af-loop-label { fill: #047857; font: 600 14px 'Geist', sans-serif; }
+
+    /* coding agent */
+    .af-agent-ring { fill: none; stroke: #059669; stroke-width: 2; opacity: 0.5; }
+    .af-agent-ticks { fill: none; stroke: #059669; stroke-width: 3; stroke-dasharray: 2 9; opacity: 0.55; }
+    .af-agent-core { fill: url(#af-agent-grad); }
+    .af-agent-spark { fill: none; stroke: rgba(255,255,255,0.9); stroke-width: 1.8; stroke-linejoin: round; }
+    .af-agent-label { fill: #ffffff; font: 700 17px 'Geist', sans-serif; }
+
+    /* panels / chips */
+    .af-panel { fill: #f8f9fb; stroke: #e5e7eb; stroke-width: 1.25; }
+    .af-chip { fill: #ffffff; stroke: #e5e7eb; stroke-width: 1.25; }
+    .af-chip-label { fill: #111827; font: 600 14px 'Geist', sans-serif; }
+
+    /* code review depth ramp */
+    .af-review-bar { stroke: #b8d7d1; stroke-width: 1.25; }
+    .af-depth-0 .af-review-bar { fill: #f3faf8; }
+    .af-depth-1 .af-review-bar { fill: #e4f3ee; }
+    .af-depth-2 .af-review-bar { fill: #d2ece4; }
+    .af-depth-3 .af-review-bar { fill: #bbe2d6; stroke: #059669; }
+    .af-review-n { fill: #047857; font: 700 12px 'Geist Mono', ui-monospace, monospace; }
+    .af-review-label { fill: #111827; font: 600 13px 'Geist', sans-serif; }
+
+    /* triage */
+    .af-pr { fill: #ffffff; stroke: #059669; stroke-width: 1.75; }
+    .af-pr-label { fill: #111827; font: 700 15px 'Geist', sans-serif; }
+    .af-branch { fill: none; stroke-width: 2; }
+    .af-branch--risk { stroke: #f59e0b; }
+    .af-human-mark { fill: none; stroke: #f59e0b; stroke-width: 1.6; }
+    .af-approved-label { fill: #f59e0b; font: 600 11px 'Geist Mono', ui-monospace, monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+    .af-autofix-path { fill: none; stroke: rgba(5,150,105,0.65); stroke-width: 1.75; stroke-dasharray: 4 6; }
+    .af-autofix-label { fill: #059669; font: 600 13px 'Geist', sans-serif; }
+
+    /* tracing vault */
+    .af-vault { fill: #ecf4f3; stroke: #add2ca; stroke-width: 1.5; }
+    .af-vault-label { fill: #111827; font: 700 20px 'Geist', sans-serif; }
+    .af-vault-tag { fill: #6b7280; font: 600 11px 'Geist Mono', ui-monospace, monospace; letter-spacing: 0.1em; text-transform: uppercase; }
+    .af-vault-mark { fill: #059669; }
+    .af-chain-block { fill: rgba(5,150,105,0.08); stroke: #80c2b0; stroke-width: 1.25; }
+    .af-chain-block--head { fill: #b4dfd2; stroke: #059669; }
+    .af-chain-link { stroke: #8bc6b7; stroke-width: 1.5; stroke-dasharray: 2 3; }
+
+    /* ship to production */
+    .af-ship-box { fill: #ffffff; stroke: #059669; stroke-width: 1.5; }
+    .af-ship-icon { fill: none; stroke: #059669; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+    .af-ship-label { fill: #111827; font: 700 17px 'Geist', sans-serif; }
+    .af-seal { fill: #ffffff; stroke: #059669; stroke-width: 2; }
+    .af-seal-check { fill: none; stroke: #059669; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* confetti */
+    .af-conf--1 { fill: #059669; }
+    .af-conf--2 { fill: #f59e0b; }
+    .af-conf--3 { fill: #0693e3; }
+    .af-conf--4 { fill: #9b51e0; }
+  </style>
+
+  <defs>
+    <marker id="af-arrow-amber" viewBox="0 0 12 9" refX="11" refY="4.5" markerWidth="7" markerHeight="5.25" orient="auto-start-reverse">
+      <path d="M0,0.5 L12,4.5 L0,8.5 L3.2,4.5 Z" fill="#f59e0b" />
+    </marker>
+    <radialGradient id="af-agent-grad" cx="38%" cy="32%" r="78%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </radialGradient>
+    <pattern id="af-grid" width="26" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" class="af-grid-dot" />
+    </pattern>
+  </defs>
+
+  <rect class="af-svg-bg" x="0" y="0" width="1280" height="680" />
+
+  <!-- blueprint substrate -->
+  <rect x="36" y="40" width="1208" height="600" fill="url(#af-grid)" class="af-bp" />
+  <g class="af-fid">
+    <path d="M35,44 H45 M40,39 V49" />
+    <path d="M1235,44 H1245 M1240,39 V49" />
+    <path d="M35,658 H45 M40,653 V663" />
+    <path d="M1235,658 H1245 M1240,653 V663" />
+  </g>
+
+  <!-- ============ ORCHESTRATOR (the enclosure: the whole engine room) ============ -->
+  <g id="af-orchestrator">
+    <rect x="44" y="228" width="1014" height="334" rx="20" class="af-orch-box" />
+    <rect x="439" y="214" width="224" height="28" rx="9" class="af-orch-legend" />
+    <g class="af-orch-icon" transform="translate(452,221) scale(0.6)"><circle cx="12" cy="4.5" r="2.5"/><path d="m10.2 6.3-3.9 3.9"/><circle cx="4.5" cy="12" r="2.5"/><path d="M7 12h10"/><circle cx="19.5" cy="12" r="2.5"/><path d="m13.8 17.7 3.9-3.9"/><circle cx="12" cy="19.5" r="2.5"/></g>
+    <text x="480" y="233" class="af-orch-label">Visdom Orchestrator</text>
+  </g>
+
+  <!-- ============ TRACEVAULT (baseplate) ============ -->
+  <g id="af-tracevault">
+    <rect x="44" y="578" width="1192" height="68" rx="18" class="af-vault" />
+    <line x1="60" y1="579.5" x2="1220" y2="579.5" class="af-sheen" />
+    <g class="af-vault-icon" transform="translate(64,602) scale(0.8)"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></g>
+    <text x="94" y="619" class="af-vault-label">Visdom AI Tracing</text>
+    <g>
+      <rect x="1020" y="605" width="14" height="14" rx="3" class="af-chain-block" />
+      <line x1="1034" y1="612" x2="1048" y2="612" class="af-chain-link" />
+      <rect x="1048" y="605" width="14" height="14" rx="3" class="af-chain-block" />
+      <line x1="1062" y1="612" x2="1076" y2="612" class="af-chain-link" />
+      <rect x="1076" y="605" width="14" height="14" rx="3" class="af-chain-block" />
+      <line x1="1090" y1="612" x2="1104" y2="612" class="af-chain-link" />
+      <rect x="1104" y="605" width="14" height="14" rx="3" class="af-chain-block af-chain-block--head" />
+    </g>
+    <text x="1212" y="616" text-anchor="end" class="af-vault-tag">Ed25519</text>
+    <circle cx="150" cy="578" r="3.5" class="af-vault-mark" />
+    <circle cx="356" cy="578" r="3.5" class="af-vault-mark" />
+    <circle cx="575" cy="578" r="3.5" class="af-vault-mark" />
+    <circle cx="800" cy="578" r="3.5" class="af-vault-mark" />
+    <circle cx="983" cy="578" r="3.5" class="af-vault-mark" />
+    <circle cx="1156" cy="578" r="3.5" class="af-vault-mark" />
+  </g>
+
+  <!-- trace-drop paths (stage bottom -> vault) -->
+  <path class="af-trace-path" d="M150,514 L150,578" />
+  <path class="af-trace-path" d="M356,476 L356,578" />
+  <path class="af-trace-path" d="M575,476 L575,578" />
+  <path class="af-trace-path" d="M800,476 L800,578" />
+  <path class="af-trace-path" d="M983,542 L983,578" />
+  <path class="af-trace-path" d="M1156,386 L1156,578" />
+
+  <!-- ============ CONTEXT FABRIC: sources row + cross-cutting bar ============ -->
+  <g id="af-context">
+    <!-- Jira -->
+    <g>
+      <rect x="44" y="56" width="180" height="42" rx="11" class="af-card" />
+      <g class="af-src-icon" transform="translate(58,66) scale(0.85)"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 7v10M12 7v7M16 7v4"/></g>
+      <text x="90" y="82" class="af-card-label">Jira</text>
+      <path class="af-wire" d="M134,98 L134,126" />
+      <circle cx="134" cy="126" r="2.5" class="af-port" />
+    </g>
+    <!-- Git history -->
+    <g>
+      <rect x="246" y="56" width="180" height="42" rx="11" class="af-card" />
+      <g class="af-src-icon" transform="translate(260,66) scale(0.85)"><circle cx="12" cy="12" r="3"/><path d="M3 12h6M15 12h6"/></g>
+      <text x="292" y="82" class="af-card-label">Git history</text>
+      <path class="af-wire" d="M336,98 L336,126" />
+      <circle cx="336" cy="126" r="2.5" class="af-port" />
+    </g>
+    <!-- Review comments -->
+    <g>
+      <rect x="448" y="56" width="180" height="42" rx="11" class="af-card" />
+      <g class="af-src-icon" transform="translate(462,66) scale(0.85)"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></g>
+      <text x="494" y="82" class="af-card-label">Review comments</text>
+      <path class="af-wire" d="M538,98 L538,126" />
+      <circle cx="538" cy="126" r="2.5" class="af-port" />
+    </g>
+    <!-- Repositories -->
+    <g>
+      <rect x="650" y="56" width="180" height="42" rx="11" class="af-card" />
+      <g class="af-src-icon" transform="translate(664,66) scale(0.85)"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></g>
+      <text x="696" y="82" class="af-card-label">Repositories</text>
+      <path class="af-wire" d="M740,98 L740,126" />
+      <circle cx="740" cy="126" r="2.5" class="af-port" />
+    </g>
+    <!-- Docs & ADRs -->
+    <g>
+      <rect x="852" y="56" width="180" height="42" rx="11" class="af-card" />
+      <g class="af-src-icon" transform="translate(866,66) scale(0.85)"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8M16 17H8M10 9H8"/></g>
+      <text x="898" y="82" class="af-card-label">Docs &amp; ADRs</text>
+      <path class="af-wire" d="M942,98 L942,126" />
+      <circle cx="942" cy="126" r="2.5" class="af-port" />
+    </g>
+    <!-- Owners & on-call -->
+    <g>
+      <rect x="1054" y="56" width="180" height="42" rx="11" class="af-card" />
+      <g class="af-src-icon" transform="translate(1068,66) scale(0.85)"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></g>
+      <text x="1100" y="82" class="af-card-label">Owners &amp; on-call</text>
+      <path class="af-wire" d="M1144,98 L1144,126" />
+      <circle cx="1144" cy="126" r="2.5" class="af-port" />
+    </g>
+
+    <!-- the fabric bar -->
+    <rect x="44" y="126" width="1192" height="66" rx="18" class="af-vault af-fabricbar" />
+    <line x1="60" y1="127.5" x2="1220" y2="127.5" class="af-sheen" />
+    <g class="af-vault-icon" transform="translate(64,149) scale(0.8)"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></g>
+    <text x="94" y="166" class="af-vault-label">Visdom Context Fabric</text>
+    <text x="1212" y="163" text-anchor="end" class="af-vault-tag">queried by every stage</text>
+  </g>
+
+  <!-- ============ PREFLIGHT RAIL ============ -->
+  <g id="af-preflight">
+    <path class="af-rail-pre" d="M64,192 L64,332 Q64,350 92,350" />
+    <text x="84" y="252" class="af-rail-label">Preflight</text>
+    <text x="84" y="268" class="af-rail-label">context</text>
+  </g>
+
+  <!-- ============ ACTIVE CONTEXT LOOP ============ -->
+  <g id="af-loop">
+    <path class="af-loop-path" d="M160,192 C 168,220 168,254 161,293" />
+    <path class="af-loop-path" d="M177,295 C 186,262 186,220 182,192" />
+    <text x="208" y="252" class="af-loop-label">Active</text>
+    <text x="208" y="270" class="af-loop-label">context</text>
+  </g>
+
+  <!-- ============ CODING AGENT ============ -->
+  <g id="af-agent">
+    <circle cx="150" cy="350" r="58" class="af-agent-ring" />
+    <circle cx="150" cy="350" r="51" class="af-agent-ticks" />
+    <circle cx="150" cy="350" r="44" class="af-agent-core" />
+    <g class="af-agent-spark" transform="translate(142,318) scale(0.68)"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></g>
+    <text x="150" y="354" text-anchor="middle" class="af-agent-label">Coding</text>
+    <text x="150" y="374" text-anchor="middle" class="af-agent-label">Agent</text>
+    <rect x="116" y="416" width="68" height="32" rx="10" class="af-sandbox-tag" />
+    <text x="150" y="429" text-anchor="middle" class="af-sandbox-label">Sandcat</text>
+    <text x="150" y="441" text-anchor="middle" class="af-sandbox-label">sandbox</text>
+    <g transform="translate(0,460)">
+      <text x="150" y="9" text-anchor="middle" class="af-brands-label">Runs your agent</text>
+      <g transform="translate(106,18)">
+        <title>Cursor</title>
+        <rect x="0" y="0" width="28" height="28" rx="8" class="af-brand-chip" />
+        <g transform="translate(4,4) scale(0.8333)"><path class="af-brand-mark" d="M11.503.131 1.891 5.678a.84.84 0 0 0-.42.726v11.188c0 .3.162.575.42.724l9.609 5.55a1 1 0 0 0 .998 0l9.61-5.55a.84.84 0 0 0 .42-.724V6.404a.84.84 0 0 0-.42-.726L12.497.131a1.01 1.01 0 0 0-.996 0M2.657 6.338h18.55c.263 0 .43.287.297.515L12.23 22.918c-.062.107-.229.064-.229-.06V12.335a.59.59 0 0 0-.295-.51l-9.11-5.257c-.109-.063-.064-.23.061-.23"/></g>
+      </g>
+      <g transform="translate(136,18)">
+        <title>Claude</title>
+        <rect x="0" y="0" width="28" height="28" rx="8" class="af-brand-chip" />
+        <g transform="translate(4,4) scale(0.8333)"><path class="af-brand-mark" d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></g>
+      </g>
+      <g transform="translate(166,18)">
+        <title>Codex</title>
+        <rect x="0" y="0" width="28" height="28" rx="8" class="af-brand-chip" />
+        <g transform="translate(4,4) scale(0.8333)"><path class="af-brand-mark" d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.5125 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></g>
+      </g>
+    </g>
+  </g>
+
+  <!-- pipeline connectors (the main spine) -->
+  <path class="af-pipe" d="M212,332 L272,332" />
+  <path class="af-pipe" d="M440,332 L474,332" />
+  <path class="af-pipe" d="M676,332 L710,332" />
+  <path class="af-pipe" d="M890,332 L924,332" />
+  <path class="af-pipe" d="M1042,332 L1076,332" />
+
+  <!-- ============ TESTING ============ -->
+  <g id="af-testing">
+    <rect x="272" y="264" width="168" height="206" rx="16" class="af-panel" />
+    <line x1="288" y1="265.5" x2="424" y2="265.5" class="af-sheen" />
+    <rect x="278" y="270" width="156" height="26" rx="8" class="af-mhead" />
+    <g class="af-mhead-icon" transform="translate(288,275) scale(0.66)"><path d="M9 3h6M10 3v5L5 16a3 3 0 0 0 2.6 4.5h8.8A3 3 0 0 0 19 16l-5-8V3"/><path d="M7.5 14h9"/></g>
+    <text x="310" y="288" class="af-mhead-label">Visdom Testing</text>
+    <g><rect x="280" y="304" width="152" height="34" rx="8" class="af-chip" /><text x="356" y="326" text-anchor="middle" class="af-chip-label">Classic tests</text></g>
+    <g><rect x="280" y="344" width="152" height="34" rx="8" class="af-chip" /><text x="356" y="366" text-anchor="middle" class="af-chip-label">Architecture testing</text></g>
+    <g><rect x="280" y="384" width="152" height="34" rx="8" class="af-chip" /><text x="356" y="406" text-anchor="middle" class="af-chip-label">Property-based</text></g>
+    <g><rect x="280" y="424" width="152" height="34" rx="8" class="af-chip" /><text x="356" y="446" text-anchor="middle" class="af-chip-label">Mutation testing</text></g>
+  </g>
+
+  <!-- the pull request envelope -->
+  <g id="af-pr-env">
+    <rect x="462" y="258" width="588" height="226" rx="20" class="af-prenv" />
+    <g class="af-prenv-icon" transform="translate(834,470) scale(0.5)"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6"/><path d="M13 6h2a3 3 0 0 1 3 3v6"/></g>
+    <text x="964" y="480" text-anchor="end" class="af-prenv-label">Pull Request</text>
+  </g>
+
+  <!-- ============ CODE REVIEW ============ -->
+  <g id="af-review">
+    <rect x="474" y="264" width="202" height="206" rx="16" class="af-panel" />
+    <line x1="490" y1="265.5" x2="660" y2="265.5" class="af-sheen" />
+    <rect x="480" y="270" width="190" height="26" rx="8" class="af-mhead" />
+    <g class="af-mhead-icon" transform="translate(490,275) scale(0.66)"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></g>
+    <text x="512" y="288" class="af-mhead-label">Visdom Code Review</text>
+    <g class="af-depth-0"><rect x="486" y="304" width="178" height="34" rx="8" class="af-review-bar" /><text x="499" y="326" class="af-review-n">L1</text><text x="522" y="326" class="af-review-label">Linting review</text></g>
+    <g class="af-depth-1"><rect x="486" y="344" width="178" height="34" rx="8" class="af-review-bar" /><text x="499" y="366" class="af-review-n">L2</text><text x="522" y="366" class="af-review-label">Deterministic review</text></g>
+    <g class="af-depth-2"><rect x="486" y="384" width="178" height="34" rx="8" class="af-review-bar" /><text x="499" y="406" class="af-review-n">L3</text><text x="522" y="406" class="af-review-label">Single-pass LLM</text></g>
+    <g class="af-depth-3"><rect x="486" y="424" width="178" height="34" rx="8" class="af-review-bar" /><text x="499" y="446" class="af-review-n">L4</text><text x="522" y="446" class="af-review-label">Deep LLM review</text></g>
+  </g>
+
+  <!-- ============ SECURITY (AppSec on the same PR, powered by Aikido) ============ -->
+  <g id="af-security">
+    <rect x="710" y="264" width="180" height="206" rx="16" class="af-panel" />
+    <line x1="726" y1="265.5" x2="874" y2="265.5" class="af-sheen" />
+    <rect x="716" y="270" width="168" height="26" rx="8" class="af-mhead" />
+    <g class="af-mhead-icon" transform="translate(726,275) scale(0.66)"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1 1 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></g>
+    <text x="748" y="288" class="af-mhead-label">Visdom Security</text>
+    <g><rect x="722" y="304" width="156" height="34" rx="8" class="af-chip" /><text x="800" y="326" text-anchor="middle" class="af-chip-label">SAST &amp; DAST</text></g>
+    <g><rect x="722" y="344" width="156" height="34" rx="8" class="af-chip" /><text x="800" y="366" text-anchor="middle" class="af-chip-label">Dependencies</text></g>
+    <g><rect x="722" y="384" width="156" height="34" rx="8" class="af-chip" /><text x="800" y="406" text-anchor="middle" class="af-chip-label">Secrets &amp; IaC</text></g>
+    <g>
+      <text x="800" y="433" text-anchor="middle" class="af-brands-label">Powered by</text>
+      <g>
+        <title>Aikido</title>
+        <rect x="760" y="438" width="28" height="28" rx="8" class="af-brand-chip" />
+        <!-- Aikido: official brand mark (aikido.dev) -->
+        <g transform="translate(765.2,442) scale(1.1)">
+          <path class="af-brand-mark" d="M15.9961 0H0V5.65188H15.9961V0Z" />
+          <path class="af-brand-mark" d="M0 10.953C4.5507 6.83365 11.4453 6.83364 15.9961 10.953V17.9968L15.9929 18L7.99803 9.88536L0.00313606 18L0 17.9968V10.953Z" />
+        </g>
+      </g>
+      <text x="796" y="460" class="af-chip-label">Aikido</text>
+    </g>
+  </g>
+
+  <!-- ============ TRIAGE ============ -->
+  <g id="af-triage">
+    <rect x="924" y="264" width="118" height="104" rx="16" class="af-panel" />
+    <line x1="940" y1="265.5" x2="1026" y2="265.5" class="af-sheen" />
+    <rect x="930" y="270" width="106" height="26" rx="8" class="af-mhead" />
+    <g class="af-mhead-icon" transform="translate(940,275) scale(0.66)"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></g>
+    <text x="962" y="288" class="af-mhead-label">Triage</text>
+
+    <rect x="930" y="311" width="106" height="42" rx="10" class="af-pr" />
+    <text x="983" y="337" text-anchor="middle" class="af-pr-label">Risk gate</text>
+
+    <path class="af-branch af-branch--risk" d="M983,370 L983,484" marker-end="url(#af-arrow-amber)" />
+    <g>
+      <path class="af-autofix-path" d="M963,370 C 963,460 913,518 823,518 L320,518 C 252,518 206,462 194,389" />
+      <text x="530" y="508" text-anchor="middle" class="af-autofix-label">green &#183; trivial: auto-fix &#8594; back to agent</text>
+    </g>
+    <g>
+      <rect x="913" y="490" width="140" height="46" rx="10" class="af-card af-card--risk" />
+      <text x="953" y="510" class="af-card-label af-card-label--risk">High-risk</text>
+      <text x="953" y="527" class="af-card-sub">human approval</text>
+      <g class="af-human" transform="translate(933,508)">
+        <circle cx="0" cy="-4" r="5" class="af-human-mark" />
+        <path d="M-8,10 a8,9 0 0 1 16,0" class="af-human-mark" />
+      </g>
+      <g>
+        <path class="af-branch af-branch--risk" d="M1053,513 L1102,513 Q1118,513 1118,497 L1118,388" marker-end="url(#af-arrow-amber)" />
+        <text x="1061" y="529" class="af-approved-label">approved</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============ SHIP TO PRODUCTION ============ -->
+  <g id="af-ship">
+    <rect x="1076" y="284" width="160" height="96" rx="16" class="af-ship-box" />
+    <line x1="1092" y1="285.5" x2="1220" y2="285.5" class="af-sheen" />
+    <g class="af-ship-icon" transform="translate(1094,319) scale(1.15)"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></g>
+    <text x="1132" y="338" class="af-ship-label">Production</text>
+    <circle cx="1228" cy="292" r="11" class="af-seal" />
+    <g class="af-seal-check" transform="translate(1220,284) scale(0.66)"><path d="M20 6 9 17l-5-5"/></g>
+    <g>
+      <rect x="1084" y="270" width="6" height="6" rx="1.8" class="af-conf--1" />
+      <rect x="1108" y="264" width="6" height="6" rx="1.8" class="af-conf--2" />
+      <rect x="1132" y="268" width="6" height="6" rx="1.8" class="af-conf--3" />
+      <rect x="1158" y="262" width="6" height="6" rx="1.8" class="af-conf--4" />
+      <rect x="1182" y="269" width="6" height="6" rx="1.8" class="af-conf--1" />
+      <rect x="1068" y="288" width="6" height="6" rx="1.8" class="af-conf--3" />
+      <rect x="1242" y="316" width="6" height="6" rx="1.8" class="af-conf--2" />
+      <rect x="1096" y="256" width="6" height="6" rx="1.8" class="af-conf--4" />
+      <rect x="1166" y="252" width="6" height="6" rx="1.8" class="af-conf--2" />
+      <rect x="1226" y="266" width="6" height="6" rx="1.8" class="af-conf--1" />
+      <rect x="1144" y="274" width="6" height="6" rx="1.8" class="af-conf--1" />
+      <rect x="1204" y="270" width="6" height="6" rx="1.8" class="af-conf--3" />
+    </g>
+  </g>
+</svg>

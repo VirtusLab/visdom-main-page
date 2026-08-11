@@ -2,46 +2,29 @@
 // The shift: AI generation got fast, but the delivery infrastructure around it
 // (context, CI, verification, review) was built for humans typing. Sets up why
 // the platform and the orchestrator matter, before either is shown.
-const unchanged = [
-  {
-    dim: 'Context',
-    text: 'Still lives in someone\'s head, not in the system. Agents see open files, not the dependency and intent graph.',
-  },
-  {
-    dim: 'Execution',
-    text: '45-minute CI built for humans. For an agent iterating fast, more time goes to waiting on the build than writing the code.',
-  },
-  {
-    dim: 'Verification',
-    text: 'Tests written by the same agent that wrote the code. Coverage looks great, bugs still ship.',
-  },
-  {
-    dim: 'Validation',
-    text: 'PR review that still waits on the same seniors. Spec and merge review turn into hollow rituals.',
-  },
-];
+import { useI18n } from '../i18n';
+
+const { t } = useI18n(Astro);
 ---
-<section class="section shift-section" aria-label="Why AI stalls in human-built delivery infrastructure">
+<section class="section shift-section" aria-label={t.shift.aria}>
   <div class="container">
     <div class="fade-up shift-head">
-      <p class="section-label">The shift</p>
-      <h2 class="section-title">AI got fast. The pipes it runs through did not.</h2>
-      <p class="section-subtitle">
-        You rolled out the assistant. Engineers were excited. Then throughput stalled and the ROI faded. The assistant was never the bottleneck. The delivery infrastructure around it was: pipelines, CI, and review built for humans typing at human speed. Plug an AI into that and it does not get fixed, it exposes every crack.
-      </p>
+      <p class="section-label">{t.shift.label}</p>
+      <h2 class="section-title">{t.shift.title}</h2>
+      <p class="section-subtitle">{t.shift.subtitle}</p>
     </div>
 
     <div class="shift-grid fade-up">
       <div class="shift-card shift-card--changed">
-        <p class="shift-card-label">What changed</p>
-        <p class="shift-changed-lead">AI agents now generate code faster than any human.</p>
-        <p class="shift-changed-body">The constraint moved from writing the code to understanding, validating, and safely shipping it.</p>
+        <p class="shift-card-label">{t.shift.changedLabel}</p>
+        <p class="shift-changed-lead">{t.shift.changedLead}</p>
+        <p class="shift-changed-body">{t.shift.changedBody}</p>
       </div>
 
       <div class="shift-card shift-card--same">
-        <p class="shift-card-label">What did not change</p>
+        <p class="shift-card-label">{t.shift.sameLabel}</p>
         <ul class="shift-list" role="list">
-          {unchanged.map((u) => (
+          {t.shift.unchanged.map((u) => (
             <li class="shift-item">
               <span class="shift-item-dim">{u.dim}</span>
               <span class="shift-item-text">{u.text}</span>
@@ -51,7 +34,7 @@ const unchanged = [
       </div>
     </div>
 
-    <p class="shift-bridge fade-up">So we built the infrastructure layer AI actually needs. <span aria-hidden="true">&darr;</span></p>
+    <p class="shift-bridge fade-up">{t.shift.bridge} <span aria-hidden="true">&darr;</span></p>
   </div>
 </section>
 
