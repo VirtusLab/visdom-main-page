@@ -64,6 +64,21 @@ const partners: Partner[] = [
       ))}
     </ul>
   </div>
+
+  {/*
+    The arc: a very large circle whose top edge crosses the section, drawn as a
+    2px prism ring and revealed left to right on scroll. Purely decorative, so
+    aria-hidden and it degrades to a fully drawn arc without JS.
+  */}
+  <div class="arc" aria-hidden="true" id="bv-arc">
+    <div class="arc-lines"></div>
+    <div class="arc-viewport">
+      <div class="arc-reveal">
+        <span class="arc-ring arc-ring--glow"></span>
+        <span class="arc-ring"></span>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="pt" aria-labelledby="pt-title">
@@ -109,6 +124,36 @@ const partners: Partner[] = [
     </ul>
   </div>
 </section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const arc = document.getElementById('bv-arc');
+  if (arc) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce) {
+      // Scrubbed rather than played: the arc draws in step with the scroll
+      // position, which is what makes it read as one continuous gesture.
+      const state = { p: 0 };
+      arc.style.setProperty('--arc-p', '0');
+      gsap.to(state, {
+        p: 100,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: arc,
+          start: 'top 92%',
+          end: 'bottom 55%',
+          scrub: 0.5,
+        },
+        onUpdate: () => arc.style.setProperty('--arc-p', String(state.p)),
+      });
+    }
+    // Reduced motion keeps the CSS default of 100: fully drawn, never animated.
+  }
+</script>
 
 <style>
   /* ── built by ── */
@@ -186,6 +231,96 @@ const partners: Partner[] = [
     font-size: var(--fs-base);
     color: var(--color-text-muted);
     margin: 0;
+  }
+
+  /*
+   * ── the arc ───────────────────────────────────────────────────────────────
+   *
+   * A circle far wider than the page, pushed down so only its top edge crosses
+   * the section: what you see is a shallow arc spanning the full width. Sized as
+   * a percentage of the section rather than the source's fixed 1488px, so the
+   * curvature stays the same at every viewport instead of flattening out.
+   *
+   * The ring is one element: a conic gradient clipped by a radial mask that
+   * keeps only the outermost 2px, so there is no second opaque disc to cover the
+   * interior. A blurred, thicker copy underneath provides the bloom.
+   *
+   * --arc-p is the reveal position, driven by scroll. At 0 nothing is drawn, at
+   * 100 the whole arc is. Without JS it stays at 100.
+   */
+  .arc {
+    --arc-p: 100;
+    position: relative;
+    margin-top: -2rem;
+    overflow: hidden;
+  }
+
+  /* hairline verticals fading in downwards, behind the arc */
+  .arc-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      to right,
+      color-mix(in oklab, var(--vmm-accent) 15%, transparent) 0 1px,
+      transparent 1px 9px
+    );
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 48%, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, transparent 48%, #000 100%);
+  }
+
+  .arc-viewport {
+    position: relative;
+    height: clamp(220px, 30vw, 440px);
+  }
+
+  /* The left-to-right wipe, 8% of soft edge as on the source page. The mask is
+     recomputed on every scroll frame, hence the hint. */
+  .arc-reveal {
+    position: absolute;
+    inset: 0;
+    will-change: mask-image;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      #000 calc(var(--arc-p) * 1%),
+      transparent calc((var(--arc-p) + 8) * 1%)
+    );
+    mask-image: linear-gradient(
+      to right,
+      #000 calc(var(--arc-p) * 1%),
+      transparent calc((var(--arc-p) + 8) * 1%)
+    );
+  }
+
+  .arc-ring {
+    position: absolute;
+    left: 50%;
+    top: clamp(70px, 9vw, 130px);
+    width: 116%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: conic-gradient(
+      from 90deg,
+      rgb(161, 130, 141) 0deg,
+      rgb(126, 134, 174) 43.2deg,
+      rgb(71, 143, 225) 86.4deg,
+      rgb(52, 162, 153) 129.6deg,
+      rgb(59, 177, 98) 172.8deg,
+      rgb(156, 176, 54) 216deg,
+      rgb(190, 144, 50) 259.2deg,
+      rgb(210, 125, 97) 302.4deg,
+      rgb(161, 130, 141) 360deg
+    );
+    -webkit-mask-image: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+    mask-image: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  }
+
+  .arc-ring--glow {
+    filter: blur(5px);
+    opacity: 0.75;
+    -webkit-mask-image: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 5px));
+    mask-image: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 5px));
   }
 
   /* ── partners ── */
