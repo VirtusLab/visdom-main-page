@@ -196,7 +196,7 @@ const pl = {
       triage: 'Triage',
       riskGate: 'Bramka ryzyka',
       autofix: 'zielone i trywialne: auto-fix → z powrotem do agenta',
-      highRisk: 'Duże ryzyko',
+      highRisk: 'Wysokie ryzyko',
       humanApproval: 'zgoda człowieka',
       approved: 'zaakceptowane',
       production: 'Produkcja',
