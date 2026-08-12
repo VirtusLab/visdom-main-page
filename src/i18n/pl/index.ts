@@ -186,7 +186,7 @@ const pl = {
       review: 'Visdom Code Review',
       reviewLevels: [
         { n: 'L1', label: 'Linting' },
-        { n: 'L2', label: 'Deterministyczne' },
+        { n: 'L2', label: 'Reguły deterministyczne' },
         { n: 'L3', label: 'Jeden przebieg LLM' },
         { n: 'L4', label: 'Głęboki przegląd LLM' },
       ],
@@ -464,7 +464,7 @@ const pl = {
       panelHead: 'Visdom Code Review',
       levels: [
         { n: 'L1', label: 'Linting' },
-        { n: 'L2', label: 'Deterministyczne' },
+        { n: 'L2', label: 'Reguły deterministyczne' },
         { n: 'L3', label: 'Jeden przebieg LLM' },
         { n: 'L4', label: 'Głęboki przegląd LLM' },
       ],

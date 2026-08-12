@@ -488,6 +488,17 @@ const revY = (i: number) => 304 + i * 40;
     --fs-3xl: calc(1.25rem * var(--af-label-scale));
   }
 
+  /*
+   * The L1-L4 bars are the narrowest text slot in the diagram: 142px between
+   * where the label starts and the bar's right edge. "Reguły deterministyczne"
+   * needs 142.3px at the scaled --fs-sm, so it would sit flush against the
+   * edge. One token step down buys 11px and the 0.9px size difference against
+   * the neighbouring chips is not perceptible.
+   */
+  :global(html[lang='pl']) .af-review-label {
+    font-size: var(--fs-xs);
+  }
+
   /* ---- stage reveal (driven by GSAP; everything visible without JS) ---- */
   .js .af-group[data-reveal],
   .js .af-reveal { opacity: 0; }
