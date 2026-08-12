@@ -604,6 +604,27 @@ const en = {
     photoCaption: 'Out in the field on the Visdom AI Tour.',
   },
 
+  /** Credibility block, mirrored from the other Visdom property. */
+  builtBy: {
+    title: 'Built by VirtusLab',
+    body: "VirtusLab's engineers spent over a decade helping organizations solve software delivery and developer productivity challenges at scale. We maintain core open-source infrastructure (Scala toolchain, Metals, Scala CLI), contribute to the JVM ecosystem, and build production-grade tooling where the cost of getting it wrong is high.",
+    stats: [
+      { value: '15+', label: 'years on market' },
+      { value: '500', label: 'engineers' },
+      { value: 'Open Source', label: 'in DNA' },
+      { value: 'Scala & JVM', label: 'core contributors' },
+    ] as T4<{ value: string; label: string }>,
+  },
+
+  partners: {
+    badge: 'partnerships & technologies',
+    title: 'Trusted Across the Modern Stack.',
+    body: 'VirtusLab maintains deep technical partnerships with the tools and platforms that power modern engineering at scale. We actively contribute to these ecosystems, bringing hands-on expertise to organizations modernizing software delivery and engineering operations.',
+    cta: 'Get in touch',
+    /** Accessible name for the logo grid. */
+    gridAria: 'Tools and platforms VirtusLab partners with',
+  },
+
   writing: {
     label: 'Writing in the open',
     title: 'We work in the open and share what we learn.',

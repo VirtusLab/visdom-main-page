@@ -1,0 +1,283 @@
+---
+/**
+ * Two blocks lifted from the other Visdom property: who built this, and the
+ * stack we are embedded in.
+ *
+ * The partner logos come in two flavours. The monochrome wordmarks ship an
+ * -on-dark twin because they are drawn in near-black and vanish on our dark
+ * theme; the full-colour product icons work on both and ship once. Swapped with
+ * :global(.dark), which is this project's convention, rather than a Tailwind
+ * dark: variant, since no dark custom-variant is configured here.
+ */
+import { useI18n } from '../i18n';
+
+const { t } = useI18n(Astro);
+const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+
+type Partner = {
+  name: string;
+  file: string;
+  /** true when a separate light-ink version exists for the dark theme. */
+  onDark?: boolean;
+  /** Wordmarks are wider and get a wider cell; icons sit in narrow ones. */
+  wide?: boolean;
+  /** Rendered height in px. Wordmarks 24, icons 32, as on the source page. */
+  h: number;
+};
+
+const partners: Partner[] = [
+  { name: 'IntelliJ IDEA', file: 'logo-intellij-idea', h: 32 },
+  { name: 'PyCharm', file: 'logo-pycharm', h: 32 },
+  { name: 'CLion', file: 'logo-clion', h: 32 },
+  { name: 'Visual Studio Code', file: 'logo-vscode', h: 32 },
+  { name: 'Visual Studio', file: 'logo-visual-studio', h: 32 },
+  { name: 'Claude', file: 'logo-claude', h: 32 },
+  { name: 'JetBrains', file: 'logo-jetbrains', onDark: true, wide: true, h: 24 },
+  { name: 'Cursor', file: 'logo-cursor', onDark: true, wide: true, h: 24 },
+  { name: 'Sourcegraph', file: 'logo-sourcegraph', onDark: true, wide: true, h: 24 },
+  { name: 'Databricks', file: 'logo-databricks', onDark: true, wide: true, h: 24 },
+  { name: 'EngFlow', file: 'logo-engflow', onDark: true, wide: true, h: 24 },
+  { name: 'Google', file: 'logo-google', onDark: true, wide: true, h: 24 },
+];
+---
+<section class="bv" aria-labelledby="bv-title">
+  <div class="container bv-head fade-up">
+    <img
+      class="bv-vl"
+      src={`${base}/partners/virtuslab-logo-wide.svg`}
+      alt="VirtusLab"
+      width="96"
+      height="40"
+      loading="lazy"
+    />
+    <h2 id="bv-title" class="bv-title">{t.builtBy.title}</h2>
+    <p class="bv-body">{t.builtBy.body}</p>
+  </div>
+
+  <div class="container">
+    <ul class="bv-stats fade-up" role="list">
+      {t.builtBy.stats.map((s) => (
+        <li class="bv-stat">
+          <p class="bv-stat-value">{s.value}</p>
+          <p class="bv-stat-label">{s.label}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<section class="pt" aria-labelledby="pt-title">
+  <div class="container pt-head fade-up">
+    <span class="pt-badge">
+      <span class="pt-badge-dot" aria-hidden="true"></span>
+      {t.partners.badge}
+    </span>
+    <h2 id="pt-title" class="pt-title">{t.partners.title}</h2>
+    <p class="pt-body">{t.partners.body}</p>
+    <a class="btn-pill btn-primary" href="#contact" data-cta="cta_click" data-location="partners">
+      {t.partners.cta}
+    </a>
+  </div>
+
+  <div class="container">
+    <ul class="pt-grid fade-up" role="list" aria-label={t.partners.gridAria}>
+      {partners.map((p) => (
+        <li class={`pt-cell${p.wide ? ' pt-cell--wide' : ''}`}>
+          <img
+            class={`pt-logo${p.onDark ? ' pt-logo--light' : ''}`}
+            src={`${base}/partners/${p.file}.svg`}
+            alt={p.name}
+            height={p.h}
+            loading="lazy"
+            decoding="async"
+            style={`height:${p.h}px`}
+          />
+          {p.onDark && (
+            <img
+              class="pt-logo pt-logo--dark"
+              src={`${base}/partners/${p.file}-on-dark.svg`}
+              alt=""
+              aria-hidden="true"
+              height={p.h}
+              loading="lazy"
+              decoding="async"
+              style={`height:${p.h}px`}
+            />
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* ── built by ── */
+  .bv {
+    padding: 5.5rem 0 0;
+    background: var(--color-bg);
+  }
+
+  .bv-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.25rem;
+    max-width: 56rem;
+  }
+
+  .bv-vl {
+    height: 40px;
+    width: auto;
+    opacity: 0.9;
+  }
+
+  /* the wordmark is near-black, so it needs inverting on the dark theme */
+  :global(.dark) .bv-vl {
+    filter: invert(1) brightness(1.6);
+  }
+
+  .bv-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.9rem, 4.2vw, 3rem);
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .bv-body {
+    font-size: var(--fs-lg);
+    line-height: 1.75;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .bv-stats {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+
+  @media (min-width: 640px) { .bv-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1100px) { .bv-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+  .bv-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 0;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--color-emerald);
+  }
+
+  .bv-stat-value {
+    font-family: var(--font-heading);
+    font-size: 2.25rem;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    font-weight: 500;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .bv-stat-label {
+    font-size: var(--fs-base);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  /* ── partners ── */
+  .pt {
+    padding: 5.5rem 0 4rem;
+    background: var(--color-bg);
+  }
+
+  .pt-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.15rem;
+    max-width: 56rem;
+  }
+
+  .pt-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--color-text);
+  }
+
+  .pt-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--color-emerald);
+  }
+
+  .pt-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 3.4vw, 2.25rem);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .pt-body {
+    font-size: var(--fs-lg);
+    line-height: 1.75;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /*
+   * One hairline grid rather than twelve bordered cards: the cells draw only
+   * their right and bottom edge and the container clips the overflow, so the
+   * outer edge stays clean at every breakpoint without per-cell overrides.
+   */
+  .pt-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 3rem;
+    border: 1px solid var(--color-border-light);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  @media (min-width: 700px) { .pt-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 1000px) { .pt-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+  .pt-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 112px;
+    padding: 1.75rem 1.5rem;
+    border-right: 1px solid var(--color-border-light);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .pt-logo {
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* the monochrome wordmarks swap; the colour icons have no --light/--dark pair
+     and are simply never hidden */
+  .pt-logo--dark { display: none; }
+  :global(.dark) .pt-logo--light { display: none; }
+  :global(.dark) .pt-logo--dark { display: block; }
+</style>

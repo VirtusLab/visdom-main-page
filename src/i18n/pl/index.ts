@@ -592,6 +592,25 @@ const pl = {
     photoCaption: 'W terenie, na Visdom AI Tour.',
   },
 
+  builtBy: {
+    title: 'Zbudowane przez VirtusLab',
+    body: 'Inżynierowie VirtusLab od ponad dekady pomagają organizacjom rozwiązywać problemy z dostarczaniem oprogramowania i produktywnością zespołów w dużej skali. Utrzymujemy kluczową infrastrukturę open source (toolchain Scali, Metals, Scala CLI), współtworzymy ekosystem JVM i budujemy narzędzia produkcyjne tam, gdzie pomyłka drogo kosztuje.',
+    stats: [
+      { value: '15+', label: 'lat na rynku' },
+      { value: '500', label: 'inżynierów' },
+      { value: 'Open Source', label: 'w DNA' },
+      { value: 'Scala i JVM', label: 'core contributors' },
+    ],
+  },
+
+  partners: {
+    badge: 'partnerstwa i technologie',
+    title: 'Sprawdzeni w całym nowoczesnym stacku.',
+    body: 'VirtusLab utrzymuje głębokie partnerstwa techniczne z narzędziami i platformami, na których stoi nowoczesna inżynieria w skali. Aktywnie współtworzymy te ekosystemy i wnosimy praktyczne doświadczenie do organizacji, które modernizują dostarczanie oprogramowania i operacje inżynierskie.',
+    cta: 'Porozmawiajmy',
+    gridAria: 'Narzędzia i platformy, z którymi VirtusLab współpracuje',
+  },
+
   writing: {
     label: 'Piszemy otwarcie',
     title: 'Pracujemy otwarcie i dzielimy się tym, czego się uczymy.',
