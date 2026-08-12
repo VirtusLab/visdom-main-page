@@ -1,5 +1,5 @@
 ---
-import emblemSvg from '../icons/visdom-emblem.svg?raw';
+import visdomLogoSvg from '../icons/visdom-logo.svg?raw';
 import vlLogoSvg from '../icons/virtuslab-logo.svg?raw';
 import { useI18n } from '../i18n';
 
@@ -21,15 +21,15 @@ const stepAccents = [
       <div class="hero-brand-logo">
         <div class="hero-vl-logo" set:html={vlLogoSvg} role="img" aria-label="VirtusLab"></div>
       </div>
+      {/* The same lockup the header uses, scaled up. It used to be the wordmark
+          set as display text with the crest standing separately beside it,
+          which meant the hero and the header showed two different marks. */}
       <div class="hero-lockup">
-        <div class="hero-brand-text">
-          <div class="hero-brand-line">
-            <span class="hero-brand-name">Visdom</span>
-            <span class="hero-brand-version">2.0</span>
-          </div>
-          <div class="hero-brand-tagline">{t.hero.brandTagline}</div>
+        <div class="hero-brand-line">
+          <span class="hero-logo" set:html={visdomLogoSvg} role="img" aria-label="Visdom"></span>
+          <span class="hero-brand-version">2.0</span>
         </div>
-        <div class="hero-emblem" set:html={emblemSvg} aria-hidden="true"></div>
+        <div class="hero-brand-tagline">{t.hero.brandTagline}</div>
       </div>
     </div>
 
@@ -142,52 +142,39 @@ const stepAccents = [
     margin-bottom: 12px;
   }
 
-  /* the wordmark + tagline stack, with the emblem alongside it on the right */
+  /* brand lockup, then the tagline under it */
   .hero-lockup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /*
+   * Sized to keep the hero's presence while switching from the bespoke
+   * composition to the real mark. The wordmark is 15.4 of the lockup's 48 units
+   * of height, so at 200px it has a 64px cap height against the 69px of the
+   * display text it replaces, and comes out 456px wide against roughly 460px
+   * for the old wordmark and crest together. Same weight on the page, one mark
+   * instead of two.
+   */
+  .hero-brand-line {
+    --hero-logo-h: clamp(7rem, 16vw, 12.5rem);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: clamp(16px, 3vw, 36px);
+    gap: clamp(12px, 2vw, 22px);
   }
 
-  .hero-brand-text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  /* the Visdom crystal emblem, to the right of the text, roughly the height of
-     the whole wordmark + tagline stack; currentColor tracks the theme. The SVG
-     carries its own aspect-ratio so the flex row reserves real width for it and
-     the lockup (with the VirtusLab mark centered above) sits on one center axis. */
-  .hero-emblem {
-    flex: 0 0 auto;
+  .hero-logo {
+    display: block;
     color: var(--color-text);
     filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.35));
   }
 
-  .hero-emblem :global(svg) {
-    height: clamp(6rem, 12vw, 8.75rem);
+  .hero-logo :global(svg) {
+    height: var(--hero-logo-h);
     width: auto;
-    aspect-ratio: 332 / 912;
     display: block;
-  }
-
-  .hero-brand-line {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-
-  .hero-brand-name {
-    font-family: var(--font-heading);
-    font-size: clamp(3.5rem, 10vw, 6rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    color: var(--color-text);
   }
 
   .hero-brand-version {
@@ -199,7 +186,14 @@ const stepAccents = [
     border: 1px solid rgba(16, 185, 129, 0.2);
     padding: 2px 10px;
     border-radius: 9999px;
+    /*
+     * The crest fills the lockup's full height but the wordmark sits in its
+     * lower half: vertical centre at 27.7 of 48 units, so 57.7% down rather than
+     * 50%. align-items: center would float the chip 7.7% of the logo height
+     * above the wordmark it belongs to, so push it back down by exactly that.
+     */
     align-self: center;
+    transform: translateY(calc(var(--hero-logo-h, 0px) * 0.077));
   }
 
   .hero-brand-tagline {
@@ -332,6 +326,12 @@ const stepAccents = [
 
     .hero-brand-line {
       justify-content: flex-start;
+    }
+
+    /* the lockup centers itself, so it needs releasing to match the left-aligned
+       brand block on narrow screens */
+    .hero-lockup {
+      align-items: flex-start;
     }
 
     .hero-vl-logo {
