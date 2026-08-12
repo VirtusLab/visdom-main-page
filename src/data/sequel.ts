@@ -30,9 +30,22 @@ export type SequelConfig = {
   clickToLoad: boolean;
 };
 
+/**
+ * Both ids can come from the environment, so plugging in a real event is a
+ * Vercel env var and a redeploy rather than a code change:
+ *
+ *   PUBLIC_SEQUEL_EVENT_ID    the session to embed
+ *   PUBLIC_SEQUEL_COMPANY_ID  the workspace, for the event grid
+ *
+ * Locally: PUBLIC_SEQUEL_EVENT_ID=<id> npm run dev
+ *
+ * They are PUBLIC_ on purpose. Sequel ids are not secrets: they ship in the
+ * HTML of every embed. Deliberately not read from a query string, which would
+ * let anyone frame arbitrary content on our domain.
+ */
 export const SEQUEL: SequelConfig = {
-  companyId: '',
-  eventId: '',
+  companyId: import.meta.env.PUBLIC_SEQUEL_COMPANY_ID ?? '',
+  eventId: import.meta.env.PUBLIC_SEQUEL_EVENT_ID ?? '',
   clickToLoad: true,
 };
 
