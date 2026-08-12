@@ -1,6 +1,77 @@
 @import "tailwindcss";
 @source "../../node_modules/@virtuslab/visdom-ui/dist";
 
+/*
+ * Fonts, self-hosted.
+ *
+ * Geist and Geist Mono are the variable cuts from the `geist` package, one file
+ * each covering the whole 100-900 weight axis. They replace fifteen static
+ * subset files fetched from Google Fonts behind a blocking stylesheet and two
+ * preconnects. Same bytes, roughly, but same-origin and no third party on a page
+ * that carries a consent banner.
+ *
+ * "Geist Variable" is the family name the other Visdom properties use, so the
+ * CSS reads the same across them.
+ *
+ * Paths are relative on purpose: Vite rewrites and hashes them, which keeps
+ * them correct under the /visdom-main-page base on GitHub Pages. An absolute
+ * /fonts/... would 404 there.
+ */
+@font-face {
+  font-family: 'Geist Variable';
+  src: url('../fonts/Geist-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono Variable';
+  src: url('../fonts/GeistMono-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Instrument Serif is one weight with an italic, used only by .serif-accent.
+   Split latin / latin-ext the way Google ships it, because the Polish accent
+   copy ("nocną zmianę") needs the extended range. */
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('../fonts/InstrumentSerif-normal-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('../fonts/InstrumentSerif-normal-latin-ext.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('../fonts/InstrumentSerif-italic-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('../fonts/InstrumentSerif-italic-latin-ext.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 /* Type scale (rem, 16px base). Use these tokens instead of ad-hoc font sizes,
    so text stays on one consistent scale. Responsive display headings keep using
    clamp(). */
@@ -101,10 +172,12 @@
   --radius: 0.625rem;
   --radius-xl: calc(var(--radius) + 4px);
 
-  --font-heading: 'Geist', sans-serif;
-  --font-body: 'Geist', sans-serif;
-  --font-mono: 'Geist Mono', monospace;
-  --font-serif: 'Instrument Serif', serif;
+  /* System fallbacks are listed so the swap window looks like the same page.
+     'Geist' stays in the stack for anyone who still has the static cut cached. */
+  --font-heading: 'Geist Variable', 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Geist Variable', 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: 'Instrument Serif', ui-serif, Georgia, serif;
 }
 
 /* ── Dark theme (Maturity Matrix) ── */
