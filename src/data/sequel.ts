@@ -61,48 +61,22 @@ export function isConfigured(config: SequelConfig = SEQUEL): boolean {
   return Boolean(config.eventId);
 }
 
-/**
- * The postMessage events Sequel's iframe emits, with the payload fields we
- * would actually read. This is the integration surface: it is how the embed
- * tells the host page that someone registered or that the session started, and
- * the only way those become GA4 conversions on our side.
+/** Origin the embed posts from. Messages from anywhere else are ignored. */
+export const SEQUEL_ORIGIN = 'https://embed.sequel.io';
+
+/*
+ * The frame talks to the host page over postMessage, shaped
+ * { event: <name>, data: { ...fields } }. The names it sends:
  *
- * Shape on the wire: { event: <name>, data: { ...fields } }
+ *   initialized      initialized, sessionId
+ *   event-loaded     role, eventId
+ *   user-registered  firstname, lastname, email, eventId   <- the conversion
+ *   event-started    role
+ *   event-ended      role
+ *   cta-updated      showing, role, title, link, description, buttonText, uid
+ *   drawer-changed   opened
+ *
+ * user-registered is the one that matters: it is what replaces the mailto CTA,
+ * and the only way a signup becomes a GA4 conversion. Note it hands us an email
+ * address client-side, so anything beyond firing an event needs a decision.
  */
-export const SEQUEL_EVENTS = [
-  {
-    name: 'initialized',
-    fields: 'initialized, sessionId',
-    meaning: 'The embed is up. Nothing to report yet.',
-  },
-  {
-    name: 'event-loaded',
-    fields: 'role, eventId',
-    meaning: 'The session page rendered. Good place for a page-level view.',
-  },
-  {
-    name: 'user-registered',
-    fields: 'firstname, lastname, email, eventId',
-    meaning: 'The conversion. This is the one that matters: it replaces the mailto CTA.',
-  },
-  {
-    name: 'event-started',
-    fields: 'role',
-    meaning: 'Going live. Separates registrants from actual attendees.',
-  },
-  {
-    name: 'event-ended',
-    fields: 'role',
-    meaning: 'Session over. The replay takes over at the same URL.',
-  },
-  {
-    name: 'cta-updated',
-    fields: 'showing, role, title, link, description, buttonText, uid',
-    meaning: 'The host pushed an in-session CTA. Worth tracking as its own click.',
-  },
-  {
-    name: 'drawer-changed',
-    fields: 'opened',
-    meaning: 'Chat or Q&A panel toggled. Engagement signal, low value on its own.',
-  },
-] as const;

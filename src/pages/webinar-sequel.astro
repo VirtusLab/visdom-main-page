@@ -1,109 +1,123 @@
 ---
 /**
- * /webinar-sequel: a spike answering "what would the webinar page look like if
- * Sequel hosted the session inside it?"
+ * /webinar-sequel: the webinar landing page with the session hosted in the page
+ * by Sequel.io instead of handing people off to a mailto and a Zoom link.
  *
- * This is a preview, not a live landing page. It is noindex, it is not linked
- * from the nav, and it carries a banner saying so. The chrome, the hero and the
- * session data are the real ones from /webinar so the comparison is honest: the
- * only thing that changes is what sits where the "Reserve your spot" button
- * used to be.
+ * Same copy and same session data as /webinar. The only difference is the
+ * mechanism: one embed carries registration before the session, the live room
+ * during it, and the replay afterwards, so there is a single URL to link to and
+ * nothing to swap over on the day.
  *
- * The Sequel ids in src/data/sequel.ts are empty. With them empty every embed
- * renders a placeholder at the size the real thing would occupy, which is the
- * point: you can see the layout without pretending we have a live event.
+ * noindex, because it is a second page carrying the first page's copy. Two
+ * indexable near-duplicates would compete with each other. It comes off noindex
+ * on the day this replaces /webinar.
+ *
+ * Sequel ids live in src/data/sequel.ts. While eventId is empty the session
+ * panel keeps its own registration CTA, the same one /webinar uses today, so
+ * the page works either way.
  */
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import TourBanner from '../components/TourBanner.astro';
 import Footer from '../components/Footer.astro';
-import { WEBINAR, formatSessionDate, hostInitials } from '../data/webinar';
+import {
+  WEBINAR,
+  registrationHref,
+  formatSessionDate,
+  hostInitials,
+} from '../data/webinar';
 import {
   SEQUEL,
-  SEQUEL_EVENTS,
   SEQUEL_IFRAME_ALLOW,
-  SEQUEL_TOOLKIT_SRC,
+  SEQUEL_ORIGIN,
   sequelEventUrl,
   isConfigured,
 } from '../data/sequel';
 import '../styles/global.css';
 
+const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 const sessionDate = formatSessionDate();
 const initials = hostInitials();
 const eventUrl = sequelEventUrl();
-const configured = isConfigured();
+const embedded = isConfigured();
 
-// What the current page does versus what the embed would do instead.
-const shifts = [
-  {
-    now: 'A "Reserve your spot" button that opens a mailto',
-    then: 'A registration form inside the page, writing straight into Sequel',
-  },
-  {
-    now: 'The session itself happens on Zoom, on someone else\'s domain',
-    then: 'The live room renders here, on visdom.virtuslab.com',
-  },
-  {
-    now: 'Attendance is whatever the Zoom CSV says, days later',
-    then: 'user-registered and event-started arrive as postMessage, live',
-  },
-  {
-    now: 'The replay is a link to a file somebody has to upload',
-    then: 'The same URL becomes the on-demand replay when the session ends',
-  },
+const fallbackHref = registrationHref();
+const fallbackExternal = fallbackHref.startsWith('http');
+
+// Verbatim from the campaign brief, same as /webinar. Do not reword.
+const agenda = [
+  'Why AI adoption often stalls after the first wave of excitement.',
+  'What infrastructure is required for AI-native software delivery.',
+  'A live demonstration of AI agents shipping production-ready code safely and at scale.',
+  'How Visdom connects AI agents with your SDLC through its core components.',
+  'Q&A with our expert.',
 ];
+
+const siteUrl = import.meta.env.SITE || 'https://visdom.virtuslab.com';
+const eventJsonLd = WEBINAR.startsAt
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Event',
+      name: WEBINAR.title,
+      description: WEBINAR.subtitle,
+      startDate: WEBINAR.startsAt,
+      endDate: new Date(
+        new Date(WEBINAR.startsAt).getTime() + WEBINAR.durationMinutes * 60_000,
+      ).toISOString(),
+      eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
+      eventStatus: 'https://schema.org/EventScheduled',
+      location: { '@type': 'VirtualLocation', url: `${siteUrl}/webinar-sequel` },
+      image: [`${siteUrl}/og-image.png`],
+      organizer: { '@type': 'Organization', name: 'VirtusLab', url: 'https://virtuslab.com' },
+      performer: {
+        '@type': 'Person',
+        name: WEBINAR.host.name,
+        jobTitle: WEBINAR.host.role,
+        worksFor: { '@type': 'Organization', name: WEBINAR.host.company },
+      },
+    }
+  : null;
 ---
 <Layout
-  title={`Sequel embed spike | ${WEBINAR.title} | Visdom by VirtusLab`}
-  description="Internal preview: what the Visdom webinar page looks like with the session embedded via Sequel.io."
+  title={`${WEBINAR.title} | Live webinar | Visdom by VirtusLab`}
+  description={WEBINAR.subtitle}
   noindex={true}
 >
+  {eventJsonLd && (
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(eventJsonLd)} />
+  )}
+
   <TourBanner />
   <Nav />
 
   <main class="sq">
-    {/* A preview page that looks this much like the real one needs to say so. */}
-    <div class="sq-flag">
-      <div class="container sq-flag-inner">
-        <span class="sq-flag-tag">Spike</span>
-        <p>
-          Preview of a <a href="https://sequel.io" target="_blank" rel="noopener">Sequel.io</a>
-          integration, not a live page. Sequel ids are unset, so the embeds below render
-          placeholders at full size. The real page is <a href="/webinar">/webinar</a>.
-        </p>
-      </div>
-    </div>
-
-    {/* ── HERO: the real one, minus the CTA the embed would replace ──────── */}
+    {/* ── HERO ───────────────────────────────────────────────────────────── */}
     <section class="sq-hero">
+      <div class="aurora" aria-hidden="true"></div>
       <div class="container sq-hero-grid">
-        <div>
+        <div class="fade-up">
           <p class="section-label">Live webinar</p>
           <h1 class="sq-headline">
             Can your agents <span class="sq-accent">actually ship?</span>
           </h1>
-          <p class="sq-lede">{WEBINAR.subtitle}</p>
-          <p class="sq-note">
-            No button here on purpose. With Sequel, registration is the first state of the
-            embed below, so the reader never leaves the page to sign up.
+          <p class="sq-lede">
+            AI coding assistants can write code. But can they actually deliver software?
           </p>
+          <div class="sq-actions">
+            <a class="btn-pill btn-primary" href="#session" data-cta="webinar_register" data-location="webinar_sequel_hero">
+              Take your seat -&gt;
+            </a>
+            <a class="btn-pill btn-outline" href="#agenda">See the agenda</a>
+          </div>
         </div>
 
-        <div class="card sq-session">
+        <div class="fade-up card sq-session-card">
           <div class="sq-session-head"><span class="sq-mono">Session details</span></div>
           <dl class="sq-session-rows">
-            <div class="sq-session-row">
-              <dt>Date</dt><dd>{sessionDate}</dd>
-            </div>
-            <div class="sq-session-row">
-              <dt>Runtime</dt><dd>{WEBINAR.durationMinutes} minutes</dd>
-            </div>
-            <div class="sq-session-row">
-              <dt>Format</dt><dd>Live, with Q&amp;A</dd>
-            </div>
-            <div class="sq-session-row">
-              <dt>Hosted on</dt><dd class="sq-session-accent">This page</dd>
-            </div>
+            <div class="sq-session-row"><dt>Date</dt><dd>{sessionDate}</dd></div>
+            <div class="sq-session-row"><dt>Runtime</dt><dd>{WEBINAR.durationMinutes} minutes</dd></div>
+            <div class="sq-session-row"><dt>Format</dt><dd>Live, with Q&amp;A</dd></div>
+            <div class="sq-session-row"><dt>Price</dt><dd class="sq-session-accent">Free</dd></div>
           </dl>
           <div class="sq-session-host">
             <span class="sq-plate" aria-hidden="true">{initials}</span>
@@ -116,187 +130,158 @@ const shifts = [
       </div>
     </section>
 
-    {/* ── THE EMBED ──────────────────────────────────────────────────────── */}
-    <section class="sq-section" id="stage">
+    {/* ── THE SESSION: registration, live room and replay, all in one frame ─ */}
+    <section class="sq-section" id="session">
       <div class="container">
-        <p class="section-label">The embed</p>
-        <h2 class="sq-h2">One frame, three states</h2>
-        <p class="sq-section-lead">
-          The same embed is the registration form before the session, the live room during
-          it, and the replay afterwards. One URL, one place to link to, no swapping the
-          page over on the day.
+        <p class="section-label fade-up">The session</p>
+        <h2 class="sq-h2 fade-up">Everything happens on this page</h2>
+        <p class="sq-section-lead fade-up">
+          Sign up here, watch here, and come back to the same address for the recording.
+          No other platform, no separate link in your calendar.
         </p>
 
         <div
-          class="sq-stage"
+          class="sq-stage fade-up"
           id="sq-stage"
           data-embed-url={eventUrl ?? ''}
           data-allow={SEQUEL_IFRAME_ALLOW}
+          data-origin={SEQUEL_ORIGIN}
         >
-          {configured ? (
-            SEQUEL.clickToLoad ? (
-              <div class="sq-poster" id="sq-poster">
-                <div class="sq-poster-body">
-                  <p class="sq-poster-title">{WEBINAR.title}</p>
-                  <p class="sq-poster-meta">{sessionDate} · {WEBINAR.durationMinutes} min</p>
-                  <button type="button" class="btn-pill btn-primary" id="sq-load">
-                    Load the session -&gt;
-                  </button>
-                  <p class="sq-poster-fine">
-                    Loads sequel.io, which sets its own cookies and asks for camera and
-                    microphone access.
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <iframe
-                src={eventUrl}
-                title={WEBINAR.title}
-                allow={SEQUEL_IFRAME_ALLOW}
-                allowfullscreen
-                loading="lazy"
-              ></iframe>
-            )
+          {embedded && !SEQUEL.clickToLoad ? (
+            <iframe
+              src={eventUrl}
+              title={WEBINAR.title}
+              allow={SEQUEL_IFRAME_ALLOW}
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
           ) : (
-            <div class="sq-placeholder">
-              <div class="sq-placeholder-body">
-                <span class="sq-mono sq-placeholder-tag">Embed slot</span>
-                <p class="sq-placeholder-title">
-                  The Sequel event would render here, at this size.
+            <div class="sq-panel" id="sq-panel">
+              <div class="sq-panel-body">
+                <p class="sq-panel-kicker sq-mono">Live webinar</p>
+                <p class="sq-panel-title">{WEBINAR.title}</p>
+                <p class="sq-panel-meta">
+                  <span>{sessionDate}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{WEBINAR.durationMinutes} min</span>
+                  <span aria-hidden="true">·</span>
+                  <span>Free</span>
                 </p>
-                <p class="sq-placeholder-copy">
-                  Set <code>eventId</code> in <code>src/data/sequel.ts</code> and this
-                  becomes a live <code>&lt;iframe&gt;</code> pointing at
-                  <code>embed.sequel.io/event/&lt;id&gt;</code>. The id comes from the
-                  Sequel admin dashboard and is not a secret.
-                </p>
+
+                {embedded ? (
+                  <>
+                    <button type="button" class="btn-pill btn-primary sq-panel-cta" id="sq-load">
+                      Reserve your seat -&gt;
+                    </button>
+                    <p class="sq-panel-fine">
+                      Opens the session player on this page.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <a
+                      class="btn-pill btn-primary sq-panel-cta"
+                      href={fallbackHref}
+                      target={fallbackExternal ? '_blank' : undefined}
+                      rel={fallbackExternal ? 'noopener' : undefined}
+                      data-cta="webinar_register"
+                      data-location="webinar_sequel_panel"
+                    >
+                      Reserve your seat -&gt;
+                    </a>
+                    <p class="sq-panel-fine">
+                      We will send the joining details and the recording afterwards.
+                    </p>
+                  </>
+                )}
+
+                <div class="sq-panel-host">
+                  <span class="sq-plate" aria-hidden="true">{initials}</span>
+                  <span>Hosted by <b>{WEBINAR.host.name}</b>, {WEBINAR.host.role}</span>
+                </div>
               </div>
             </div>
           )}
         </div>
-
-        <p class="sq-caption">
-          Sequel asks for <code>{SEQUEL_IFRAME_ALLOW}</code>, because the audience can come
-          on stage and share a screen. Worth knowing before it goes on a public page.
-        </p>
       </div>
     </section>
 
-    {/* ── WHAT CHANGES ───────────────────────────────────────────────────── */}
+    {/* ── THE PREMISE ────────────────────────────────────────────────────── */}
     <section class="sq-section section-alt">
       <div class="container">
-        <p class="section-label">What it changes</p>
-        <h2 class="sq-h2">Four things move on-domain</h2>
-        <ul class="sq-shifts" role="list">
-          {shifts.map((s) => (
-            <li class="sq-shift">
-              <p class="sq-shift-now"><span class="sq-mono">now</span>{s.now}</p>
-              <p class="sq-shift-then"><span class="sq-mono">with Sequel</span>{s.then}</p>
+        <h2 class="sq-h2 fade-up">The real bottleneck isn't the agent.</h2>
+        <div class="sq-two-col fade-up">
+          <p>
+            Many engineering organizations discover that the real bottleneck is the
+            delivery infrastructure.
+          </p>
+          <p>
+            Pipelines, CI, code reviews, security gates, and release processes were
+            designed for human speed, not AI.
+          </p>
+        </div>
+        <div class="sq-pull fade-up">
+          <span class="sq-pull-rule" aria-hidden="true"></span>
+          <p>
+            Visdom is the <span class="sq-accent">missing layer</span> between AI coding
+            and production.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* ── AGENDA ─────────────────────────────────────────────────────────── */}
+    <section class="sq-section" id="agenda">
+      <div class="container">
+        <p class="section-label fade-up">Agenda</p>
+        <h2 class="sq-h2 fade-up">During this live session, we'll cover</h2>
+        <ol class="sq-agenda fade-up" role="list">
+          {agenda.map((item, i) => (
+            <li class="sq-agenda-item">
+              <span class="sq-agenda-n sq-mono">{String(i + 1).padStart(2, '0')}</span>
+              <p>{item}</p>
             </li>
           ))}
-        </ul>
+        </ol>
       </div>
     </section>
 
-    {/* ── THE WIRING ─────────────────────────────────────────────────────── */}
-    <section class="sq-section">
-      <div class="container">
-        <p class="section-label">The wiring</p>
-        <h2 class="sq-h2">What we would actually have to build</h2>
-        <p class="sq-section-lead">
-          The embed is one iframe. The work is on our side of it: the frame talks to the
-          page over <code>postMessage</code>, and those messages are the only way a
-          registration becomes a GA4 conversion.
-        </p>
-
-        <div class="sq-table-wrap">
-          <table class="sq-table">
-            <thead>
-              <tr><th>Event</th><th>Payload</th><th>What we do with it</th></tr>
-            </thead>
-            <tbody>
-              {SEQUEL_EVENTS.map((e) => (
-                <tr>
-                  <td><code>{e.name}</code></td>
-                  <td class="sq-td-fields">{e.fields}</td>
-                  <td>{e.meaning}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <p class="sq-caption">
-          The listener below is live on this page. Open the console and it logs every
-          message the frame sends, so you can see the real shape before we commit to it.
-        </p>
-      </div>
-    </section>
-
-    {/* ── EVENT GRID ─────────────────────────────────────────────────────── */}
+    {/* ── HOST ───────────────────────────────────────────────────────────── */}
     <section class="sq-section section-alt">
       <div class="container">
-        <p class="section-label">The other component</p>
-        <h2 class="sq-h2">An event grid, for when there is more than one</h2>
-        <p class="sq-section-lead">
-          Sequel's second embed lists every session in the workspace. This is what would
-          carry a series, or the replay library, without us building a listing page.
-        </p>
-
-        {SEQUEL.companyId ? (
-          <div id="sequel_root" class="sq-grid-root"></div>
-        ) : (
-          <div class="sq-placeholder sq-placeholder--short">
-            <div class="sq-placeholder-body">
-              <span class="sq-mono sq-placeholder-tag">Grid slot</span>
-              <p class="sq-placeholder-title">The event grid would render here.</p>
-              <p class="sq-placeholder-copy">
-                Needs <code>companyId</code> in <code>src/data/sequel.ts</code>. It loads
-                <code>{SEQUEL_TOOLKIT_SRC}</code> and calls
-                <code>Sequel.renderEventGrid()</code>, which takes
-                <code>darkMode</code>, <code>showDescription</code> and
-                <code>excludeText</code>. Note it renders into a hardcoded
-                <code>#sequel_root</code>, so one grid per page.
-              </p>
-            </div>
+        <p class="section-label fade-up">Your host</p>
+        <div class="sq-host fade-up">
+          <span class="sq-plate sq-plate-lg" aria-hidden="true">{initials}</span>
+          <div>
+            <h2 class="sq-host-name">{WEBINAR.host.name}</h2>
+            <p class="sq-mono sq-host-role">{WEBINAR.host.role}, {WEBINAR.host.company}</p>
+            <p class="sq-host-bio">
+              {WEBINAR.host.name} will demonstrate how Visdom turns AI-assisted software
+              delivery into an agent-operable SDLC: how agents can move through the whole
+              lifecycle with the context, validation, governance, and orchestration they
+              need to ship production-ready software.
+            </p>
+            {WEBINAR.host.note && <p class="sq-host-note">{WEBINAR.host.note}</p>}
           </div>
-        )}
+        </div>
       </div>
     </section>
 
-    {/* ── OPEN QUESTIONS ─────────────────────────────────────────────────── */}
-    <section class="sq-section">
+    {/* ── CLOSE ──────────────────────────────────────────────────────────── */}
+    <section class="sq-final">
+      <div class="aurora" aria-hidden="true"></div>
       <div class="container">
-        <p class="section-label">Before we commit</p>
-        <h2 class="sq-h2">Open questions</h2>
-        <ul class="sq-questions" role="list">
-          <li>
-            <b>Consent.</b> The frame sets third-party cookies and asks for camera and mic.
-            On a page that already runs a Cookie Information banner, it should load behind
-            consent. This spike gates it behind an explicit click, which is the cheap
-            version of that.
-          </li>
-          <li>
-            <b>Theme.</b> Our page defaults to the dark theme. The single-event embed
-            renders Sequel's own chrome and only the grid documents a
-            <code>darkMode</code> flag, so the live room may sit light-on-dark until we
-            check what it actually exposes.
-          </li>
-          <li>
-            <b>Height.</b> Sequel's own guidance is <code>90vh</code>. That is a tall frame
-            with our sticky header above it; needs a look on a laptop screen.
-          </li>
-          <li>
-            <b>Localization.</b> The frame's UI is Sequel's, not ours. If the session ever
-            runs in Polish, the surrounding page can be translated but the room's buttons
-            probably cannot.
-          </li>
-          <li>
-            <b>Data.</b> <code>user-registered</code> hands us an email in the browser.
-            Whatever we do with it past a GA4 event needs a decision, because that is
-            personal data arriving client-side.
-          </li>
-        </ul>
+        <p class="sq-final-statement fade-up">
+          Whether you're exploring AI coding assistants or already introducing them into
+          your engineering organization, this session shows what it takes to move from
+          writing code to shipping it.
+        </p>
+        <div class="sq-final-actions fade-up">
+          <a class="btn-pill btn-primary" href="#session" data-cta="webinar_register" data-location="webinar_sequel_final">
+            Take your seat -&gt;
+          </a>
+          <a class="btn-pill btn-outline" href={`${base}/`}>Explore the platform</a>
+        </div>
       </div>
     </section>
   </main>
@@ -305,38 +290,34 @@ const shifts = [
 </Layout>
 
 <script>
-  // Click-to-load: the third-party frame is injected only when asked for.
   const stage = document.getElementById('sq-stage');
-  const loadBtn = document.getElementById('sq-load');
-  if (stage && loadBtn) {
-    loadBtn.addEventListener('click', () => {
-      const url = stage.dataset.embedUrl;
-      if (!url) return;
-      const frame = document.createElement('iframe');
-      frame.src = url;
-      frame.title = 'Webinar session';
-      frame.allow = stage.dataset.allow ?? '';
-      frame.allowFullscreen = true;
-      document.getElementById('sq-poster')?.remove();
-      stage.appendChild(frame);
-    });
-  }
+  const origin = stage?.dataset.origin ?? '';
 
-  // The integration surface. Sequel posts { event, data } from inside the frame;
-  // this is where those become the site's existing GA4 conversion vocabulary.
+  // The frame is injected on click rather than at load: it sets third-party
+  // cookies and asks for camera and microphone, which should wait for intent.
+  document.getElementById('sq-load')?.addEventListener('click', () => {
+    const url = stage?.dataset.embedUrl;
+    if (!stage || !url) return;
+    const frame = document.createElement('iframe');
+    frame.src = url;
+    frame.title = 'Webinar session';
+    frame.allow = stage.dataset.allow ?? '';
+    frame.allowFullscreen = true;
+    document.getElementById('sq-panel')?.remove();
+    stage.appendChild(frame);
+  });
+
+  // Sequel reports what happens inside the frame over postMessage. Mapped onto
+  // the GA4 vocabulary Analytics.astro already uses, so a signup here is the
+  // same generate_lead the mailto CTA fires and the funnel stays comparable.
   window.addEventListener('message', (e) => {
-    if (e.origin !== 'https://embed.sequel.io') return;
+    if (!origin || e.origin !== origin) return;
     const name = e.data?.event;
     const data = e.data?.data ?? {};
-    if (!name) return;
-
-    console.log('[sequel]', name, data);
-
     const gtag = (window as any).gtag;
-    if (typeof gtag !== 'function') return;
+    if (!name || typeof gtag !== 'function') return;
 
     if (name === 'user-registered') {
-      // Same event the mailto CTA fires today, so the funnel stays comparable.
       gtag('event', 'generate_lead', {
         method: 'sequel',
         cta_id: 'webinar_register',
@@ -345,90 +326,39 @@ const shifts = [
     } else if (name === 'event-started' || name === 'event-ended') {
       gtag('event', name.replace('-', '_'), { location: 'webinar_sequel_embed' });
     } else if (name === 'cta-updated' && data.showing) {
-      gtag('event', 'cta_click', { cta_id: 'sequel_in_session', location: 'webinar_sequel_embed' });
+      gtag('event', 'cta_click', {
+        cta_id: 'sequel_in_session',
+        location: 'webinar_sequel_embed',
+      });
     }
   });
 </script>
 
-{SEQUEL.companyId && (
-  <script type="module" is:inline define:vars={{ src: SEQUEL_TOOLKIT_SRC, companyId: SEQUEL.companyId }}>
-    // The grid renders into a hardcoded #sequel_root, so there can be only one.
-    import(src).then(() => {
-      window.Sequel?.renderEventGrid({ companyId, darkMode: true, showDescription: true });
-    });
-  </script>
-)}
-
 <style>
   .sq { background: var(--color-bg); }
 
-  /* preview flag */
-  .sq-flag {
-    background: color-mix(in oklab, var(--color-amber) 12%, var(--color-bg));
-    border-bottom: 1px solid color-mix(in oklab, var(--color-amber) 35%, transparent);
-  }
-  .sq-flag-inner {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    flex-wrap: wrap;
-  }
-  .sq-flag-tag {
-    flex: 0 0 auto;
-    padding: 2px 9px;
-    border-radius: 9999px;
-    background: var(--color-amber);
-    color: var(--color-bg);
-    font-family: var(--font-mono);
-    font-size: var(--fs-2xs);
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .sq-flag p { font-size: var(--fs-sm); color: var(--color-text-secondary); margin: 0; }
-  .sq-flag a { color: var(--color-text); text-decoration: underline; text-underline-offset: 2px; }
-
-  /* hero */
-  .sq-hero { padding: 4rem 0 3rem; }
-  .sq-hero-grid {
-    display: grid;
-    gap: 2.5rem;
-    align-items: start;
-  }
+  /* ---- hero ---- */
+  .sq-hero { position: relative; overflow: hidden; padding: 5rem 0 3.5rem; }
+  .sq-hero-grid { position: relative; z-index: 1; display: grid; gap: 2.5rem; align-items: start; }
   @media (min-width: 900px) {
-    .sq-hero-grid { grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr); gap: 3.5rem; }
+    .sq-hero-grid { grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr); gap: 3.5rem; }
   }
   .sq-headline {
     font-family: var(--font-heading);
-    font-size: clamp(2rem, 4.6vw, 3.25rem);
-    font-weight: 700;
-    letter-spacing: -0.035em;
-    line-height: 1.06;
-    color: var(--color-text);
-    margin: 0.6rem 0 1rem;
+    font-size: clamp(2.1rem, 5vw, 3.4rem);
+    font-weight: 700; letter-spacing: -0.035em; line-height: 1.05;
+    color: var(--color-text); margin: 0.6rem 0 1rem;
   }
   .sq-accent { color: var(--vmm-accent); }
-  .sq-lede { font-size: var(--fs-lg); color: var(--color-text-secondary); line-height: 1.6; max-width: 34rem; }
-  .sq-note {
-    margin-top: 1.25rem;
-    padding-left: 12px;
-    border-left: 2px solid var(--color-border);
-    font-size: var(--fs-sm);
-    color: var(--color-text-muted);
-    max-width: 32rem;
-  }
+  .sq-lede { font-size: var(--fs-lg); color: var(--color-text-secondary); line-height: 1.6; max-width: 32rem; }
+  .sq-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 2rem; }
 
-  /* session card */
-  .sq-session { padding: 20px; }
+  /* ---- session details card ---- */
+  .sq-session-card { padding: 20px; }
   .sq-session-head { padding-bottom: 12px; border-bottom: 1px solid var(--color-border-light); }
   .sq-mono {
-    font-family: var(--font-mono);
-    font-size: var(--fs-2xs);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
+    font-family: var(--font-mono); font-size: var(--fs-2xs);
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-muted);
   }
   .sq-session-rows { margin: 14px 0 0; display: grid; gap: 10px; }
   .sq-session-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
@@ -437,112 +367,109 @@ const shifts = [
   .sq-session-accent { color: var(--color-emerald) !important; }
   .sq-session-host {
     display: flex; align-items: center; gap: 10px;
-    margin-top: 16px; padding-top: 14px;
-    border-top: 1px solid var(--color-border-light);
-  }
-  .sq-plate {
-    display: grid; place-items: center;
-    width: 36px; height: 36px; border-radius: 9999px;
-    background: var(--color-surface); border: 1px solid var(--color-border);
-    font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700;
-    color: var(--color-text-secondary);
+    margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--color-border-light);
   }
   .sq-session-host-text { display: flex; flex-direction: column; }
   .sq-session-host-text b { font-size: var(--fs-sm); color: var(--color-text); }
   .sq-session-host-text span { font-size: var(--fs-2xs); color: var(--color-text-muted); }
 
-  /* sections */
-  .sq-section { padding: 4rem 0; }
+  .sq-plate {
+    display: grid; place-items: center; flex: 0 0 auto;
+    width: 36px; height: 36px; border-radius: 9999px;
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700;
+    color: var(--color-text-secondary);
+  }
+  .sq-plate-lg { width: 76px; height: 76px; font-size: var(--fs-lg); }
+
+  /* ---- sections ---- */
+  .sq-section { padding: 4.5rem 0; }
   .sq-h2 {
     font-family: var(--font-heading);
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    color: var(--color-text);
+    font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+    font-weight: 700; letter-spacing: -0.03em; color: var(--color-text);
     margin: 0.6rem 0 0.9rem;
   }
-  .sq-section-lead { color: var(--color-text-secondary); line-height: 1.65; max-width: 46rem; margin-bottom: 2rem; }
-  .sq-caption { margin-top: 1rem; font-size: var(--fs-sm); color: var(--color-text-muted); max-width: 46rem; }
-  .sq-caption code, .sq-section-lead code, .sq-questions code, .sq-placeholder code {
-    font-family: var(--font-mono);
-    font-size: 0.92em;
-    padding: 1px 5px;
-    border-radius: 5px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border-light);
-    color: var(--color-text);
-    word-break: break-word;
-  }
+  .sq-section-lead { color: var(--color-text-secondary); line-height: 1.65; max-width: 44rem; margin-bottom: 2.25rem; }
 
-  /* the embed slot: same box whether it holds an iframe or a placeholder */
+  /* ---- the embed / session panel ---- */
   .sq-stage {
-    position: relative;
-    border-radius: 14px;
-    overflow: hidden;
+    position: relative; display: grid;
+    border-radius: 16px; overflow: hidden;
     border: 1px solid var(--color-border);
     background: var(--color-surface);
-    min-height: min(80vh, 620px);
-    display: grid;
+    min-height: min(78vh, 600px);
+    box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 18px 50px rgba(0,0,0,.07);
   }
-  .sq-stage :global(iframe) { width: 100%; height: min(80vh, 620px); border: 0; display: block; }
+  .sq-stage :global(iframe) { width: 100%; height: min(78vh, 600px); border: 0; display: block; }
 
-  .sq-poster, .sq-placeholder { display: grid; place-items: center; padding: 2rem; text-align: center; }
-  .sq-poster {
+  .sq-panel {
+    display: grid; place-items: center; padding: 2.5rem 1.5rem; text-align: center;
     background:
-      radial-gradient(1200px 400px at 50% -10%, var(--vmm-accent-soft), transparent 70%),
+      radial-gradient(900px 320px at 50% -5%, var(--vmm-accent-soft), transparent 70%),
       var(--color-surface);
   }
-  .sq-poster-body { max-width: 30rem; display: grid; gap: 10px; justify-items: center; }
-  .sq-poster-title { font-family: var(--font-heading); font-size: var(--fs-2xl); font-weight: 700; color: var(--color-text); margin: 0; }
-  .sq-poster-meta { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--color-text-muted); margin: 0; }
-  .sq-poster-fine { font-size: var(--fs-2xs); color: var(--color-text-muted); margin: 6px 0 0; }
-
-  /* placeholder reads as a deliberate empty slot, not a broken embed */
-  .sq-placeholder {
-    background-image:
-      repeating-linear-gradient(135deg, var(--color-border-light) 0 1px, transparent 1px 11px);
+  .sq-panel-body { display: grid; gap: 12px; justify-items: center; max-width: 34rem; }
+  .sq-panel-kicker { margin: 0; }
+  .sq-panel-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 3.4vw, 2.25rem);
+    font-weight: 700; letter-spacing: -0.03em; line-height: 1.15;
+    color: var(--color-text); margin: 0;
   }
-  .sq-placeholder--short { min-height: 260px; border-radius: 14px; border: 1px solid var(--color-border); }
-  .sq-placeholder-body { max-width: 34rem; display: grid; gap: 10px; justify-items: center; }
-  .sq-placeholder-tag { display: inline-block; }
-  .sq-placeholder-title { font-family: var(--font-heading); font-size: var(--fs-xl); font-weight: 700; color: var(--color-text); margin: 0; }
-  .sq-placeholder-copy { font-size: var(--fs-sm); color: var(--color-text-secondary); line-height: 1.6; margin: 0; }
-
-  /* now / with Sequel */
-  .sq-shifts { display: grid; gap: 12px; }
-  @media (min-width: 800px) { .sq-shifts { grid-template-columns: 1fr 1fr; } }
-  .sq-shift {
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    background: var(--color-bg);
-    padding: 16px;
-    display: grid;
-    gap: 10px;
+  .sq-panel-meta {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    font-size: var(--fs-sm); color: var(--color-text-secondary); margin: 0;
   }
-  .sq-shift p { margin: 0; font-size: var(--fs-sm); line-height: 1.55; }
-  .sq-shift .sq-mono { display: block; margin-bottom: 3px; }
-  .sq-shift-now { color: var(--color-text-muted); }
-  .sq-shift-then { color: var(--color-text); }
-  .sq-shift-then .sq-mono { color: var(--color-emerald); }
-
-  /* postMessage table */
-  .sq-table-wrap { overflow-x: auto; border: 1px solid var(--color-border); border-radius: 12px; }
-  .sq-table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); min-width: 640px; }
-  .sq-table th, .sq-table td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--color-border-light); vertical-align: top; }
-  .sq-table thead th {
-    font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--color-text-muted); background: var(--color-surface);
+  .sq-panel-cta { margin-top: 8px; }
+  .sq-panel-fine { font-size: var(--fs-2xs); color: var(--color-text-muted); margin: 0; }
+  .sq-panel-host {
+    display: flex; align-items: center; gap: 10px;
+    margin-top: 14px; padding-top: 16px;
+    border-top: 1px solid var(--color-border-light);
+    font-size: var(--fs-sm); color: var(--color-text-secondary);
   }
-  .sq-table tbody tr:last-child td { border-bottom: 0; }
-  .sq-table td { color: var(--color-text-secondary); }
-  .sq-td-fields { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--color-text-muted); }
+  .sq-panel-host b { color: var(--color-text); }
 
-  .sq-questions { display: grid; gap: 14px; max-width: 48rem; }
-  .sq-questions li {
-    font-size: var(--fs-sm); color: var(--color-text-secondary); line-height: 1.6;
-    padding-left: 14px; border-left: 2px solid var(--color-border);
+  /* ---- premise ---- */
+  .sq-two-col { display: grid; gap: 1.25rem; max-width: 52rem; }
+  @media (min-width: 800px) { .sq-two-col { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+  .sq-two-col p { color: var(--color-text-secondary); line-height: 1.65; margin: 0; }
+  .sq-pull { display: flex; gap: 16px; margin-top: 2.5rem; max-width: 40rem; }
+  .sq-pull-rule { flex: 0 0 3px; border-radius: 3px; background: var(--vmm-accent); }
+  .sq-pull p {
+    font-family: var(--font-heading);
+    font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+    font-weight: 600; letter-spacing: -0.02em; line-height: 1.3;
+    color: var(--color-text); margin: 0;
   }
-  .sq-questions b { color: var(--color-text); }
 
-  .sq-grid-root { min-height: 320px; }
+  /* ---- agenda ---- */
+  .sq-agenda { display: grid; gap: 10px; max-width: 46rem; }
+  .sq-agenda-item {
+    display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;
+    padding: 16px; border-radius: 12px;
+    border: 1px solid var(--color-border-light); background: var(--color-surface);
+  }
+  .sq-agenda-item p { margin: 0; color: var(--color-text); line-height: 1.55; }
+  .sq-agenda-n { color: var(--vmm-accent); padding-top: 2px; }
+
+  /* ---- host ---- */
+  .sq-host { display: grid; gap: 1.25rem; align-items: start; max-width: 48rem; }
+  @media (min-width: 700px) { .sq-host { grid-template-columns: auto 1fr; gap: 1.75rem; } }
+  .sq-host-name { font-family: var(--font-heading); font-size: var(--fs-3xl); font-weight: 700; color: var(--color-text); margin: 0 0 4px; }
+  .sq-host-role { margin: 0 0 12px; }
+  .sq-host-bio { color: var(--color-text-secondary); line-height: 1.65; margin: 0; }
+  .sq-host-note { margin: 10px 0 0; font-size: var(--fs-sm); color: var(--color-text-muted); }
+
+  /* ---- close ---- */
+  .sq-final { position: relative; overflow: hidden; padding: 5rem 0 6rem; text-align: center; }
+  .sq-final > .container { position: relative; z-index: 1; }
+  .sq-final-statement {
+    font-family: var(--font-heading);
+    font-size: clamp(1.35rem, 3vw, 2rem);
+    font-weight: 600; letter-spacing: -0.025em; line-height: 1.35;
+    color: var(--color-text); margin: 0 auto; max-width: 44rem;
+  }
+  .sq-final-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 2rem; }
 </style>
