@@ -461,6 +461,33 @@ const revY = (i: number) => 304 + i * 40;
   .af-stage { width: 100%; }
   .af-svg { width: 100%; height: auto; overflow: visible; display: block; }
 
+  /*
+   * Polish labels run 15 to 30 percent longer than the English this diagram's
+   * geometry was laid out for, so they crowd their pills. Step the whole label
+   * scale down one notch for that locale.
+   *
+   * Every af-* label takes its size from a --fs-* token, so redefining the
+   * tokens on the svg scales all 32 text nodes together and keeps them in
+   * proportion with each other. Doing it per class would drift the moment
+   * someone touched one rule. Only the tokens the diagram actually uses are
+   * listed. The scroll captions live outside the svg and keep full size.
+   *
+   * One number to tune: --af-label-scale.
+   */
+  :global(html[lang='pl']) .af-svg {
+    --af-label-scale: 0.9;
+    --fs-4xs: calc(0.5625rem * var(--af-label-scale));
+    --fs-3xs: calc(0.625rem * var(--af-label-scale));
+    --fs-2xs: calc(0.6875rem * var(--af-label-scale));
+    --fs-xs: calc(0.75rem * var(--af-label-scale));
+    --fs-sm: calc(0.8125rem * var(--af-label-scale));
+    --fs-md: calc(0.875rem * var(--af-label-scale));
+    --fs-base: calc(0.9375rem * var(--af-label-scale));
+    --fs-lg: calc(1rem * var(--af-label-scale));
+    --fs-xl: calc(1.0625rem * var(--af-label-scale));
+    --fs-3xl: calc(1.25rem * var(--af-label-scale));
+  }
+
   /* ---- stage reveal (driven by GSAP; everything visible without JS) ---- */
   .js .af-group[data-reveal],
   .js .af-reveal { opacity: 0; }
