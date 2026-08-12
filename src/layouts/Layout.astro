@@ -6,6 +6,8 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  /** Keeps a page out of search results. For spikes and internal previews. */
+  noindex?: boolean;
 }
 
 const { locale, t } = useI18n(Astro);
@@ -15,6 +17,7 @@ const {
   title = t.meta.title,
   description = t.meta.description,
   ogImage,
+  noindex = false,
 } = Astro.props;
 
 const siteUrl = import.meta.env.SITE || "https://virtuslab.github.io/visdom-main-page";
@@ -44,6 +47,7 @@ const piwikScript = `(function(window, document, dataLayerName, id) { window[dat
 
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
     {alternates.map((alt) => (
       <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
