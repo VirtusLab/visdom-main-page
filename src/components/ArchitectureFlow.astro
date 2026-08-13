@@ -20,19 +20,22 @@ const icons: Record<string, string> = {
   repo: '<line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
   docs: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8M16 17H8M10 9H8"/>',
   org: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
-  // module header + accent icons
-  layers: '<path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/>',
-  flask: '<path d="M9 3h6M10 3v5L5 16a3 3 0 0 0 2.6 4.5h8.8A3 3 0 0 0 19 16l-5-8V3"/><path d="M7.5 14h9"/>',
-  eye: '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/>',
   pr: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6"/><path d="M13 6h2a3 3 0 0 1 3 3v6"/>',
-  link: '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
-  spark: '<path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/>',
   rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
-  funnel: '<path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/>',
-  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1 1 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
   check: '<path d="M20 6 9 17l-5-5"/>',
-  // orchestrator: routed waypoints, one conductor wiring the stages together
-  waypoints: '<circle cx="12" cy="4.5" r="2.5"/><path d="m10.2 6.3-3.9 3.9"/><circle cx="4.5" cy="12" r="2.5"/><path d="M7 12h10"/><circle cx="19.5" cy="12" r="2.5"/><path d="m13.8 17.7 3.9-3.9"/><circle cx="12" cy="19.5" r="2.5"/>',
+};
+
+/*
+ * Module glyphs. The restyle drops the line icons in module headers for a small
+ * solid mark per component, which is what carries the colour coding: each module
+ * owns one accent and the glyph is the only place it appears at full strength.
+ * All drawn in a 10x10 box so they can be placed by translate alone.
+ */
+const glyphs = {
+  dot: '<circle cx="5" cy="5" r="5" />',
+  ring: '<circle cx="5" cy="5" r="3.9" fill="none" stroke-width="2.2" />',
+  diamond: '<rect x="0.8" y="0.8" width="8.4" height="8.4" rx="1.5" transform="rotate(45 5 5)" />',
+  square: '<rect x="0" y="0" width="10" height="10" rx="2.4" />',
 };
 
 const testLayers = d.testLayers;
@@ -93,14 +96,6 @@ const revY = (i: number) => 304 + i * 40;
             <marker id="af-arrow-amber" viewBox="0 0 12 9" refX="11" refY="4.5" markerWidth="7" markerHeight="5.25" orient="auto-start-reverse">
               <path d="M0,0.5 L12,4.5 L0,8.5 L3.2,4.5 Z" class="af-arrowhead--amber" />
             </marker>
-            <radialGradient id="af-agent-grad" cx="38%" cy="32%" r="78%">
-              <stop offset="0%" stop-color="var(--vmm-accent-2)" />
-              <stop offset="100%" stop-color="var(--vmm-accent)" />
-            </radialGradient>
-            <linearGradient id="af-depth-grad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="var(--vmm-accent)" stop-opacity="0.12" />
-              <stop offset="100%" stop-color="var(--vmm-accent)" stop-opacity="0.9" />
-            </linearGradient>
             <pattern id="af-grid" width="26" height="26" patternUnits="userSpaceOnUse">
               <circle cx="1" cy="1" r="1" class="af-grid-dot" />
             </pattern>
@@ -123,7 +118,7 @@ const revY = (i: number) => 304 + i * 40;
             <rect x="44" y="228" width="1014" height="334" rx="20" class="af-orch-box" />
             {/* title as a legend riding the top border */}
             <rect x="439" y="214" width="224" height="28" rx="9" class="af-orch-legend" />
-            <g class="af-orch-icon" transform="translate(452,221) scale(0.6)" set:html={icons.waypoints} />
+            <g class="af-glyph af-glyph--orch" transform="translate(457,218)" set:html={glyphs.ring} />
             <text x="480" y="233" class="af-orch-label">{d.orchestrator}</text>
           </g>
 
@@ -131,7 +126,7 @@ const revY = (i: number) => 304 + i * 40;
           <g id="af-tracing" class="af-group" data-reveal>
             <rect x="44" y="578" width="1192" height="68" rx="18" class="af-vault" />
             <line x1="60" y1="579.5" x2="1220" y2="579.5" class="af-sheen" />
-            <g class="af-vault-icon" transform="translate(64,602) scale(0.8)" set:html={icons.link} />
+            <g class="af-glyph af-glyph--tracing" transform="translate(66,607)" set:html={glyphs.dot} />
             <text x="94" y="619" class="af-vault-label">{d.vault}</text>
             {/* hash-chain motif: linked blocks, append-only */}
             <g class="af-chain" aria-hidden="true">
@@ -170,7 +165,7 @@ const revY = (i: number) => 304 + i * 40;
             <!-- the fabric bar: cross-cutting, like the vault below -->
             <rect x="44" y="126" width="1192" height="66" rx="18" class="af-vault af-fabricbar" />
             <line x1="60" y1="127.5" x2="1220" y2="127.5" class="af-sheen" />
-            <g class="af-vault-icon" transform="translate(64,149) scale(0.8)" set:html={icons.layers} />
+            <g class="af-glyph af-glyph--fabric" transform="translate(66,154)" set:html={glyphs.dot} />
             <text x="94" y="166" class="af-vault-label">{d.fabric}</text>
             <text x="1212" y="163" text-anchor="end" class="af-vault-tag">{d.fabricTag}</text>
           </g>
@@ -198,7 +193,6 @@ const revY = (i: number) => 304 + i * 40;
             <circle cx="150" cy="350" r="58" class="af-agent-ring" />
             <circle cx="150" cy="350" r="51" class="af-agent-ticks" />
             <circle cx="150" cy="350" r="44" class="af-agent-core" />
-            <g class="af-agent-spark" transform="translate(142,318) scale(0.68)" set:html={icons.spark} />
             <text x="150" y="354" text-anchor="middle" class="af-agent-label">{d.agent[0]}</text>
             <text x="150" y="374" text-anchor="middle" class="af-agent-label">{d.agent[1]}</text>
             <!-- the agent runs contained: Sandcat sandbox tag -->
@@ -262,7 +256,7 @@ const revY = (i: number) => 304 + i * 40;
             <rect x="272" y="264" width="168" height="206" rx="16" class="af-panel" />
             <line x1="288" y1="265.5" x2="424" y2="265.5" class="af-sheen" />
             <rect x="278" y="270" width="156" height="26" rx="8" class="af-mhead" />
-            <g class="af-mhead-icon" transform="translate(288,275) scale(0.66)" set:html={icons.flask} />
+            <g class="af-glyph" transform="translate(290,278)" set:html={glyphs.diamond} />
             <text x="310" y="288" class="af-mhead-label">{d.testing}</text>
             {testLayers.map((t, i) => (
               <g class="af-test-row">
@@ -286,7 +280,7 @@ const revY = (i: number) => 304 + i * 40;
             <rect x="474" y="264" width="202" height="206" rx="16" class="af-panel" />
             <line x1="490" y1="265.5" x2="660" y2="265.5" class="af-sheen" />
             <rect x="480" y="270" width="190" height="26" rx="8" class="af-mhead" />
-            <g class="af-mhead-icon" transform="translate(490,275) scale(0.66)" set:html={icons.eye} />
+            <g class="af-glyph" transform="translate(492,278)" set:html={glyphs.square} />
             <text x="512" y="288" class="af-mhead-label">{d.review}</text>
             {reviewLevels.map((r, i) => (
               <g class={`af-review-row af-depth-${i}`}>
@@ -302,7 +296,7 @@ const revY = (i: number) => 304 + i * 40;
             <rect x="710" y="264" width="180" height="206" rx="16" class="af-panel" />
             <line x1="726" y1="265.5" x2="874" y2="265.5" class="af-sheen" />
             <rect x="716" y="270" width="168" height="26" rx="8" class="af-mhead" />
-            <g class="af-mhead-icon" transform="translate(726,275) scale(0.66)" set:html={icons.shield} />
+            <g class="af-glyph" transform="translate(728,278)" set:html={glyphs.square} />
             <text x="748" y="288" class="af-mhead-label">{d.security}</text>
             {securityLayers.map((s, i) => (
               <g class="af-sec-row">
@@ -330,8 +324,8 @@ const revY = (i: number) => 304 + i * 40;
             <rect x="924" y="264" width="118" height="104" rx="16" class="af-panel" />
             <line x1="940" y1="265.5" x2="1026" y2="265.5" class="af-sheen" />
             <rect x="930" y="270" width="106" height="26" rx="8" class="af-mhead" />
-            <g class="af-mhead-icon" transform="translate(940,275) scale(0.66)" set:html={icons.funnel} />
-            <text x="962" y="288" class="af-mhead-label">{d.triage}</text>
+            
+            <text x="983" y="288" text-anchor="middle" class="af-mhead-label">{d.triage}</text>
 
             <rect x="927" y="311" width="112" height="42" rx="10" class="af-pr" />
             <text x="983" y="337" text-anchor="middle" class="af-pr-label">{d.riskGate}</text>
@@ -505,16 +499,52 @@ const revY = (i: number) => 304 + i * 40;
   .af-group.is-active :is(.af-core, .af-agent-core, .af-panel, .af-vault, .af-orch-box) { filter: drop-shadow(0 0 12px var(--vmm-accent-soft)) drop-shadow(0 0 4px var(--vmm-accent)); }
 
   /* ---- blueprint substrate ---- */
-  .af-grid-dot { fill: var(--color-text-muted); opacity: 0.35; }
-  .af-bp { opacity: 0.5; pointer-events: none; }
-  .af-fid path { stroke: var(--color-border); stroke-width: 1.25; fill: none; }
+  /*
+   * One accent per module, and the module owns it. Before this, every surface,
+   * pipe and border was tinted with the single emerald accent, which made the
+   * whole diagram read as one green mass; now the colour only appears in a
+   * module's glyph and the few marks that belong to it, and everything
+   * structural is neutral. Both themes, because the reference is light and ours
+   * defaults to dark.
+   */
+  .af {
+    --af-blue: #2f6feb;
+    --af-green: #16a34a;
+    --af-olive: #8a9b1f;
+    --af-amber: #c2820a;
+    --af-red: #c2543d;
+    --af-teal: #0d9488;
+  }
+
+  :global(.dark) .af {
+    --af-blue: #60a5fa;
+    --af-green: #34d399;
+    --af-olive: #bcd23a;
+    --af-amber: #f0b429;
+    --af-red: #ef8b73;
+    --af-teal: #2dd4bf;
+  }
+
+  #af-testing { --af-accent: var(--af-olive); }
+  #af-review { --af-accent: var(--af-amber); }
+  #af-security { --af-accent: var(--af-red); }
+  #af-triage { --af-accent: var(--color-text-muted); }
+
+  .af-glyph { fill: var(--af-accent, var(--color-text-muted)); stroke: var(--af-accent, var(--color-text-muted)); }
+  .af-glyph--fabric { fill: var(--af-blue); stroke: var(--af-blue); }
+  .af-glyph--orch { fill: none; stroke: var(--af-green); }
+  .af-glyph--tracing { fill: var(--af-teal); stroke: var(--af-teal); }
+
+  .af-grid-dot { fill: var(--color-text-muted); opacity: 0.12; }
+  .af-bp { opacity: 0.35; pointer-events: none; }
+  .af-fid path { stroke: var(--color-border); stroke-width: 1; fill: none; opacity: 0.5; }
 
   /* 1px inner top highlight: gives panels a machined edge */
-  .af-sheen { stroke: rgba(255, 255, 255, 0.5); stroke-width: 1; opacity: 0.5; }
+  .af-sheen { stroke: rgba(255, 255, 255, 0.5); stroke-width: 1; opacity: 0; }
   :global(.dark) .af-sheen { stroke: rgba(255, 255, 255, 0.14); opacity: 1; }
 
   /* module header chip */
-  .af-mhead { fill: var(--color-surface-light); }
+  .af-mhead { fill: transparent; }
   /* concrete-detail footers inside modules */
   /* the agent runs inside Sandcat */
   .af-sandbox-tag { fill: var(--color-surface-light); stroke: var(--color-border); stroke-width: 1; }
@@ -523,14 +553,13 @@ const revY = (i: number) => 304 + i * 40;
   .af-brands-label { fill: var(--color-text-muted); font: 600 var(--fs-4xs) var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
   .af-brand-chip { fill: var(--color-surface); stroke: var(--color-border); stroke-width: 1.25; }
   .af-brand-mark { fill: var(--color-text); }
-  .af-mhead-label { fill: var(--color-text); font: 600 var(--fs-xs) var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
-  .af-mhead-icon, .af-core-icon, .af-vault-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .af-mhead-label { fill: var(--color-text); font: 500 var(--fs-md) var(--font-mono); letter-spacing: -0.01em; }
 
   /* light streaks: a glowing segment travels the path (pathLength=100) */
   .af-streak {
     fill: none;
-    stroke: var(--vmm-accent-2);
-    stroke-width: 2.5;
+    stroke: color-mix(in oklab, var(--color-text) 45%, transparent);
+    stroke-width: 2;
     stroke-linecap: round;
     stroke-dasharray: 14 86;
     animation: af-streak 2.4s linear infinite;
@@ -554,63 +583,63 @@ const revY = (i: number) => 304 + i * 40;
   .af-card { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
   .af-card--green { stroke: var(--vmm-accent); }
   .af-card--risk { stroke: var(--color-amber); }
-  .af-card-label { fill: var(--color-text); font: 600 var(--fs-sm) var(--font-body); }
+  .af-card-label { fill: var(--color-text); font: 500 var(--fs-sm) var(--font-body); }
   .af-card-label--green { fill: var(--color-emerald-dark); font-weight: 700; font-size: var(--fs-base); }
   .af-card-label--risk { fill: var(--color-amber); font-weight: 700; font-size: var(--fs-base); }
   .af-card-sub { fill: var(--color-text-secondary); font: 500 var(--fs-sm) var(--font-body); }
-  .af-src-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .af-src-icon { fill: none; stroke: var(--color-text-muted); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
   /* the fabric bar mirrors the vault but earns the accent: it is the spine of the thesis */
-  .af-fabricbar { stroke: color-mix(in oklab, var(--vmm-accent) 35%, var(--color-border)); }
+  .af-fabricbar { stroke: var(--color-border); }
 
   /* the orchestrator enclosure: the engine room wrapping preflight, the agent, testing,
      review and triage. Soft accent fill so the blueprint shows through; everything inside
      renders on top. Production sits outside it. */
   .af-orch-box {
-    fill: color-mix(in oklab, var(--vmm-accent) 3%, transparent);
-    stroke: color-mix(in oklab, var(--vmm-accent) 32%, var(--color-border));
-    stroke-width: 1.5;
+    fill: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    stroke: var(--color-border);
+    stroke-width: 1.25;
   }
-  :global(.dark) .af-orch-box { fill: color-mix(in oklab, var(--vmm-accent) 6%, transparent); }
-  .af-orch-legend { fill: var(--color-surface); stroke: color-mix(in oklab, var(--vmm-accent) 40%, var(--color-border)); stroke-width: 1.25; }
+  :global(.dark) .af-orch-box { fill: color-mix(in oklab, var(--color-text-muted) 8%, transparent); }
+  .af-orch-legend { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
   .af-orch-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .af-orch-label { fill: var(--color-text); font: 700 var(--fs-lg) var(--font-heading); }
+  .af-orch-label { fill: var(--color-text); font: 500 var(--fs-md) var(--font-mono); letter-spacing: -0.01em; }
 
   /* the pull request envelope: a soft mist around review + triage */
   .af-prenv {
-    fill: color-mix(in oklab, var(--vmm-accent) 3.5%, transparent);
-    stroke: color-mix(in oklab, var(--vmm-accent) 24%, var(--color-border));
+    fill: transparent;
+    stroke: color-mix(in oklab, var(--color-text-muted) 40%, transparent);
     stroke-width: 1;
-    stroke-dasharray: 6 6;
+    stroke-dasharray: 2 4;
   }
-  :global(.dark) .af-prenv { fill: color-mix(in oklab, var(--vmm-accent) 6%, transparent); }
+  :global(.dark) .af-prenv { fill: color-mix(in oklab, var(--color-text-muted) 6%, transparent); }
   .af-prenv-icon { fill: none; stroke: var(--color-text-muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .af-prenv-label { fill: var(--color-text-muted); font: 600 var(--fs-xs) var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
+  .af-prenv-label { fill: var(--color-text-muted); font: 500 var(--fs-sm) var(--font-mono); letter-spacing: -0.01em; }
 
   .af-wire, .af-trace-path {
     fill: none;
-    stroke: color-mix(in oklab, var(--vmm-accent) 30%, var(--color-border));
-    stroke-width: 1.75;
+    stroke: color-mix(in oklab, var(--color-text-muted) 45%, transparent);
+    stroke-width: 1.25;
   }
   .af-trace-path { stroke-dasharray: 3 7; opacity: 0.6; }
-  .af-port { fill: var(--vmm-accent); opacity: 0.8; }
+  .af-port { fill: var(--color-text-muted); opacity: 0.55; }
 
   /* the main spine reads as THE flow: solid, accent, thicker */
-  .af-pipe { fill: none; stroke: var(--vmm-accent); stroke-width: 2.5; opacity: 0.85; }
+  .af-pipe { fill: none; stroke: color-mix(in oklab, var(--color-text-muted) 55%, transparent); stroke-width: 1.5; }
 
-  .af-rail-pre { fill: none; stroke: var(--vmm-accent); stroke-width: 2.5; }
+  .af-rail-pre { fill: none; stroke: var(--af-blue); stroke-width: 1.5; stroke-dasharray: 5 5; opacity: 0.85; }
   .af-arrowhead--amber { fill: var(--color-amber); }
-  .af-rail-label { fill: var(--color-text); font: 600 var(--fs-md) var(--font-body); }
+  .af-rail-label { fill: var(--af-blue); font: 500 var(--fs-sm) var(--font-body); }
 
   /* dashes drift along the path direction: constant, legible direction cue */
-  .af-loop-path { fill: none; stroke: color-mix(in oklab, var(--vmm-accent) 55%, transparent); stroke-width: 2; stroke-dasharray: 5 5; }
-  .af-loop-label { fill: var(--color-emerald-dark); font: 600 var(--fs-md) var(--font-body); }
+  .af-loop-path { fill: none; stroke: var(--af-blue); stroke-width: 1.5; stroke-dasharray: 5 5; opacity: 0.85; }
+  .af-loop-label { fill: var(--af-blue); font: 500 var(--fs-sm) var(--font-body); }
 
-  .af-agent-ring { fill: none; stroke: var(--vmm-accent); stroke-width: 2; opacity: 0.5; transform-box: fill-box; transform-origin: center; animation: af-ring 2.8s ease-out infinite; }
+  .af-agent-ring { fill: none; stroke: var(--color-border); stroke-width: 1.5; opacity: 0.9; transform-box: fill-box; transform-origin: center; animation: af-ring 2.8s ease-out infinite; }
   /* dial: slowly rotating tick ring around the agent */
   .af-agent-ticks {
     fill: none;
-    stroke: var(--vmm-accent);
+    stroke: color-mix(in oklab, var(--color-text-muted) 40%, transparent);
     stroke-width: 3;
     stroke-dasharray: 2 9;
     opacity: 0.55;
@@ -618,60 +647,59 @@ const revY = (i: number) => 304 + i * 40;
     transform-origin: center;
     animation: af-rotate 40s linear infinite;
   }
-  .af-agent-core { fill: url(#af-agent-grad); }
-  .af-agent-spark { fill: none; stroke: rgba(255, 255, 255, 0.9); stroke-width: 1.8; stroke-linejoin: round; }
-  .af-agent-label { fill: var(--primary-foreground, #fff); font: 700 var(--fs-xl) var(--font-heading); }
+  .af-agent-core { fill: var(--color-surface-light); stroke: var(--color-border); stroke-width: 1.25; }
+  .af-agent-label { fill: var(--color-text); font: 500 var(--fs-lg) var(--font-body); }
   @keyframes af-rotate { to { transform: rotate(360deg); } }
 
-  .af-panel { fill: var(--color-surface); stroke: var(--color-border); stroke-width: 1.25; }
+  .af-panel { fill: color-mix(in oklab, var(--color-text-muted) 3%, transparent); stroke: var(--color-border); stroke-width: 1.25; }
   .af-chip { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
-  .af-chip-label { fill: var(--color-text); font: 600 var(--fs-md) var(--font-body); }
+  .af-chip-label { fill: var(--color-text); font: 500 var(--fs-md) var(--font-body); }
 
   /* depth ramp: fill saturation grows, only L4 earns the accent border */
-  .af-review-bar { stroke: color-mix(in oklab, var(--vmm-accent) 20%, var(--color-border)); stroke-width: 1.25; animation: af-gate 3.8s ease-in-out infinite; }
-  .af-depth-0 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 5%, var(--card)); animation-delay: 0s; }
-  .af-depth-1 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 11%, var(--card)); animation-delay: 0.45s; }
-  .af-depth-2 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 18%, var(--card)); animation-delay: 0.9s; }
-  .af-depth-3 .af-review-bar { fill: color-mix(in oklab, var(--vmm-accent) 27%, var(--card)); stroke: var(--vmm-accent); animation-delay: 1.35s; }
+  .af-review-bar { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; animation: af-gate 3.8s ease-in-out infinite; }
+  .af-depth-0 .af-review-bar { animation-delay: 0s; }
+  .af-depth-1 .af-review-bar { animation-delay: 0.45s; }
+  .af-depth-2 .af-review-bar { animation-delay: 0.9s; }
+  .af-depth-3 .af-review-bar { animation-delay: 1.35s; }
 
   /* gate scan: a soft highlight sweeps L1 to L4, the analysis deepening on loop */
   @keyframes af-gate {
     0%, 24%, 100% { filter: none; }
     9% { filter: brightness(1.35) drop-shadow(0 0 5px var(--vmm-accent-soft)); }
   }
-  .af-review-n { fill: var(--color-emerald-dark); font: 700 var(--fs-xs) var(--font-mono); }
+  .af-review-n { fill: var(--af-accent); font: 500 var(--fs-xs) var(--font-mono); }
   .af-review-label { fill: var(--color-text); font: 600 var(--fs-sm) var(--font-body); }
   .af-depth-label { fill: var(--color-text-secondary); font: 600 var(--fs-sm) var(--font-body); }
 
-  .af-pr { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 1.75; }
+  .af-pr { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
   .af-pr-label { fill: var(--color-text); font: 700 var(--fs-base) var(--font-body); }
   .af-branch { fill: none; stroke-width: 2; }
   .af-branch--green { stroke: var(--vmm-accent); }
   .af-branch--risk { stroke: var(--color-amber); }
   .af-human-mark { fill: none; stroke: var(--color-amber); stroke-width: 1.6; }
-  .af-approved-label { fill: var(--color-amber); font: 600 var(--fs-2xs) var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  .af-approved-label { fill: var(--af-green); font: 500 var(--fs-sm) var(--font-body); }
 
-  .af-autofix-path { fill: none; stroke: color-mix(in oklab, var(--vmm-accent) 65%, transparent); stroke-width: 1.75; stroke-dasharray: 4 6; }
-  .af-autofix-label { fill: var(--vmm-accent); font: 600 var(--fs-sm) var(--font-body); }
+  .af-autofix-path { fill: none; stroke: var(--af-green); stroke-width: 1.25; stroke-dasharray: 4 5; opacity: 0.8; }
+  .af-autofix-label { fill: var(--af-green); font: 500 var(--fs-sm) var(--font-body); }
 
   /* ---- vault ---- */
   .af-vault {
-    fill: color-mix(in oklab, var(--vmm-accent) 5%, var(--color-surface));
-    stroke: color-mix(in oklab, var(--vmm-accent) 25%, var(--color-border));
-    stroke-width: 1.5;
+    fill: var(--card);
+    stroke: var(--color-border);
+    stroke-width: 1.25;
   }
-  .af-vault-rule { stroke: color-mix(in oklab, var(--vmm-accent) 20%, var(--color-border)); stroke-width: 1; opacity: 0.7; }
-  .af-vault-label { fill: var(--color-text); font: 700 var(--fs-3xl) var(--font-heading); }
-  .af-vault-tag { fill: var(--color-text-secondary); font: 600 var(--fs-2xs) var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
-  .af-vault-mark { fill: var(--vmm-accent); }
+  .af-vault-rule { stroke: var(--color-border); stroke-width: 1; opacity: 0.7; }
+  .af-vault-label { fill: var(--color-text); font: 500 var(--fs-2xl) var(--font-mono); letter-spacing: -0.015em; }
+  .af-vault-tag { fill: var(--color-text-muted); font: 500 var(--fs-sm) var(--font-mono); letter-spacing: -0.01em; }
+  .af-vault-mark { fill: var(--color-text-muted); opacity: 0.5; }
   .af-chain-block { fill: var(--vmm-accent-soft); stroke: color-mix(in oklab, var(--vmm-accent) 45%, var(--color-border)); stroke-width: 1.25; }
   .af-chain-block--head { fill: color-mix(in oklab, var(--vmm-accent) 30%, var(--card)); stroke: var(--vmm-accent); }
   .af-chain-link { stroke: color-mix(in oklab, var(--vmm-accent) 40%, var(--color-border)); stroke-width: 1.5; stroke-dasharray: 2 3; }
 
   /* ---- ship to production: the joyful finale, dressed like the other modules ---- */
-  .af-ship-box { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 1.5; }
+  .af-ship-box { fill: var(--card); stroke: var(--af-green); stroke-width: 1.25; }
   .af-ship-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
-  .af-ship-label { fill: var(--color-text); font: 700 var(--fs-xl) var(--font-heading); }
+  .af-ship-label { fill: var(--color-text); font: 500 var(--fs-lg) var(--font-body); }
   .af-ship-sub { fill: var(--vmm-accent); font: 600 var(--fs-2xs) var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
   .af-seal { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 2; }
   .af-seal-check { fill: none; stroke: var(--vmm-accent); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
