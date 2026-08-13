@@ -142,7 +142,7 @@ const formStrings = {
       })
         .then(function (res) {
           return res.json().catch(function () { return {}; }).then(function (body) {
-            return { ok: res.ok && body && body.ok, body: body || {} };
+            return { ok: res.ok && body && body.ok, skipped: !!(body && body.skipped), body: body || {} };
           });
         })
         .then(function (result) {
@@ -150,11 +150,15 @@ const formStrings = {
 
           show(formStrings.success, 'ok');
           form.reset();
-          if (button) button.textContent = formStrings.submit;
+          // Re-enabled: a visitor who mistyped their address, or wants to send a
+          // second request, must not be left with a dead button and a cleared form.
+          submitted = false;
+          if (button) { button.disabled = false; button.textContent = formStrings.submit; }
 
-          // The conversion fires here and nowhere else: only a delivered request
-          // counts, so analytics stops crediting clicks that went nowhere.
-          if (typeof window.gtag === 'function') {
+          // The conversion fires here and nowhere else, and not for a request the
+          // server skipped (honeypot): counting one would recreate the very
+          // click-without-delivery gap this replaced.
+          if (!result.skipped && typeof window.gtag === 'function') {
             window.gtag('event', 'generate_lead', {
               method: 'form',
               cta_id: 'book_working_session',

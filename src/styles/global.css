@@ -13,13 +13,18 @@
  * "Geist Variable" is the family name the other Visdom properties use, so the
  * CSS reads the same across them.
  *
+ * format('woff2'), not format('woff2-variations'): the latter is a legacy hint,
+ * and per the spec a UA that does not recognise a format string skips that src
+ * entirely, which would leave no source at all and silently drop the site to a
+ * system font. font-weight: 100 900 is what declares the axis.
+ *
  * Paths are relative on purpose: Vite rewrites and hashes them, which keeps
  * them correct under the /visdom-main-page base on GitHub Pages. An absolute
  * /fonts/... would 404 there.
  */
 @font-face {
   font-family: 'Geist Variable';
-  src: url('../fonts/Geist-Variable.woff2') format('woff2-variations');
+  src: url('../fonts/Geist-Variable.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -27,7 +32,7 @@
 
 @font-face {
   font-family: 'Geist Mono Variable';
-  src: url('../fonts/GeistMono-Variable.woff2') format('woff2-variations');
+  src: url('../fonts/GeistMono-Variable.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;

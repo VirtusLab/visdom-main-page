@@ -54,7 +54,11 @@ jobs:
           BASE: /visdom-main-page
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/
+          # dist/client/, not dist/: with the Vercel adapter in place the static
+          # site is emitted under dist/client and dist/ itself only holds that
+          # directory, so uploading dist/ would publish the site one level deep
+          # and 404 the root.
+          path: dist/client/
 
   deploy:
     needs: build

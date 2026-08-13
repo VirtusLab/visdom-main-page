@@ -46,11 +46,19 @@ export function newErrorRef(prefix = 'ERR'): string {
   return `${prefix}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
 }
 
-/** Server-side env lookup. process.env at runtime, import.meta.env in dev. */
+/**
+ * Server-side env lookup, process.env only.
+ *
+ * Deliberately NOT falling back to `import.meta.env`. Astro's env plugin rewrites
+ * a bare `import.meta.env` into an object literal carrying the values of every
+ * key named anywhere in this module's source, so referencing MAILCHIMP_API_KEY in
+ * the error message below was enough to bake the real key into the built server
+ * bundle. Verified: the value appeared verbatim in
+ * .vercel/output/functions/_render.func. process.env is populated at runtime by
+ * both `astro dev` and Vercel, so the fallback bought nothing.
+ */
 export function serverEnv(name: string): string | undefined {
-  const fromProcess =
-    typeof process !== 'undefined' && process.env ? process.env[name] : undefined;
-  return fromProcess ?? (import.meta.env as Record<string, string | undefined>)[name];
+  return typeof process !== 'undefined' && process.env ? process.env[name] : undefined;
 }
 
 export interface SendEmailInput {

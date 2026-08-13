@@ -19,8 +19,6 @@ type Partner = {
   file: string;
   /** true when a separate light-ink version exists for the dark theme. */
   onDark?: boolean;
-  /** Wordmarks are wider and get a wider cell; icons sit in narrow ones. */
-  wide?: boolean;
   /** Rendered height in px. Wordmarks 24, icons 32, as on the source page. */
   h: number;
 };
@@ -32,12 +30,12 @@ const partners: Partner[] = [
   { name: 'Visual Studio Code', file: 'logo-vscode', h: 32 },
   { name: 'Visual Studio', file: 'logo-visual-studio', h: 32 },
   { name: 'Claude', file: 'logo-claude', h: 32 },
-  { name: 'JetBrains', file: 'logo-jetbrains', onDark: true, wide: true, h: 24 },
-  { name: 'Cursor', file: 'logo-cursor', onDark: true, wide: true, h: 24 },
-  { name: 'Sourcegraph', file: 'logo-sourcegraph', onDark: true, wide: true, h: 24 },
-  { name: 'Databricks', file: 'logo-databricks', onDark: true, wide: true, h: 24 },
-  { name: 'EngFlow', file: 'logo-engflow', onDark: true, wide: true, h: 24 },
-  { name: 'Google', file: 'logo-google', onDark: true, wide: true, h: 24 },
+  { name: 'JetBrains', file: 'logo-jetbrains', onDark: true, h: 24 },
+  { name: 'Cursor', file: 'logo-cursor', onDark: true, h: 24 },
+  { name: 'Sourcegraph', file: 'logo-sourcegraph', onDark: true, h: 24 },
+  { name: 'Databricks', file: 'logo-databricks', onDark: true, h: 24 },
+  { name: 'EngFlow', file: 'logo-engflow', onDark: true, h: 24 },
+  { name: 'Google', file: 'logo-google', onDark: true, h: 24 },
 ];
 ---
 <section class="bv" aria-labelledby="bv-title">
@@ -89,7 +87,7 @@ const partners: Partner[] = [
     </span>
     <h2 id="pt-title" class="pt-title">{t.partners.title}</h2>
     <p class="pt-body">{t.partners.body}</p>
-    <a class="btn-pill btn-primary" href="#contact" data-cta="cta_click" data-location="partners">
+    <a class="btn-pill btn-primary" href="#contact" data-cta="see_visdom_partners" data-location="partners">
       {t.partners.cta}
     </a>
   </div>
@@ -97,7 +95,7 @@ const partners: Partner[] = [
   <div class="container">
     <ul class="pt-grid fade-up" role="list" aria-label={t.partners.gridAria}>
       {partners.map((p) => (
-        <li class={`pt-cell${p.wide ? ' pt-cell--wide' : ''}`}>
+        <li class="pt-cell">
           <img
             class={`pt-logo${p.onDark ? ' pt-logo--light' : ''}`}
             src={`${base}/partners/${p.file}.svg`}
