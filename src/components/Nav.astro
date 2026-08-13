@@ -1,5 +1,5 @@
 ---
-import visdomLogoSvg from '../icons/visdom-logo.svg?raw';
+import visdomCrestSvg from '../icons/visdom-crest.svg?raw';
 import {
   useI18n,
   alternatesFor,
@@ -42,10 +42,12 @@ const languages = alternatesFor(Astro.url.pathname)
     </svg>
     <span class="site-header-divider" aria-hidden="true"></span>
     <span class="site-header-lockup">
-      {/* The brand lockup, inlined so its single path can take currentColor and
-          follow the theme. That is why there is one file here and not the
-          light/dark pair the other Visdom properties ship. */}
-      <span class="site-header-logo" set:html={visdomLogoSvg} role="img" aria-label="Visdom"></span>
+      {/* The lockup is the crest plus the wordmark, but the wordmark is set in
+          our own Geist rather than taken from the logo file's outlines. The crest
+          is extracted from that file and inlined so its path can take
+          currentColor and follow the theme. */}
+      <span class="site-header-crest" set:html={visdomCrestSvg} aria-hidden="true"></span>
+      <span class="site-header-product">Visdom</span>
       <span class="site-header-version">2.0</span>
     </span>
   </a>
@@ -148,9 +150,7 @@ const languages = alternatesFor(Astro.url.pathname)
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* 10px, not 14px: the brand lockup is taller than the text it replaced.
-       See .site-header-logo. */
-    padding: 10px clamp(20px, 5vw, 80px);
+    padding: 14px clamp(20px, 5vw, 80px);
     background: color-mix(in oklab, var(--color-bg) 72%, transparent);
     -webkit-backdrop-filter: blur(14px);
     backdrop-filter: blur(14px);
@@ -195,36 +195,37 @@ const languages = alternatesFor(Astro.url.pathname)
     .site-header-divider { display: block; }
   }
 
-  /*
-   * The wordmark used to be text at --fs-3xl/800, cap height about 14px. In the
-   * real lockup the crest owns the full 48 units of height while "VISDOM" is
-   * only 15.4 of them, so the box has to be roughly three times the wordmark to
-   * read at the same size: 44px gives a 14.1px cap height, matching what was
-   * there before. Sizing it to the old 20px font-size would have shrunk the
-   * wordmark to 6px.
-   *
-   * That makes the header taller, so its vertical padding comes down from 14px
-   * to 10px. Net header height goes from about 48px to 64px.
-   */
-  .site-header-logo {
+  /* The wordmark is type again, Geist at --fs-3xl/800, as it was before the logo
+     file's own outlines were used. Only the crest comes from that file. */
+  .site-header-product {
+    font-family: var(--font-heading);
+    color: var(--color-text);
+    font-weight: 800;
+    font-size: var(--fs-3xl);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* The crest keeps its own 0.335 ratio. Sized against the wordmark's cap height
+     rather than its font-size: 20px of Geist 800 caps out around 14px, and the
+     crest sits right at roughly twice that. */
+  .site-header-crest {
     display: inline-block;
     color: var(--color-text);
+    flex: 0 0 auto;
   }
 
-  .site-header-logo :global(svg) {
-    height: 34px;
+  .site-header-crest :global(svg) {
+    height: 28px;
     width: auto;
     display: block;
-  }
-
-  @media (min-width: 640px) {
-    .site-header-logo :global(svg) { height: 44px; }
   }
 
   .site-header-lockup {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
   }
 
   /* version chip, scaled-down twin of the hero's "2.0" badge */
