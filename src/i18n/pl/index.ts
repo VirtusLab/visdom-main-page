@@ -291,7 +291,7 @@ const pl = {
       'Review zielone, deployment gotowy. Wychodzi pull request.',
     ],
     ctaLine: 'Chcecie zobaczyć Orchestratora na waszym stacku?',
-    ctaButton: 'Umówcie demo ->',
+    ctaButton: 'Zobaczcie Visdom w akcji!',
   },
 
   useCases: {
@@ -607,7 +607,7 @@ const pl = {
     badge: 'partnerstwa i technologie',
     title: 'Sprawdzeni w całym nowoczesnym stacku.',
     body: 'VirtusLab utrzymuje głębokie partnerstwa techniczne z narzędziami i platformami, na których stoi nowoczesna inżynieria w skali. Aktywnie współtworzymy te ekosystemy i wnosimy praktyczne doświadczenie do organizacji, które modernizują dostarczanie oprogramowania i operacje inżynierskie.',
-    cta: 'Porozmawiajmy',
+    cta: 'Zobaczcie Visdom w akcji!',
     gridAria: 'Narzędzia i platformy, z którymi VirtusLab współpracuje',
   },
 
@@ -673,7 +673,7 @@ const pl = {
       emailLabel: 'E-mail służbowy',
       messageLabel: 'Co próbujecie dowieźć?',
       optional: 'opcjonalne',
-      submit: 'Umówcie sesję roboczą ->',
+      submit: 'Zobaczcie Visdom w akcji!',
       status:
         'Otwieram klienta poczty. Jeśli nic się nie otworzy, napiszcie na visdom@virtuslab.com.',
       mailSubject: 'Prośba o sesję roboczą',

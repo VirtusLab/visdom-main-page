@@ -311,7 +311,7 @@ const en = {
       'Review green, deployment done. A pull request rolls out.',
     ] as T5<string>,
     ctaLine: 'Want to see the Orchestrator on your stack?',
-    ctaButton: 'Book a demo ->',
+    ctaButton: 'See Visdom in action!',
   },
 
   useCases: {
@@ -620,7 +620,7 @@ const en = {
     badge: 'partnerships & technologies',
     title: 'Trusted Across the Modern Stack.',
     body: 'VirtusLab maintains deep technical partnerships with the tools and platforms that power modern engineering at scale. We actively contribute to these ecosystems, bringing hands-on expertise to organizations modernizing software delivery and engineering operations.',
-    cta: 'Get in touch',
+    cta: 'See Visdom in action!',
     /** Accessible name for the logo grid. */
     gridAria: 'Tools and platforms VirtusLab partners with',
   },
@@ -689,7 +689,7 @@ const en = {
       emailLabel: 'Work email',
       messageLabel: 'What are you trying to ship?',
       optional: 'optional',
-      submit: 'Book a working session ->',
+      submit: 'See Visdom in action!',
       status: 'Opening your email client. If nothing opens, write to visdom@virtuslab.com.',
       /** Goes into the generated mailto, not onto the page. */
       mailSubject: 'Working session request',
