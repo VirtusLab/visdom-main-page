@@ -690,13 +690,13 @@ const en = {
       messageLabel: 'What are you trying to ship?',
       optional: 'optional',
       submit: 'See Visdom in action!',
-      status: 'Opening your email client. If nothing opens, write to visdom@virtuslab.com.',
-      /** Goes into the generated mailto, not onto the page. */
-      mailSubject: 'Working session request',
-      mailName: 'Name',
-      mailCompany: 'Company',
-      mailEmail: 'Email',
-      mailPlaceholder: '(Add anything useful about what you are trying to ship.)',
+      /** Live region states while the request is in flight and after it lands. */
+      sending: 'Sending...',
+      success: 'Thanks. An engineer will reply within one business day, and a confirmation is on its way to your inbox.',
+      error: 'We could not send that. Please try again, or write to visdom@virtuslab.com.',
+      errorRef: 'Reference:',
+      /** Shown if the endpoint is unreachable, e.g. on a static-only deploy. */
+      errorFallback: 'Write to visdom@virtuslab.com',
     },
     matrix: {
       badge: 'Self-serve',

@@ -674,13 +674,11 @@ const pl = {
       messageLabel: 'Co próbujecie dowieźć?',
       optional: 'opcjonalne',
       submit: 'Zobaczcie Visdom w akcji!',
-      status:
-        'Otwieram klienta poczty. Jeśli nic się nie otworzy, napiszcie na visdom@virtuslab.com.',
-      mailSubject: 'Prośba o sesję roboczą',
-      mailName: 'Imię i nazwisko',
-      mailCompany: 'Firma',
-      mailEmail: 'E-mail',
-      mailPlaceholder: '(Dopiszcie cokolwiek przydatnego o tym, co próbujecie dowieźć.)',
+      sending: 'Wysyłam...',
+      success: 'Dzięki. Inżynier odpowie w ciągu jednego dnia roboczego, a potwierdzenie jest już w drodze na wasz e-mail.',
+      error: 'Nie udało się wysłać. Spróbujcie ponownie albo napiszcie na visdom@virtuslab.com.',
+      errorRef: 'Numer zgłoszenia:',
+      errorFallback: 'Napiszcie na visdom@virtuslab.com',
     },
     matrix: {
       badge: 'Samoobsługa',

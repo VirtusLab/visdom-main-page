@@ -1,20 +1,24 @@
 ---
 import { useI18n } from '../i18n';
 
-const { t } = useI18n(Astro);
+const { locale, t } = useI18n(Astro);
+const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 
 const CONTACT_EMAIL = 'visdom@virtuslab.com';
 
-// The submit handler is an inline script (it has to run before any hydration),
-// so the strings it needs are handed over explicitly rather than imported.
+// Handed to the inline submit script. It posts to /api/contact, which is the
+// whole point: the old handler opened a mailto, which most visitors cannot use
+// and which analytics could never see.
 const formStrings = {
-  email: CONTACT_EMAIL,
-  subject: t.cta.form.mailSubject,
-  name: t.cta.form.mailName,
-  company: t.cta.form.mailCompany,
-  emailLabel: t.cta.form.mailEmail,
-  placeholder: t.cta.form.mailPlaceholder,
-  status: t.cta.form.status,
+  endpoint: `${base}/api/contact`,
+  locale,
+  mailto: `mailto:${CONTACT_EMAIL}`,
+  submit: t.cta.form.submit,
+  sending: t.cta.form.sending,
+  success: t.cta.form.success,
+  error: t.cta.form.error,
+  errorRef: t.cta.form.errorRef,
+  errorFallback: t.cta.form.errorFallback,
 };
 ---
 <section id="contact" class="section final-cta-section">
@@ -30,9 +34,9 @@ const formStrings = {
         <form
           id="contact-form"
           class="final-cta-card final-cta-card--primary contact-form"
-          action={`mailto:${CONTACT_EMAIL}`}
+          action={`${base}/api/contact`}
           method="post"
-          enctype="text/plain"
+          novalidate
         >
           <p class="final-cta-card-label">{t.cta.form.badge}</p>
           <h3>{t.cta.form.title}</h3>
@@ -57,6 +61,13 @@ const formStrings = {
           <div class="contact-field">
             <label for="cf-message">{t.cta.form.messageLabel} <span>{t.cta.form.optional}</span></label>
             <textarea id="cf-message" name="message" rows="3"></textarea>
+          </div>
+
+          {/* Hidden from people, filled by naive bots. The endpoint answers 200
+              and sends nothing when it arrives populated. */}
+          <div class="contact-honeypot" aria-hidden="true">
+            <label for="cf-website">Website</label>
+            <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
           </div>
 
           <button type="submit" class="btn-pill btn-primary" data-cta="book_working_session" data-location="final_cta">{t.cta.form.submit}</button>
@@ -92,40 +103,81 @@ const formStrings = {
   (function () {
     var form = document.getElementById('contact-form');
     if (!form) return;
+
+    var button = form.querySelector('button[type="submit"]');
+    var status = form.querySelector('.contact-form-status');
+    var submitted = false;
+
+    function show(message, tone) {
+      if (!status) return;
+      status.hidden = false;
+      status.textContent = message;
+      status.className = 'contact-form-status' + (tone ? ' is-' + tone : '');
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (submitted) return;
       if (typeof form.reportValidity === 'function' && !form.reportValidity()) return;
 
       var data = new FormData(form);
       var val = function (k) { return (data.get(k) || '').toString().trim(); };
-      var name = val('name');
-      var company = val('company');
-      var email = val('email');
-      var message = val('message');
+      var payload = {
+        name: val('name'),
+        company: val('company'),
+        email: val('email'),
+        message: val('message'),
+        website: val('website'),
+        locale: formStrings.locale,
+      };
 
-      var subject = formStrings.subject + (company ? ' - ' + company : '');
-      var lines = [];
-      if (name) lines.push(formStrings.name + ': ' + name);
-      if (company) lines.push(formStrings.company + ': ' + company);
-      if (email) lines.push(formStrings.emailLabel + ': ' + email);
-      var body = lines.join('\n') +
-        (message ? '\n\n' + message : '\n\n' + formStrings.placeholder);
+      submitted = true;
+      if (button) { button.disabled = true; button.textContent = formStrings.sending; }
+      show(formStrings.sending, 'pending');
 
-      var mailto = 'mailto:' + formStrings.email + '?subject=' +
-        encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      fetch(formStrings.endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+        .then(function (res) {
+          return res.json().catch(function () { return {}; }).then(function (body) {
+            return { ok: res.ok && body && body.ok, body: body || {} };
+          });
+        })
+        .then(function (result) {
+          if (!result.ok) throw result.body;
 
-      // Preserve the conversion event the delegated click listener fires for the
-      // old mailto CTA (a button submit is not caught by that a[href] listener).
-      if (typeof window.gtag === 'function') {
-        window.gtag('event', 'generate_lead', { method: 'email', cta_id: 'book_working_session', location: 'final_cta' });
-      }
+          show(formStrings.success, 'ok');
+          form.reset();
+          if (button) button.textContent = formStrings.submit;
 
-      var status = form.querySelector('.contact-form-status');
-      if (status) {
-        status.hidden = false;
-        status.textContent = formStrings.status;
-      }
-      window.location.href = mailto;
+          // The conversion fires here and nowhere else: only a delivered request
+          // counts, so analytics stops crediting clicks that went nowhere.
+          if (typeof window.gtag === 'function') {
+            window.gtag('event', 'generate_lead', {
+              method: 'form',
+              cta_id: 'book_working_session',
+              location: 'final_cta',
+            });
+          }
+        })
+        .catch(function (body) {
+          submitted = false;
+          if (button) { button.disabled = false; button.textContent = formStrings.submit; }
+          var ref = body && body.ref ? ' ' + formStrings.errorRef + ' ' + body.ref : '';
+          show(formStrings.error + ref, 'error');
+
+          // Endpoint missing entirely (a static-only deploy) or unreachable: give
+          // them the address rather than a dead end.
+          if (status && !status.querySelector('a')) {
+            var link = document.createElement('a');
+            link.href = formStrings.mailto;
+            link.textContent = formStrings.errorFallback;
+            status.appendChild(document.createTextNode(' '));
+            status.appendChild(link);
+          }
+        });
     });
   })();
 </script>
@@ -334,6 +386,21 @@ const formStrings = {
   .contact-form .btn-pill {
     margin-top: 0.25rem;
   }
+
+  /* Off-screen rather than display:none: bots skip hidden inputs less often when
+     they are technically rendered, and no assistive tech announces it. */
+  .contact-honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .contact-form-status.is-ok { color: var(--color-emerald); }
+  .contact-form-status.is-error { color: var(--color-amber); }
+  .contact-form-status.is-error a { color: inherit; text-decoration: underline; }
 
   .contact-form-status {
     font-size: var(--fs-sm);
