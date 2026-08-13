@@ -553,7 +553,7 @@ const revY = (i: number) => 304 + i * 40;
   .af-brands-label { fill: var(--color-text-muted); font: 600 var(--fs-4xs) var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
   .af-brand-chip { fill: var(--color-surface); stroke: var(--color-border); stroke-width: 1.25; }
   .af-brand-mark { fill: var(--color-text); }
-  .af-mhead-label { fill: var(--color-text); font: 500 var(--fs-md) var(--font-mono); letter-spacing: -0.01em; }
+  .af-mhead-label { fill: var(--color-text); font: 600 var(--fs-xs) var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
 
   /* light streaks: a glowing segment travels the path (pathLength=100) */
   .af-streak {
@@ -583,7 +583,7 @@ const revY = (i: number) => 304 + i * 40;
   .af-card { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
   .af-card--green { stroke: var(--vmm-accent); }
   .af-card--risk { stroke: var(--color-amber); }
-  .af-card-label { fill: var(--color-text); font: 500 var(--fs-sm) var(--font-body); }
+  .af-card-label { fill: var(--color-text); font: 600 var(--fs-sm) var(--font-body); }
   .af-card-label--green { fill: var(--color-emerald-dark); font-weight: 700; font-size: var(--fs-base); }
   .af-card-label--risk { fill: var(--color-amber); font-weight: 700; font-size: var(--fs-base); }
   .af-card-sub { fill: var(--color-text-secondary); font: 500 var(--fs-sm) var(--font-body); }
@@ -603,7 +603,7 @@ const revY = (i: number) => 304 + i * 40;
   :global(.dark) .af-orch-box { fill: color-mix(in oklab, var(--color-text-muted) 8%, transparent); }
   .af-orch-legend { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
   .af-orch-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .af-orch-label { fill: var(--color-text); font: 500 var(--fs-md) var(--font-mono); letter-spacing: -0.01em; }
+  .af-orch-label { fill: var(--color-text); font: 700 var(--fs-lg) var(--font-heading); }
 
   /* the pull request envelope: a soft mist around review + triage */
   .af-prenv {
@@ -614,7 +614,7 @@ const revY = (i: number) => 304 + i * 40;
   }
   :global(.dark) .af-prenv { fill: color-mix(in oklab, var(--color-text-muted) 6%, transparent); }
   .af-prenv-icon { fill: none; stroke: var(--color-text-muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .af-prenv-label { fill: var(--color-text-muted); font: 500 var(--fs-sm) var(--font-mono); letter-spacing: -0.01em; }
+  .af-prenv-label { fill: var(--color-text-muted); font: 600 var(--fs-xs) var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
 
   .af-wire, .af-trace-path {
     fill: none;
@@ -629,11 +629,11 @@ const revY = (i: number) => 304 + i * 40;
 
   .af-rail-pre { fill: none; stroke: var(--af-blue); stroke-width: 1.5; stroke-dasharray: 5 5; opacity: 0.85; }
   .af-arrowhead--amber { fill: var(--color-amber); }
-  .af-rail-label { fill: var(--af-blue); font: 500 var(--fs-sm) var(--font-body); }
+  .af-rail-label { fill: var(--af-blue); font: 600 var(--fs-md) var(--font-body); }
 
   /* dashes drift along the path direction: constant, legible direction cue */
   .af-loop-path { fill: none; stroke: var(--af-blue); stroke-width: 1.5; stroke-dasharray: 5 5; opacity: 0.85; }
-  .af-loop-label { fill: var(--af-blue); font: 500 var(--fs-sm) var(--font-body); }
+  .af-loop-label { fill: var(--af-blue); font: 600 var(--fs-md) var(--font-body); }
 
   .af-agent-ring { fill: none; stroke: var(--color-border); stroke-width: 1.5; opacity: 0.9; transform-box: fill-box; transform-origin: center; animation: af-ring 2.8s ease-out infinite; }
   /* dial: slowly rotating tick ring around the agent */
@@ -648,12 +648,12 @@ const revY = (i: number) => 304 + i * 40;
     animation: af-rotate 40s linear infinite;
   }
   .af-agent-core { fill: var(--color-surface-light); stroke: var(--color-border); stroke-width: 1.25; }
-  .af-agent-label { fill: var(--color-text); font: 500 var(--fs-lg) var(--font-body); }
+  .af-agent-label { fill: var(--color-text); font: 700 var(--fs-xl) var(--font-heading); }
   @keyframes af-rotate { to { transform: rotate(360deg); } }
 
   .af-panel { fill: color-mix(in oklab, var(--color-text-muted) 3%, transparent); stroke: var(--color-border); stroke-width: 1.25; }
   .af-chip { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
-  .af-chip-label { fill: var(--color-text); font: 500 var(--fs-md) var(--font-body); }
+  .af-chip-label { fill: var(--color-text); font: 600 var(--fs-md) var(--font-body); }
 
   /* depth ramp: fill saturation grows, only L4 earns the accent border */
   .af-review-bar { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; animation: af-gate 3.8s ease-in-out infinite; }
@@ -667,7 +667,7 @@ const revY = (i: number) => 304 + i * 40;
     0%, 24%, 100% { filter: none; }
     9% { filter: brightness(1.35) drop-shadow(0 0 5px var(--vmm-accent-soft)); }
   }
-  .af-review-n { fill: var(--af-accent); font: 500 var(--fs-xs) var(--font-mono); }
+  .af-review-n { fill: var(--af-accent); font: 700 var(--fs-xs) var(--font-mono); }
   .af-review-label { fill: var(--color-text); font: 600 var(--fs-sm) var(--font-body); }
   .af-depth-label { fill: var(--color-text-secondary); font: 600 var(--fs-sm) var(--font-body); }
 
@@ -677,10 +677,10 @@ const revY = (i: number) => 304 + i * 40;
   .af-branch--green { stroke: var(--vmm-accent); }
   .af-branch--risk { stroke: var(--color-amber); }
   .af-human-mark { fill: none; stroke: var(--color-amber); stroke-width: 1.6; }
-  .af-approved-label { fill: var(--af-green); font: 500 var(--fs-sm) var(--font-body); }
+  .af-approved-label { fill: var(--af-green); font: 600 var(--fs-2xs) var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
 
   .af-autofix-path { fill: none; stroke: var(--af-green); stroke-width: 1.25; stroke-dasharray: 4 5; opacity: 0.8; }
-  .af-autofix-label { fill: var(--af-green); font: 500 var(--fs-sm) var(--font-body); }
+  .af-autofix-label { fill: var(--af-green); font: 600 var(--fs-sm) var(--font-body); }
 
   /* ---- vault ---- */
   .af-vault {
@@ -689,8 +689,8 @@ const revY = (i: number) => 304 + i * 40;
     stroke-width: 1.25;
   }
   .af-vault-rule { stroke: var(--color-border); stroke-width: 1; opacity: 0.7; }
-  .af-vault-label { fill: var(--color-text); font: 500 var(--fs-2xl) var(--font-mono); letter-spacing: -0.015em; }
-  .af-vault-tag { fill: var(--color-text-muted); font: 500 var(--fs-sm) var(--font-mono); letter-spacing: -0.01em; }
+  .af-vault-label { fill: var(--color-text); font: 700 var(--fs-3xl) var(--font-heading); }
+  .af-vault-tag { fill: var(--color-text-muted); font: 600 var(--fs-2xs) var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
   .af-vault-mark { fill: var(--color-text-muted); opacity: 0.5; }
   .af-chain-block { fill: var(--vmm-accent-soft); stroke: color-mix(in oklab, var(--vmm-accent) 45%, var(--color-border)); stroke-width: 1.25; }
   .af-chain-block--head { fill: color-mix(in oklab, var(--vmm-accent) 30%, var(--card)); stroke: var(--vmm-accent); }
@@ -699,7 +699,7 @@ const revY = (i: number) => 304 + i * 40;
   /* ---- ship to production: the joyful finale, dressed like the other modules ---- */
   .af-ship-box { fill: var(--card); stroke: var(--af-green); stroke-width: 1.25; }
   .af-ship-icon { fill: none; stroke: var(--vmm-accent); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
-  .af-ship-label { fill: var(--color-text); font: 500 var(--fs-lg) var(--font-body); }
+  .af-ship-label { fill: var(--color-text); font: 700 var(--fs-xl) var(--font-heading); }
   .af-ship-sub { fill: var(--vmm-accent); font: 600 var(--fs-2xs) var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
   .af-seal { fill: var(--card); stroke: var(--vmm-accent); stroke-width: 2; }
   .af-seal-check { fill: none; stroke: var(--vmm-accent); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
