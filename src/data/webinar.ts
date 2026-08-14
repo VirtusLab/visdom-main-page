@@ -59,6 +59,52 @@ export const WEBINAR: WebinarConfig = {
   },
 };
 
+export type Speaker = {
+  name: string;
+  /** Empty renders the card without a role line until the copy is confirmed. */
+  role: string;
+  company: string;
+  /** 2-3 sentences. Empty hides the bio until the edited copy arrives. */
+  bio: string;
+  /** Full profile URL. Empty hides the link. */
+  linkedin: string;
+  /** Photo path under public/. Initials plate renders until the file exists. */
+  photo: string;
+};
+
+/**
+ * The session's speaker roster, in billing order. Photos and edited bios are
+ * coming from marketing; the empty fields render nothing until filled, so the
+ * section ships in a presentable placeholder state.
+ */
+export const SPEAKERS: Speaker[] = [
+  {
+    name: 'Artur Skowroński',
+    role: 'Head of Application Development',
+    company: 'VirtusLab',
+    bio:
+      'Artur will demonstrate how Visdom transforms AI-assisted software delivery into an agent-operable SDLC: how AI agents can safely navigate the entire delivery lifecycle with the context, validation, governance, and orchestration they need to ship production-ready software. He also writes the JVM Weekly newsletter.',
+    linkedin: 'https://www.linkedin.com/in/arturskowronski/',
+    photo: '/webinar-host.jpg',
+  },
+  {
+    name: 'Krzysztof Grajek',
+    role: '',
+    company: 'SoftwareMill',
+    bio: '',
+    linkedin: 'https://www.linkedin.com/in/krzysztofgrajek/',
+    photo: '/speakers/krzysztof-grajek.jpg',
+  },
+  {
+    name: 'Adam Warski',
+    role: 'Chief R&D Officer',
+    company: 'SoftwareMill',
+    bio: '',
+    linkedin: 'https://www.linkedin.com/in/adamwarski/',
+    photo: '/speakers/adam-warski.jpg',
+  },
+];
+
 /** Where the "Reserve your spot" button points. Never empty. */
 export function registrationHref(w: WebinarConfig = WEBINAR): string {
   if (w.registrationUrl) return w.registrationUrl;
@@ -86,12 +132,17 @@ export function formatSessionDate(w: WebinarConfig = WEBINAR): string {
   return `${date}, ${time} ${w.timezoneLabel}`;
 }
 
-/** Two-letter plate shown until the host headshot is in place. */
-export function hostInitials(w: WebinarConfig = WEBINAR): string {
-  return w.host.name
+/** Two-letter plate shown until a headshot is in place. */
+export function initials(name: string): string {
+  return name
     .split(/\s+/)
     .slice(0, 2)
     .map((part) => part[0] ?? '')
     .join('')
     .toUpperCase();
+}
+
+/** Kept for pages that still read the single-host config. */
+export function hostInitials(w: WebinarConfig = WEBINAR): string {
+  return initials(w.host.name);
 }

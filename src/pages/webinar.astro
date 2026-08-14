@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import TourBanner from '../components/TourBanner.astro';
 import Footer from '../components/Footer.astro';
-import { WEBINAR, registrationHref, hostInitials } from '../data/webinar';
+import { WEBINAR, SPEAKERS, registrationHref, initials } from '../data/webinar';
 import { SEQUEL, SEQUEL_TOOLKIT_SRC } from '../data/sequel';
 import { TOUR_STOPS, TOUR_HREF } from '../data/tour';
 import '../styles/global.css';
@@ -14,7 +14,6 @@ const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 // to be the CTA survives only as the having-trouble fallback under the widget.
 const href = '#register';
 const mailtoHref = registrationHref();
-const initials = hostInitials();
 
 // The highlights band splits the session date into a display value and a mono
 // label, both derived from the one startsAt in webinar.ts.
@@ -59,12 +58,12 @@ const eventJsonLd = WEBINAR.startsAt
       location: { '@type': 'VirtualLocation', url: `${siteUrl}/webinar` },
       image: [`${siteUrl}/og-image.png`],
       organizer: { '@type': 'Organization', name: 'VirtusLab', url: 'https://virtuslab.com' },
-      performer: {
+      performer: SPEAKERS.map((s) => ({
         '@type': 'Person',
-        name: WEBINAR.host.name,
-        jobTitle: WEBINAR.host.role,
-        worksFor: { '@type': 'Organization', name: WEBINAR.host.company },
-      },
+        name: s.name,
+        ...(s.role ? { jobTitle: s.role } : {}),
+        worksFor: { '@type': 'Organization', name: s.company },
+      })),
       offers: {
         '@type': 'Offer',
         price: 0,
@@ -118,15 +117,19 @@ const eventJsonLd = WEBINAR.startsAt
         <div class="wb-meta fade-up">
           <div class="wb-feat">
             <span class="wb-meta-label">Featuring</span>
-            <div class="wb-feat-person">
-              <span class="wb-plate" data-initials={initials} aria-hidden="true">
-                <img src={WEBINAR.host.photo} alt="" loading="lazy" onerror="this.remove()" />
-                <span>{initials}</span>
-              </span>
-              <span class="wb-feat-text">
-                <b>{WEBINAR.host.name}</b>
-                <span>{WEBINAR.host.role} @ {WEBINAR.host.company}</span>
-              </span>
+            <div class="wb-feat-people">
+              {SPEAKERS.map((s) => (
+                <div class="wb-feat-person">
+                  <span class="wb-plate" aria-hidden="true">
+                    <img src={`${base}${s.photo}`} alt="" loading="lazy" onerror="this.remove()" />
+                    <span>{initials(s.name)}</span>
+                  </span>
+                  <span class="wb-feat-text">
+                    <b>{s.name}</b>
+                    <span>{s.company}</span>
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -181,21 +184,40 @@ const eventJsonLd = WEBINAR.startsAt
       </script>
     </section>
 
-    {/* ── EDITORIAL BODY ─────────────────────────────────────────────────── */}
-    {/* Narrative intro before the first H2, masterclass-style. This is the
-        campaign brief's host paragraph, doing the reference page's
-        set-the-scene job. */}
-    <section class="wb-section wb-intro-section">
+    {/* ── SPEAKERS ───────────────────────────────────────────────────────── */}
+    {/* Roster between the embed and the premise: photo, name, role, company,
+        bio and LinkedIn per person. Bios and role lines appear as the fields
+        in SPEAKERS are filled in. */}
+    <section class="wb-section wb-speakers-section">
       <div class="container">
-        <p class="wb-intro fade-up">
-          Join us for an exclusive webinar with our Head of Application Development,
-          {' '}{WEBINAR.host.name}, who will demonstrate how Visdom transforms
-          AI-assisted software delivery into an agent-operable SDLC. You'll see how AI
-          agents can safely navigate the entire software delivery lifecycle with the
-          context, validation, governance, and orchestration they need to ship
-          production-ready software.
-        </p>
-        {WEBINAR.host.note && <p class="wb-intro-note fade-up">{WEBINAR.host.note}</p>}
+        <h2 class="wb-h2 wb-speakers-h2 fade-up">Meet your speakers</h2>
+
+        <div class="wb-speakers fade-up">
+          {SPEAKERS.map((s) => (
+            <article class="wb-speaker">
+              <span class="wb-portrait" aria-hidden="true">
+                <img src={`${base}${s.photo}`} alt="" loading="lazy" onerror="this.remove()" />
+                <span>{initials(s.name)}</span>
+              </span>
+              <h3 class="wb-speaker-name">{s.name}</h3>
+              {s.role && <p class="wb-speaker-role">{s.role}</p>}
+              <p class="wb-speaker-company">{s.company}</p>
+              {s.bio && <p class="wb-speaker-bio">{s.bio}</p>}
+              {s.linkedin && (
+                <a
+                  class="wb-speaker-in"
+                  href={s.linkedin}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={`${s.name} on LinkedIn`}
+                  data-cta="webinar_speaker_linkedin"
+                >
+                  in
+                </a>
+              )}
+            </article>
+          ))}
+        </div>
       </div>
     </section>
 
@@ -498,11 +520,17 @@ const eventJsonLd = WEBINAR.startsAt
     color: var(--color-text-muted);
   }
 
+  .wb-feat-people {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.75rem;
+    margin-top: 0.75rem;
+  }
+
   .wb-feat-person {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-top: 0.75rem;
   }
 
   .wb-feat-text {
@@ -512,14 +540,14 @@ const eventJsonLd = WEBINAR.startsAt
   }
 
   .wb-feat-text b {
-    font-size: var(--fs-lg);
+    font-size: var(--fs-md);
     font-weight: 600;
     letter-spacing: -0.01em;
     color: var(--color-text);
   }
 
   .wb-feat-text span {
-    font-size: var(--fs-sm);
+    font-size: var(--fs-xs);
     color: var(--color-text-secondary);
   }
 
@@ -601,23 +629,116 @@ const eventJsonLd = WEBINAR.startsAt
     text-decoration: underline;
   }
 
-  /* ── Narrative intro ───────────────────────────────────────────────────── */
-  .wb-intro-section {
+  /* ── Speakers ──────────────────────────────────────────────────────────── */
+  .wb-speakers-section {
     padding-top: 0;
+    text-align: center;
   }
 
-  .wb-intro {
-    margin: 0;
-    max-width: 62ch;
+  .wb-speakers-h2 {
+    max-width: none;
+  }
+
+  .wb-speakers {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem 2rem;
+    max-width: 60rem;
+    margin: clamp(2rem, 4vw, 3rem) auto 0;
+  }
+
+  .wb-speaker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Round portrait in the reference's shape; the img removes itself when the
+     headshot file is absent and the initials plate shows instead. */
+  .wb-portrait {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: clamp(6.5rem, 9vw, 8rem);
+    aspect-ratio: 1;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    background: var(--color-surface-light);
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xl);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+  }
+
+  .wb-portrait img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .wb-speaker-name {
+    margin: 1.1rem 0 0;
     font-size: var(--fs-xl);
-    line-height: 1.7;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+  }
+
+  .wb-speaker-role {
+    margin: 0.35rem 0 0;
+    font-size: var(--fs-md);
+    font-weight: 600;
     color: var(--color-text-secondary);
   }
 
-  .wb-intro-note {
-    margin: 0.85rem 0 0;
-    font-size: var(--fs-base);
+  .wb-speaker-company {
+    margin: 0.25rem 0 1rem;
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xs);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     color: var(--color-text-muted);
+  }
+
+  .wb-speaker-bio {
+    margin: 0 0 1rem;
+    max-width: 34ch;
+    font-size: var(--fs-sm);
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+  }
+
+  .wb-speaker-in {
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    /* auto top margin pins the roundel to the card bottom, so the three links
+       sit on one line even while bios differ in length. */
+    margin-top: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    background: var(--color-surface);
+    font-family: var(--font-heading);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .wb-speaker-in:hover {
+    border-color: color-mix(in oklab, var(--color-emerald) 45%, transparent);
+    color: var(--color-emerald-dark);
+  }
+
+  :global(.dark) .wb-speaker-in:hover {
+    color: var(--color-emerald);
   }
 
   /* ── Premise ───────────────────────────────────────────────────────────── */
@@ -926,6 +1047,11 @@ const eventJsonLd = WEBINAR.startsAt
 
     .wb-hi {
       gap: 1rem 2rem;
+    }
+
+    .wb-speakers {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2.25rem;
     }
   }
 
