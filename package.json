@@ -3,14 +3,15 @@
   "type": "module",
   "version": "0.0.1",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.18.0"
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run check:i18n && astro build",
+    "build": "npm run check:i18n && npm test && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check:i18n": "tsc --noEmit --strict --target es2022 --module esnext --moduleResolution bundler src/i18n/pl/index.ts"
+    "check:i18n": "tsc --noEmit --strict --target es2022 --module esnext --moduleResolution bundler src/i18n/pl/index.ts",
+    "test": "node --test \"src/**/*.test.ts\""
   },
   "dependencies": {
     "@astrojs/react": "^5.0.3",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@types/node": "^22.20.1",
     "geist": "^1.7.2",
     "typescript": "^5.9.3"
   }

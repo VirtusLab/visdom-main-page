@@ -4,27 +4,46 @@
  * Replaces a mailto: link. That link opened the OS mail client, which most
  * visitors do not have configured, so they saw an error and left; and because
  * nothing was ever submitted, the conversion never reached analytics either. The
- * form now posts here, and the client fires the GA4 event only once this reports
- * a delivery, so what analytics counts is deliveries rather than clicks.
+ * form posts here, and the client fires the GA4 event only once this reports a
+ * capture, so what analytics counts is captured leads rather than clicks.
  *
- * Same credential and sender as the Maturity Matrix advisory form: Mailchimp
- * Transactional on MAILCHIMP_API_KEY, from the verified send.virtuslab.com
- * domain. Recipients are that form's owners plus aklepacka. See src/lib/email.ts.
+ * HubSpot is the destination, in two independent channels (see src/lib/hubspot.ts):
  *
- * This endpoint is unauthenticated and sends from a verified domain, so it is an
- * abuse target. The guards: nothing the caller types is ever echoed to an address
- * the caller chose, field lengths are capped, and submissions are rate limited
- * per IP and per email.
+ * 1. A form submission, which creates or updates the contact in the CRM. This is
+ *    the durable record, and HubSpot's own form settings decide who gets notified
+ *    and whether the visitor gets a follow-up. That copy and that routing belong
+ *    to whoever owns the portal, not to this repo.
+ * 2. Optionally, transactional Single-Send emails for the team notification and
+ *    the visitor confirmation, for portals that have the transactional add-on.
+ *
+ * Either channel accepting the lead is a success, because losing the lead is the
+ * only outcome worth failing the request over. Both failing returns 502 with a
+ * ref, and the visitor is shown the mailto fallback.
+ *
+ * This endpoint is unauthenticated and triggers mail from a verified domain, so it
+ * is an abuse target. The guards: nothing the caller types is ever echoed to an
+ * address the caller chose, field lengths are capped, and submissions are rate
+ * limited per IP and per email.
  */
 import type { APIRoute } from 'astro';
-import { sendEmail, parseSender, EmailError, newErrorRef, serverEnv } from '../../lib/email';
+import {
+  HubSpotError,
+  formConfigured,
+  newErrorRef,
+  readCookie,
+  sendTransactionalEmail,
+  serverEnv,
+  submitLead,
+  transactionalEmailId,
+} from '../../lib/hubspot';
 
 export const prerender = false;
 
 /**
- * The owners of this offer, matching the Matrix advisory form's list plus
- * aklepacka. Overridable without a deploy via CONTACT_NOTIFY_TO
- * (comma-separated).
+ * Who the transactional team notification goes to, matching the Matrix advisory
+ * form's list plus aklepacka. Overridable without a deploy via CONTACT_NOTIFY_TO
+ * (comma-separated). The CRM notification is separate: that one is configured on
+ * the HubSpot form itself.
  */
 const DEFAULT_RECIPIENTS = [
   'askowronski@virtuslab.com',
@@ -33,7 +52,7 @@ const DEFAULT_RECIPIENTS = [
   'aklepacka@virtuslab.com',
 ];
 
-/** Where a local or preview submission goes instead of the owner list. */
+/** Where a local or preview notification goes instead of the owner list. */
 const DEV_RECIPIENT = 'me@arturskowronski.com';
 
 /**
@@ -113,6 +132,22 @@ function page(title: string, body: string, status = 200) {
   );
 }
 
+/**
+ * Which page the request came from. The referer is caller-controlled and ends up
+ * in a CRM record and in a notification body, so it is only used when it parses as
+ * a web URL, and it is capped. Anything else falls back to the endpoint's own URL.
+ */
+function pageUriOf(request: Request): string {
+  const raw = request.headers.get('referer') ?? '';
+  try {
+    const url = new URL(raw);
+    if (url.protocol === 'https:' || url.protocol === 'http:') return url.toString().slice(0, 500);
+  } catch {
+    // Absent or unparseable, which is the common case for a native form post.
+  }
+  return request.url.slice(0, 500);
+}
+
 function recipients(requestUrl: string): { to: string[]; mode: 'owners' | 'dev' } {
   const configured = serverEnv('CONTACT_NOTIFY_TO');
   if (configured) {
@@ -183,92 +218,173 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       : page('Too many requests', 'Please try again in a few minutes.', 429);
   }
 
-  const from = serverEnv('ACCESS_REQUEST_FROM') || 'Visdom <noreply@send.virtuslab.com>';
-  const { fromEmail, fromName } = parseSender(from);
+  // One id per submission, so a retried Single-Send is deduplicated by HubSpot
+  // instead of arriving twice.
+  const submissionId = crypto.randomUUID();
+  const submittedAt = new Date().toISOString();
+  const pageUri = pageUriOf(request);
+  const from = serverEnv('HUBSPOT_FROM') || undefined;
 
-  const text = [
-    'New working-session request from the Visdom site',
-    '',
-    `Name:     ${name}`,
-    `Email:    ${email}`,
-    company ? `Company:  ${company}` : null,
-    `Language: ${locale}`,
-    '',
-    message ? 'What they are trying to ship:' : null,
-    message || null,
-    message ? '' : null,
-    `Timestamp: ${new Date().toISOString()}`,
-  ]
-    .filter((l) => l !== null)
-    .join('\n');
+  // A preview or a localhost run must not write into the production CRM. The
+  // emails still go out (to the dev recipient), so the path is exercised end to
+  // end; only the contact record is held back. Set HUBSPOT_ALLOW_DEV_SUBMIT=1 to
+  // test the real submission against a sandbox portal.
+  const devRun = isDevHost(request.url) && !serverEnv('HUBSPOT_ALLOW_DEV_SUBMIT');
 
-  // The team notification IS the conversion, so a failure here fails the request
-  // and the visitor is told to try again. One email per recipient because
-  // sendEmail targets a single address, as in the Matrix. Delivery to at least
-  // one owner counts as success: losing one address should not lose the lead.
-  const { to, mode } = recipients(request.url);
-  console.log(`[contact] submission mode=${mode} recipients=${to.length} locale=${locale}`);
+  const failures: HubSpotError[] = [];
 
-  const results = await Promise.allSettled(
-    to.map((addr) =>
-      sendEmail({
-        to: addr,
-        fromEmail,
-        fromName,
-        replyTo: email,
-        subject: `Working session: ${name}${company ? ` - ${company}` : ''}`,
-        text,
-      }),
-    ),
-  );
+  // 1. The CRM write. This is the lead.
+  let captured = false;
+  if (formConfigured() && !devRun) {
+    try {
+      await submitLead({
+        email,
+        name,
+        company: company || undefined,
+        message: message || undefined,
+        locale,
+        pageUri,
+        pageName: 'Visdom: working session request',
+        ipAddress: ip,
+        // Present only if the visitor has HubSpot tracking, which ties the
+        // submission to their session. Absent is fine, not an error.
+        hutk: readCookie(request.headers.get('cookie'), 'hubspotutk'),
+      });
+      captured = true;
+    } catch (e) {
+      if (e instanceof HubSpotError) failures.push(e);
+      else console.error('[contact] unexpected error capturing the lead', String(e));
+    }
+  }
 
-  const delivered = results.filter((r) => r.status === 'fulfilled').length;
-  if (delivered === 0) {
-    const first = results.find((r) => r.status === 'rejected') as PromiseRejectedResult | undefined;
-    const reason = first?.reason;
-    const ref = reason instanceof EmailError ? reason.ref : newErrorRef('CNT');
-    const code = reason instanceof EmailError ? reason.code : 'UNKNOWN';
-    console.error(`[contact] ${ref} no recipient reached code=${code} to=${to.join(',')}`);
+  // 2. The transactional team notification, for portals that have the add-on.
+  // Delivery to at least one owner counts: losing one address must not lose the
+  // lead. The summary is one custom property so a minimal template can print it,
+  // with the individual values alongside for a template that wants to lay them
+  // out itself.
+  const notifyEmailId = transactionalEmailId('HUBSPOT_NOTIFY_EMAIL_ID');
+  let notified = 0;
+  if (notifyEmailId) {
+    const { to, mode } = recipients(request.url);
+    console.log(`[contact] notifying mode=${mode} recipients=${to.length} locale=${locale}`);
+
+    const summary = [
+      'New working-session request from the Visdom site',
+      '',
+      `Name:     ${name}`,
+      `Email:    ${email}`,
+      company ? `Company:  ${company}` : null,
+      `Language: ${locale}`,
+      `Page:     ${pageUri}`,
+      '',
+      message ? 'What they are trying to ship:' : null,
+      message || null,
+      message ? '' : null,
+      `Timestamp: ${submittedAt}`,
+    ]
+      .filter((l) => l !== null)
+      .join('\n');
+
+    const results = await Promise.allSettled(
+      to.map((addr, i) =>
+        sendTransactionalEmail({
+          to: addr,
+          emailId: notifyEmailId,
+          from,
+          replyTo: email,
+          sendId: `${submissionId}-notify-${i}`,
+          // No contactProperties: the recipients here are our own people, and
+          // this data belongs on the lead's record, not on theirs.
+          customProperties: {
+            summary,
+            lead_name: name,
+            lead_email: email,
+            lead_company: company,
+            lead_message: message,
+            locale,
+            page_uri: pageUri,
+            submitted_at: submittedAt,
+          },
+        }),
+      ),
+    );
+
+    notified = results.filter((r) => r.status === 'fulfilled').length;
+    for (const r of results) {
+      if (r.status === 'rejected' && r.reason instanceof HubSpotError) failures.push(r.reason);
+    }
+    if (notified > 0 && notified < to.length) {
+      console.error(`[contact] partial notification ${notified}/${to.length}`);
+    }
+  }
+
+  if (!captured && notified === 0) {
+    if (!formConfigured() && !notifyEmailId) {
+      const ref = newErrorRef('CNT');
+      console.error(
+        `[contact] ${ref} no HubSpot channel configured. Set HUBSPOT_PORTAL_ID and ` +
+          'HUBSPOT_FORM_GUID, or HUBSPOT_ACCESS_TOKEN and HUBSPOT_NOTIFY_EMAIL_ID.',
+      );
+      return wantsJson
+        ? json({ ok: false, error: 'We could not send your request right now.', ref }, 502)
+        : page('We could not send that', `Please write to visdom@virtuslab.com. Reference ${ref}.`, 502);
+    }
+    if (devRun && !notifyEmailId) {
+      // Nothing was configured for this host to do. Say so plainly rather than
+      // reporting a lead that does not exist, and keep it out of analytics.
+      console.warn('[contact] dev host, CRM write skipped and no transactional template set');
+      return wantsJson
+        ? json({ ok: true, skipped: true, dev: true })
+        : page('Thanks', 'Dev host: nothing was sent, and no lead was recorded.');
+    }
+    const first = failures[0];
+    const ref = first?.ref ?? newErrorRef('CNT');
+    console.error(`[contact] ${ref} HubSpot took nothing code=${first?.code ?? 'UNKNOWN'}`);
     return wantsJson
       ? json({ ok: false, error: 'We could not send your request right now.', ref }, 502)
       : page('We could not send that', `Please write to visdom@virtuslab.com. Reference ${ref}.`, 502);
   }
-  if (delivered < to.length) {
-    console.error(`[contact] partial delivery ${delivered}/${to.length} to=${to.join(',')}`);
-  }
 
-  // Confirmation to the visitor. Best effort: the lead is already with the team,
-  // so a failure here must not turn a captured lead into a visible error.
+  console.log(
+    `[contact] lead handled captured=${captured} notified=${notified} devRun=${devRun} locale=${locale}`,
+  );
+
+  // 3. Confirmation to the visitor. Best effort: the lead is already recorded, so
+  // a failure here must not turn a captured lead into a visible error. Skipped
+  // entirely when the HubSpot form already sends a follow-up, which is the usual
+  // setup and the reason this template is optional.
   //
-  // Fixed template on purpose. Nothing the caller typed is echoed here, because
-  // this address is unverified: echoing `message` back would have let anyone use a
-  // VirtusLab-verified sender to deliver arbitrary text to arbitrary people.
-  try {
-    await sendEmail({
-      to: email,
-      fromEmail,
-      fromName,
-      replyTo: 'visdom@virtuslab.com',
-      subject: 'We got your request - Visdom by VirtusLab',
-      text: [
-        'Hi,',
-        '',
-        'Thanks for asking to see Visdom in action. An engineer from the team will',
-        'reply within one business day to find a slot.',
-        '',
-        'If you need anything sooner, just reply to this email.',
-        '',
-        '--',
-        'Visdom team, VirtusLab',
-        'visdom@virtuslab.com',
-      ].join('\n'),
-    });
-  } catch (e) {
-    const ref = e instanceof EmailError ? e.ref : newErrorRef('CNT');
-    console.error(`[contact] ${ref} confirmation to requester failed (non-fatal) to=${email}`);
+  // Fixed template on purpose, and only their first name is passed. Nothing else
+  // the caller typed is echoed here, because this address is unverified: echoing
+  // `message` back would let anyone use a VirtusLab-verified sender to deliver
+  // arbitrary text to arbitrary people.
+  const confirmEmailId = transactionalEmailId('HUBSPOT_CONFIRM_EMAIL_ID');
+  if (confirmEmailId) {
+    try {
+      await sendTransactionalEmail({
+        to: email,
+        emailId: confirmEmailId,
+        from,
+        replyTo: 'visdom@virtuslab.com',
+        sendId: `${submissionId}-confirm`,
+        customProperties: { first_name: name.split(/\s+/)[0] ?? '', locale },
+      });
+    } catch (e) {
+      const ref = e instanceof HubSpotError ? e.ref : newErrorRef('CNT');
+      console.error(`[contact] ${ref} confirmation to requester failed (non-fatal)`);
+    }
   }
 
-  return wantsJson ? json({ ok: true }) : page('Thanks', 'An engineer will reply within one business day.');
+  const body: Record<string, unknown> = { ok: true };
+  if (devRun) {
+    // The UI still shows success, but no conversion is counted: PUBLIC_GA_ID
+    // defaults to the production property, and a local test is not a lead.
+    body.skipped = true;
+    body.dev = true;
+  }
+  return wantsJson
+    ? json(body)
+    : page('Thanks', 'An engineer will reply within one business day.');
 };
 
 /** Anything but POST on this path is a mistake worth naming. */
