@@ -59,7 +59,7 @@ Never translated:
 
 - Visdom product names (Visdom Context Fabric, Visdom Code Review, Visdom
   Testing, Visdom Security, Visdom AI Tracing, Visdom Machine CI, Orchestrator,
-  Coding Agent, Sandcat, Aikido).
+  Coding Agent, Visdom Sandbox, Aikido).
 - The Maturity Matrix's own vocabulary: L1-L5 level names and the four
   perspectives. The live matrix publishes them in English.
 - Article titles. Their links point at English texts, so a translated title

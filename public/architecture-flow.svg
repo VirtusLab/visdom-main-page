@@ -38,6 +38,7 @@
     .af-orch-legend { fill: #f8f9fb; stroke: #8bc6b7; stroke-width: 1.25; }
     .af-orch-icon { fill: none; stroke: #059669; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .af-orch-label { fill: #111827; font: 700 16px 'Geist', sans-serif; }
+    .af-orch-sub { fill: #6b7280; font: 600 9px 'Geist Mono', ui-monospace, monospace; letter-spacing: 0.1em; text-transform: uppercase; }
 
     /* pull request envelope */
     .af-prenv { fill: rgba(5,150,105,0.035); stroke: #afd4cc; stroke-width: 1; stroke-dasharray: 6 6; }
@@ -135,9 +136,10 @@
   <!-- ============ ORCHESTRATOR (the enclosure: the whole engine room) ============ -->
   <g id="af-orchestrator">
     <rect x="44" y="228" width="1014" height="334" rx="20" class="af-orch-box" />
-    <rect x="439" y="214" width="224" height="28" rx="9" class="af-orch-legend" />
-    <g class="af-orch-icon" transform="translate(452,221) scale(0.6)"><circle cx="12" cy="4.5" r="2.5"/><path d="m10.2 6.3-3.9 3.9"/><circle cx="4.5" cy="12" r="2.5"/><path d="M7 12h10"/><circle cx="19.5" cy="12" r="2.5"/><path d="m13.8 17.7 3.9-3.9"/><circle cx="12" cy="19.5" r="2.5"/></g>
-    <text x="480" y="233" class="af-orch-label">Visdom Orchestrator</text>
+    <rect x="439" y="206" width="224" height="44" rx="9" class="af-orch-legend" />
+    <g class="af-orch-icon" transform="translate(452,213) scale(0.6)"><circle cx="12" cy="4.5" r="2.5"/><path d="m10.2 6.3-3.9 3.9"/><circle cx="4.5" cy="12" r="2.5"/><path d="M7 12h10"/><circle cx="19.5" cy="12" r="2.5"/><path d="m13.8 17.7 3.9-3.9"/><circle cx="12" cy="19.5" r="2.5"/></g>
+    <text x="480" y="225" class="af-orch-label">Visdom Orchestrator</text>
+    <text x="551" y="242" text-anchor="middle" class="af-orch-sub">powered by Visdom Machine Speed</text>
   </g>
 
   <!-- ============ TRACEVAULT (baseplate) ============ -->
@@ -255,8 +257,8 @@
     <text x="150" y="354" text-anchor="middle" class="af-agent-label">Coding</text>
     <text x="150" y="374" text-anchor="middle" class="af-agent-label">Agent</text>
     <rect x="116" y="416" width="68" height="32" rx="10" class="af-sandbox-tag" />
-    <text x="150" y="429" text-anchor="middle" class="af-sandbox-label">Sandcat</text>
-    <text x="150" y="441" text-anchor="middle" class="af-sandbox-label">sandbox</text>
+    <text x="150" y="429" text-anchor="middle" class="af-sandbox-label">Visdom</text>
+    <text x="150" y="441" text-anchor="middle" class="af-sandbox-label">Sandbox</text>
     <g transform="translate(0,460)">
       <text x="150" y="9" text-anchor="middle" class="af-brands-label">Runs your agent</text>
       <g transform="translate(106,18)">

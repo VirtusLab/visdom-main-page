@@ -243,7 +243,7 @@ const tracingColors = [
             <h3 class="text-2xl font-bold text-text mt-3 mb-4">{t.solutions.security.title}</h3>
             <p class="text-text-secondary leading-relaxed mb-6">{t.solutions.security.body}</p>
             <p class="text-sm text-text-muted mb-6">
-              {t.solutions.security.notePoweredBy} <span class="font-semibold text-text">{t.solutions.security.noteSandcat}</span> {t.solutions.security.noteContainment} <span class="font-semibold text-text">{t.solutions.security.noteAikido}</span> {t.solutions.security.noteRest}
+              {t.solutions.security.notePoweredBy} <span class="font-semibold text-text">{t.solutions.security.noteSandbox}</span> {t.solutions.security.noteContainment} <span class="font-semibold text-text">{t.solutions.security.noteAikido}</span> {t.solutions.security.noteRest}
             </p>
             <div class="flex gap-3">
               <a href="https://virtuslab.github.io/visdom-security/" target="_blank" rel="noopener" class="btn-pill btn-primary text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>{t.solutions.readReference}</a>
@@ -257,7 +257,7 @@ const tracingColors = [
                 <div class="cmp-panel">
                   <span class="cmp-panel-head">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>
-                    {t.solutions.security.sandcatHead}
+                    {t.solutions.security.sandboxHead}
                   </span>
                   <div class="cmp-sec-agent">
                     <span class="cmp-sec-tag">{t.solutions.security.agentTag}</span>
@@ -508,7 +508,7 @@ const tracingColors = [
     color: var(--color-text);
   }
 
-  /* 05 Security: Sandcat containment as horizontal blocks, same panel style */
+  /* 05 Security: Visdom Sandbox containment as horizontal blocks, same panel style */
   .cmp-sec {
     display: flex;
     flex-direction: column;

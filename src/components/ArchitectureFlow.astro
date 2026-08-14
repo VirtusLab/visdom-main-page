@@ -116,10 +116,11 @@ const revY = (i: number) => 304 + i * 40;
                spine, panels and PR envelope all render on top of its soft fill. -->
           <g id="af-orchestrator" class="af-group" data-reveal>
             <rect x="44" y="228" width="1014" height="334" rx="20" class="af-orch-box" />
-            {/* title as a legend riding the top border */}
-            <rect x="439" y="214" width="224" height="28" rx="9" class="af-orch-legend" />
-            <g class="af-glyph af-glyph--orch" transform="translate(457,218)" set:html={glyphs.ring} />
-            <text x="480" y="233" class="af-orch-label">{d.orchestrator}</text>
+            {/* title as a legend riding the top border, with the engine credit underneath */}
+            <rect x="439" y="206" width="224" height="44" rx="9" class="af-orch-legend" />
+            <g class="af-glyph af-glyph--orch" transform="translate(457,210)" set:html={glyphs.ring} />
+            <text x="480" y="225" class="af-orch-label">{d.orchestrator}</text>
+            <text x="551" y="242" text-anchor="middle" class="af-orch-sub">{d.orchestratorSub}</text>
           </g>
 
           <!-- ============ AI TRACING (baseplate, spans everything) ============ -->
@@ -195,7 +196,7 @@ const revY = (i: number) => 304 + i * 40;
             <circle cx="150" cy="350" r="44" class="af-agent-core" />
             <text x="150" y="354" text-anchor="middle" class="af-agent-label">{d.agent[0]}</text>
             <text x="150" y="374" text-anchor="middle" class="af-agent-label">{d.agent[1]}</text>
-            <!-- the agent runs contained: Sandcat sandbox tag -->
+            <!-- the agent runs contained: Visdom Sandbox tag -->
             <rect x="116" y="416" width="68" height="32" rx="10" class="af-sandbox-tag" />
             <text x="150" y="429" text-anchor="middle" class="af-sandbox-label">{d.sandbox[0]}</text>
             <text x="150" y="441" text-anchor="middle" class="af-sandbox-label">{d.sandbox[1]}</text>
@@ -545,7 +546,7 @@ const revY = (i: number) => 304 + i * 40;
   /* module header chip */
   .af-mhead { fill: transparent; }
   /* concrete-detail footers inside modules */
-  /* the agent runs inside Sandcat */
+  /* the agent runs inside Visdom Sandbox */
   .af-sandbox-tag { fill: var(--color-surface-light); stroke: var(--color-border); stroke-width: 1; }
   .af-sandbox-label { fill: var(--color-text-secondary); font: 600 var(--fs-3xs) var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
   /* the coding agents that can run inside the sandbox */
@@ -602,6 +603,7 @@ const revY = (i: number) => 304 + i * 40;
   :global(.dark) .af-orch-box { fill: color-mix(in oklab, var(--color-text-muted) 8%, transparent); }
   .af-orch-legend { fill: var(--card); stroke: var(--color-border); stroke-width: 1.25; }
   .af-orch-label { fill: var(--color-text); font: 700 var(--fs-lg) var(--font-heading); }
+  .af-orch-sub { fill: var(--color-text-muted); font: 600 var(--fs-4xs) var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
 
   /* the pull request envelope: a soft mist around review + triage */
   .af-prenv {
