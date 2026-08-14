@@ -4,13 +4,16 @@ import Nav from '../components/Nav.astro';
 import TourBanner from '../components/TourBanner.astro';
 import Footer from '../components/Footer.astro';
 import { WEBINAR, registrationHref, formatSessionDate, hostInitials } from '../data/webinar';
+import { SEQUEL, SEQUEL_TOOLKIT_SRC } from '../data/sequel';
 import { TOUR_STOPS, TOUR_HREF } from '../data/tour';
 import '../styles/global.css';
 
 const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 
-const href = registrationHref();
-const external = href.startsWith('http');
+// Registration happens on this page, in the Sequel embed. The mailto that used
+// to be the CTA survives only as the having-trouble fallback under the widget.
+const href = '#register';
+const mailtoHref = registrationHref();
 const sessionDate = formatSessionDate();
 const initials = hostInitials();
 
@@ -55,7 +58,7 @@ const eventJsonLd = WEBINAR.startsAt
         price: 0,
         priceCurrency: 'EUR',
         availability: 'https://schema.org/InStock',
-        url: href,
+        url: `${siteUrl}/webinar#register`,
       },
     }
   : null;
@@ -89,8 +92,6 @@ const eventJsonLd = WEBINAR.startsAt
             <a
               class="btn-pill btn-primary"
               href={href}
-              target={external ? '_blank' : undefined}
-              rel={external ? 'noopener' : undefined}
               data-cta="webinar_register" data-location="webinar_hero"
             >
               Reserve your spot -&gt;
@@ -134,6 +135,40 @@ const eventJsonLd = WEBINAR.startsAt
           </div>
         </div>
       </div>
+    </section>
+
+    {/* ── REGISTER ───────────────────────────────────────────────────────── */}
+    {/* The Sequel embed carries the whole lifecycle in this one container:
+        countdown and registration before the session, the live stage during
+        it, the replay afterwards. The event schedule lives in Sequel; the
+        widget renders it on its own. */}
+    <section class="wb-section" id="register">
+      <div class="container">
+        <p class="section-label fade-up">Register</p>
+        <div class="wb-embed">
+          <div id="sequel_root"></div>
+        </div>
+        <p class="wb-embed-fine">
+          Having trouble registering? Email <a href={mailtoHref}>{WEBINAR.contactEmail}</a>.
+        </p>
+      </div>
+      {/* Both tags must stay is:inline and in this order: Astro would otherwise
+          bundle and hoist them, breaking the pairing between the vendor script
+          and the Sequel.renderEvent call. */}
+      <script is:inline src={SEQUEL_TOOLKIT_SRC}></script>
+      <script is:inline define:vars={{ eventId: SEQUEL.eventId }}>
+        (function () {
+          function renderSequel() {
+            window.Sequel.renderEvent({ eventId: eventId });
+          }
+          // DOMContentLoaded may already have fired by the time this runs.
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', renderSequel);
+          } else {
+            renderSequel();
+          }
+        })();
+      </script>
     </section>
 
     {/* ── THE PREMISE ────────────────────────────────────────────────────── */}
@@ -308,8 +343,6 @@ const eventJsonLd = WEBINAR.startsAt
           <a
             class="btn-pill btn-primary"
             href={href}
-            target={external ? '_blank' : undefined}
-            rel={external ? 'noopener' : undefined}
             data-cta="webinar_register" data-location="webinar_final"
           >
             Reserve your spot -&gt;
@@ -321,6 +354,25 @@ const eventJsonLd = WEBINAR.startsAt
 
   <Footer />
 </Layout>
+
+<script>
+  import { SEQUEL_ORIGIN } from '../data/sequel';
+
+  // Sequel reports what happens inside its frame over postMessage. A completed
+  // registration becomes the same generate_lead the mailto CTA used to stand
+  // in for, so the GA4 funnel stays comparable across the switch.
+  window.addEventListener('message', (e) => {
+    if (e.origin !== SEQUEL_ORIGIN) return;
+    const name = (e.data as { event?: string } | null)?.event;
+    const gtag = (window as any).gtag;
+    if (name !== 'user-registered' || typeof gtag !== 'function') return;
+    gtag('event', 'generate_lead', {
+      method: 'sequel',
+      cta_id: 'webinar_register',
+      location: 'webinar_embed',
+    });
+  });
+</script>
 
 <style>
   /* ── Shared type roles ─────────────────────────────────────────────────── */
@@ -543,6 +595,35 @@ const eventJsonLd = WEBINAR.startsAt
     aspect-ratio: 4 / 5;
     border-radius: var(--radius-xl);
     font-size: var(--fs-6xl);
+  }
+
+  /* ── Register embed ────────────────────────────────────────────────────── */
+  .wb-embed {
+    margin-top: 2rem;
+    /* Sequel manages everything inside the root, including its own sizing.
+       The container caps the width; this only stops any fixed-width internals
+       from pushing the page wider than the viewport on small screens. */
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .wb-embed :global(#sequel_root) {
+    width: 100%;
+  }
+
+  .wb-embed :global(iframe) {
+    max-width: 100%;
+  }
+
+  .wb-embed-fine {
+    margin: 1.25rem 0 0;
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+
+  .wb-embed-fine a {
+    color: var(--color-text-secondary);
+    text-decoration: underline;
   }
 
   /* ── Premise ───────────────────────────────────────────────────────────── */

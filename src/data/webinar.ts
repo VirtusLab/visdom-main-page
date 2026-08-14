@@ -42,7 +42,9 @@ export const WEBINAR: WebinarConfig = {
   title: 'Can your agents actually ship?',
   subtitle:
     'AI coding assistants can write code. But can they actually deliver software? Join our live session on turning AI-assisted delivery into an agent-operable SDLC.',
-  startsAt: null,
+  // Copy of the schedule in Sequel (the source of truth). If the event moves
+  // in Sequel, this must move with it. 16:00 CEST = 14:00 UTC.
+  startsAt: '2026-09-16T14:00:00Z',
   timezone: 'Europe/Warsaw',
   timezoneLabel: 'CEST',
   durationMinutes: 60,
@@ -70,6 +72,7 @@ export function formatSessionDate(w: WebinarConfig = WEBINAR): string {
   if (!w.startsAt) return 'To be announced';
   const d = new Date(w.startsAt);
   const date = d.toLocaleDateString('en-GB', {
+    weekday: 'long',
     day: 'numeric',
     month: 'long',
     year: 'numeric',

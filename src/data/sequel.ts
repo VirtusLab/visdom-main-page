@@ -45,7 +45,11 @@ export type SequelConfig = {
  */
 export const SEQUEL: SequelConfig = {
   companyId: import.meta.env.PUBLIC_SEQUEL_COMPANY_ID ?? '',
-  eventId: import.meta.env.PUBLIC_SEQUEL_EVENT_ID ?? '',
+  // "Can your agents actually ship? [TEST]", Wed 16 September 2026, 16:00 CEST.
+  // Shipped with [TEST] in the name on purpose; swap the id when the
+  // production event exists. The env var still overrides for previews.
+  eventId:
+    import.meta.env.PUBLIC_SEQUEL_EVENT_ID ?? 'e60a3e18-9676-4f92-b66a-c52a70f988af',
   clickToLoad: true,
 };
 
