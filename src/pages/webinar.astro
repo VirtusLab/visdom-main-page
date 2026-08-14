@@ -314,14 +314,31 @@ const eventJsonLd = WEBINAR.startsAt
           who cannot make a stop in person.
         </p>
 
-        <figure class="wb-tour-photo fade-up">
+        <figure class="wb-tour-gallery fade-up">
           <img
+            class="wb-tour-wide"
             src={`${base}/track-record-tour.jpg`}
             width="2000"
             height="1431"
             loading="lazy"
             decoding="async"
             alt="VirtusLab engineers at an AI infrastructure conference, in Can Your AI Agents Actually Ship shirts."
+          />
+          <img
+            src={`${base}/tour-aiworld-booth.jpg`}
+            width="1600"
+            height="1200"
+            loading="lazy"
+            decoding="async"
+            alt="The VirtusLab booth at AI World Congress in London, with the team talking to attendees on the expo floor."
+          />
+          <img
+            src={`${base}/tour-aiworld-stage.jpg`}
+            width="1000"
+            height="1333"
+            loading="lazy"
+            decoding="async"
+            alt="A VirtusLab speaker on the main stage at AI World Congress in London."
           />
           <figcaption>Out in the field on the Visdom AI Tour.</figcaption>
         </figure>
@@ -900,24 +917,34 @@ const eventJsonLd = WEBINAR.startsAt
   }
 
   /* ── Visdom AI Tour ────────────────────────────────────────────────────── */
-  .wb-tour-photo {
+  /* Three shots, one caption: the wide group photo on top, then the booth and
+     the stage side by side. The second row's column ratio matches the two
+     images' aspect ratios (4:3 next to 3:4), so both render at the same height
+     with no cropping. */
+  .wb-tour-gallery {
+    display: grid;
+    grid-template-columns: 16fr 9fr;
+    gap: 0.625rem;
     max-width: 56rem;
     margin: 2.5rem 0 0;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    background: var(--color-surface);
   }
 
-  .wb-tour-photo img {
+  .wb-tour-gallery img {
     display: block;
     width: 100%;
     height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    background: var(--color-surface);
   }
 
-  .wb-tour-photo figcaption {
-    padding: 0.75rem 1.1rem;
-    border-top: 1px solid var(--color-border-light);
+  .wb-tour-wide {
+    grid-column: 1 / -1;
+  }
+
+  .wb-tour-gallery figcaption {
+    grid-column: 1 / -1;
+    padding-top: 0.35rem;
     font-family: var(--font-mono);
     font-size: var(--fs-2xs);
     letter-spacing: 0.14em;
@@ -1052,6 +1079,14 @@ const eventJsonLd = WEBINAR.startsAt
     .wb-speakers {
       grid-template-columns: minmax(0, 1fr);
       gap: 2.25rem;
+    }
+
+    .wb-tour-gallery {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .wb-tour-gallery img {
+      grid-column: 1 / -1;
     }
   }
 
