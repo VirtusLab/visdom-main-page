@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import TourBanner from '../components/TourBanner.astro';
 import Footer from '../components/Footer.astro';
-import { WEBINAR, registrationHref, formatSessionDate, hostInitials } from '../data/webinar';
+import { WEBINAR, registrationHref, hostInitials } from '../data/webinar';
 import { SEQUEL, SEQUEL_TOOLKIT_SRC } from '../data/sequel';
 import { TOUR_STOPS, TOUR_HREF } from '../data/tour';
 import '../styles/global.css';
@@ -14,18 +14,30 @@ const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 // to be the CTA survives only as the having-trouble fallback under the widget.
 const href = '#register';
 const mailtoHref = registrationHref();
-const sessionDate = formatSessionDate();
 const initials = hostInitials();
 
-// The session agenda, verbatim from the campaign brief. Do not reword these:
-// the copy is the marketing team's. The grid spans are the only editorial
-// decision here (the live demonstration is the accent cell).
+// The highlights band splits the session date into a display value and a mono
+// label, both derived from the one startsAt in webinar.ts.
+const startDate = WEBINAR.startsAt ? new Date(WEBINAR.startsAt) : null;
+const hiDate = startDate
+  ? startDate.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      timeZone: WEBINAR.timezone,
+    })
+  : 'To be announced';
+const hiDateLabel = startDate
+  ? `${startDate.toLocaleDateString('en-GB', { weekday: 'long', timeZone: WEBINAR.timezone })}, ${startDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: WEBINAR.timezone })} ${WEBINAR.timezoneLabel}`
+  : 'Date and time';
+
+// The session agenda, verbatim from the campaign brief. Do not reword these.
+// Listed in running order: the session builds up to the demo and closes on Q&A.
 const agenda = [
-  { span: 'span-5', tone: 'raised', text: 'Why AI adoption often stalls after the first wave of excitement.' },
-  { span: 'span-7', tone: 'plain', text: 'What infrastructure is required for AI-native software delivery.' },
-  { span: 'span-8', tone: 'accent', text: 'A live demonstration of AI agents shipping production-ready code safely and at scale.' },
-  { span: 'span-4', tone: 'plain', text: 'Q&A with our expert.' },
-  { span: 'span-12', tone: 'plain', text: 'How Visdom connects AI agents with your SDLC through its core components.' },
+  'Why AI adoption often stalls after the first wave of excitement.',
+  'What infrastructure is required for AI-native software delivery.',
+  'A live demonstration of AI agents shipping production-ready code safely and at scale.',
+  'How Visdom connects AI agents with your SDLC through its core components.',
+  'Q&A with our expert.',
 ];
 
 const siteUrl = import.meta.env.SITE || 'https://visdom.virtuslab.com';
@@ -74,9 +86,12 @@ const eventJsonLd = WEBINAR.startsAt
 
   <main class="webinar">
     {/* ── HERO ───────────────────────────────────────────────────────────── */}
+    {/* Editorial header in the Sequel masterclass shape: label, headline,
+        lede, CTAs, then one hairline band holding the featuring row and the
+        session-fact highlights. The embed is the next screen down. */}
     <section class="wb-hero">
       <div class="aurora" aria-hidden="true"></div>
-      <div class="container wb-hero-grid">
+      <div class="container wb-hero-inner">
         <div class="fade-up">
           <p class="section-label">Live webinar</p>
 
@@ -100,39 +115,35 @@ const eventJsonLd = WEBINAR.startsAt
           </div>
         </div>
 
-        {/* Session card: the event's own metadata, standing in as the hero asset. */}
-        <div class="fade-up wb-session card">
-          <div class="wb-session-head">
-            <span class="wb-mono">Session details</span>
+        <div class="wb-meta fade-up">
+          <div class="wb-feat">
+            <span class="wb-meta-label">Featuring</span>
+            <div class="wb-feat-person">
+              <span class="wb-plate" data-initials={initials} aria-hidden="true">
+                <img src={WEBINAR.host.photo} alt="" loading="lazy" onerror="this.remove()" />
+                <span>{initials}</span>
+              </span>
+              <span class="wb-feat-text">
+                <b>{WEBINAR.host.name}</b>
+                <span>{WEBINAR.host.role} @ {WEBINAR.host.company}</span>
+              </span>
+            </div>
           </div>
-          <dl class="wb-session-rows">
-            <div class="wb-session-row">
-              <dt class="wb-session-k">Date</dt>
-              <dd class="wb-session-v">{sessionDate}</dd>
+
+          <dl class="wb-hi">
+            <div class="wb-hi-item">
+              <dt class="wb-meta-label">{hiDateLabel}</dt>
+              <dd>{hiDate}</dd>
             </div>
-            <div class="wb-session-row">
-              <dt class="wb-session-k">Runtime</dt>
-              <dd class="wb-session-v">{WEBINAR.durationMinutes} minutes</dd>
+            <div class="wb-hi-item">
+              <dt class="wb-meta-label">Live, with Q&amp;A</dt>
+              <dd>{WEBINAR.durationMinutes} minutes</dd>
             </div>
-            <div class="wb-session-row">
-              <dt class="wb-session-k">Format</dt>
-              <dd class="wb-session-v">Live, with Q&amp;A</dd>
-            </div>
-            <div class="wb-session-row">
-              <dt class="wb-session-k">Price</dt>
-              <dd class="wb-session-v wb-session-v-accent">Free</dd>
+            <div class="wb-hi-item">
+              <dt class="wb-meta-label">Online session</dt>
+              <dd>Free</dd>
             </div>
           </dl>
-          <div class="wb-session-host">
-            <span class="wb-plate wb-plate-sm" data-initials={initials} aria-hidden="true">
-              <img src={WEBINAR.host.photo} alt="" loading="lazy" onerror="this.remove()" />
-              <span>{initials}</span>
-            </span>
-            <span class="wb-session-host-text">
-              <b>{WEBINAR.host.name}</b>
-              <span>{WEBINAR.host.role}, {WEBINAR.host.company}</span>
-            </span>
-          </div>
         </div>
       </div>
     </section>
@@ -142,9 +153,8 @@ const eventJsonLd = WEBINAR.startsAt
         countdown and registration before the session, the live stage during
         it, the replay afterwards. The event schedule lives in Sequel; the
         widget renders it on its own. */}
-    <section class="wb-section" id="register">
+    <section class="wb-register" id="register">
       <div class="container">
-        <p class="section-label fade-up">Register</p>
         <div class="wb-embed">
           <div id="sequel_root"></div>
         </div>
@@ -169,6 +179,24 @@ const eventJsonLd = WEBINAR.startsAt
           }
         })();
       </script>
+    </section>
+
+    {/* ── EDITORIAL BODY ─────────────────────────────────────────────────── */}
+    {/* Narrative intro before the first H2, masterclass-style. This is the
+        campaign brief's host paragraph, doing the reference page's
+        set-the-scene job. */}
+    <section class="wb-section wb-intro-section">
+      <div class="container">
+        <p class="wb-intro fade-up">
+          Join us for an exclusive webinar with our Head of Application Development,
+          {' '}{WEBINAR.host.name}, who will demonstrate how Visdom transforms
+          AI-assisted software delivery into an agent-operable SDLC. You'll see how AI
+          agents can safely navigate the entire software delivery lifecycle with the
+          context, validation, governance, and orchestration they need to ship
+          production-ready software.
+        </p>
+        {WEBINAR.host.note && <p class="wb-intro-note fade-up">{WEBINAR.host.note}</p>}
+      </div>
     </section>
 
     {/* ── THE PREMISE ────────────────────────────────────────────────────── */}
@@ -240,19 +268,20 @@ const eventJsonLd = WEBINAR.startsAt
       <div class="container">
         <h2 class="wb-h2 fade-up">During this live session, we'll cover</h2>
 
-        <div class="wb-agenda fade-up">
-          {agenda.map((item) => (
-            <article class={`wb-cell wb-cell-${item.tone} ${item.span}`}>
-              <h3>{item.text}</h3>
-            </article>
+        <ol class="wb-agenda fade-up" role="list">
+          {agenda.map((item, i) => (
+            <li class="wb-agenda-item">
+              <span class="wb-agenda-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <p>{item}</p>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
 
     {/* ── ON THE TOUR ────────────────────────────────────────────────────── */}
-    {/* Frames the webinar as one stop on the Visdom AI Tour rather than a
-        standalone online event: the same demo we run on stage, opened up. */}
+    {/* The related-content beat at the end of the body: the webinar as one
+        stop on the Visdom AI Tour, the same demo we run on stage. */}
     <section class="wb-section">
       <div class="container">
         <p class="section-label fade-up">Visdom AI Tour</p>
@@ -297,34 +326,7 @@ const eventJsonLd = WEBINAR.startsAt
       </div>
     </section>
 
-    {/* ── HOST ───────────────────────────────────────────────────────────── */}
-    <section class="wb-section">
-      <div class="container">
-        <p class="section-label fade-up">Your host</p>
-
-        <div class="wb-host fade-up">
-          <span class="wb-plate wb-plate-lg" aria-hidden="true">
-            <img src={WEBINAR.host.photo} alt="" loading="lazy" onerror="this.remove()" />
-            <span>{initials}</span>
-          </span>
-          <div>
-            <h2 class="wb-host-name">{WEBINAR.host.name}</h2>
-            <p class="wb-host-role wb-mono">{WEBINAR.host.role}, {WEBINAR.host.company}</p>
-            <p class="wb-host-bio">
-              Join us for an exclusive webinar with our Head of Application Development,
-              {' '}{WEBINAR.host.name}, who will demonstrate how Visdom transforms
-              AI-assisted software delivery into an agent-operable SDLC. You'll see how AI
-              agents can safely navigate the entire software delivery lifecycle with the
-              context, validation, governance, and orchestration they need to ship
-              production-ready software.
-            </p>
-            {WEBINAR.host.note && <p class="wb-host-note">{WEBINAR.host.note}</p>}
-          </div>
-        </div>
-      </div>
-    </section>
-
-    {/* ── REGISTER ───────────────────────────────────────────────────────── */}
+    {/* ── CLOSING ────────────────────────────────────────────────────────── */}
     <section class="wb-final">
       <div class="aurora" aria-hidden="true"></div>
       <div class="container">
@@ -422,23 +424,18 @@ const eventJsonLd = WEBINAR.startsAt
   /* ── Hero ──────────────────────────────────────────────────────────────── */
   .wb-hero {
     position: relative;
-    padding: clamp(3rem, 6vw, 5.5rem) 0 clamp(3.5rem, 7vw, 6rem);
+    padding: clamp(3rem, 6vw, 5rem) 0 clamp(2.5rem, 5vw, 4rem);
     overflow: hidden;
   }
 
-  .wb-hero-grid {
+  .wb-hero-inner {
     position: relative;
     z-index: 1;
-    display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.85fr);
-    gap: clamp(2rem, 4vw, 4rem);
-    align-items: center;
   }
 
-  /* The left column is sized to hold "Can your agents" on one line: the
-     headline must never run to three lines at desktop. */
   .wb-headline {
     margin: 0.75rem 0 0;
+    max-width: 16ch;
     font-family: var(--font-heading);
     font-size: clamp(2.25rem, 4.6vw, 3.75rem);
     font-weight: 800;
@@ -473,88 +470,73 @@ const eventJsonLd = WEBINAR.startsAt
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-    margin-top: 2.25rem;
+    margin-top: 2rem;
   }
 
-  /* ── Session card ──────────────────────────────────────────────────────── */
-  .wb-session {
-    overflow: hidden;
+  /* ── Featuring + highlights band ───────────────────────────────────────── */
+  /* One hairline band under the hero copy: who is presenting on the left,
+     the three session facts on the right. */
+  .wb-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem 3rem;
+    margin-top: clamp(2.25rem, 4vw, 3.5rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
   }
 
-  .wb-session:hover {
-    /* This card is information, not a link. Suppress the .card lift. */
-    transform: none;
-    border-color: var(--color-border);
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
-  }
-
-  .wb-session-head {
-    padding: 0.85rem 1.25rem;
-    border-bottom: 1px solid var(--color-border);
-    background: var(--color-surface);
-  }
-
-  .wb-session-rows {
-    margin: 0;
-  }
-
-  .wb-session-row {
-    display: grid;
-    grid-template-columns: 5.25rem minmax(0, 1fr);
-    gap: 1rem;
-    align-items: baseline;
-    padding: 0.9rem 1.25rem;
-    border-bottom: 1px solid var(--color-border-light);
-  }
-
-  .wb-session-k {
+  .wb-meta-label {
+    display: block;
     margin: 0;
     font-family: var(--font-mono);
     font-size: var(--fs-3xs);
+    font-weight: 500;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
 
-  .wb-session-v {
-    margin: 0;
-    font-size: var(--fs-xl);
-    font-weight: 600;
-    letter-spacing: -0.015em;
-    color: var(--color-text);
-  }
-
-  .wb-session-v-accent {
-    color: var(--color-emerald-dark);
-  }
-
-  :global(.dark) .wb-session-v-accent {
-    color: var(--color-emerald);
-  }
-
-  .wb-session-host {
+  .wb-feat-person {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.9rem 1.25rem;
-    background: var(--color-surface);
+    margin-top: 0.75rem;
   }
 
-  .wb-session-host-text {
+  .wb-feat-text {
     display: flex;
     flex-direction: column;
     min-width: 0;
   }
 
-  .wb-session-host-text b {
-    font-size: var(--fs-md);
+  .wb-feat-text b {
+    font-size: var(--fs-lg);
     font-weight: 600;
+    letter-spacing: -0.01em;
     color: var(--color-text);
   }
 
-  .wb-session-host-text span {
-    font-size: var(--fs-xs);
+  .wb-feat-text span {
+    font-size: var(--fs-sm);
     color: var(--color-text-secondary);
+  }
+
+  .wb-hi {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem 2.5rem;
+    margin: 0;
+  }
+
+  .wb-hi-item dd {
+    margin: 0.4rem 0 0;
+    font-family: var(--font-heading);
+    font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
   }
 
   /* ── Host portrait plate ───────────────────────────────────────────────── */
@@ -565,11 +547,14 @@ const eventJsonLd = WEBINAR.startsAt
     display: grid;
     place-items: center;
     flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
     overflow: hidden;
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     background: var(--color-surface-light);
     font-family: var(--font-mono);
+    font-size: var(--fs-sm);
     font-weight: 600;
     letter-spacing: 0.08em;
     color: var(--color-text-muted);
@@ -583,23 +568,13 @@ const eventJsonLd = WEBINAR.startsAt
     object-fit: cover;
   }
 
-  .wb-plate-sm {
-    width: 2.75rem;
-    height: 2.75rem;
-    font-size: var(--fs-sm);
-  }
-
-  .wb-plate-lg {
-    width: 100%;
-    max-width: 17.5rem;
-    aspect-ratio: 4 / 5;
-    border-radius: var(--radius-xl);
-    font-size: var(--fs-6xl);
-  }
-
   /* ── Register embed ────────────────────────────────────────────────────── */
+  .wb-register {
+    position: relative;
+    padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(3rem, 5vw, 4.5rem);
+  }
+
   .wb-embed {
-    margin-top: 2rem;
     /* Sequel manages everything inside the root, including its own sizing.
        The container caps the width; this only stops any fixed-width internals
        from pushing the page wider than the viewport on small screens. */
@@ -624,6 +599,25 @@ const eventJsonLd = WEBINAR.startsAt
   .wb-embed-fine a {
     color: var(--color-text-secondary);
     text-decoration: underline;
+  }
+
+  /* ── Narrative intro ───────────────────────────────────────────────────── */
+  .wb-intro-section {
+    padding-top: 0;
+  }
+
+  .wb-intro {
+    margin: 0;
+    max-width: 62ch;
+    font-size: var(--fs-xl);
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  .wb-intro-note {
+    margin: 0.85rem 0 0;
+    font-size: var(--fs-base);
+    color: var(--color-text-muted);
   }
 
   /* ── Premise ───────────────────────────────────────────────────────────── */
@@ -740,51 +734,48 @@ const eventJsonLd = WEBINAR.startsAt
     margin-top: 0.85rem;
   }
 
-  /* ── Agenda grid ───────────────────────────────────────────────────────── */
+  /* ── Agenda list ───────────────────────────────────────────────────────── */
+  /* Running order of the session, so an ordered list rather than a grid. */
   .wb-agenda {
     display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 0.75rem;
-    margin-top: 2.5rem;
+    gap: 0.625rem;
+    max-width: 52rem;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .span-4 { grid-column: span 4; }
-  .span-5 { grid-column: span 5; }
-  .span-7 { grid-column: span 7; }
-  .span-8 { grid-column: span 8; }
-  .span-12 { grid-column: span 12; }
-
-  .wb-cell {
-    padding: clamp(1.25rem, 2.3vw, 1.85rem);
+  .wb-agenda-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+    padding: clamp(1rem, 2vw, 1.4rem) clamp(1.1rem, 2.2vw, 1.6rem);
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-xl);
     background: var(--color-bg);
   }
 
-  .wb-cell h3 {
+  .wb-agenda-n {
+    padding-top: 0.2em;
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--color-emerald-dark);
+  }
+
+  :global(.dark) .wb-agenda-n {
+    color: var(--color-emerald);
+  }
+
+  .wb-agenda-item p {
     margin: 0;
-    font-size: clamp(1.15rem, 1.9vw, 1.4rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.25;
+    font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.4;
     color: var(--color-text);
-  }
-
-  .wb-cell-raised {
-    background: var(--color-surface-light);
-    border-color: var(--color-border);
-  }
-
-  .wb-cell-accent {
-    border-color: color-mix(in oklab, var(--color-emerald) 36%, transparent);
-    background:
-      linear-gradient(150deg,
-        color-mix(in oklab, var(--color-emerald) 15%, transparent),
-        color-mix(in oklab, var(--color-emerald) 3%, transparent));
-  }
-
-  .wb-cell-accent h3 {
-    font-size: clamp(1.3rem, 2.4vw, 1.75rem);
   }
 
   /* ── Visdom AI Tour ────────────────────────────────────────────────────── */
@@ -890,47 +881,6 @@ const eventJsonLd = WEBINAR.startsAt
     text-decoration: underline;
   }
 
-  /* ── Host ──────────────────────────────────────────────────────────────── */
-  .wb-host {
-    display: grid;
-    grid-template-columns: 17.5rem minmax(0, 1fr);
-    gap: clamp(1.5rem, 4vw, 3.5rem);
-    align-items: center;
-    margin-top: 1.75rem;
-  }
-
-  .wb-host-name {
-    margin: 0;
-    font-size: clamp(1.6rem, 3vw, 2.35rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--color-text);
-  }
-
-  .wb-host-role {
-    margin: 0.75rem 0 0;
-    letter-spacing: 0.14em;
-    color: var(--color-emerald-dark);
-  }
-
-  :global(.dark) .wb-host-role {
-    color: var(--color-emerald);
-  }
-
-  .wb-host-bio {
-    margin: 1.25rem 0 0;
-    max-width: 62ch;
-    font-size: var(--fs-lg);
-    line-height: 1.7;
-    color: var(--color-text-secondary);
-  }
-
-  .wb-host-note {
-    margin: 0.85rem 0 0;
-    font-size: var(--fs-base);
-    color: var(--color-text-muted);
-  }
-
   /* ── Closing band ──────────────────────────────────────────────────────── */
   .wb-final {
     position: relative;
@@ -968,27 +918,14 @@ const eventJsonLd = WEBINAR.startsAt
   }
 
   /* ── Responsive ────────────────────────────────────────────────────────── */
-  @media (max-width: 1024px) {
-    .wb-hero-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .wb-session {
-      max-width: 30rem;
-    }
-  }
-
   @media (max-width: 860px) {
-    .wb-agenda {
-      grid-template-columns: minmax(0, 1fr);
+    .wb-meta {
+      flex-direction: column;
+      align-items: stretch;
     }
 
-    .span-4, .span-5, .span-7, .span-8, .span-12 {
-      grid-column: auto;
-    }
-
-    .wb-host {
-      grid-template-columns: minmax(0, 1fr);
+    .wb-hi {
+      gap: 1rem 2rem;
     }
   }
 
