@@ -11,8 +11,15 @@
 //   PUBLIC_GA_ID      GA4 measurement ID. Defaults to the production property so
 //                     funnels across virtuslab.com subdomains stitch automatically.
 //   PUBLIC_SENTRY_DSN Sentry DSN. When empty, Sentry is not loaded at all.
+//   PUBLIC_SITE_SOURCE Which property this copy runs on, e.g. maturity-matrix.
+//                     Attached to every event as `source`. Several properties
+//                     share one GA4 property so the funnel stitches, which is
+//                     exactly why each event has to say where it happened. Keep
+//                     the slugs identical to SOURCES in src/lib/source.ts, so a
+//                     lead can be followed from GA4 into HubSpot by one value.
 const gaId = import.meta.env.PUBLIC_GA_ID ?? 'G-9ZRBC2F0CG';
 const sentryDsn = import.meta.env.PUBLIC_SENTRY_DSN ?? '';
+const siteSource = import.meta.env.PUBLIC_SITE_SOURCE ?? 'visdom-site';
 ---
 {gaId && (
   <>
@@ -21,12 +28,17 @@ const sentryDsn = import.meta.env.PUBLIC_SENTRY_DSN ?? '';
       async
       src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
     ></script>
-    <script is:inline define:vars={{ gaId }}>
+    <script is:inline define:vars={{ gaId, siteSource }}>
       window.dataLayer = window.dataLayer || [];
       function gtag() { dataLayer.push(arguments); }
       window.gtag = window.gtag || gtag;
       gtag('js', new Date());
-      gtag('config', gaId);
+      // Sent with every event including page_view, so property attribution never
+      // depends on remembering to pass it at each call site.
+      gtag('config', gaId, { source: siteSource });
+      // Also exposed for handlers that build their own event payloads, such as
+      // the contact form's conversion.
+      window.__siteSource = siteSource;
     </script>
 
     <!-- Conversion tracking: one delegated listener covers every current and
@@ -34,7 +46,13 @@ const sentryDsn = import.meta.env.PUBLIC_SENTRY_DSN ?? '';
     <script is:inline>
       (function () {
         function send(name, params) {
-          if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
+          if (typeof window.gtag !== 'function') return;
+          var payload = params || {};
+          // Belt and braces alongside the config-level `source`: a GA4 config
+          // parameter is not guaranteed to survive on every event, and losing the
+          // property on a conversion is the one that would actually mislead.
+          if (payload.source == null) payload.source = window.__siteSource;
+          window.gtag('event', name, payload);
         }
         document.addEventListener('click', function (e) {
           var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
@@ -82,6 +100,9 @@ const sentryDsn = import.meta.env.PUBLIC_SENTRY_DSN ?? '';
           metric_rating: metric.rating,
           value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
           non_interaction: true,
+          // So field performance can be compared per property, not just in
+          // aggregate across everything sharing this GA4 property.
+          source: (window as any).__siteSource,
         });
       }
       onCLS(report);

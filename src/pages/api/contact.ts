@@ -416,7 +416,11 @@ const handlePost: APIRoute = async ({ request, clientAddress }) => {
     }
   }
 
-  const body: Record<string, unknown> = { ok: true };
+  // The source is echoed back so the GA4 conversion is tagged with the same value
+  // that reached HubSpot. The client declares a source, but the server is the one
+  // that validates it and may fall back to the hostname, so letting the client
+  // report its own guess would let the two systems disagree about the same lead.
+  const body: Record<string, unknown> = { ok: true, source: source.slug };
   if (devRun) {
     // The UI still shows success, but no conversion is counted: PUBLIC_GA_ID
     // defaults to the production property, and a local test is not a lead.

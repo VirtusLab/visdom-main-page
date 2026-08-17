@@ -11,10 +11,15 @@ const CONTACT_EMAIL = 'visdom@virtuslab.com';
 // and which analytics could never see.
 // Which property this form is sitting on. The same HubSpot form serves several
 // of them, so this is what separates a lead from here and a lead from the
-// Maturity Matrix once both are in the CRM. A copy of this component on another
-// property MUST change this string; if it is forgotten the endpoint falls back to
-// classifying by hostname, so the lead is still attributed, just less precisely.
-const SOURCE = 'visdom-site';
+// Maturity Matrix once both are in the CRM.
+//
+// One variable, PUBLIC_SITE_SOURCE, also drives the `source` on every GA4 event
+// in Analytics.astro. Deliberately not two constants: a copy of this site that
+// updated one and forgot the other would report a lead to HubSpot and to GA4
+// under different names, which is worse than not splitting them at all. If it is
+// unset the endpoint still classifies by hostname, so the lead is attributed,
+// just less precisely.
+const SOURCE = import.meta.env.PUBLIC_SITE_SOURCE || 'visdom-site';
 
 const formStrings = {
   endpoint: `${base}/api/contact`,
@@ -119,6 +124,8 @@ const formStrings = {
     var button = form.querySelector('button[type="submit"]');
     var status = form.querySelector('.contact-form-status');
     var submitted = false;
+    // One conversion per page view, however many times the form is sent.
+    var counted = false;
 
     function show(message, tone) {
       if (!status) return;
@@ -155,7 +162,13 @@ const formStrings = {
       })
         .then(function (res) {
           return res.json().catch(function () { return {}; }).then(function (body) {
-            return { ok: res.ok && body && body.ok, skipped: !!(body && body.skipped), body: body || {} };
+            return {
+              ok: res.ok && body && body.ok,
+              skipped: !!(body && body.skipped),
+              // What the server actually recorded, which is what GA4 should count.
+              source: (body && body.source) || formStrings.source,
+              body: body || {},
+            };
           });
         })
         .then(function (result) {
@@ -169,13 +182,23 @@ const formStrings = {
           if (button) { button.disabled = false; button.textContent = formStrings.submit; }
 
           // The conversion fires here and nowhere else, and not for a request the
-          // server skipped (honeypot): counting one would recreate the very
-          // click-without-delivery gap this replaced.
-          if (!result.skipped && typeof window.gtag === 'function') {
+          // server skipped (honeypot, or a dev host): counting one would recreate
+          // the very click-without-delivery gap this replaced.
+          //
+          // Once per page view. The form deliberately re-enables itself after a
+          // success, so a visitor who submits twice would otherwise be counted as
+          // two leads while HubSpot correctly records one contact.
+          if (!result.skipped && !counted && typeof window.gtag === 'function') {
+            counted = true;
             window.gtag('event', 'generate_lead', {
               method: 'form',
               cta_id: 'book_working_session',
               location: 'final_cta',
+              // Which property the lead came from, as resolved by the server, so
+              // GA4 and HubSpot agree. Register it as a custom dimension in GA4
+              // to segment by it in reports.
+              source: result.source,
+              locale: formStrings.locale,
             });
           }
         })

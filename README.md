@@ -52,6 +52,43 @@ The site supports Google Analytics 4. It only loads when a measurement ID is set
    - Vercel: add `PUBLIC_GA_ID` under Project Settings, Environment Variables.
 3. Redeploy (or restart `npm run dev`). With no ID set, no analytics script loads.
 
+### Conversions
+
+`generate_lead` is the conversion. It fires from two places, both in
+`src/components/Analytics.astro` and `src/components/CtaSection.astro`:
+
+| method | when |
+| :----- | :--- |
+| `form` | the contact endpoint confirmed it captured the lead |
+| `email` | a `mailto:` CTA tagged `data-cta="book_working_session"` was clicked |
+
+The `form` conversion is counted on **confirmed capture, not on submit**. That is
+the whole reason the endpoint exists: the old mailto link was counted on click,
+including for the many visitors whose mail client never opened. It is suppressed
+when the server reports `skipped` (a honeypot hit, or a dev host), and it fires at
+most once per page view even though the form deliberately re-enables itself, so a
+visitor sending twice is one lead in GA4 and one contact in HubSpot.
+
+Every event carries `source`, the property it happened on, matching the slugs in
+`src/lib/source.ts`. Set `PUBLIC_SITE_SOURCE` on each property (it defaults to
+`visdom-site`); the conversion uses the value the *server* resolved, so GA4 and
+HubSpot never disagree about the same lead. Supporting events: `contact_email`,
+`matrix_click`, `outbound_click`, `cta_click`, plus Core Web Vitals as events.
+
+Two steps live in the GA4 console and cannot be done from this repo:
+
+1. Mark `generate_lead` as a **key event**, otherwise it is recorded but not
+   reported as a conversion.
+2. Register `source` (and `locale`) as **custom dimensions**, otherwise the
+   parameters are collected but cannot be used to segment reports.
+
+Known gap: a visitor with JavaScript blocked posts the form natively, gets the
+server-rendered thank-you page, and is never counted, because gtag cannot run
+either. HubSpot still has the lead, so the CRM is the source of truth for lead
+volume and GA4 undercounts by that slice. Closing it properly means the GA4
+Measurement Protocol (a server-side event with an API secret and the `_ga`
+client id), which is worth doing only if that slice turns out to matter.
+
 ## 📬 Contact form (HubSpot)
 
 `POST /api/contact` sends the working-session form to HubSpot. HubSpot is both the
