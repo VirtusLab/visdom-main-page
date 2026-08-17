@@ -666,7 +666,6 @@ const pl = {
     subtitle:
       'Najszybszy sposób, żeby sprawdzić, czy możemy pomóc, to 30-minutowa rozmowa z inżynierami, którzy to zbudowali. Jeśli pasujemy do siebie, wspólnie ustalamy zakres Assessmentu. Jeśli nie, wychodzicie z linkami do naszych tekstów inżynierskich i do Matrixa.',
     form: {
-      badge: 'Rekomendowane',
       title: 'Umówcie sesję roboczą',
       body: '30 minut ze staff engineerem. Napiszcie, nad czym pracujecie, a przyjdziemy przygotowani z jednym wzorcem, który u was najszybciej zrobi różnicę.',
       nameLabel: 'Imię i nazwisko',
@@ -681,19 +680,10 @@ const pl = {
       errorRef: 'Numer zgłoszenia:',
       errorFallback: 'Napiszcie na visdom@virtuslab.com',
     },
-    matrix: {
-      badge: 'Samoobsługa',
-      title: 'Przejdźcie Matrix sami',
-      body: '60 praktyk w 4 perspektywach. Zajmuje 20 minut. Wychodzicie z punktem odniesienia i jasnym pierwszym krokiem do zrobienia razem z nami.',
-      fineprint:
-        'Self-assessment jest bezpłatny. Moderowany warsztat z diagnozą to stała opłata, poproście o wycenę.',
-      cta: 'Przejdźcie Matrix ->',
-    },
-    writing: {
-      badge: 'Inżynieria przede wszystkim',
-      title: 'Zobaczcie, jak myślimy',
-      body: '50+ artykułów o AI-Native SDLC: kontekst, CI, code review i governance. Poczytajcie, jak to robimy, zanim ocenicie prezentację sprzedażową.',
-      cta: 'Przeczytajcie teksty',
+    alt: {
+      lead: 'Jeszcze nie na rozmowę?',
+      matrix: 'Przejdźcie Matrix sami',
+      writing: 'Poczytajcie nasze teksty inżynierskie',
     },
     footnoteBefore: 'Wolicie zwykłego maila?',
     footnoteAfter: 'Odpowiada inżynier, w ciągu jednego dnia roboczego.',

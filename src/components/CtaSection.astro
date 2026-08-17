@@ -6,9 +6,6 @@ const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 
 const CONTACT_EMAIL = 'visdom@virtuslab.com';
 
-// Handed to the inline submit script. It posts to /api/contact, which is the
-// whole point: the old handler opened a mailto, which most visitors cannot use
-// and which analytics could never see.
 // Which property this form is sitting on. The same HubSpot form serves several
 // of them, so this is what separates a lead from here and a lead from the
 // Maturity Matrix once both are in the CRM.
@@ -21,6 +18,9 @@ const CONTACT_EMAIL = 'visdom@virtuslab.com';
 // just less precisely.
 const SOURCE = import.meta.env.PUBLIC_SITE_SOURCE || 'visdom-site';
 
+// Handed to the inline submit script. It posts to /api/contact, which is the
+// whole point: the old handler opened a mailto, which most visitors cannot use
+// and which analytics could never see.
 const formStrings = {
   endpoint: `${base}/api/contact`,
   source: SOURCE,
@@ -43,6 +43,11 @@ const formStrings = {
         <p class="final-cta-sub">{t.cta.subtitle}</p>
       </div>
 
+      {/* One column on purpose. The form used to sit in a grid beside two cards
+          of equal weight, each with its own heading and button, so the moment we
+          most wanted a form filled offered three competing choices. Both of those
+          destinations are pitched properly earlier on the page, so here they are
+          demoted to one line below rather than removed. */}
       <div class="final-cta-layout">
         <form
           id="contact-form"
@@ -51,7 +56,6 @@ const formStrings = {
           method="post"
           novalidate
         >
-          <p class="final-cta-card-label">{t.cta.form.badge}</p>
           <h3>{t.cta.form.title}</h3>
           <p>{t.cta.form.body}</p>
 
@@ -91,23 +95,22 @@ const formStrings = {
           <p class="contact-form-status" role="status" aria-live="polite" hidden></p>
         </form>
 
-        <div class="final-cta-aside">
-          <article class="final-cta-card">
-            <p class="final-cta-card-label">{t.cta.matrix.badge}</p>
-            <h3>{t.cta.matrix.title}</h3>
-            <p>{t.cta.matrix.body}</p>
-            <p class="final-cta-card-fineprint">{t.cta.matrix.fineprint}</p>
-            <a href="https://visdom-maturity-matrix.virtuslab.com/workshop" data-location="final_cta" target="_blank" rel="noopener" class="btn-pill btn-outline">{t.cta.matrix.cta}</a>
-          </article>
-
-          <article class="final-cta-card">
-            <p class="final-cta-card-label">{t.cta.writing.badge}</p>
-            <h3>{t.cta.writing.title}</h3>
-            <p>{t.cta.writing.body}</p>
-            <a href="#insights" class="btn-pill btn-outline"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>{t.cta.writing.cta}</a>
-          </article>
-        </div>
       </div>
+
+      {/* Text links, not buttons: the section should offer one action and two
+          exits, and an outline button reads as a third action. Both keep their
+          tracking, so if demoting them costs clicks it will be visible rather
+          than assumed. */}
+      <p class="final-cta-alt">
+        <span>{t.cta.alt.lead}</span>
+        <a
+          href="https://visdom-maturity-matrix.virtuslab.com/workshop"
+          data-location="final_cta"
+          target="_blank"
+          rel="noopener"
+        >{t.cta.alt.matrix}</a>
+        <a href="#insights" data-cta="read_writing" data-location="final_cta">{t.cta.alt.writing}</a>
+      </p>
 
       <p class="final-cta-footnote">
         {t.cta.footnoteBefore} <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. {t.cta.footnoteAfter}
@@ -272,17 +275,12 @@ const formStrings = {
     margin: 0 auto;
   }
 
+  /* One column, and narrower than the section's 64rem: a form stretched to the
+     full width reads as a leftover from the two-column layout rather than a
+     deliberate shape, and the fields get uncomfortably wide to scan. */
   .final-cta-layout {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 1.25rem;
-    align-items: start;
-    margin-bottom: 2rem;
-  }
-
-  .final-cta-aside {
-    display: grid;
-    gap: 1.25rem;
+    max-width: 46rem;
+    margin: 0 auto 1.5rem;
   }
 
   .final-cta-card {
@@ -306,20 +304,6 @@ const formStrings = {
       var(--card);
   }
 
-  .final-cta-card-label {
-    font-family: var(--font-mono);
-    font-size: var(--fs-2xs);
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    margin: 0;
-  }
-
-  .final-cta-card--primary .final-cta-card-label {
-    color: var(--color-emerald-dark, #047857);
-  }
-
   .final-cta-card h3 {
     font-size: var(--fs-3xl);
     font-weight: 700;
@@ -334,21 +318,40 @@ const formStrings = {
     margin: 0;
   }
 
-  .final-cta-aside .final-cta-card p {
-    flex-grow: 1;
-  }
-
   .final-cta-card .btn-pill {
     align-self: flex-start;
     margin-top: 0.5rem;
   }
 
-  .final-cta-card .final-cta-card-fineprint {
-    font-size: var(--fs-sm);
+  /* The two exits. Muted, inline, and set below the form so the eye reaches them
+     only after it has passed the thing we actually want used. */
+  .final-cta-alt {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0.4rem 1.25rem;
+    max-width: 46rem;
+    /* Tight against the footnote below it. Both are small print offering another
+       route out, so they should read as one quiet block rather than two separate
+       propositions stacked under the form. */
+    margin: 0 auto 0.6rem;
+    font-size: var(--fs-md);
     color: var(--color-text-muted);
-    line-height: 1.5;
-    flex-grow: 0;
-    margin: 0;
+  }
+
+  .final-cta-alt a {
+    color: var(--color-text-secondary);
+    text-decoration: underline;
+    text-decoration-color: var(--color-border);
+    text-underline-offset: 3px;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+
+  .final-cta-alt a:hover,
+  .final-cta-alt a:focus-visible {
+    color: var(--color-emerald-dark, var(--color-emerald));
+    text-decoration-color: currentColor;
   }
 
   /* ── Contact form ── */
@@ -462,11 +465,6 @@ const formStrings = {
     text-underline-offset: 3px;
   }
 
-  @media (max-width: 900px) {
-    .final-cta-layout {
-      grid-template-columns: 1fr;
-    }
-  }
 
   @media (max-width: 520px) {
     .contact-field-row {

@@ -682,7 +682,6 @@ const en = {
     subtitle:
       "The fastest way to know if we can help is a 30-minute call with the engineers who built this. If the fit is there, we scope an Assessment together. If it isn't, you leave with pointers to our engineering writing and the Matrix.",
     form: {
-      badge: 'Recommended',
       title: 'Book a working session',
       body: "30 minutes with a staff engineer. Tell us what you're working on and we come prepared with the one pattern most likely to move your number first.",
       nameLabel: 'Name',
@@ -699,19 +698,18 @@ const en = {
       /** Shown if the endpoint is unreachable, e.g. on a static-only deploy. */
       errorFallback: 'Write to visdom@virtuslab.com',
     },
-    matrix: {
-      badge: 'Self-serve',
-      title: 'Run the Matrix yourself',
-      body: '60 practices across 4 perspectives. Takes 20 minutes. You walk away with a scored baseline and a clear first move to make with us.',
-      fineprint:
-        'Self-assessment is free. Facilitated workshop + diagnosis is a fixed fee - ask for a quote.',
-      cta: 'Run the Matrix ->',
-    },
-    writing: {
-      badge: 'Engineering-first',
-      title: 'See how we think',
-      body: '50+ articles on the AI-Native SDLC: context, CI, review, and governance. Read the engineering before you judge the sales deck.',
-      cta: 'Read the writing',
+    /**
+     * The two routes for a reader who is not ready to book. Deliberately one
+     * quiet line rather than the two cards that used to sit beside the form:
+     * both destinations are already pitched properly earlier on this page
+     * (MaturityLadder and MaturityRef for the Matrix, the #insights section for
+     * the writing), so repeating them at the decision point only competed with
+     * the form. The subtitle above already promises exactly these two.
+     */
+    alt: {
+      lead: 'Not ready for a call?',
+      matrix: 'Run the Matrix yourself',
+      writing: 'Read our engineering writing',
     },
     footnoteBefore: 'Prefer plain email?',
     footnoteAfter: 'Replies come from an engineer, within one business day.',
