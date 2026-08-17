@@ -9,8 +9,16 @@ const CONTACT_EMAIL = 'visdom@virtuslab.com';
 // Handed to the inline submit script. It posts to /api/contact, which is the
 // whole point: the old handler opened a mailto, which most visitors cannot use
 // and which analytics could never see.
+// Which property this form is sitting on. The same HubSpot form serves several
+// of them, so this is what separates a lead from here and a lead from the
+// Maturity Matrix once both are in the CRM. A copy of this component on another
+// property MUST change this string; if it is forgotten the endpoint falls back to
+// classifying by hostname, so the lead is still attributed, just less precisely.
+const SOURCE = 'visdom-site';
+
 const formStrings = {
   endpoint: `${base}/api/contact`,
+  source: SOURCE,
   locale,
   mailto: `mailto:${CONTACT_EMAIL}`,
   submit: t.cta.form.submit,
@@ -62,6 +70,10 @@ const formStrings = {
             <label for="cf-message">{t.cta.form.messageLabel} <span>{t.cta.form.optional}</span></label>
             <textarea id="cf-message" name="message" rows="3"></textarea>
           </div>
+
+          {/* Carries the origin property on the no-JS path too, where the browser
+              posts the form natively and the fetch handler below never runs. */}
+          <input type="hidden" name="source" value={SOURCE} />
 
           {/* Hidden from people, filled by naive bots. The endpoint answers 200
               and sends nothing when it arrives populated. */}
@@ -129,6 +141,7 @@ const formStrings = {
         message: val('message'),
         website: val('website'),
         locale: formStrings.locale,
+        source: formStrings.source,
       };
 
       submitted = true;

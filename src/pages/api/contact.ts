@@ -37,6 +37,7 @@ import {
   submitLead,
   transactionalEmailId,
 } from '../../lib/hubspot';
+import { allowedOrigin, pageUriOf, resolveSource } from '../../lib/source';
 
 export const prerender = false;
 
@@ -133,20 +134,25 @@ function page(title: string, body: string, status = 200) {
   );
 }
 
-/**
- * Which page the request came from. The referer is caller-controlled and ends up
- * in a CRM record and in a notification body, so it is only used when it parses as
- * a web URL, and it is capped. Anything else falls back to the endpoint's own URL.
- */
-function pageUriOf(request: Request): string {
-  const raw = request.headers.get('referer') ?? '';
-  try {
-    const url = new URL(raw);
-    if (url.protocol === 'https:' || url.protocol === 'http:') return url.toString().slice(0, 500);
-  } catch {
-    // Absent or unparseable, which is the common case for a native form post.
-  }
-  return request.url.slice(0, 500);
+
+/** Applies the CORS headers to a response when the caller's origin is allowed. */
+function withCors(request: Request, res: Response): Response {
+  const origin = allowedOrigin(request.headers.get('origin'), serverEnv('CONTACT_ALLOWED_ORIGINS'));
+  if (!origin) return res;
+  res.headers.set('Access-Control-Allow-Origin', origin);
+  // The allow-list varies the response, so a shared cache must not serve one
+  // origin's headers to another.
+  res.headers.set('Vary', 'Origin');
+  return res;
+}
+
+/** The request facts src/lib/source.ts needs, pulled out so it stays testable. */
+function ctxOf(request: Request) {
+  return {
+    origin: request.headers.get('origin'),
+    referer: request.headers.get('referer'),
+    url: request.url,
+  };
 }
 
 function recipients(requestUrl: string): { to: string[]; mode: 'owners' | 'dev' } {
@@ -160,7 +166,30 @@ function recipients(requestUrl: string): { to: string[]; mode: 'owners' | 'dev' 
     : { to: DEFAULT_RECIPIENTS, mode: 'owners' };
 }
 
-export const POST: APIRoute = async ({ request, clientAddress }) => {
+/**
+ * Preflight. A JSON post from another origin triggers one, and it must answer
+ * before the browser will send the real request. Only reachable for an origin
+ * that is already on the allow-list; anything else gets no CORS headers and the
+ * browser refuses on its own.
+ */
+export const OPTIONS: APIRoute = ({ request }) => {
+  const origin = allowedOrigin(request.headers.get('origin'), serverEnv('CONTACT_ALLOWED_ORIGINS'));
+  if (!origin) return new Response(null, { status: 403 });
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Max-Age': '86400',
+      Vary: 'Origin',
+    },
+  });
+};
+
+export const POST: APIRoute = async (ctx) => withCors(ctx.request, await handlePost(ctx));
+
+const handlePost: APIRoute = async ({ request, clientAddress }) => {
   const contentType = request.headers.get('content-type') ?? '';
   const wantsJson = contentType.includes('application/json');
 
@@ -223,7 +252,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   // instead of arriving twice.
   const submissionId = crypto.randomUUID();
   const submittedAt = new Date().toISOString();
-  const pageUri = pageUriOf(request);
+  const ctx = ctxOf(request);
+  const pageUri = pageUriOf(ctx);
+  const source = resolveSource(ctx, str('source'));
   const from = serverEnv('HUBSPOT_FROM') || undefined;
 
   // A preview or a localhost run must not write into the production CRM. The
@@ -245,7 +276,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         message: message || undefined,
         locale,
         pageUri,
-        pageName: 'Visdom: working session request',
+        // Carries the origin property into HubSpot without touching the form
+        // itself. pageUri and pageName are submission context, not form fields,
+        // so the same form serves every property and each lead still says where
+        // it came from. pageUri is the one HubSpot surfaces most prominently, so
+        // the label here is the readable backup rather than the only signal.
+        pageName: `${source.label}: working session request`,
         ipAddress: ip,
         // Present only if the visitor has HubSpot tracking, which ties the
         // submission to their session. Absent is fine, not an error.
@@ -270,12 +306,13 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     console.log(`[contact] notifying mode=${mode} recipients=${to.length} locale=${locale}`);
 
     const summary = [
-      'New working-session request from the Visdom site',
+      `New working-session request from the ${source.label}`,
       '',
       `Name:     ${name}`,
       `Email:    ${email}`,
       company ? `Company:  ${company}` : null,
       `Language: ${locale}`,
+      `Source:   ${source.slug}`,
       `Page:     ${pageUri}`,
       '',
       message ? 'What they are trying to ship:' : null,
@@ -303,6 +340,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
             lead_company: company,
             lead_message: message,
             locale,
+            source: source.slug,
+            source_label: source.label,
             page_uri: pageUri,
             submitted_at: submittedAt,
           },
@@ -347,7 +386,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 
   console.log(
-    `[contact] lead handled captured=${captured} notified=${notified} devRun=${devRun} locale=${locale}`,
+    `[contact] lead handled captured=${captured} notified=${notified} devRun=${devRun} ` +
+      `locale=${locale} source=${source.slug}${source.declared ? '' : ' (derived)'}`,
   );
 
   // 3. Confirmation to the visitor. Best effort: the lead is already recorded, so

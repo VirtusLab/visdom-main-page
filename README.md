@@ -87,6 +87,37 @@ already-running deployment keeps the old values. (`vercel redeploy` currently
 fails on this project: it builds without the cache and then cannot authenticate to
 GitHub Packages for `@virtuslab/visdom-ui`.)
 
+### Putting this form on another property
+
+The same HubSpot form is shared, on purpose: duplicating it would split the
+submission history and double the settings that can silently drift apart. Nothing
+in HubSpot needs changing to add a property, because the origin travels as
+submission *context* (`pageUri`, `pageName`) rather than as a form field.
+
+Each lead is attributed in three places: the page name and page URL on the HubSpot
+submission, a `Source:` line in the transactional notification, and `source=` in
+the server log.
+
+To add a property (`src/lib/source.ts`):
+
+1. Add its hostname to `SOURCES` with a slug and a human label.
+2. Have its form send `source` with that slug, both in the JSON payload and as a
+   hidden input for the no-JS path. See `SOURCE` in `src/components/CtaSection.astro`.
+3. Decide how it reaches the endpoint:
+   - **Ship a copy of the endpoint** on that property, which is what the Maturity
+     Matrix already does for its own email. Nothing else to configure.
+   - **Or post to this endpoint cross-origin**, which additionally needs the
+     property's origin in `CONTACT_ALLOWED_ORIGINS` here. It is an explicit
+     allow-list, never a wildcard: this endpoint is unauthenticated and writes to
+     the CRM.
+
+Step 1 is a convenience, not a requirement. A property that declares a slug this
+repo has never heard of is still recorded under that slug, and a property that
+declares nothing is classified by `Origin`, then `Referer`, then the serving host.
+A caller-supplied slug is trusted for labelling only: it can never change where the
+lead goes, who is notified, or whether the CRM write happens, and anything outside
+`[a-z0-9-]` is discarded rather than sanitised.
+
 ### Guards against losing a lead quietly
 
 A misconfigured deployment builds and serves exactly like a working one, which is
