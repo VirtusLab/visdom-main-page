@@ -81,8 +81,38 @@ are configured independently (`src/lib/hubspot.ts`):
    uses the authenticated endpoint, which has higher rate limits. Without the
    scope the endpoint falls back to the public one automatically.
 
-Changing either variable needs a redeploy. Vercel captures environment variables
-when a deployment is built, so an already-running deployment keeps the old values.
+Changing either variable needs a redeploy, and the way to trigger one is to push a
+commit. Vercel captures environment variables when a deployment is built, so an
+already-running deployment keeps the old values. (`vercel redeploy` currently
+fails on this project: it builds without the cache and then cannot authenticate to
+GitHub Packages for `@virtuslab/visdom-ui`.)
+
+### Guards against losing a lead quietly
+
+A misconfigured deployment builds and serves exactly like a working one, which is
+how this form spent three days answering every visitor with an error before anyone
+noticed. Three things now make that loud:
+
+- **`npm run check:env`**, part of `npm run build`. A *production* build fails if
+  no channel can accept a lead, and names the missing variables. Local and preview
+  builds only warn, so a contributor without HubSpot access can still build.
+  `VISDOM_ALLOW_UNCONFIGURED=1` overrides it and says so in the log.
+- **`GET /api/contact`**, a health check reporting booleans only, never values. It
+  answers 503 when nothing can accept a lead, so an uptime monitor pointed at it
+  treats a silently broken form as the outage it is. This is what catches a
+  variable that was changed but never redeployed, which the build guard cannot
+  see.
+- **`npm run smoke`** (optionally `npm run smoke -- https://preview-url`) asks a
+  running deployment the same question and exits non-zero if it is unhealthy. It
+  has no side effects: the health check is a read, and its submission fills the
+  honeypot, so the handler returns before contacting HubSpot or sending anything.
+  Safe to run against production as often as you like.
+
+None of these prove a lead reaches the *right* HubSpot form. Nothing observable
+from outside can, because a submission to the wrong form succeeds just as loudly
+as one to the right form. That check is a real submission plus a look at the CRM.
+Two settings on the HubSpot side deserve the same suspicion, since both fail
+silently with a 200: contact creation being off, and reCAPTCHA being on.
 
 **B. Transactional Single-Send emails (needs the transactional email add-on)**
 

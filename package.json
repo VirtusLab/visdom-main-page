@@ -7,7 +7,9 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run check:i18n && npm test && astro build",
+    "build": "npm run check:i18n && npm run check:env && npm test && astro build",
+    "check:env": "node scripts/check-env.mjs",
+    "smoke": "node scripts/smoke.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "check:i18n": "tsc --noEmit --strict --target es2022 --module esnext --moduleResolution bundler src/i18n/pl/index.ts",

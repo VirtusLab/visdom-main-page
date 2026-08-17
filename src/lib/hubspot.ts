@@ -589,6 +589,47 @@ export function formConfigured(): boolean {
   return Boolean(serverEnv('HUBSPOT_PORTAL_ID') && serverEnv('HUBSPOT_FORM_GUID'));
 }
 
+export interface ConfigSummary {
+  /** The CRM write is possible. Without it a lead has nowhere durable to go. */
+  form: boolean;
+  /** Optional transactional channels. */
+  notify: boolean;
+  confirm: boolean;
+  token: boolean;
+  /** True when at least one channel can accept a lead. */
+  usable: boolean;
+  /** Names of the variables that are missing and would matter. */
+  missing: string[];
+}
+
+/**
+ * What this instance can actually do with a lead, as booleans only.
+ *
+ * Deliberately free of values: it is reported over HTTP by the health check on
+ * GET /api/contact and printed by the build guard, so it must never leak a
+ * credential or the form id. Knowing THAT a form is configured is harmless;
+ * knowing WHICH form would hand the endpoint to spammers.
+ *
+ * This exists because the failure that actually hurt was silent. The contact form
+ * returned 502 for three days with nobody watching the logs, because a working
+ * deployment and a configured deployment look identical from the outside.
+ */
+export function configSummary(): ConfigSummary {
+  const form = formConfigured();
+  const notify = Boolean(serverEnv('HUBSPOT_NOTIFY_EMAIL_ID'));
+  const confirm = Boolean(serverEnv('HUBSPOT_CONFIRM_EMAIL_ID'));
+  const token = Boolean(serverEnv('HUBSPOT_ACCESS_TOKEN'));
+
+  const missing: string[] = [];
+  if (!serverEnv('HUBSPOT_PORTAL_ID')) missing.push('HUBSPOT_PORTAL_ID');
+  if (!serverEnv('HUBSPOT_FORM_GUID')) missing.push('HUBSPOT_FORM_GUID');
+  // A transactional template without a token cannot send, so name the token only
+  // when something actually needs it.
+  if ((notify || confirm) && !token) missing.push('HUBSPOT_ACCESS_TOKEN');
+
+  return { form, notify, confirm, token, usable: form || (notify && token), missing };
+}
+
 /** Reads one cookie out of a request's Cookie header. */
 export function readCookie(header: string | null, name: string): string | undefined {
   if (!header) return undefined;

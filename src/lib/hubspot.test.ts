@@ -11,6 +11,7 @@ import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   HubSpotError,
+  configSummary,
   readCookie,
   sendTransactionalEmail,
   submitLead,
@@ -51,6 +52,7 @@ const ENV_KEYS = [
   'HUBSPOT_FORM_GUID',
   'HUBSPOT_SUBSCRIPTION_TYPE_ID',
   'HUBSPOT_NOTIFY_EMAIL_ID',
+  'HUBSPOT_CONFIRM_EMAIL_ID',
 ];
 const saved: Record<string, string | undefined> = {};
 let restoreConsole: (() => void) | undefined;
@@ -316,6 +318,68 @@ test('an unconfigured portal is a configuration error, not a submission', async 
     (e: unknown) => e instanceof HubSpotError && e.code === 'HUBSPOT_CONFIG_MISSING',
   );
   assert.equal(calls.length, 0);
+});
+
+// ── Configuration reporting ──────────────────────────────────────────────────
+//
+// This is what the health check and the build guard both read, so a wrong answer
+// here is exactly the silent failure they exist to prevent.
+
+const clearHubSpotEnv = () => ENV_KEYS.forEach((k) => delete process.env[k]);
+
+test('an unconfigured instance reports itself unusable and names what is missing', () => {
+  clearHubSpotEnv();
+  const cfg = configSummary();
+  assert.equal(cfg.usable, false);
+  assert.equal(cfg.form, false);
+  assert.deepEqual(cfg.missing, ['HUBSPOT_PORTAL_ID', 'HUBSPOT_FORM_GUID']);
+});
+
+test('the form channel alone makes an instance usable', () => {
+  clearHubSpotEnv();
+  process.env.HUBSPOT_PORTAL_ID = '2404976';
+  process.env.HUBSPOT_FORM_GUID = 'guid';
+  const cfg = configSummary();
+  assert.equal(cfg.usable, true);
+  assert.equal(cfg.form, true);
+  assert.deepEqual(cfg.missing, []);
+});
+
+test('half a form is not a form', () => {
+  clearHubSpotEnv();
+  process.env.HUBSPOT_PORTAL_ID = '2404976';
+  const cfg = configSummary();
+  assert.equal(cfg.form, false);
+  assert.equal(cfg.usable, false);
+  assert.deepEqual(cfg.missing, ['HUBSPOT_FORM_GUID']);
+});
+
+test('a transactional template without a token cannot send, and says so', () => {
+  clearHubSpotEnv();
+  process.env.HUBSPOT_NOTIFY_EMAIL_ID = '123';
+  const cfg = configSummary();
+  assert.equal(cfg.notify, true);
+  assert.equal(cfg.token, false);
+  // No form and no token, so nothing can accept a lead.
+  assert.equal(cfg.usable, false);
+  assert.ok(cfg.missing.includes('HUBSPOT_ACCESS_TOKEN'));
+});
+
+test('transactional alone is enough when it can actually send', () => {
+  clearHubSpotEnv();
+  process.env.HUBSPOT_NOTIFY_EMAIL_ID = '123';
+  process.env.HUBSPOT_ACCESS_TOKEN = 'pat-test-123';
+  assert.equal(configSummary().usable, true);
+});
+
+test('the summary carries no values, only booleans and variable names', () => {
+  clearHubSpotEnv();
+  process.env.HUBSPOT_PORTAL_ID = '2404976';
+  process.env.HUBSPOT_FORM_GUID = 'super-secret-guid';
+  process.env.HUBSPOT_ACCESS_TOKEN = 'pat-super-secret';
+  const serialised = JSON.stringify(configSummary());
+  // The health endpoint publishes this, so a leak here is a public leak.
+  assert.doesNotMatch(serialised, /super-secret-guid|pat-super-secret|2404976/);
 });
 
 // ── Helpers ──────────────────────────────────────────────────────────────────

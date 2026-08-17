@@ -28,6 +28,7 @@
 import type { APIRoute } from 'astro';
 import {
   HubSpotError,
+  configSummary,
   formConfigured,
   newErrorRef,
   readCookie,
@@ -387,5 +388,33 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     : page('Thanks', 'An engineer will reply within one business day.');
 };
 
-/** Anything but POST on this path is a mistake worth naming. */
+/**
+ * GET /api/contact: health check for a RUNNING deployment.
+ *
+ * The build guard (scripts/check-env.mjs) proves the variables existed when the
+ * deployment was built. This proves what the deployment actually received, which
+ * is not the same thing: Vercel captures env vars at build time, so changing one
+ * without redeploying leaves the old value live, and nothing says so out loud.
+ * That gap shipped a form pointing at the wrong destination once already.
+ *
+ * Booleans only. It reports THAT a channel is configured, never which form or
+ * which credential, so publishing it costs nothing an attacker did not already
+ * know from the POST handler existing.
+ *
+ * 503 when no channel can accept a lead, so any uptime monitor pointed here
+ * treats a silently broken form as an outage, which is what it is.
+ */
+export const GET: APIRoute = () => {
+  const cfg = configSummary();
+  return json(
+    {
+      ok: cfg.usable,
+      configured: { form: cfg.form, notify: cfg.notify, confirm: cfg.confirm, token: cfg.token },
+      missing: cfg.missing,
+    },
+    cfg.usable ? 200 : 503,
+  );
+};
+
+/** Anything but GET or POST on this path is a mistake worth naming. */
 export const ALL: APIRoute = () => json({ ok: false, error: 'Method not allowed.' }, 405);
