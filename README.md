@@ -61,15 +61,28 @@ are configured independently (`src/lib/hubspot.ts`):
 **A. Form submission (no add-on needed, the main path)**
 
 1. In HubSpot, create a form with the fields `email`, `firstname`, `lastname`,
-   `company`, `message`. A field the form does not define is dropped and the
-   submission is retried, so a missing optional field costs data, not the lead.
-2. Set the form's notification recipients, and its follow-up email if the visitor
+   `company`, `message` and, for the page language, `hs_language` ("Preferred
+   language"). A field the form does not define is dropped and the submission is
+   retried, so a missing optional field costs data, not the lead.
+2. Turn ON "Automatically create new contacts from unknown email addresses" in the
+   form's General settings. It is OFF by default, and with it off a first-time
+   visitor never becomes a contact, which silently loses the lead.
+3. Do NOT enable reCAPTCHA, and ignore HubSpot's warning about it. Submissions
+   arrive server-side from this endpoint rather than from a rendered form, so a
+   captcha rejects every one of them. Spam is handled here instead: a honeypot
+   field and per-IP rate limiting.
+4. Set the form's notification recipients, and its follow-up email if the visitor
    should get a confirmation. That copy lives in HubSpot on purpose: marketing can
-   change it without a deploy.
-3. Set `HUBSPOT_PORTAL_ID` and `HUBSPOT_FORM_GUID`.
-4. Optional: a private app token in `HUBSPOT_ACCESS_TOKEN` with the `forms` scope
+   change it without a deploy. Only people with a HubSpot seat can be picked as
+   recipients.
+5. Set `HUBSPOT_PORTAL_ID` and `HUBSPOT_FORM_GUID`. The GUID stays in the
+   environment rather than in this repo, so the endpoint is not handed to spammers.
+6. Optional: a private app token in `HUBSPOT_ACCESS_TOKEN` with the `forms` scope
    uses the authenticated endpoint, which has higher rate limits. Without the
    scope the endpoint falls back to the public one automatically.
+
+Changing either variable needs a redeploy. Vercel captures environment variables
+when a deployment is built, so an already-running deployment keeps the old values.
 
 **B. Transactional Single-Send emails (needs the transactional email add-on)**
 
