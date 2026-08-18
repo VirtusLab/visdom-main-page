@@ -34,6 +34,8 @@ const en = {
   nav: {
     ariaPrimary: 'Primary',
     platform: 'Platform',
+    /** First item in the Platform dropdown, so the section overview stays reachable from the nav. */
+    platformOverview: 'Platform overview',
     insights: 'Insights',
     maturityMatrix: 'Maturity Matrix',
     contact: 'Get in Touch',

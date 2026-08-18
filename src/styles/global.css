@@ -229,6 +229,11 @@ h1, h2, h3 {
 
 html {
   scroll-behavior: smooth;
+  /* The header is sticky, so an anchor jump would otherwise land with the
+     heading tucked underneath it. Covers every in-page link at once, including
+     the component anchors campaigns deep-link to. Header is 14px padding plus a
+     ~36px control row, rounded up for breathing room. */
+  scroll-padding-top: 5.5rem;
 }
 
 body {

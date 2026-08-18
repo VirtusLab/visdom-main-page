@@ -1,5 +1,6 @@
 ---
 import visdomCrestSvg from '../icons/visdom-crest.svg?raw';
+import { PLATFORM_COMPONENTS, shortName } from '../data/platform';
 import {
   useI18n,
   alternatesFor,
@@ -16,8 +17,23 @@ const home = localePath(locale, '/');
 const onHome = Astro.url.pathname.replace(/\/$/, '') === home.replace(/\/$/, '');
 const anchor = (hash: string) => (onHome ? hash : `${home}${hash}`);
 
+// The Platform entry opens onto the six components. Before this, a reader who
+// wanted one specific component had to scroll the whole page to find it, and a
+// campaign could not link to the section that matched its promise.
+//
+// Built from PLATFORM_COMPONENTS rather than written out, so a component added
+// to the page appears here, and a menu item can never point at an anchor that
+// does not exist.
+const platformItems = [
+  { label: t.nav.platformOverview, href: anchor('#platform') },
+  ...PLATFORM_COMPONENTS.map((component) => ({
+    label: shortName(t.solutions[component.key].title),
+    href: anchor(`#${component.id}`),
+  })),
+];
+
 const links = [
-  { label: t.nav.platform, href: anchor('#platform') },
+  { label: t.nav.platform, href: anchor('#platform'), items: platformItems },
   { label: t.nav.insights, href: anchor('#thesis') },
   { label: t.nav.maturityMatrix, href: 'https://visdom-maturity-matrix.virtuslab.com/', external: true },
 ];
@@ -54,14 +70,34 @@ const languages = alternatesFor(Astro.url.pathname)
 
   <nav class="site-header-nav" aria-label={t.nav.ariaPrimary}>
     {links.map((link) => (
-      <a
-        href={link.href}
-        class="site-header-nav-link"
-        target={link.external ? '_blank' : undefined}
-        rel={link.external ? 'noopener' : undefined}
-      >
-        {link.label}
-      </a>
+      link.items ? (
+        /* The trigger stays a real link, so clicking Platform still goes to the
+           section. The menu opens on hover and on focus-within, which is why the
+           trigger must live inside the group: focusing it is what reveals the
+           items and makes them tabbable. */
+        <div class="site-header-nav-group">
+          <a href={link.href} class="site-header-nav-link site-header-nav-trigger">
+            {link.label}
+            <svg class="site-header-nav-chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </a>
+          <div class="site-header-dropdown">
+            {link.items.map((item) => (
+              <a href={item.href} class="site-header-dropdown-link">{item.label}</a>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <a
+          href={link.href}
+          class="site-header-nav-link"
+          target={link.external ? '_blank' : undefined}
+          rel={link.external ? 'noopener' : undefined}
+        >
+          {link.label}
+        </a>
+      )
     ))}
   </nav>
 
@@ -113,15 +149,28 @@ const languages = alternatesFor(Astro.url.pathname)
 
   <div class="site-header-mobile-menu" id="site-header-mobile-menu" hidden>
     {links.map((link) => (
-      <a
-        href={link.href}
-        class="site-header-mobile-link"
-        target={link.external ? '_blank' : undefined}
-        rel={link.external ? 'noopener' : undefined}
-      >
-        {link.label}
-        {link.external && <span aria-hidden="true"> &#8599;</span>}
-      </a>
+      <>
+        <a
+          href={link.href}
+          class="site-header-mobile-link"
+          target={link.external ? '_blank' : undefined}
+          rel={link.external ? 'noopener' : undefined}
+        >
+          {link.label}
+          {link.external && <span aria-hidden="true"> &#8599;</span>}
+        </a>
+        {/* Laid out flat rather than behind another tap. The menu is already
+            open, so hiding six links behind an accordion would add a step to
+            reach exactly what someone opened the menu for. The overview is
+            skipped here because the parent link above already is it. */}
+        {link.items && (
+          <div class="site-header-mobile-sub">
+            {link.items.slice(1).map((item) => (
+              <a href={item.href} class="site-header-mobile-link site-header-mobile-sublink">{item.label}</a>
+            ))}
+          </div>
+        )}
+      </>
     ))}
     <a href={contactHref} class="site-header-mobile-link site-header-mobile-link--cta">{t.nav.contact}</a>
     {languages.length > 1 && (
@@ -257,6 +306,103 @@ const languages = alternatesFor(Astro.url.pathname)
 
   @media (min-width: 900px) {
     .site-header-nav { display: inline-flex; }
+  }
+
+  /* ── Platform dropdown ── */
+  .site-header-nav-group {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .site-header-nav-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .site-header-nav-chevron {
+    transition: transform 0.2s ease;
+  }
+
+  .site-header-nav-group:hover .site-header-nav-chevron,
+  .site-header-nav-group:focus-within .site-header-nav-chevron {
+    transform: rotate(180deg);
+  }
+
+  .site-header-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 15rem;
+    padding: 6px;
+    background: var(--card, var(--color-surface));
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl, 16px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+    /* visibility, not display: it keeps the links out of the tab order while
+       closed and still allows the fade. The group's own :focus-within is what
+       opens it, since the trigger sits inside the group. */
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s;
+  }
+
+  .site-header-nav-group:hover .site-header-dropdown,
+  .site-header-nav-group:focus-within .site-header-dropdown {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Bridges the gap between trigger and menu, so the pointer crossing it does
+     not close the menu mid-travel. */
+  .site-header-nav-group::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 12px;
+  }
+
+  .site-header-dropdown-link {
+    padding: 8px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--color-text-secondary);
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .site-header-dropdown-link:hover,
+  .site-header-dropdown-link:focus-visible {
+    background: color-mix(in oklab, var(--color-emerald) 12%, transparent);
+    color: var(--color-text);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header-dropdown,
+    .site-header-nav-chevron {
+      transition: none;
+    }
+  }
+
+  /* ── Mobile: the same six, indented under Platform ── */
+  .site-header-mobile-sub {
+    display: flex;
+    flex-direction: column;
+    margin-left: 12px;
+    padding-left: 10px;
+    border-left: 1px solid var(--color-border);
+  }
+
+  .site-header-mobile-sublink {
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
   }
 
   .site-header-nav-link {
@@ -455,6 +601,15 @@ const languages = alternatesFor(Astro.url.pathname)
       } catch (e) {}
     });
   }
+
+  // Escape closes the Platform dropdown. It opens on hover and focus-within, so
+  // there is no state to clear: dropping focus out of the group is enough, and
+  // this is the one thing CSS cannot do on its own.
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    const open = document.activeElement?.closest('.site-header-nav-group');
+    if (open) (open.querySelector('.site-header-nav-trigger') as HTMLElement | null)?.blur();
+  });
 
   const header = document.getElementById('site-header');
   if (header) {

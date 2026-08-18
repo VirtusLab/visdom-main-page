@@ -108,6 +108,57 @@ const piwikScript = `(function(window, document, dataLayerName, id) { window[dat
         { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
       );
       document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+
+      // Landing on an anchor lands in the wrong place without this. The browser
+      // jumps while the document is still short, then late layout (webfonts, the
+      // architecture diagrams, the consent banner injected from another origin)
+      // pushes the target thousands of pixels further down, leaving the reader
+      // near the top with the right URL and the wrong view. Measured on a cold
+      // load of /#security: target at 17026px, window resting at 58px.
+      //
+      // Campaigns deep-link straight to a component anchor, so this is the path
+      // that matters most. Re-assert the jump once the page has settled, with
+      // smooth scrolling switched off so it does not fight the browser's own
+      // in-flight animation.
+      (() => {
+        if (!location.hash) return;
+
+        // If the reader has started moving the page themselves, leave them alone:
+        // being yanked somewhere else a second after arriving is worse than
+        // landing slightly off.
+        let claimed = false;
+        const claim = () => { claimed = true; };
+        addEventListener('wheel', claim, { passive: true, once: true });
+        addEventListener('touchmove', claim, { passive: true, once: true });
+        addEventListener('keydown', claim, { once: true });
+
+        const settle = () => {
+          if (claimed) return;
+          let target = null;
+          try {
+            target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+          } catch (e) {
+            return; // A malformed hash is not worth throwing over.
+          }
+          if (!target) return;
+          const root = document.documentElement;
+          const previous = root.style.scrollBehavior;
+          root.style.scrollBehavior = 'auto';
+          target.scrollIntoView({ block: 'start' });
+          root.style.scrollBehavior = previous;
+        };
+
+        // Two passes: once the load event fires, and once more after the layout
+        // has had a frame to finish, since the banner arrives late.
+        const run = () => {
+          requestAnimationFrame(settle);
+          setTimeout(settle, 400);
+        };
+        // A cached page can already be complete by the time this runs, and then
+        // the load event never fires again.
+        if (document.readyState === 'complete') run();
+        else addEventListener('load', run);
+      })();
     </script>
     <script
       is:inline

@@ -29,6 +29,7 @@ const pl = {
   nav: {
     ariaPrimary: 'Główna',
     platform: 'Platforma',
+    platformOverview: 'Przegląd platformy',
     insights: 'Publikacje',
     maturityMatrix: 'Maturity Matrix',
     contact: 'Porozmawiajmy',
