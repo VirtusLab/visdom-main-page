@@ -75,7 +75,16 @@ const eventJsonLd = WEBINAR.startsAt
   : null;
 ---
 
-<Layout title={`${WEBINAR.title} | Live webinar | Visdom by VirtusLab`} description={WEBINAR.subtitle}>
+{/* Its own card, not the platform one. A shared link is often the first thing
+    anyone sees of this session, and the generic image says nothing about who is
+    speaking or when. Regenerate with scripts/make-og-webinar.py after changing
+    the title, the date or the roster. */}
+<Layout
+  title={`${WEBINAR.title} | Live webinar | Visdom by VirtusLab`}
+  description={WEBINAR.subtitle}
+  ogImage={`${Astro.site ?? 'https://visdom.virtuslab.com'}og-webinar.png`.replace(/([^:]\/)\/+/g, '$1')}
+  ogImageAlt={`${WEBINAR.title} Live webinar with ${SPEAKERS.map((s) => s.name).join(', ')}.`}
+>
   {eventJsonLd && (
     <script type="application/ld+json" is:inline set:html={JSON.stringify(eventJsonLd)} />
   )}
