@@ -73,11 +73,24 @@ export type Speaker = {
 };
 
 /**
- * The session's speaker roster, in billing order. Photos and edited bios are
- * coming from marketing; the empty fields render nothing until filled, so the
- * section ships in a presentable placeholder state.
+ * The session's speaker roster, in billing order: Adam, Artur, Krzysztof, which
+ * is the order marketing supplied the photos in.
+ *
+ * Bios for Adam and Krzysztof come from the "Speakers Bio" brief. Photos are
+ * still outstanding, and the card handles that on its own: the <img> removes
+ * itself on error and leaves the initials plate, so dropping three files into
+ * public/speakers/ is the only step left and needs no code change.
  */
 export const SPEAKERS: Speaker[] = [
+  {
+    name: 'Adam Warski',
+    role: 'Chief R&D Officer',
+    company: 'SoftwareMill',
+    bio:
+      "Adam co-founded SoftwareMill and builds open-source JVM tooling (Tapir, sttp, Ox) with a current focus on making AI coding agents safe and productive in real engineering workflows. He created Sandcat, a setup for securely running AI agents. That work gives him a builder's perspective on the same problem Visdom tackles: how to let agents operate safely inside a real production SDLC.",
+    linkedin: 'https://www.linkedin.com/in/adamwarski/',
+    photo: '/speakers/adam-warski.jpg',
+  },
   {
     name: 'Artur Skowroński',
     role: 'Head of Application Development',
@@ -85,23 +98,20 @@ export const SPEAKERS: Speaker[] = [
     bio:
       'Artur will demonstrate how Visdom transforms AI-assisted software delivery into an agent-operable SDLC: how AI agents can safely navigate the entire delivery lifecycle with the context, validation, governance, and orchestration they need to ship production-ready software. He also writes the JVM Weekly newsletter.',
     linkedin: 'https://www.linkedin.com/in/arturskowronski/',
-    photo: '/webinar-host.jpg',
+    photo: '/speakers/artur-skowronski.jpg',
   },
   {
+    // Role deliberately left empty: the bio brief calls him "a software engineer
+    // at SoftwareMill" while VirtusLab's own LinkedIn creative from April 2026
+    // says "Principal Engineer". Rather than pick one and understate or inflate a
+    // real person's title, the card omits the role line and the bio carries it.
     name: 'Krzysztof Grajek',
     role: '',
     company: 'SoftwareMill',
-    bio: '',
+    bio:
+      'Krzysztof is a software engineer at SoftwareMill, building enterprise-grade systems around Kafka and streaming data architectures. His day-to-day work sits at the exact intersection this webinar explores. He helps clients keep fast-moving production systems reliable while rolling new automation into their delivery pipelines.',
     linkedin: 'https://www.linkedin.com/in/krzysztofgrajek/',
     photo: '/speakers/krzysztof-grajek.jpg',
-  },
-  {
-    name: 'Adam Warski',
-    role: 'Chief R&D Officer',
-    company: 'SoftwareMill',
-    bio: '',
-    linkedin: 'https://www.linkedin.com/in/adamwarski/',
-    photo: '/speakers/adam-warski.jpg',
   },
 ];
 
