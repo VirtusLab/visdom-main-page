@@ -2,9 +2,22 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 import vercel from '@astrojs/vercel';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  integrations: [react()],
+  // Sitemap: the site had none, and /webinar was reachable only by someone who
+  // already had the link. No internal page links to it, so without this a
+  // crawler has no route in at all, which matters for a page campaigns point at.
+  //
+  // The filter drops anything carrying noindex. Right now that is only the
+  // /webinar-sequel spike; listing a noindex page in the sitemap sends search
+  // engines two contradictory instructions about the same URL.
+  integrations: [
+    react(),
+    sitemap({
+      filter: (page) => !page.includes('/webinar-sequel'),
+    }),
+  ],
   // Every page stays prerendered; the adapter exists only so the contact
   // endpoint can run as a function (src/pages/api/contact.ts opts in with
   // `prerender = false`). Without it the form would be back to a mailto.

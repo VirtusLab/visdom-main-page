@@ -1,0 +1,11 @@
+# The site had no robots.txt at all, which meant no crawler was ever pointed at
+# a sitemap and every bot had to discover pages by following links. /webinar has
+# no inbound links, so it was effectively invisible.
+User-agent: *
+Allow: /
+
+# The Sequel spike is noindex in its own head; repeating it here keeps crawlers
+# that ignore meta robots from spending budget on a duplicate of /webinar.
+Disallow: /webinar-sequel
+
+Sitemap: https://visdom.virtuslab.com/sitemap-index.xml
