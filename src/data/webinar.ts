@@ -44,9 +44,10 @@ export const WEBINAR: WebinarConfig = {
     'AI coding assistants can write code. But can they actually deliver software? Join our live session on turning AI-assisted delivery into an agent-operable SDLC.',
   // Copy of the schedule in Sequel (the source of truth). If the event moves
   // in Sequel, this must move with it. 15:00 CEST = 13:00 UTC.
-  // Thursday 24 September, the date the Sequel event carries and the one the
-  // September plan has always named. The page sat on 16 September for a day.
-  startsAt: '2026-09-24T13:00:00Z',
+  // Monday 21 September. The session moved off 24 September when the schedule
+  // had to be reworked. The clock time did not move: 15:00 CEST is what makes
+  // the session reachable from New York in the morning.
+  startsAt: '2026-09-21T13:00:00Z',
   timezone: 'Europe/Warsaw',
   timezoneLabel: 'CEST',
   durationMinutes: 60,
