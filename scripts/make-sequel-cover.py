@@ -42,12 +42,24 @@ TZ = one(r"timezone:\s*'([^']+)'", 'the timezone')
 TZ_LABEL = one(r"timezoneLabel:\s*'([^']+)'", 'the timezone label')
 MINUTES = one(r'durationMinutes:\s*(\d+)', 'the duration')
 
-_host = re.search(r'host:\s*\{([\s\S]*?)\n  \},', WEB)
-if not _host:
-    raise SystemExit('make-sequel-cover: could not read the host block from src/data/webinar.ts')
-HOST_NAME = one(r"host:\s*\{\s*\n\s*name:\s*'([^']+)'", 'the host name')
-HOST_ROLE = re.search(r"role:\s*'([^']+)'", _host.group(1)).group(1)
-HOST_COMPANY = re.search(r"company:\s*'([^']+)'", _host.group(1)).group(1)
+# The brand line under the wordmark. Constant: it names the product owner, not
+# whoever happens to be speaking.
+BRAND = 'VirtusLab'
+
+# The full roster, read from the SAME array the page and the Open Graph card
+# render from. This card used to read the single `host` block instead, which is
+# why it announced one speaker for a three-speaker session and disagreed with
+# every other surface.
+ROSTER = [
+    (ROOT / 'public' / m.group(4).lstrip('/'), m.group(1), m.group(2), m.group(3))
+    for m in re.finditer(
+        r"name:\s*'([^']+)',\s*\n\s*role:\s*'([^']*)',\s*\n\s*company:\s*'([^']+)',"
+        r"[\s\S]*?photo:\s*'([^']+)'",
+        WEB[WEB.index('export const SPEAKERS'):],
+    )
+]
+if not ROSTER:
+    raise SystemExit('make-sequel-cover: could not read SPEAKERS from src/data/webinar.ts')
 
 _local = datetime.fromisoformat(STARTS_AT.replace('Z', '+00:00')).astimezone(ZoneInfo(TZ))
 WHEN = (
@@ -121,7 +133,7 @@ img.paste(crest, (PAD, PAD - 8), crest)
 wx = PAD + crest.width + 22
 d.text((wx, PAD), 'Visdom', font=sans('Bold', 54), fill=TEXT)
 wend = wx + d.textlength('Visdom', font=sans('Bold', 54))
-d.text((wend + 18, PAD + 18), f'by {HOST_COMPANY}', font=sans('Regular', 30), fill=MUTED)
+d.text((wend + 18, PAD + 18), f'by {BRAND}', font=sans('Regular', 30), fill=MUTED)
 
 # Live badge.
 y = 372
@@ -149,11 +161,43 @@ if HEAD_ACCENT:
 wy = hy + line_h * (2 if HEAD_ACCENT else 1) + 52
 d.text((PAD, wy), WHEN, font=sans('Medium', 38), fill=SECONDARY)
 
-# Host, under a hairline rule.
-ry = wy + 116
+# Speakers, under a hairline rule, as a row across the full width. The old
+# single-line host sat on the left and left the right half of a 1920-wide card
+# empty; three faces both fix the count and use the space.
+ry = wy + 96
 d.line((PAD, ry, W - PAD, ry), fill=RULE, width=2)
-d.text((PAD, ry + 42), HOST_NAME, font=sans('SemiBold', 38), fill=TEXT)
-d.text((PAD, ry + 92), f'{HOST_ROLE}, {HOST_COMPANY}', font=sans('Regular', 30), fill=MUTED)
+
+DIA = 132
+top = ry + 46
+slot = (W - PAD * 2) // len(ROSTER)
+mask = Image.new('L', (DIA, DIA), 0)
+ImageDraw.Draw(mask).ellipse((0, 0, DIA - 1, DIA - 1), fill=255)
+nf, rf = sans('SemiBold', 36), sans('Regular', 27)
+for i, (path, name, role, company) in enumerate(ROSTER):
+    x = PAD + i * slot
+    if path.exists():
+        p_img = Image.open(path).convert('RGB').resize((DIA, DIA), Image.LANCZOS)
+        img.paste(p_img, (x, top), mask)
+        d.ellipse((x, top, x + DIA - 1, top + DIA - 1), outline=(255, 255, 255, 46), width=2)
+        tx = x + DIA + 22
+    else:
+        tx = x
+    # Name, role and company on their own lines. One line could not hold
+    # "Head of Application Development, VirtusLab" inside a 552px column, and
+    # shrinking it far enough to fit made it unreadable while dropping the role
+    # left one speaker described differently from the other two. Stacking keeps
+    # every speaker described the same way and nothing overflows.
+    d.text((tx, top + 14), name, font=nf, fill=TEXT)
+    # Each line is fitted to its own column. Without this the longest role
+    # ("Head of Application Development") runs right into the next portrait.
+    avail = slot - (tx - x) - 24
+    ly = top + 60
+    for part in ([role] if role else []) + [company]:
+        psize = 27
+        while psize > 20 and d.textlength(part, font=sans('Regular', psize)) > avail:
+            psize -= 1
+        d.text((tx, ly), part, font=sans('Regular', psize), fill=MUTED)
+        ly += 38
 
 img.save(OUT, quality=92, optimize=True)
 print('zapisano', OUT, img.size)
