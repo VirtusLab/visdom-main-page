@@ -663,14 +663,14 @@ const pl = {
 
   cta: {
     label: 'Następny krok',
-    title: 'Zobaczcie Visdom w waszym środowisku.',
+    title: 'Zobaczcie Visdom w waszym środowisku inżynierskim.',
     subtitle:
-      'Umówcie 30-minutową sesję z naszymi inżynierami. Powiedzcie, gdzie wasz SDLC się zacina albo czego w nim brakuje, a na demo pokażemy te części Visdoma, które mają u was największe znaczenie.',
+      'Umówcie 30-minutową sesję z naszymi inżynierami. Powiedzcie nam, gdzie w waszym SDLC coś się zacina albo czego w nim brakuje, a my skupimy demo na tych możliwościach Visdoma, które są najistotniejsze dla waszego środowiska.',
     subtitleComposable:
-      'Visdom jest modułowy - możecie wziąć to, czego potrzebujecie, bez wdrażania całej platformy.',
+      'Visdom jest modułowy - możecie zacząć od tego, czego potrzebujecie, bez wdrażania całej platformy.',
     form: {
-      title: 'Umówcie sesję z inżynierem Visdoma',
-      body: 'Napiszcie, co w waszym SDLC boli najbardziej, a dopasujemy sesję do waszego środowiska.',
+      title: 'Umówcie sesję Visdoma z naszym inżynierem',
+      body: 'Napiszcie o swoim największym wyzwaniu w SDLC, a dopasujemy sesję do waszego środowiska inżynierskiego.',
       nameLabel: 'Imię i nazwisko',
       companyLabel: 'Firma',
       emailLabel: 'E-mail służbowy',
