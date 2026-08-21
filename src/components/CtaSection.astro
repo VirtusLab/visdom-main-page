@@ -31,7 +31,6 @@ const formStrings = {
   mailto: `mailto:${CONTACT_EMAIL}`,
   submit: t.cta.form.submit,
   sending: t.cta.form.sending,
-  success: t.cta.form.success,
   error: t.cta.form.error,
   errorRef: t.cta.form.errorRef,
   errorFallback: t.cta.form.errorFallback,
@@ -106,8 +105,26 @@ const formStrings = {
           )}
 
           <button type="submit" class="btn-pill btn-primary" data-cta="book_working_session" data-location="final_cta">{t.cta.form.submit}</button>
+          {/* In-flight and error states only. Success is the panel below, because
+              a grey line under a still-filled form was easy to miss and left it
+              unclear whether anything had been sent. */}
           <p class="contact-form-status" role="status" aria-live="polite" hidden></p>
         </form>
+
+        {/* Revealed in place of the form once the lead is recorded, and given
+            focus, so the confirmation is the only thing in the card and is
+            announced. The button puts the form back: a visitor who mistyped their
+            address must not be left staring at a dead end. */}
+        <div id="contact-success" class="final-cta-card final-cta-card--primary contact-success" hidden>
+          <span class="contact-success-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          </span>
+          <h3 id="contact-success-title" tabindex="-1">{t.cta.form.successTitle}</h3>
+          <p>{t.cta.form.success}</p>
+          <button type="button" class="contact-success-again">{t.cta.form.successAgain}</button>
+        </div>
 
       </div>
 
@@ -144,6 +161,9 @@ const formStrings = {
 
     var button = form.querySelector('button[type="submit"]');
     var status = form.querySelector('.contact-form-status');
+    var success = document.getElementById('contact-success');
+    var successTitle = success && success.querySelector('h3');
+    var successAgain = success && success.querySelector('.contact-success-again');
     var submitted = false;
     // One conversion per page view, however many times the form is sent.
     var counted = false;
@@ -153,6 +173,26 @@ const formStrings = {
       status.hidden = false;
       status.textContent = message;
       status.className = 'contact-form-status' + (tone ? ' is-' + tone : '');
+    }
+
+    // The form goes away and the confirmation takes its place. Focus moves to the
+    // panel heading, which both announces it and scrolls it into view, since the
+    // card shrinks and the old submit button is no longer where the eye left it.
+    function showSuccessPanel() {
+      if (status) { status.hidden = true; status.textContent = ''; }
+      form.hidden = true;
+      if (!success) return;
+      success.hidden = false;
+      if (successTitle && typeof successTitle.focus === 'function') successTitle.focus();
+    }
+
+    if (successAgain) {
+      successAgain.addEventListener('click', function () {
+        if (success) success.hidden = true;
+        form.hidden = false;
+        var first = form.querySelector('input:not([type="hidden"]), textarea');
+        if (first && typeof first.focus === 'function') first.focus();
+      });
     }
 
     function resetCaptcha() {
@@ -208,9 +248,9 @@ const formStrings = {
         .then(function (result) {
           if (!result.ok) throw result.body;
 
-          show(formStrings.success, 'ok');
           form.reset();
           resetCaptcha();
+          showSuccessPanel();
           // Re-enabled: a visitor who mistyped their address, or wants to send a
           // second request, must not be left with a dead button and a cleared form.
           submitted = false;
@@ -487,6 +527,79 @@ const formStrings = {
     font-size: var(--fs-sm);
     color: var(--color-emerald-dark, var(--color-emerald));
     margin: 0;
+  }
+
+  /* ── Sent ── */
+  /* Sized to sit roughly where the form did, so the section does not collapse
+     upward and leave the confirmation stranded above the fold's edge. */
+  .contact-success {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.6rem;
+    min-height: 18rem;
+    padding: 2.5rem 1.75rem;
+  }
+
+  .contact-success-mark {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    margin-bottom: 0.4rem;
+    border-radius: 50%;
+    color: #fff;
+    background: var(--color-emerald);
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.16);
+  }
+
+  .contact-success-mark svg {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  .contact-success h3 {
+    font-size: var(--fs-3xl);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  /* Focused programmatically to announce the panel, so the ring would appear
+     without a key ever being pressed. */
+  .contact-success h3:focus {
+    outline: none;
+  }
+
+  .contact-success p {
+    max-width: 32rem;
+    font-size: var(--fs-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* A text link, not a button: sending again is the rare path, and a second
+     pill here would compete with the confirmation itself. */
+  .contact-success-again {
+    margin-top: 0.5rem;
+    padding: 0;
+    font: inherit;
+    font-size: var(--fs-md);
+    color: var(--color-text-muted);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--color-border);
+    text-underline-offset: 3px;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+
+  .contact-success-again:hover,
+  .contact-success-again:focus-visible {
+    color: var(--color-emerald-dark, var(--color-emerald));
+    text-decoration-color: currentColor;
   }
 
   .final-cta-footnote {

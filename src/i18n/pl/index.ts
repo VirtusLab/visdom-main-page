@@ -663,20 +663,22 @@ const pl = {
 
   cta: {
     label: 'Następny krok',
-    title: 'Odpuśćmy prezentację. Zacznijmy od kodu.',
+    title: 'Zobaczcie Visdom w waszym środowisku.',
     subtitle:
-      'Najszybszy sposób, żeby sprawdzić, czy możemy pomóc, to 30-minutowa rozmowa z inżynierami, którzy to zbudowali. Jeśli pasujemy do siebie, wspólnie ustalamy zakres Assessmentu. Jeśli nie, wychodzicie z linkami do naszych tekstów inżynierskich i do Matrixa.',
+      'Umówcie 30 minut z naszymi inżynierami. Powiedzcie, gdzie wasz SDLC się zacina albo czego w nim brakuje, a na demo pokażemy te części Visdoma, które mają u was największe znaczenie. Visdom jest modułowy: możecie wziąć to, czego potrzebujecie, bez wdrażania całej platformy.',
     form: {
-      title: 'Umówcie sesję roboczą',
-      body: '30 minut ze staff engineerem. Napiszcie, nad czym pracujecie, a przyjdziemy przygotowani z jednym wzorcem, który u was najszybciej zrobi różnicę.',
+      title: 'Umówcie sesję z inżynierem Visdoma',
+      body: 'Napiszcie, co w waszym SDLC boli najbardziej, a dopasujemy sesję do waszego środowiska.',
       nameLabel: 'Imię i nazwisko',
       companyLabel: 'Firma',
       emailLabel: 'E-mail służbowy',
-      messageLabel: 'Co próbujecie dowieźć?',
+      messageLabel: 'Co najbardziej spowalnia wasz SDLC?',
       optional: 'opcjonalne',
       submit: 'Zobaczcie Visdom w akcji!',
       sending: 'Wysyłam...',
-      success: 'Dzięki. Inżynier odpowie w ciągu jednego dnia roboczego, a potwierdzenie jest już w drodze na wasz e-mail.',
+      successTitle: 'Mamy wasze zgłoszenie.',
+      success: 'Inżynier odezwie się w ciągu jednego dnia roboczego i umówi z wami sesję Visdoma.',
+      successAgain: 'Wyślijcie kolejne zgłoszenie',
       error: 'Nie udało się wysłać. Spróbujcie ponownie albo napiszcie na visdom@virtuslab.com.',
       errorRef: 'Numer zgłoszenia:',
       errorFallback: 'Napiszcie na visdom@virtuslab.com',

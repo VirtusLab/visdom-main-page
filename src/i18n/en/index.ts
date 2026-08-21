@@ -680,21 +680,37 @@ const en = {
 
   cta: {
     label: 'Next move',
-    title: 'Skip the deck. Start with the code.',
+    /**
+     * Names the product and the thing being booked. The section used to open on
+     * "Skip the deck", which read as a generic call and left a reader who landed
+     * here mid-page unsure what they were signing up for: this site also links to
+     * the Maturity Matrix, and Matrix sessions are booked on the Matrix site, not
+     * in this form.
+     */
+    title: 'See Visdom in your engineering context.',
     subtitle:
-      "The fastest way to know if we can help is a 30-minute call with the engineers who built this. If the fit is there, we scope an Assessment together. If it isn't, you leave with pointers to our engineering writing and the Matrix.",
+      "Book a 30-minute guided session with our engineers. Tell us where you see friction or gaps in your SDLC, and we'll focus the demo on the Visdom capabilities most relevant to your environment. Visdom is composable: you can start with what you need, without adopting the entire platform.",
     form: {
-      title: 'Book a working session',
-      body: "30 minutes with a staff engineer. Tell us what you're working on and we come prepared with the one pattern most likely to move your number first.",
+      title: 'Book a guided Visdom session',
+      body: "Share your biggest SDLC challenge and we'll tailor the session to your engineering environment.",
       nameLabel: 'Name',
       companyLabel: 'Company',
       emailLabel: 'Work email',
-      messageLabel: 'What are you trying to ship?',
+      messageLabel: 'What slows your SDLC down most?',
       optional: 'optional',
       submit: 'See Visdom in action!',
       /** Live region states while the request is in flight and after it lands. */
       sending: 'Sending...',
-      success: 'Thanks. An engineer will reply within one business day, and a confirmation is on its way to your inbox.',
+      /**
+       * The success state replaces the form rather than adding a line under it,
+       * so these are a panel heading and a body, not one sentence. No promise of
+       * a confirmation email: that one is sent by HubSpot's form settings, and
+       * this repo cannot see whether it is switched on.
+       */
+      successTitle: 'Request received.',
+      success: 'An engineer will reply within one business day to arrange your Visdom session.',
+      /** Reopens the form, for a mistyped address or a second request. */
+      successAgain: 'Send another request',
       error: 'We could not send that. Please try again, or write to visdom@virtuslab.com.',
       errorRef: 'Reference:',
       /** Shown if the endpoint is unreachable, e.g. on a static-only deploy. */
@@ -707,7 +723,8 @@ const en = {
      * both destinations are already pitched properly earlier on this page
      * (MaturityLadder and MaturityRef for the Matrix, the #insights section for
      * the writing), so repeating them at the decision point only competed with
-     * the form. The subtitle above already promises exactly these two.
+     * the form. Keeping the Matrix exit here also keeps the two bookings apart:
+     * this form books a Visdom session, the Matrix link books a Matrix one.
      */
     alt: {
       lead: 'Not ready for a call?',
