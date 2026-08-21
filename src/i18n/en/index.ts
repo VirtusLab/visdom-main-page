@@ -689,26 +689,32 @@ const en = {
      */
     title: 'See Visdom in your engineering context.',
     subtitle:
-      "Book a 30-minute guided session with our engineers. Tell us where you see friction or gaps in your SDLC, and we'll focus the demo on the Visdom capabilities most relevant to your environment. Visdom is composable: you can start with what you need, without adopting the entire platform.",
+      "Book a 30-minute guided session with our engineers. Tell us where you see friction or gaps in your SDLC, and we'll focus the demo on the Visdom capabilities most relevant to your environment.",
+    /** Its own paragraph, as approved: the composability point is a separate promise. */
+    subtitleComposable:
+      'Visdom is composable - you can start with what you need, without adopting the entire platform.',
     form: {
       title: 'Book a guided Visdom session',
       body: "Share your biggest SDLC challenge and we'll tailor the session to your engineering environment.",
       nameLabel: 'Name',
       companyLabel: 'Company',
       emailLabel: 'Work email',
-      messageLabel: 'What slows your SDLC down most?',
+      messageLabel: 'What are you trying to ship?',
       optional: 'optional',
       submit: 'See Visdom in action!',
       /** Live region states while the request is in flight and after it lands. */
       sending: 'Sending...',
       /**
-       * The success state replaces the form rather than adding a line under it,
-       * so these are a panel heading and a body, not one sentence. No promise of
-       * a confirmation email: that one is sent by HubSpot's form settings, and
-       * this repo cannot see whether it is switched on.
+       * The approved success sentence, split across the panel's heading and body
+       * rather than reworded: it replaces the form now instead of sitting under
+       * it, so it needs a heading, but the wording is the one that was signed off.
+       *
+       * The confirmation it promises is sent by the HubSpot form's own settings,
+       * which this repo cannot see. If that follow-up is off in the portal, this
+       * line is a promise the site does not keep.
        */
-      successTitle: 'Request received.',
-      success: 'An engineer will reply within one business day to arrange your Visdom session.',
+      successTitle: 'Thanks.',
+      success: 'An engineer will reply within one business day, and a confirmation is on its way to your inbox.',
       /** Reopens the form, for a mistyped address or a second request. */
       successAgain: 'Send another request',
       error: 'We could not send that. Please try again, or write to visdom@virtuslab.com.',

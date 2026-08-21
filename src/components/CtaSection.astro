@@ -45,6 +45,9 @@ const formStrings = {
         <p class="section-label">{t.cta.label}</p>
         <h2 class="final-cta-title">{t.cta.title}</h2>
         <p class="final-cta-sub">{t.cta.subtitle}</p>
+        {/* Kept as its own paragraph rather than folded into the one above: the
+            composability point is a separate promise, not a trailing clause. */}
+        <p class="final-cta-sub final-cta-sub--note">{t.cta.subtitleComposable}</p>
       </div>
 
       {/* One column on purpose. The form used to sit in a grid beside two cards
@@ -347,6 +350,10 @@ const formStrings = {
     color: var(--color-text-secondary);
     max-width: 50rem;
     margin: 0 auto;
+  }
+
+  .final-cta-sub--note {
+    margin-top: 1rem;
   }
 
   /* One column, and narrower than the section's 64rem: a form stretched to the
