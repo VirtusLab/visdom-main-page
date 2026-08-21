@@ -699,6 +699,7 @@ const en = {
       errorRef: 'Reference:',
       /** Shown if the endpoint is unreachable, e.g. on a static-only deploy. */
       errorFallback: 'Write to visdom@virtuslab.com',
+      errorCaptcha: 'Please complete the verification and try again.',
     },
     /**
      * The two routes for a reader who is not ready to book. Deliberately one

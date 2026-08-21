@@ -11,7 +11,7 @@
  * Scope is deliberately narrow:
  * - It fails ONLY for a production build. A preview or a local build has no
  *   business being blocked by marketing configuration, and contributors without
- *   HubSpot access must still be able to run `npm run build`.
+ *   HubSpot or Cloudflare access must still be able to run `npm run build`.
  * - It checks presence, never validity. A wrong-but-present form id is a mistake
  *   this cannot see; the smoke check against a running deployment can.
  * - VISDOM_ALLOW_UNCONFIGURED=1 overrides it, so a genuine emergency deploy is
@@ -30,32 +30,37 @@ const token = present('HUBSPOT_ACCESS_TOKEN');
 // Either channel is enough: the CRM write, or a transactional notification that
 // can actually be sent. See src/lib/hubspot.ts for why they are independent.
 const usable = form || (notify && token);
+const captcha = present('PUBLIC_TURNSTILE_SITE_KEY') && present('TURNSTILE_SECRET_KEY');
+const ready = usable && captcha;
 
 const missing = [];
 if (!present('HUBSPOT_PORTAL_ID')) missing.push('HUBSPOT_PORTAL_ID');
 if (!present('HUBSPOT_FORM_GUID')) missing.push('HUBSPOT_FORM_GUID');
+if (!present('PUBLIC_TURNSTILE_SITE_KEY')) missing.push('PUBLIC_TURNSTILE_SITE_KEY');
+if (!present('TURNSTILE_SECRET_KEY')) missing.push('TURNSTILE_SECRET_KEY');
 
-const state = `form=${form} notify=${notify} token=${token}`;
+const state = `form=${form} notify=${notify} token=${token} captcha=${captcha}`;
 
-if (usable) {
+if (ready) {
   console.log(`[check-env] contact form is configured (${state})`);
   process.exit(0);
 }
 
 if (!isProd) {
   console.warn(
-    `[check-env] contact form is NOT configured (${state}). ` +
-      'Fine for a local or preview build: submissions answer 502 and the page ' +
-      'falls back to the mailto link. Set the variables from .env.example to test it.',
+    `[check-env] contact form is NOT fully configured (${state}). ` +
+      'Fine for a local or preview build: HubSpot submissions answer 502 and the page ' +
+      'falls back to the mailto link; Turnstile is skipped when its secret is unset. ' +
+      'Set the variables from .env.example to test it.',
   );
   process.exit(0);
 }
 
 if (override) {
   console.warn(
-    `[check-env] contact form is NOT configured (${state}), but ` +
+    `[check-env] contact form is NOT fully configured (${state}), but ` +
       'VISDOM_ALLOW_UNCONFIGURED=1 was set, so the build continues. ' +
-      'Every lead submitted against this deployment will be lost.',
+      'Leads may be lost, and spam may not be challenged.',
   );
   process.exit(0);
 }
@@ -63,7 +68,7 @@ if (override) {
 console.error(
   [
     '',
-    '  Production build refused: the contact form has nowhere to put a lead.',
+    '  Production build refused: the contact form is missing configuration.',
     '',
     `  Missing: ${missing.join(', ')}`,
     '',

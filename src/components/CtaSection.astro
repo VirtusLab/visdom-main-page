@@ -18,6 +18,9 @@ const CONTACT_EMAIL = 'visdom@virtuslab.com';
 // just less precisely.
 const SOURCE = import.meta.env.PUBLIC_SITE_SOURCE || 'visdom-site';
 
+// Public site key only. The secret never leaves the server (TURNSTILE_SECRET_KEY).
+const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
+
 // Handed to the inline submit script. It posts to /api/contact, which is the
 // whole point: the old handler opened a mailto, which most visitors cannot use
 // and which analytics could never see.
@@ -32,6 +35,8 @@ const formStrings = {
   error: t.cta.form.error,
   errorRef: t.cta.form.errorRef,
   errorFallback: t.cta.form.errorFallback,
+  errorCaptcha: t.cta.form.errorCaptcha,
+  turnstileSiteKey: TURNSTILE_SITE_KEY,
 };
 ---
 <section id="contact" class="section final-cta-section">
@@ -91,6 +96,15 @@ const formStrings = {
             <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
           </div>
 
+          {TURNSTILE_SITE_KEY && (
+            <div
+              class="cf-turnstile"
+              data-sitekey={TURNSTILE_SITE_KEY}
+              data-appearance="interaction-only"
+              data-theme="auto"
+            ></div>
+          )}
+
           <button type="submit" class="btn-pill btn-primary" data-cta="book_working_session" data-location="final_cta">{t.cta.form.submit}</button>
           <p class="contact-form-status" role="status" aria-live="polite" hidden></p>
         </form>
@@ -119,6 +133,10 @@ const formStrings = {
   </div>
 </section>
 
+{TURNSTILE_SITE_KEY && (
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+)}
+
 <script is:inline define:vars={{ formStrings }}>
   (function () {
     var form = document.getElementById('contact-form');
@@ -137,6 +155,12 @@ const formStrings = {
       status.className = 'contact-form-status' + (tone ? ' is-' + tone : '');
     }
 
+    function resetCaptcha() {
+      if (window.turnstile && typeof window.turnstile.reset === 'function') {
+        window.turnstile.reset();
+      }
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (submitted) return;
@@ -144,6 +168,12 @@ const formStrings = {
 
       var data = new FormData(form);
       var val = function (k) { return (data.get(k) || '').toString().trim(); };
+      var token = val('cf-turnstile-response');
+      if (formStrings.turnstileSiteKey && !token) {
+        show(formStrings.errorCaptcha, 'error');
+        resetCaptcha();
+        return;
+      }
       var payload = {
         name: val('name'),
         company: val('company'),
@@ -152,6 +182,7 @@ const formStrings = {
         website: val('website'),
         locale: formStrings.locale,
         source: formStrings.source,
+        turnstileToken: token,
       };
 
       submitted = true;
@@ -179,6 +210,7 @@ const formStrings = {
 
           show(formStrings.success, 'ok');
           form.reset();
+          resetCaptcha();
           // Re-enabled: a visitor who mistyped their address, or wants to send a
           // second request, must not be left with a dead button and a cleared form.
           submitted = false;
@@ -208,8 +240,10 @@ const formStrings = {
         .catch(function (body) {
           submitted = false;
           if (button) { button.disabled = false; button.textContent = formStrings.submit; }
-          var ref = body && body.ref ? ' ' + formStrings.errorRef + ' ' + body.ref : '';
-          show(formStrings.error + ref, 'error');
+          resetCaptcha();
+          var captchaFailed = body && body.captcha;
+          var ref = !captchaFailed && body && body.ref ? ' ' + formStrings.errorRef + ' ' + body.ref : '';
+          show((captchaFailed ? formStrings.errorCaptcha : formStrings.error) + ref, 'error');
 
           // Endpoint missing entirely (a static-only deploy) or unreachable: give
           // them the address rather than a dead end.
@@ -439,6 +473,10 @@ const formStrings = {
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
+  }
+
+  .cf-turnstile {
+    margin: 0.15rem 0 0.1rem;
   }
 
   .contact-form-status.is-ok { color: var(--color-emerald); }

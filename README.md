@@ -104,10 +104,11 @@ are configured independently (`src/lib/hubspot.ts`):
 2. Turn ON "Automatically create new contacts from unknown email addresses" in the
    form's General settings. It is OFF by default, and with it off a first-time
    visitor never becomes a contact, which silently loses the lead.
-3. Do NOT enable reCAPTCHA, and ignore HubSpot's warning about it. Submissions
-   arrive server-side from this endpoint rather than from a rendered form, so a
-   captcha rejects every one of them. Spam is handled here instead: a honeypot
-   field and per-IP rate limiting.
+3. Do NOT enable reCAPTCHA on the HubSpot form, and ignore HubSpot's warning
+   about it. Submissions arrive server-side from this endpoint rather than from a
+   rendered HubSpot form, so a captcha there rejects every lead. Spam is handled
+   here: Cloudflare Turnstile (verified against siteverify before HubSpot is
+   contacted), a honeypot field, and per-IP rate limiting.
 4. Set the form's notification recipients, and its follow-up email if the visitor
    should get a confirmation. That copy lives in HubSpot on purpose: marketing can
    change it without a deploy. Only people with a HubSpot seat can be picked as
@@ -123,6 +124,22 @@ commit. Vercel captures environment variables when a deployment is built, so an
 already-running deployment keeps the old values. (`vercel redeploy` currently
 fails on this project: it builds without the cache and then cannot authenticate to
 GitHub Packages for `@virtuslab/visdom-ui`.)
+
+### Cloudflare Turnstile
+
+The widget lives on the working-session form; `/api/contact` verifies the token
+with Cloudflare before writing to HubSpot.
+
+1. In the Cloudflare dashboard, Turnstile → Add widget. Use **Managed**. Add
+   hostnames `visdom.virtuslab.com`, `localhost`, and `*.vercel.app` (or each
+   preview host you actually use).
+2. Set `PUBLIC_TURNSTILE_SITE_KEY` (site key, ships in the page) and
+   `TURNSTILE_SECRET_KEY` (server-side only, never rename to `PUBLIC_`) in Vercel,
+   then push a commit so the new values are captured at build time.
+3. A production build without both keys fails (`npm run check:env`). Local and
+   preview builds skip verification when the secret is unset, so contributors can
+   still submit the form. Dummy keys from Cloudflare's testing docs work if you
+   want the widget locally without a real challenge.
 
 ### Putting this form on another property
 
@@ -162,19 +179,20 @@ how this form spent three days answering every visitor with an error before anyo
 noticed. Three things now make that loud:
 
 - **`npm run check:env`**, part of `npm run build`. A *production* build fails if
-  no channel can accept a lead, and names the missing variables. Local and preview
-  builds only warn, so a contributor without HubSpot access can still build.
+  no channel can accept a lead **or** Turnstile keys are missing, and names the
+  missing variables. Local and preview builds only warn, so a contributor without
+  HubSpot or Cloudflare access can still build.
   `VISDOM_ALLOW_UNCONFIGURED=1` overrides it and says so in the log.
 - **`GET /api/contact`**, a health check reporting booleans only, never values. It
   answers 503 when nothing can accept a lead, so an uptime monitor pointed at it
-  treats a silently broken form as the outage it is. This is what catches a
-  variable that was changed but never redeployed, which the build guard cannot
-  see.
+  treats a silently broken form as the outage it is. `configured.captcha` reports
+  whether Turnstile can be verified. This is what catches a variable that was
+  changed but never redeployed, which the build guard cannot see.
 - **`npm run smoke`** (optionally `npm run smoke -- https://preview-url`) asks a
   running deployment the same question and exits non-zero if it is unhealthy. It
-  has no side effects: the health check is a read, and its submission fills the
-  honeypot, so the handler returns before contacting HubSpot or sending anything.
-  Safe to run against production as often as you like.
+  has no side effects: the health check is a read, its honeypot submission returns
+  before contacting HubSpot, and a tokenless POST (when captcha is configured)
+  is refused with 4xx. Safe to run against production as often as you like.
 
 None of these prove a lead reaches the *right* HubSpot form. Nothing observable
 from outside can, because a submission to the wrong form succeeds just as loudly

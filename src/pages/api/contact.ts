@@ -21,9 +21,9 @@
  * ref, and the visitor is shown the mailto fallback.
  *
  * This endpoint is unauthenticated and triggers mail from a verified domain, so it
- * is an abuse target. The guards: nothing the caller types is ever echoed to an
- * address the caller chose, field lengths are capped, and submissions are rate
- * limited per IP and per email.
+ * is an abuse target. The guards: Cloudflare Turnstile (verified here, not on the
+ * HubSpot form), a honeypot, field lengths, and per-IP / per-email rate limits.
+ * HubSpot's own reCAPTCHA must stay off: a server-side submit would fail it.
  */
 import type { APIRoute } from 'astro';
 import {
@@ -38,6 +38,7 @@ import {
   transactionalEmailId,
 } from '../../lib/hubspot';
 import { allowedOrigin, pageUriOf, resolveSource } from '../../lib/source';
+import { turnstileConfigured, verifyTurnstile } from '../../lib/turnstile';
 
 export const prerender = false;
 
@@ -241,6 +242,24 @@ const handlePost: APIRoute = async ({ request, clientAddress }) => {
   }
 
   const ip = clientAddress || 'unknown';
+
+  // Widget token. Not via str(): that helper's default cap is 40 characters, and
+  // a Turnstile token is far longer. The widget writes cf-turnstile-response on a
+  // native post; the JS path sends turnstileToken.
+  const turnstileToken = (fields.turnstileToken || fields['cf-turnstile-response'] || '')
+    .trim()
+    .slice(0, 4096);
+  const captcha = await verifyTurnstile({ token: turnstileToken, ip });
+  if (!captcha.ok) {
+    return wantsJson
+      ? json({ ok: false, error: 'Please complete the verification and try again.', captcha: true }, 400)
+      : page(
+          'Verification required',
+          'Please go back, complete the verification, and submit again.',
+          400,
+        );
+  }
+
   if (rateLimited(`ip:${ip}`) || rateLimited(`em:${email.toLowerCase()}`)) {
     console.warn(`[contact] rate limited ip=${ip}`);
     return wantsJson
@@ -453,7 +472,13 @@ export const GET: APIRoute = () => {
   return json(
     {
       ok: cfg.usable,
-      configured: { form: cfg.form, notify: cfg.notify, confirm: cfg.confirm, token: cfg.token },
+      configured: {
+        form: cfg.form,
+        notify: cfg.notify,
+        confirm: cfg.confirm,
+        token: cfg.token,
+        captcha: turnstileConfigured(),
+      },
       missing: cfg.missing,
     },
     cfg.usable ? 200 : 503,

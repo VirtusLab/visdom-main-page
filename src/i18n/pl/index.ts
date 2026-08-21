@@ -680,6 +680,7 @@ const pl = {
       error: 'Nie udało się wysłać. Spróbujcie ponownie albo napiszcie na visdom@virtuslab.com.',
       errorRef: 'Numer zgłoszenia:',
       errorFallback: 'Napiszcie na visdom@virtuslab.com',
+      errorCaptcha: 'Dokończcie weryfikację i spróbujcie ponownie.',
     },
     alt: {
       lead: 'Jeszcze nie na rozmowę?',
