@@ -116,7 +116,7 @@ export const SPEAKERS: Speaker[] = [
   {
     name: 'Krzysztof Grajek',
     role: 'Principal Engineer',
-    company: 'SoftwareMill',
+    company: 'VirtusLab',
     bio:
       'Krzysztof builds enterprise-grade systems around Kafka and streaming data architectures. His day-to-day work sits at the exact intersection this webinar explores. He helps clients keep fast-moving production systems reliable while rolling new automation into their delivery pipelines.',
     linkedin: 'https://www.linkedin.com/in/krzysztofgrajek/',
