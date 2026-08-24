@@ -100,7 +100,7 @@ export const SPEAKERS: Speaker[] = [
     role: 'Head of R&D',
     company: 'VirtusLab',
     bio:
-      "Adam is the Head of R&D at VirtusLab where he builds closed and open-source developer tooling (Tapir, sttp, Ox, Sandcat, Orca) with a current focus on making AI coding agents safe and productive in real engineering workflows. In the Visdom project he's responsible for the Context Fabric component, for computing organization-wide context to AI agents. That provides an essential part of production-grade SDLC, so that agents know what functionality is implemented where, and how development is done within a given project.",
+      "Adam is the Head of R&D at VirtusLab, where he builds closed- and open-source developer tooling (Tapir, sttp, Ox, Sandcat, Orca), currently focused on making AI coding agents safe and productive in real engineering workflows. In Visdom, he owns the Context Fabric component, which computes organization-wide context for AI agents - a key part of production-grade SDLC, so agents know what's implemented where and how development is done within a given project.",
     linkedin: 'https://www.linkedin.com/in/adamwarski/',
     photo: '/speakers/adam-warski.jpg',
   },
