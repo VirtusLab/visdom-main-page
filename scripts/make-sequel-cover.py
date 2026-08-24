@@ -173,7 +173,7 @@ slot = (W - PAD * 2) // len(ROSTER)
 mask = Image.new('L', (DIA, DIA), 0)
 ImageDraw.Draw(mask).ellipse((0, 0, DIA - 1, DIA - 1), fill=255)
 nf, rf = sans('SemiBold', 36), sans('Regular', 27)
-for i, (path, name, role, company) in enumerate(ROSTER):
+for i, (path, name, role, _company) in enumerate(ROSTER):
     x = PAD + i * slot
     if path.exists():
         p_img = Image.open(path).convert('RGB').resize((DIA, DIA), Image.LANCZOS)
@@ -182,22 +182,18 @@ for i, (path, name, role, company) in enumerate(ROSTER):
         tx = x + DIA + 22
     else:
         tx = x
-    # Name, role and company on their own lines. One line could not hold
-    # "Head of Application Development, VirtusLab" inside a 552px column, and
-    # shrinking it far enough to fit made it unreadable while dropping the role
-    # left one speaker described differently from the other two. Stacking keeps
-    # every speaker described the same way and nothing overflows.
+    # Name over position. The employer used to sit on a third line and is gone
+    # on purpose: this is a Visdom session, so the card names what each speaker
+    # does, not who signs their contract.
     d.text((tx, top + 14), name, font=nf, fill=TEXT)
-    # Each line is fitted to its own column. Without this the longest role
+    # Fitted to its own column. Without this the longest role
     # ("Head of Application Development") runs right into the next portrait.
     avail = slot - (tx - x) - 24
-    ly = top + 60
-    for part in ([role] if role else []) + [company]:
+    if role:
         psize = 27
-        while psize > 20 and d.textlength(part, font=sans('Regular', psize)) > avail:
+        while psize > 20 and d.textlength(role, font=sans('Regular', psize)) > avail:
             psize -= 1
-        d.text((tx, ly), part, font=sans('Regular', psize), fill=MUTED)
-        ly += 38
+        d.text((tx, top + 60), role, font=sans('Regular', psize), fill=MUTED)
 
 img.save(OUT, quality=92, optimize=True)
 print('zapisano', OUT, img.size)

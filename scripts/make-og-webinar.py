@@ -45,7 +45,7 @@ WHEN = f"{_local.day} {_local:%B %Y}  ·  {_local:%H:%M} {TZ_LABEL}  ·  {MINUTE
 ROSTER = [
     (ROOT / 'public' / m.group(3).lstrip('/'), m.group(1), m.group(2))
     for m in re.finditer(
-        r"name:\s*'([^']+)',\s*\n\s*role:[^\n]*\n\s*company:\s*'([^']+)',"
+        r"name:\s*'([^']+)',\s*\n\s*role:\s*'([^']*)',\s*\n\s*company:[^\n]*"
         r"[\s\S]*?photo:\s*'([^']+)'",
         WEB[WEB.index('export const SPEAKERS'):],
     )
@@ -133,15 +133,35 @@ gap = 34
 x = PAD
 mask = Image.new('L', (D, D), 0)
 ImageDraw.Draw(mask).ellipse((0, 0, D - 1, D - 1), fill=255)
-nf, cf = sans('SemiBold', 24), sans('Regular', 21)
-for path, name, company in people:
+nf = sans('SemiBold', 24)
+
+
+def row_width(font):
+    """Width of the whole speaker row, ignoring the trailing gap after the last."""
+    total = sum(
+        D + 18 + max(d.textlength(n, font=nf), d.textlength(r, font=font)) + gap + 12
+        for _, n, r in people
+    )
+    return total - (gap + 12)
+
+
+# The second line is the speaker's position, not their employer, matching the
+# Sequel cover. Roles run far wider than company names ("Head of Application
+# Development" against "VirtusLab"), so the type is shrunk until three of them
+# fit between the margins instead of running off the right edge.
+csize = 21
+while csize > 15 and row_width(sans('Regular', csize)) > W - PAD * 2:
+    csize -= 1
+cf = sans('Regular', csize)
+for path, name, role in people:
     p = Image.open(path).convert('RGB').resize((D, D), Image.LANCZOS)
     img.paste(p, (x, top), mask)
     d.ellipse((x, top, x + D - 1, top + D - 1), outline=(255, 255, 255, 40), width=2)
     tx = x + D + 18
     d.text((tx, top + 26), name, font=nf, fill=TEXT)
-    d.text((tx, top + 58), company, font=cf, fill=SECONDARY)
-    x = round(tx + max(d.textlength(name, font=nf), d.textlength(company, font=cf)) + gap + 12)
+    if role:
+        d.text((tx, top + 58), role, font=cf, fill=SECONDARY)
+    x = round(tx + max(d.textlength(name, font=nf), d.textlength(role, font=cf)) + gap + 12)
 
 img.save(OUT, quality=92, optimize=True)
 print('zapisano', OUT, img.size)

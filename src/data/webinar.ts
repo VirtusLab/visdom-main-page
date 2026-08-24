@@ -79,12 +79,15 @@ export type Speaker = {
  * The session's speaker roster, in billing order: Adam, Artur, Krzysztof, which
  * is the order marketing supplied the photos in.
  *
- * Bios for Adam and Krzysztof come from the "Speakers Bio" brief, with two
- * changes Artur confirmed: Krzysztof's title is Principal Engineer, and the tool
- * Adam built is called Visdom Sandbox here, the name this site uses for it (the
- * brief calls it Sandcat). Krzysztof's bio no longer opens by restating his job
- * title, which the role line above the bio already gives and which said
- * "software engineer" before the title was confirmed.
+ * Adam's entry is the bio he supplied himself, verbatim, which is also where
+ * his title and employer come from: Head of R&D at VirtusLab, and the tooling
+ * named the way he names it, Sandcat rather than the Visdom Sandbox label this
+ * site used for it before.
+ *
+ * Krzysztof's bio comes from the "Speakers Bio" brief, with two changes Artur
+ * confirmed: his title is Principal Engineer, and the bio no longer opens by
+ * restating his job title, which the role line above it already gives and which
+ * said "software engineer" before the title was confirmed.
  *
  * Photos are
  * still outstanding, and the card handles that on its own: the <img> removes
@@ -94,10 +97,10 @@ export type Speaker = {
 export const SPEAKERS: Speaker[] = [
   {
     name: 'Adam Warski',
-    role: 'Chief R&D Officer',
-    company: 'SoftwareMill',
+    role: 'Head of R&D',
+    company: 'VirtusLab',
     bio:
-      "Adam co-founded SoftwareMill and builds open-source JVM tooling (Tapir, sttp, Ox) with a current focus on making AI coding agents safe and productive in real engineering workflows. He created Visdom Sandbox, a setup for securely running AI agents. That work gives him a builder's perspective on the same problem Visdom tackles: how to let agents operate safely inside a real production SDLC.",
+      "Adam is the Head of R&D at VirtusLab where he builds closed and open-source developer tooling (Tapir, sttp, Ox, Sandcat, Orca) with a current focus on making AI coding agents safe and productive in real engineering workflows. In the Visdom project he's responsible for the Context Fabric component, for computing organization-wide context to AI agents. That provides an essential part of production-grade SDLC, so that agents know what functionality is implemented where, and how development is done within a given project.",
     linkedin: 'https://www.linkedin.com/in/adamwarski/',
     photo: '/speakers/adam-warski.jpg',
   },
