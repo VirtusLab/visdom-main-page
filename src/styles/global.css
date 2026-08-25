@@ -100,9 +100,9 @@
 }
 
 @theme {
-  --color-bg: #ffffff;
-  --color-surface: #f8f9fb;
-  --color-surface-light: #f1f3f5;
+  --color-bg: #f5f5f2;
+  --color-surface: #eeeeeb;
+  --color-surface-light: #e7e7e4;
   --color-border: #e5e7eb;
   --color-border-light: #f0f0f0;
   --color-text: #111827;
