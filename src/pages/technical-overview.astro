@@ -13,7 +13,7 @@ import '../styles/global.css';
 ---
 
 <Layout
-  title="Visdom Platform — Technical Overview"
+  title="Visdom Platform – Technical Overview"
   description="Architecture, components, data flow and deployment of the Visdom AI-native SDLC platform."
 >
   <Nav />
@@ -248,16 +248,13 @@ definitions into supervised, auditable executions.</p>
 <ul><li><strong>Agent</strong> – the definition of a step&#x27;s executor: runtime container image, model, declared
   inputs and outputs (data ports), the list of permitted MCP servers together with a method
   allowlist, filtered secrets (an agent sees only the secrets explicitly assigned to it),
-  egress rules, system prompt and context document.</li></ul>
-<ul><li><strong>Deterministic tasks</strong> – scripts run as an explicit element of the process. They automate
+  egress rules, system prompt and context document.</li><li><strong>Deterministic tasks</strong> – scripts run as an explicit element of the process. They automate
   the work that does not require a model to decide anything, and they make that part of the
-  flow predictable.</li></ul>
-<ul><li><strong>Flow</strong> – a graph of nodes joined by data and control ports. Node types: *Trigger*,
+  flow predictable.</li><li><strong>Flow</strong> – a graph of nodes joined by data and control ports. Node types: *Trigger*,
   *Agent* (with an on_failure policy), *Decision* (branching on CEL predicates), *Approval*
   (a human consent gate: approver role, TTL, expiry behaviour, approve and reject branches),
   *Loop* (while and for-each with an iteration limit and concurrency control), *SubFlow*,
-  *Parallel* with a join gate, *Terminate*, *Output*.</li></ul>
-<ul><li><strong>Container / MCP</strong> – the catalogue of permitted runtime images and tool servers, with
+  *Parallel* with a join gate, *Terminate*, *Output*.</li><li><strong>Container / MCP</strong> – the catalogue of permitted runtime images and tool servers, with
   image versions pinned.</li></ul>
 <p>Definitions can be managed visually in the graph editor, through the API, or as
 <strong>configuration in code</strong>: YAML definitions versioned in a Git repository, in either
@@ -366,16 +363,13 @@ economic hinge.</p>
 <ul><li><strong>L0 – context collection</strong> (seconds, deterministic): the diff, pull request metadata,
   coverage delta, path classification (critical, sensitive, standard, configured per
   repository), repository conventions, and a Context Fabric query for ownership and the
-  dependency graph.</li></ul>
-<ul><li><strong>L1 – deterministic gate</strong> (under 60 seconds, zero cost): lint and format, <strong>secret
+  dependency graph.</li><li><strong>L1 – deterministic gate</strong> (under 60 seconds, zero cost): lint and format, <strong>secret
   detection and build, always blocking</strong>, SAST, dependency audit. This layer is immune to
-  prompt injection and is the hard minimum, independent of any model.</li></ul>
-<ul><li><strong>L2 – AI quick scan</strong> (under 2 minutes): risk classification of the change (low, medium,
+  prompt injection and is the hard minimum, independent of any model.</li><li><strong>L2 – AI quick scan</strong> (under 2 minutes): risk classification of the change (low, medium,
   high, critical) from predominantly deterministic signals (paths, diff size, coverage delta,
   module stability, AI-code flag), detection of patterns typical of generated code, and of
   &quot;circular tests&quot; – a test that mirrors the implementation instead of verifying a
-  specification.</li></ul>
-<ul><li><strong>L3 – AI deep review</strong> (triggered only for medium risk and above): parallel <strong>review
+  specification.</li><li><strong>L3 – AI deep review</strong> (triggered only for medium risk and above): parallel <strong>review
   lenses</strong> – security, correctness and test quality always; performance and maintainability
   optionally – working on whole files and on files related through the dependency graph, with
   organisational standards injected.</li></ul>
@@ -404,17 +398,14 @@ itself. The component introduces validation layers an agent cannot fake.</p>
   of deprecated APIs (models trained on old code reach for outdated libraries by default),
   and a freezing rule that locks existing legacy violations and blocks only new ones. In a
   controlled experiment, ArchUnit rules reduced layer-boundary violations by an agent from
-  10 out of 10 cases to 0 out of 10.</li></ul>
-<ul><li><strong>Property-based tests (jqwik, Hypothesis, fast-check)</strong> – hundreds of generated inputs per
+  10 out of 10 cases to 0 out of 10.</li><li><strong>Property-based tests (jqwik, Hypothesis, fast-check)</strong> – hundreds of generated inputs per
   property instead of hand-picked examples; invariant, oracle and round-trip patterns;
-  counterexample minimisation; repeatability through persisted seeds.</li></ul>
-<aside><span class="notelabel">Mutation testing</span>Defects are injected into the code on purpose to see whether the test suite notices. It measures the tests, not the code.</aside>
-<ul><li><strong>Mutation testing (PIT, Stryker, mutmut)</strong> – measures whether the tests actually detect
+  counterexample minimisation; repeatability through persisted seeds.</li><li><strong>Mutation testing (PIT, Stryker, mutmut)</strong> – measures whether the tests actually detect
   injected defects, with mutation score as a gate and scope limited to the classes changed in
   the pull request, optionally reinforced by AI generating tests that kill surviving mutants.</li></ul>
+<aside><span class="notelabel">Mutation testing</span>Defects are injected into the code on purpose to see whether the test suite notices. It measures the tests, not the code.</aside>
 <ul><li><strong>Contract tests (Pact, Spring Cloud Contract)</strong> – compatibility between services verified
-  before deployment.</li></ul>
-<ul><li><strong>TORS (Test Oracle Reliability Score)</strong> – a measure of test trustworthiness: the share of
+  before deployment.</li><li><strong>TORS (Test Oracle Reliability Score)</strong> – a measure of test trustworthiness: the share of
   real failures among all failures. Tests below the threshold are quarantined and excluded
   from the signal given to agents, which stops a flow from &quot;fixing&quot; flaky tests.</li></ul>
 <h3>Languages and tooling</h3>
@@ -518,13 +509,11 @@ later stage.</p>
   added, assigned to a queue) to an adapter endpoint inside your network. A CEL event filter
   decides whether the issue is within the configured scope (project, type, priority,
   component, label). Out-of-scope events are ignored; unprocessed events land in a
-  dead-letter queue with automatic retries.</li></ul>
-<ul><li><strong>Qualification.</strong> The first step of the flow – an analysis agent – reads the full ticket
+  dead-letter queue with automatic retries.</li><li><strong>Qualification.</strong> The first step of the flow – an analysis agent – reads the full ticket
   through the tracker API (description, comments, attachments, linked issues, change history,
   metadata) and assesses whether it is complete. If the description is insufficient to make a
   change safely, the agent <strong>ends the flow with a comment on the ticket</strong> naming what is
-  missing. No pull request is created.</li></ul>
-<ul><li><strong>Code location and solution design.</strong> A research agent queries the Context Fabric over
+  missing. No pull request is created.</li><li><strong>Code location and solution design.</strong> A research agent queries the Context Fabric over
   MCP: it identifies the repositories and modules related to the issue (topic index,
   dependency graph, ownership), determines the blast radius of the planned change and
   produces a fix plan consistent with the organisation&#x27;s conventions. The resulting design
@@ -536,8 +525,7 @@ later stage.</p>
   The agent implements a <strong>minimal, targeted fix</strong>; guardrails – a limit on the number of
   files changed, path protection, a prohibition on changing public interfaces – are enforced
   by policy, not only by prompt instructions. Model calls go through your LLM gateway, and
-  every prompt, tool call and file edit is recorded in AI Tracing.</li></ul>
-<ul><li><strong>Local validation.</strong> The flow runs the tests: the repository&#x27;s existing suite plus the
+  every prompt, tool call and file edit is recorded in AI Tracing.</li><li><strong>Local validation.</strong> The flow runs the tests: the repository&#x27;s existing suite plus the
   Visdom Testing gates (architecture rules on changed modules, mutation tests on changed
   classes). A failure routes into the fix loop, bounded by an iteration limit, or – once that
   limit is exhausted – ends the flow with a comment on the ticket.</li></ul>
@@ -545,15 +533,12 @@ later stage.</p>
 <ul><li><strong>Pull request.</strong> The agent publishes a branch under the configured convention, a commit
   matching the organisation&#x27;s template, and a pull request containing a link to the ticket, a
   summary of the change, the rationale, a <strong>confidence level</strong> and an &quot;AI-generated&quot; marker.
-  Reviewers are assigned from CODEOWNERS, team configuration or the ticket assignment.</li></ul>
-<ul><li><strong>Pre-review.</strong> The pull request webhook starts Code Review: deterministic gate → risk
+  Reviewers are assigned from CODEOWNERS, team configuration or the ticket assignment.</li><li><strong>Pre-review.</strong> The pull request webhook starts Code Review: deterministic gate → risk
   classification → lens review for medium risk and above. Findings land on the pull request
   as a structured comment and inline entries; events go to AI Tracing and the Control Plane.
-  Trivial fixes can return to the agent loop; risky ones wait for a human.</li></ul>
-<ul><li><strong>Feedback.</strong> The flow leaves a comment on the ticket with the status and a link to the
+  Trivial fixes can return to the agent loop; risky ones wait for a human.</li><li><strong>Feedback.</strong> The flow leaves a comment on the ticket with the status and a link to the
   pull request, or the reason for failure. <strong>The merge decision belongs solely to a human</strong> –
-  the platform has no automatic merge path.</li></ul>
-<ul><li><strong>Closing the loop.</strong> The reviewer&#x27;s decision (accept, reject, modify) returns to the
+  the platform has no automatic merge path.</li><li><strong>Closing the loop.</strong> The reviewer&#x27;s decision (accept, reject, modify) returns to the
   Control Plane as a process metric, and repeated corrections feed the Context Fabric, so the
   knowledge layer learns the conventions senior engineers keep restating in review.</li></ul>
 <h3>The rule that holds throughout</h3>
@@ -612,15 +597,13 @@ vanilla Kubernetes, OpenShift, Rancher or RKE2 – using Helm charts, split acro
 <ul><li><strong>All state in PostgreSQL</strong> (version 17 or above, a separate database per component), with
   an HA cluster recommended – an operator-managed cluster or your own database service. There
   are no external message brokers and no specialist datastores, which keeps the operational
-  surface and maintenance requirements small.</li></ul>
-<ul><li>&lt;aside label=&quot;Default-deny&quot;&gt;Nothing talks to anything until a rule says it may. Agent pods reach only the hosts on the egress allowlist.&lt;/aside&gt;</li></ul>
+  surface and maintenance requirements small.</li><li>&lt;aside label=&quot;Default-deny&quot;&gt;Nothing talks to anything until a rule says it may. Agent pods reach only the hosts on the egress allowlist.&lt;/aside&gt;</li></ul>
 <p><strong>NetworkPolicy default-deny</strong> in every namespace; communication between components is
   explicitly allowed; agent pods have no network access beyond the egress allowlist.</p>
 <ul><li><strong>Your image registry</strong> – all platform images are delivered into an internal registry.
   Air-gapped environments are supported: installation and updates arrive as signed image
   bundles with no internet connection. Images are scanned under your policies and versions
-  are pinned.</li></ul>
-<ul><li><strong>Single-tenant isolation</strong> – a dedicated instance: separate databases, separate
+  are pinned.</li><li><strong>Single-tenant isolation</strong> – a dedicated instance: separate databases, separate
   configuration, no data shared with any other installation.</li></ul>
 <h3>High availability</h3>
 <p>The platform is stateless at the service level and keeps all state in PostgreSQL, which keeps
