@@ -1,0 +1,812 @@
+---
+// The technical overview: the same document that ships as a PDF, rendered as a page.
+//
+// Body and contents are GENERATED from content/visdom-platform/*.md in the
+// visdom-materials repository by `python3 build/render-web.py --assets
+// /technical-overview`. Edit the markdown there and regenerate; edits made here are
+// lost on the next run. The figures under public/technical-overview/ come from the
+// same place.
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+---
+
+<Layout
+  title="Visdom Platform — Technical Overview"
+  description="Architecture, components, data flow and deployment of the Visdom AI-native SDLC platform."
+>
+  <Nav />
+
+  <header class="to-masthead">
+    <div class="to-inner">
+      <p class="to-eyebrow">Technical overview</p>
+      <h1>Visdom &ndash; AI-Native SDLC Platform</h1>
+      <p class="to-standfirst">
+        Architecture, components, data flow and deployment. A self-hosted platform for
+        running AI coding agents as part of a production delivery process.
+      </p>
+    </div>
+  </header>
+
+  <div class="to-wrap">
+    <nav class="to-toc" aria-label="Contents">
+      <ol>
+      <li><a href="#executive-summary">Executive summary</a></li>
+      <li><a href="#the-thesis">The thesis</a></li>
+      <li><a href="#the-concept">The concept</a></li>
+      <li><a href="#logical-architecture">Logical architecture</a></li>
+      <li><a href="#visdom-orchestrator">Visdom Orchestrator</a></li>
+      <li><a href="#visdom-context-fabric">Visdom Context Fabric</a></li>
+      <li><a href="#visdom-code-review">Visdom Code Review</a></li>
+      <li><a href="#visdom-testing">Visdom Testing</a></li>
+      <li><a href="#visdom-ai-tracing">Visdom AI Tracing</a></li>
+      <li><a href="#visdom-security">Visdom Security</a></li>
+      <li><a href="#visdom-control-plane">Visdom Control Plane</a></li>
+      <li><a href="#data-flow-the-life-of-a-change">Data flow: the life of a change</a></li>
+      <li><a href="#integrations">Integrations</a></li>
+      <li><a href="#deployment-architecture">Deployment architecture</a></li>
+      <li><a href="#security-summary">Security summary</a></li>
+      <li><a href="#getting-there-from-here">Getting there from here</a></li>
+      <li><a href="#built-by-virtuslab">Built by VirtusLab</a></li>
+      <li><a href="#this-document-has-a-living-version">This document has a living version</a></li>
+      </ol>
+    </nav>
+
+    <main class="to-body">
+<p>This document describes <strong>Visdom</strong>, an AI-native SDLC platform built by VirtusLab: what it
+is for, what it is made of, how the components work together, how a change moves through
+it, and what a deployment looks like.</p>
+<p>It is a technical document. It covers architecture, components, data flow, integration
+points and deployment topology, and it is written to be read on its own, without reference
+to any particular installation.</p>
+<p>The platform is fully self-hosted. It runs on your Kubernetes cluster, against your
+databases, your identity provider, your secret manager and your model endpoints. There is
+no vendor-side data path and no outbound telemetry.</p>
+<p>Visdom Platform is delivered to you by <strong>VirtusLab</strong>, a company that has spent <strong>fifteen
+years building developer tooling</strong> for some of the largest engineering organisations in the
+world. Visdom is designed by practitioners: the platform runs VirtusLab&#x27;s own delivery before
+it runs anyone else&#x27;s, and every mechanism described here is one the team uses daily.</p>
+<p>More at <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>.</p>
+<h2 id="executive-summary">Executive summary</h2>
+<p><strong>The problem.</strong> AI coding agents attack the one part of software delivery that was never
+the bottleneck. Writing code was never the constraint – understanding the system, validating
+the change, reviewing it and shipping it safely always was. Agents produce code faster than
+that machinery can absorb it, and they do it without knowing what the organisation knows and
+without leaving an account of what they did.</p>
+<p><strong>The platform.</strong> Visdom supplies the missing machinery: organisational context for agents,
+a defined process to run them inside, validation layers a model cannot talk its way past,
+and a signed record of every step. It is composable, it runs entirely on your own
+infrastructure, and it treats the coding agent as a replaceable part rather than the product.</p>
+<p><strong>What sets it apart</strong></p>
+<ul><li><strong>A production process, not an agent wired to a repository.</strong> Versioned flows, approval
+  gates where you place them, failure handling, and bounded fix-and-review loops.</li><li><strong>Context that is compiled, not rediscovered.</strong> Ownership, dependencies, conventions and
+  decision history served to agents, so a fix matches how your organisation actually works.</li><li><strong>Cost designed in.</strong> Work that does not need a model runs as a deterministic task, review
+  depth follows assessed risk, and spend is attributed per model, project, flow and author.</li><li><strong>Evidence you can hand to an auditor.</strong> Every prompt, model call, tool use and file edit
+  in an Ed25519-signed hash chain, verifiable offline, with attribution down to the line.</li></ul>
+<p><strong>What it changes in practice.</strong> Figures published for the platform: lead time down <strong>80%</strong>,
+from ten days to two; end-to-end CI <strong>under 5 minutes</strong>, down from 45; first review in
+<strong>12 minutes</strong>; <strong>60%</strong> of changes merged without a human, with review kept for what
+actually needs it.</p>
+<p><strong>Next steps</strong> are at the end of this document.</p>
+<h3>One change, end to end</h3>
+<figure><img src="/technical-overview/overview.png" alt=""></figure>
+<p>A ticket lands. A flow picks it up on its own schedule, reads it, and stops there if the
+ticket does not say enough to act on – with a comment saying what is missing, rather than a
+pull request nobody asked for.</p>
+<p>If it does say enough, an agent gets what a coding agent normally never has: the
+repository&#x27;s conventions, the ownership map, the dependency graph around the code it is
+about to touch, and the decisions that explain why that code looks the way it does. It works
+in a sandbox whose egress is an allowlist and whose secrets it never sees the values of.</p>
+<p>What comes out goes through gates the model cannot argue with: a deterministic pass first,
+then risk classification, then review lenses proportional to what the change actually
+touches, then architecture rules and mutation testing that hold regardless of who wrote the
+code. Trivial findings loop back to the agent for a bounded number of rounds. The rest goes
+to a person, with the findings attached.</p>
+<p>Underneath all of it, one signed chain records every prompt, model call, tool use, file edit
+and commit, with the cost attached and attribution down to the line.</p>
+<h2 id="the-thesis">The thesis</h2>
+<p>Software delivery has two sides. One is the capacity to produce a change. The other is the
+capacity to <strong>absorb</strong> it: to understand it, check it, accept responsibility for it and
+deploy it safely. For fifty years the two grew together, because the same people did both
+and were bounded by the same hours, so nobody had to tell them apart.</p>
+<p>AI pulled the pair apart. Production became elastic – it is bought with a credit card.
+Absorption stayed rigid, because it still rests on people, their attention and their
+accountability. In any system where supply is elastic and validation is fixed, the surplus
+does not disappear. It accumulates: first in the review queue, then, once the queue stops
+being passable, in the quality of the review itself.</p>
+<h3>Failure that looks like competence</h3>
+<p>There is a second reason the surplus is hard to see coming. Code from a model does not fail
+the way bad code usually fails. Badly written human code tends to look bad – odd names, a
+truncated comment, a function three hundred lines long – and a reviewer has a signal telling
+them where to slow down. Code from a model has correct names, consistent style, sensible
+comments, and a decision three levels down that is wrong for this particular system. Twenty
+years of reviewer heuristics rested on a correlation between care of form and knowledge of
+the thing. The model severed it: the form is immaculate, the knowledge of your system is
+zero.</p>
+<blockquote>The form is immaculate, the knowledge of your system is zero.</blockquote>
+<p>None of this is an argument that AI does not work. The same technology, in a different
+organisation, genuinely delivers a multiple. Everyone uses the same models. The difference
+is what surrounds them.</p>
+<p>Visdom is that surround: a composable, fully self-hosted platform that supplies context,
+orchestration, validation, oversight and operational control, turning AI-generated code into
+software you can trust in production.</p>
+<h3>The resource that is actually scarce</h3>
+<p>Absorption capacity sounds like a property of a process, and it is not. It is made of people
+– the dozen or so in any large organisation who can look at a change and say whether it is
+safe, because they remember why that module looks strange, know what happened the last time,
+and carry enough authority to say no. You cannot hire those people in a quarter or train
+them in a year.</p>
+<p>That is what makes the arithmetic work. If the constraint is the attention of your best
+engineers, the most valuable thing to build is not more output. It is the removal, from
+those people, of everything that never needed their judgement in the first place – guarding
+layer boundaries, catching a deprecated library, scanning another diff for a small mistake,
+explaining the same convention again, working out who owns a module. None of it needed a
+senior. It got one because there was nobody else to do it.</p>
+<aside><span class="notelabel">The optimistic reading</span>AI does not replace your best engineers. For the first time it gives them a chance to do only what they are irreplaceable at.</aside>
+<p>Every decision described in this document reads that way. Architecture rules exist so a
+senior does not have to be a linter. Risk classification exists so their attention lands on
+the few per cent of changes that need it. Context exists so they do not answer the same
+question for the tenth time. The audit trail exists so they do not spend a week
+reconstructing what happened.</p>
+<h3>Design principles</h3>
+<p><strong>Composability.</strong> The platform is a set of independent components. A deployment can start
+with a single capability – automating one flow, or nothing but the audit trail – and expand
+at the organisation&#x27;s own pace. The control plane is optional.</p>
+<p><strong>Customer ownership.</strong> Everything runs inside your environment: Kubernetes, databases,
+secrets, models. Visdom sends no data to the vendor and does not train models on your code.</p>
+<p><strong>Human-in-the-loop where you want it, not everywhere by default.</strong> Approval is a node you
+place in a flow, with a role, a timeout and its own branches – not a tax every change pays.
+A team that wants a person on every merge configures that; a team that wants a documentation
+fix to go through unattended and a change to a payment path to stop for review configures
+that instead. What the platform guarantees is that wherever the line is drawn, it is drawn
+explicitly in a versioned definition rather than left to whoever is reviewing that day.</p>
+<p><strong>Auditability as a foundation, not an add-on.</strong> Every prompt, model call, tool use, file
+change and commit is recorded in a cryptographically signed, tamper-evident chain of events.</p>
+<p><strong>Model agnosticism.</strong> The platform is not tied to one model vendor. Agents are separated
+from models by a driver layer and an OpenAI-compatible gateway (LiteLLM and equivalents),
+with native support for Anthropic models and for IBM&#x27;s platform, which lets an organisation
+use its own subscriptions or models served on its own infrastructure.</p>
+<h3>Isolation as an architecture, not a deployment mode</h3>
+<p>Visdom was built for environments where isolation is a requirement, rather than adapted to
+them afterwards. The distinction has practical consequences.</p>
+<p>A cloud product adapted to run on-premises keeps the assumptions, mechanisms and
+dependencies of the environment it was built in, and it is exactly at the seams of such
+adaptations that data leaks. In Visdom there is no &quot;cloud variant&quot; from which things have
+to be switched off: no outbound telemetry, no dependency on vendor services, and a
+cryptographically signed audit trail are the starting point of the design.</p>
+<p><em>Current material on the platform: <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>.</em></p>
+<h2 id="the-concept">The concept</h2>
+<p>The platform is built around one observation: an autonomous flow from issue to pull request
+is not &quot;a coding agent connected to a repository&quot;. It is a production process, and it needs
+four capabilities that no single coding agent provides.</p>
+<p>Those four are not a conclusion from the last two years. Fifteen years of building developer
+tooling kept producing the same four, at every scale of organisation. What agents added was
+not a new item on the list – it was the removal of the margin that made living with the old
+four possible. Each had been calibrated on the assumption that a human sat on the other side:
+a forty-minute build was tolerable because a person committed a few times a day; knowledge
+could stay in people&#x27;s heads because a person knew to go and ask; review could be narrow
+because the stream of changes was narrow too.</p>
+<p><strong>Organisational context.</strong> An agent has to understand not only the code, but the
+conventions, the dependencies between repositories, the real ownership of modules and the
+architectural decisions taken years ago. That capability is provided by <strong>Visdom Context
+Fabric</strong>.</p>
+<p><strong>Orchestration and oversight.</strong> A multi-stage flow – analysis, implementation, validation,
+pull request, fix-and-review iterations – has to be definable, versioned, observable,
+interruptible and repeatable. That capability is provided by the <strong>Visdom Orchestrator</strong>.</p>
+<p><strong>Independent validation.</strong> AI-generated code has to be verified by layers the model cannot
+talk its way past: deterministic gates, risk review and tests that hold against regression.
+Those capabilities are provided by <strong>Visdom Code Review</strong> and <strong>Visdom Testing</strong>.</p>
+<p><strong>Control and accountability.</strong> An organisation needs to know what an agent did, when, why
+and at what cost, and to be able to prove it. Those capabilities are provided by <strong>Visdom AI
+Tracing</strong> and <strong>Visdom Security</strong>.</p>
+<h3>The surface that ties them together</h3>
+<p>Tying them together is the <strong>Visdom Control Plane</strong>: a shared management surface (projects,
+users, RBAC, secrets) for the components that are deployed. The numbers – process metrics,
+cost, attribution – are produced and served by AI Tracing.</p>
+<p>This division answers the obvious question about what the platform adds over using coding
+agents directly against a repository. In Visdom the coding agent is a <strong>replaceable
+executor of one step</strong> – the driver layer covers Claude Code, Codex, IBM Bob and others,
+and the list is open, because a driver is a configuration point rather than a fixed set – while
+the value of the platform is everything around it: context, orchestration, validation,
+policy and audit. Those are precisely the elements that decide whether generated code can be
+deployed safely.</p>
+<figure><img src="/technical-overview/overview.png" alt=""></figure>
+<h3>What distinguishes the platform</h3>
+<p><strong>A complete orchestration model, not an agent wired to a repository.</strong> Versioned flow
+definitions, approval gates, policies and failure handling form a coherent production model
+in which the coding agent is one replaceable step.</p>
+<p><strong>Network-level control of AI traffic, applied before the fact.</strong> A transparent platform
+proxy intercepts all agent-to-model communication: content is scanned for secrets and
+sensitive data *before* it leaves the environment, rather than detected afterwards in logs.</p>
+<p><strong>An audit trail that cannot be disputed.</strong> Every prompt, model call and file change sits in
+a cryptographically signed, immutable chain of events, verifiable offline by an auditor.</p>
+<p><strong>Cost engineering built into the model, not bolted on afterwards.</strong> A flow separates work
+that needs a model from work that does not: polling, cloning, parsing and posting run as
+deterministic tasks, and review depth is proportional to assessed risk. Token consumption is
+measured per model, project, flow and author, and reducing it is continuous platform work
+rather than something an organisation is left to discover on its own invoice.</p>
+<p><strong>One way of working across the organisation.</strong> MCP servers, skills, model allowlists and
+tool configuration are defined centrally and versioned, instead of every developer
+assembling their own set. That is what makes an agent fleet governable: what is available,
+what is approved, and what was actually used are all answerable questions.</p>
+<p><strong>Self-hosted by design.</strong> Full on-premises operation as an architecture, not a deployment
+mode.</p>
+<p><em>Current material on the platform: <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>.</em></p>
+<h2 id="logical-architecture">Logical architecture</h2>
+<p>All components run inside your Kubernetes cluster. The only traffic that leaves is model
+calls, and those go through a gateway you control.</p>
+<figure><img src="/technical-overview/architecture.png" alt="Logical architecture. All components run inside the customer network; the only egress is model traffic through a controlled LLM gateway."><figcaption>Logical architecture. All components run inside the customer network; the only egress is model traffic through a controlled LLM gateway.</figcaption></figure>
+<div class="tablewrap"><table><thead><tr><th><strong>Component</strong></th><th><strong>Role in the issue-to-pull-request flow</strong></th></tr></thead><tbody><tr><td>Visdom Orchestrator</td><td>Flow engine and agent harness: flow definitions (a graph of steps), triggers (webhook, cron, manual), agents run as Kubernetes jobs, approval gates, failure handling, versioned definitions</td></tr><tr><td>Visdom Context Fabric</td><td>The organisational knowledge layer: repository index, dependency and ownership graph, conventions, decision history – served to agents over MCP and as generated rule files</td></tr><tr><td>Visdom Code Review</td><td>Multi-layer pre-review of a pull request: deterministic gate, risk classification, LLM review through fixed lenses, confidence level per finding</td></tr><tr><td>Visdom Testing</td><td>Quality gates independent of the code&#x27;s author: architecture tests, property-based tests, mutation testing, contract tests</td></tr><tr><td>Visdom AI Tracing</td><td>Audit trail and AI observability: prompts, calls, tools and changes recorded, Ed25519-signed chain, policies, cost, attribution of AI-written code, SIEM export</td></tr><tr><td>Visdom Security</td><td>Runtime isolation of agents (sandbox with egress control and secret substitution) and AppSec scanning of the change</td></tr><tr><td>Visdom Control Plane</td><td>The shared skeleton: projects, repositories, users, RBAC per project and repository, secrets, and per-repository opt-in</td></tr><tr><td>Identity broker</td><td>OIDC/SSO, MFA, synchronisation with your directory – shipped with the platform or integrated with your existing instance</td></tr></tbody></table></div>
+<p><em>Current material on the platform: <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>.</em></p>
+<h2 id="visdom-orchestrator">Visdom Orchestrator</h2>
+<p>The Orchestrator is the platform&#x27;s execution engine: a Kubernetes controller that turns flow
+definitions into supervised, auditable executions.</p>
+<h3>The definition model</h3>
+<p>Four object types, all versioned through a draft-to-publish cycle:</p>
+<ul><li><strong>Agent</strong> – the definition of a step&#x27;s executor: runtime container image, model, declared
+  inputs and outputs (data ports), the list of permitted MCP servers together with a method
+  allowlist, filtered secrets (an agent sees only the secrets explicitly assigned to it),
+  egress rules, system prompt and context document.</li></ul>
+<ul><li><strong>Deterministic tasks</strong> – scripts run as an explicit element of the process. They automate
+  the work that does not require a model to decide anything, and they make that part of the
+  flow predictable.</li></ul>
+<ul><li><strong>Flow</strong> – a graph of nodes joined by data and control ports. Node types: *Trigger*,
+  *Agent* (with an on_failure policy), *Decision* (branching on CEL predicates), *Approval*
+  (a human consent gate: approver role, TTL, expiry behaviour, approve and reject branches),
+  *Loop* (while and for-each with an iteration limit and concurrency control), *SubFlow*,
+  *Parallel* with a join gate, *Terminate*, *Output*.</li></ul>
+<ul><li><strong>Container / MCP</strong> – the catalogue of permitted runtime images and tool servers, with
+  image versions pinned.</li></ul>
+<p>Definitions can be managed visually in the graph editor, through the API, or as
+<strong>configuration in code</strong>: YAML definitions versioned in a Git repository, in either
+&quot;changes through a pull request&quot; or &quot;mirror synchronisation&quot; mode. Configuration changes are
+then reviewed the same way code is.</p>
+<figure><img src="/technical-overview/flow-graph.png" alt=""></figure>
+<h3>The execution model</h3>
+<p>Every agent step runs as a <strong>separate Kubernetes job in a dedicated namespace</strong> – one agent,
+one pod, with its own resource budget, its own identity and its own network rules. The agent
+pod talks to the controller only over authenticated channels (an Ed25519-signed token, an
+mTLS sidecar), pulling secrets just in time and reporting events, outputs and token metrics.
+Steps of a flow share a persistent workspace volume holding the repository clone and
+intermediate artefacts.</p>
+<h3>The coding-agent driver layer</h3>
+<p>The Orchestrator separates the definition of a step from the executor that runs it. The same
+flow can be executed by any of the supported drivers – <strong>Claude Code, Codex and IBM Bob</strong>
+among them – or by the platform&#x27;s own minimal
+agent loop (a native Anthropic Messages API driver and an OpenAI Chat Completions-compatible
+driver with a configurable endpoint, which covers LiteLLM and any other OpenAI-compatible
+proxy). Changing model or vendor is a change to an agent definition, not a rebuild.</p>
+<figure><img src="/technical-overview/agent-definition.png" alt="An agent definition: driver, model, container, resources, and the MCP servers the agent may call."><figcaption>An agent definition: driver, model, container, resources, and the MCP servers the agent may call.</figcaption></figure>
+<figure><img src="/technical-overview/driver-model.png" alt=""></figure>
+<h3>Triggers</h3>
+<p>Three mechanisms:</p>
+<ul><li><strong>Inbound webhooks</strong> – an endpoint on an integration adapter, with signature validation, a
+  CEL event filter (for example &quot;only bugs from project X, priority at or above medium,
+  labelled ai-fix&quot;), a retry queue with exponential backoff, a dead-letter queue and a
+  circuit breaker.</li></ul>
+<aside><span class="notelabel">CEL</span>Common Expression Language: a small sandboxed expression language, used here for event filters, branch predicates and loop stop conditions.</aside>
+<ul><li><strong>Cron schedule</strong> – for example a periodic &quot;is there anything to do?&quot; poll against a
+  queue.</li><li><strong>Manual execution</strong> from the UI or API, with the option to supply additional context,
+  which is also how an agent is re-run for the same ticket with a further instruction.</li></ul>
+<h3>Human in the loop</h3>
+<p>Four oversight mechanisms: *Approval* nodes with versioned acceptance policies;
+mid-execution questions (an agent can ask a human a question while working and wait for the
+answer); comments and discussion threads on executions; and chat sessions attached to a run,
+so an operator can refine instructions while it is in progress. Any execution can be
+<strong>cancelled</strong> – work in progress is discarded and the working branch is not published – and
+a completed or interrupted one can be <strong>re-run with additional context</strong>.</p>
+<figure><img src="/technical-overview/human-in-the-loop.png" alt=""></figure>
+<h3>The orchestrator at work</h3>
+<p>The definitions above are the mechanism. This is what the mechanism does on an ordinary
+day: one orchestrator runs every flow end to end, watching, correlating, planning and
+preparing, with the same gates, the same approvals and the same audit trail. People step in
+only where judgment matters.</p>
+<section class="scenario"><p class="slabel">Incident response</p><h4>Prod throws 500s at 2 a.m.</h4><div class="steps"><div class="when">02:14</div><div class="what">Alerts fire: error rate spikes on production.</div><div class="when">02:31</div><div class="what">Logs correlated, root cause pinned, fix drafted and run through every gate.</div><div class="when">08:00</div><div class="what">Morning standup reviews a green, fully traced pull request.</div></div><p class="kicker">A pull request, not a ticket in the queue</p></section>
+<section class="scenario"><p class="slabel">Regression hunt</p><h4>Error rate doubles on the API</h4><div class="steps"><div class="when">11:02</div><div class="what">The checkout API starts failing twice as often.</div><div class="when">11:04</div><div class="what">Events correlated across services; the deploy that broke it identified.</div><div class="when">11:27</div><div class="what">A proposed fix waits for one click of approval.</div></div><p class="kicker">Root cause before the war room</p></section>
+<section class="scenario"><p class="slabel">Bug reproduction</p><h4>A customer hits the same bug, twice</h4><div class="steps"><div class="when">14:50</div><div class="what">Support escalates a recurring, hard-to-pin failure.</div><div class="when">15:12</div><div class="what">Replayed from logs and telemetry; a failing test now reproduces it.</div><div class="when">16:05</div><div class="what">The fix ships with a regression test bolted on.</div></div><p class="kicker">Reproduced, fixed, locked for good</p></section>
+<section class="scenario"><p class="slabel">Security patch</p><h4>A CVE lands in a core library</h4><div class="steps"><div class="when">06:00</div><div class="what">A new vulnerability drops in a dependency you run.</div><div class="when">06:18</div><div class="what">Affected components mapped, dependency bumped, full gate suite run.</div><div class="when">07:02</div><div class="what">A verified upgrade sits ready to merge.</div></div><p class="kicker">Patched in hours, not sprints</p></section>
+<section class="scenario"><p class="slabel">Migration</p><h4>A deprecated API, used in 214 places</h4><div class="steps"><div class="when">09:00</div><div class="what">The framework flags an API for removal; your repository calls it everywhere.</div><div class="when">09:30</div><div class="what">Call sites mapped, the mechanical 95% migrated, gates run on every change.</div><div class="when">11:45</div><div class="what">Humans review the six call sites that actually needed judgment.</div></div><p class="kicker">214 call sites, six human decisions</p></section>
+<section class="scenario"><p class="slabel">CI hygiene</p><h4>CI fails every third run</h4><div class="steps"><div class="when">16:20</div><div class="what">A flaky test starts blocking every other merge.</div><div class="when">16:35</div><div class="what">The test is quarantined, history bisected, the race condition pinned.</div><div class="when">17:10</div><div class="what">A deterministic fix lands; the merge queue moves again.</div></div><p class="kicker">A test suite you can trust again</p></section>
+<h3>The reference issue-to-pull-request flow</h3>
+<p>The platform ships a cryptographically signed catalogue of ready agents and flows (22 agent
+definitions, among them research, implementation, test authoring, code review and triage),
+including the automated-issue-to-pr flow: issue → analysis and solution design →
+implementation → open a pull request → review-and-fix loop (a subflow with an iteration
+limit and a CEL stop condition) → tests → quality gates → notification.</p>
+<p>That flow is the starting point of a deployment and is adapted to the organisation&#x27;s own
+conventions: branch naming, commit message and pull request templates, reviewer assignment,
+and marking a pull request as AI-generated.</p>
+<p><em>Current material on Visdom Orchestrator: <a href="https://visdom-2-0-agentic.vercel.app/platform/orchestrator">visdom-2-0-agentic.vercel.app/platform/orchestrator</a>.</em></p>
+<h2 id="visdom-context-fabric">Visdom Context Fabric</h2>
+<p>The Context Fabric answers the hardest requirement in this domain: semantic understanding of
+a large, multi-repository, complicated project structure. Rather than leaving an agent to
+&quot;discover&quot; the code on every issue – which is expensive, slow and not repeatable – the
+platform maintains a <strong>compiled knowledge layer</strong> about your systems.</p>
+<figure><img src="/technical-overview/context-fabric.png" alt=""></figure>
+<h3>Processing model: aggregate, serve, govern</h3>
+<p><strong>Aggregate.</strong> Signals from repositories (code, history, blame), infrastructure as code,
+pull request history, issues and documentation are compiled and merged into <strong>topic pages</strong>,
+not a raw document index. Every artefact keeps its <strong>provenance</strong> back to the sources.
+Updates are incremental: cost is proportional to the change, not to the size of the
+knowledge base.</p>
+<aside><span class="notelabel">MCP</span>Model Context Protocol: the standard interface an agent uses to call a tool. The Fabric serves context over it, and your own internal tools can be exposed to agents the same way.</aside>
+<p><strong>Serve.</strong> An agent describes its task and receives the smallest high-signal subset of
+context <strong>within a given token budget</strong>, tuned to the phase of work (planning,
+implementation, review). Two delivery channels: <strong>MCP tools</strong> for live queries
+(<code>context.system.dependencies(...)</code>, <code>context.org.reviewers(...)</code>, <code>context.history.why(...)</code>)
+and <strong>generated rule files</strong> (AGENTS.md / CLAUDE.md) injected into the agent&#x27;s environment.</p>
+<p><strong>Govern.</strong> When a source changes, every affected page is rebuilt from current sources –
+currency by construction, so stale facts cease to exist rather than lingering.
+Contradictions between sources and orphaned topics are reported for a human to resolve; a
+human can correct and pin an artefact; and corrections reviewers keep repeating flow back
+into the knowledge layer.</p>
+<h3>Five levels of context</h3>
+<ul><li><strong>L1 – system context</strong>: services, dependencies, contracts, architectural boundaries as a
+  living graph.</li><li><strong>L2 – code context</strong>: conventions, lint rules, build configuration, recurring review
+  remarks.</li><li><strong>L3 – organisational context</strong>: the real (not nominal) reviewers and module owners,
+  escalation paths.</li><li><strong>L4 – historical context</strong>: architecture decision records, pull request threads,
+  postmortems, decisions.</li><li><strong>L5 – operational context</strong>: telemetry and incident history.</li></ul>
+<p>Most tools on the market stop at L1 and L2. L3 and L4 are what make code location accurate
+and keep a fix consistent with the organisation&#x27;s conventions.</p>
+<aside><span class="notelabel">Blast radius</span>Which modules and services a change can affect, computed from the dependency graph rather than guessed. It is what decides how much review a change gets.</aside>
+<h3>The deterministic layer</h3>
+<p>Alongside knowledge compiled with the help of a model, the Context Fabric maintains
+deterministic analytical indexes over Git history, the dependency graph and pull request
+discussions: module ownership, <strong>blast radius analysis</strong> (which modules and services a change
+touches), expertise maps and change heatmaps. Results are repeatable – the same commit
+yields the same data – pinned to a SHA and reusable across agent sessions. This is what
+supports cross-module and cross-repository dependency analysis (a shared library to its
+consuming service) and data-flow analysis between files and application layers.</p>
+<h3>Injecting organisational standards</h3>
+<p>Internal standards and architectural conventions are attached to the knowledge layer as
+first-class sources (pointed at existing documentation by glob) and cited in agent output by
+document path, with no model fine-tuning involved.</p>
+<p><em>Current material on Visdom Context Fabric: <a href="https://visdom-2-0-agentic.vercel.app/platform/context-fabric">visdom-2-0-agentic.vercel.app/platform/context-fabric</a>.</em></p>
+<h2 id="visdom-code-review">Visdom Code Review</h2>
+<p>Code Review is the quality gate for every pull request an agent produces, and optionally for
+those written by people. The architecture has four layers, with risk classification as the
+economic hinge.</p>
+<ul><li><strong>L0 – context collection</strong> (seconds, deterministic): the diff, pull request metadata,
+  coverage delta, path classification (critical, sensitive, standard, configured per
+  repository), repository conventions, and a Context Fabric query for ownership and the
+  dependency graph.</li></ul>
+<ul><li><strong>L1 – deterministic gate</strong> (under 60 seconds, zero cost): lint and format, <strong>secret
+  detection and build, always blocking</strong>, SAST, dependency audit. This layer is immune to
+  prompt injection and is the hard minimum, independent of any model.</li></ul>
+<ul><li><strong>L2 – AI quick scan</strong> (under 2 minutes): risk classification of the change (low, medium,
+  high, critical) from predominantly deterministic signals (paths, diff size, coverage delta,
+  module stability, AI-code flag), detection of patterns typical of generated code, and of
+  &quot;circular tests&quot; – a test that mirrors the implementation instead of verifying a
+  specification.</li></ul>
+<ul><li><strong>L3 – AI deep review</strong> (triggered only for medium risk and above): parallel <strong>review
+  lenses</strong> – security, correctness and test quality always; performance and maintainability
+  optionally – working on whole files and on files related through the dependency graph, with
+  organisational standards injected.</li></ul>
+<h3>What lands on the pull request</h3>
+<p><strong>Output:</strong> exactly one structured comment on the pull request (sections: blocking,
+recommendations, suggestions, plus statistics and a suggested reviewer from the expertise
+map), inline comments carrying ready-to-apply suggestions, and a SARIF 2.1.0 export.</p>
+<p><strong>Every finding carries a confidence level</strong> – high (0.8 and above) reported directly,
+medium, and low marked as &quot;needs verification&quot;, never presented as certain.</p>
+<h3>Why precision beats recall</h3>
+<p>The design doctrine is <strong>precision over recall</strong>: above roughly 15% noise, developers turn a
+tool off. Code Review holds hard caps on the number of findings, confidence thresholds and
+deduplication between layers. Review rules are configuration in code: one YAML schema covers
+both deterministic rules (regex and built-ins) and LLM rules (with mandatory success and
+failure criteria and examples), merged from global and per-repository settings, with rules
+disableable by identifier.</p>
+<p><em>Current material on the platform: <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>.</em></p>
+<h2 id="visdom-testing">Visdom Testing</h2>
+<p>Visdom Testing addresses a structural problem with generated code: when the same model
+writes both the code and the tests, a green build proves only that the model agrees with
+itself. The component introduces validation layers an agent cannot fake.</p>
+<h3>Four layers an agent cannot fake</h3>
+<blockquote>A green build can prove only that the model agrees with itself.</blockquote>
+<ul><li><strong>Architecture tests (ArchUnit)</strong> – deterministic structural rules that execute in
+  milliseconds, with no model and no network: layer boundaries, cycle prohibitions, blocking
+  of deprecated APIs (models trained on old code reach for outdated libraries by default),
+  and a freezing rule that locks existing legacy violations and blocks only new ones. In a
+  controlled experiment, ArchUnit rules reduced layer-boundary violations by an agent from
+  10 out of 10 cases to 0 out of 10.</li></ul>
+<ul><li><strong>Property-based tests (jqwik, Hypothesis, fast-check)</strong> – hundreds of generated inputs per
+  property instead of hand-picked examples; invariant, oracle and round-trip patterns;
+  counterexample minimisation; repeatability through persisted seeds.</li></ul>
+<aside><span class="notelabel">Mutation testing</span>Defects are injected into the code on purpose to see whether the test suite notices. It measures the tests, not the code.</aside>
+<ul><li><strong>Mutation testing (PIT, Stryker, mutmut)</strong> – measures whether the tests actually detect
+  injected defects, with mutation score as a gate and scope limited to the classes changed in
+  the pull request, optionally reinforced by AI generating tests that kill surviving mutants.</li></ul>
+<ul><li><strong>Contract tests (Pact, Spring Cloud Contract)</strong> – compatibility between services verified
+  before deployment.</li></ul>
+<ul><li><strong>TORS (Test Oracle Reliability Score)</strong> – a measure of test trustworthiness: the share of
+  real failures among all failures. Tests below the threshold are quarantined and excluded
+  from the signal given to agents, which stops a flow from &quot;fixing&quot; flaky tests.</li></ul>
+<h3>Languages and tooling</h3>
+<p>The reference core is JVM-first (Java, Kotlin, Scala) with documented equivalents for .NET,
+JavaScript and TypeScript, Python and Go. Tool selection follows the actual technology stack
+during deployment.</p>
+<p><em>Current material on the platform: <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>.</em></p>
+<h2 id="visdom-ai-tracing">Visdom AI Tracing</h2>
+<p>AI Tracing is the platform&#x27;s flight recorder: the component that makes AI activity fully
+auditable.</p>
+<figure><img src="/technical-overview/session-analytics.png" alt=""></figure>
+<p><strong>Recording.</strong> Every agent session, prompt, model call (model and version), tool invocation,
+edited file and resulting commit is captured through PreToolUse and PostToolUse hooks in the
+agent harness, with <strong>secrets removed before anything is written</strong>.</p>
+<aside><span class="notelabel">Ed25519</span>A signature scheme with small keys and fast verification. Each event carries the hash of the one before it, so the chain can be checked offline with the public key alone.</aside>
+<h3>Why the record holds up</h3>
+<p><strong>Immutability.</strong> Events are hashed (SHA-256), chained, and <strong>signed with the organisation&#x27;s
+Ed25519 key</strong>; the log is append-only, so changing a single byte breaks the chain.
+Verification is possible offline with the public key, without trusting the running system –
+an auditor can take a segment of the chain and verify it independently.</p>
+<p><strong>Attribution.</strong> Tree-sitter analysis overlays line-by-line attribution onto Git history:
+which line was produced with which model, under which prompt. This is the data an
+organisation needs to answer how much of its codebase is AI-written, and to satisfy internal
+policy on generated code.</p>
+<p><strong>Policies.</strong> Rules are defined as YAML in a repository – the same mechanism as other quality
+rules: model allowlists, forbidden paths (for example blocking edits to critical modules),
+required tools, limits on the share of AI code in a pull request, and <strong>token budgets per
+session, team or flow</strong>. They are enforced in the execution loop, blocking with a stated
+reason, and every block is logged into the same chain.</p>
+<h3>What the ledger is used for</h3>
+<p><strong>Cost.</strong> A cost ledger with per-model pricing, token consumption trends (daily and weekly,
+per model, team and repository), cost attributed to session, author, pull request and flow,
+cache share, model distribution against the allowlist, quotas with a blocking action (a cost
+gate can refuse to start a flow once a budget is exceeded) and overrun alerts. LLM call
+metadata – model, token counts, status, duration – is recorded per call.</p>
+<figure><img src="/technical-overview/cost-analytics.png" alt=""></figure>
+<h3>Where it lands</h3>
+<p><strong>SIEM export.</strong> A dedicated exporter (a separate, push-only container) sends signed events
+to your SIEM as Syslog, structured JSON, Splunk HEC or Elastic Bulk. Every event carries
+<code>chain_seq</code>, <code>prev_sha256</code>, <code>sha256</code> and <code>signature_ed25519</code>, so tampering can be detected on
+the SIEM side as well. Retention inside the platform is configurable and independent of
+retention in the SIEM.</p>
+<p><em>Current material on the platform: <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>.</em></p>
+<h2 id="visdom-security">Visdom Security</h2>
+<p>Visdom Security covers two layers: containment at runtime, and continuous AppSec validation.</p>
+<h3>Sandcat – runtime isolation</h3>
+<p>Agents execute in ephemeral, isolated sandboxes in which <strong>all container network traffic –
+HTTP, HTTPS, DNS, any TCP or UDP – passes through a transparent proxy in a dedicated network
+container</strong>. An agent&#x27;s tools cannot bypass the network boundary, because they do not control
+its configuration: the rules are inherited from the network namespace and the agent has no
+privilege to change them.</p>
+<p>The egress policy is a destination allowlist. Approved hosts pass – package registries, the
+LLM gateway, the source control and issue tracker – and everything else is blocked.</p>
+<blockquote>The agent uses a credential without ever seeing its value.</blockquote>
+<h3>Secret substitution</h3>
+<p>The key property: <strong>real secret values never enter the agent&#x27;s environment</strong>. The agent sees
+placeholders; the transparent proxy substitutes the real value only in requests directed at
+allowlisted hosts. An attempt to send a secret anywhere else returns 403. The secret
+physically cannot leak through the model, the logs or the generated code. Secrets are pulled
+just in time from the secret store.</p>
+<p>This mechanism has a second, organisational use: an enterprise can grant employees and
+agents access to models <strong>without disclosing API keys</strong>. An employee does not know the key,
+so they cannot use an AI tool that bypasses the platform, and every use therefore passes
+through the audit and policy layer. That removes the &quot;shadow AI&quot; class of problems without
+prohibitions and without relying on user discipline.</p>
+<h3>Pre-model scanning</h3>
+<p>Complementing secret substitution, the platform implements a pre-LLM gate: content is scanned
+for secrets, sensitive data and classifier-defined categories before it is passed to a model.
+A detection stops the process with an alert. The mechanism is built on agent harness hooks
+and a classifier layer in the controller.</p>
+<h3>AppSec</h3>
+<p>Every change an agent produces is scanned before merge: SAST, dependency analysis (including
+transitive dependencies and licences), secret detection and infrastructure as code. Finding
+triage by reachability analysis limits the noise to vulnerabilities that are actually
+exploitable. The layer is designed to integrate with the AppSec tooling an organisation
+already uses rather than replace it.</p>
+<p><em>Current material on the platform: <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>.</em></p>
+<h2 id="visdom-control-plane">Visdom Control Plane</h2>
+<p>The Control Plane is the platform&#x27;s shared administrative skeleton – a single place to manage projects and repositories,
+users and teams, <strong>RBAC per project and repository</strong> (the identity broker supplies
+authentication and general roles; the Control Plane holds the fine-grained permissions –
+who sees agent activity and configuration in which project), secrets, and an <strong>opt-in
+mechanism per repository</strong>, so an agent is enabled deliberately for named repositories rather
+than by default.</p>
+<p>It is administration, not analytics. Session activity, cost, attribution and the audit trail
+are produced and served by AI Tracing, and every component exposes a REST API with a
+published OpenAPI specification, so an organisation that wants those numbers inside its own
+portal or reporting stack pulls them from the component that owns them.</p>
+<h3>Visdom Machine CI (optional, outside the core)</h3>
+<p>For organisations where build time limits how fast agents can iterate, the platform offers a
+CI optimisation component: build caching, selective testing and Bazel-based acceleration.
+Agent iteration speed is bounded by build and test turnaround, so this matters most where a
+full build runs in tens of minutes.</p>
+<p>The component is not required for the issue-to-pull-request flow and can be considered at a
+later stage.</p>
+<p><em>Current material on the platform: <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>.</em></p>
+<h2 id="data-flow-the-life-of-a-change">Data flow: the life of a change</h2>
+<figure><img src="/technical-overview/dataflow.png" alt="Data flow for a single issue, base scenario."><figcaption>Data flow for a single issue, base scenario.</figcaption></figure>
+<p>Step by step:</p>
+<ul><li><strong>Trigger.</strong> The issue tracker sends a webhook (ticket created, status changed, label
+  added, assigned to a queue) to an adapter endpoint inside your network. A CEL event filter
+  decides whether the issue is within the configured scope (project, type, priority,
+  component, label). Out-of-scope events are ignored; unprocessed events land in a
+  dead-letter queue with automatic retries.</li></ul>
+<ul><li><strong>Qualification.</strong> The first step of the flow – an analysis agent – reads the full ticket
+  through the tracker API (description, comments, attachments, linked issues, change history,
+  metadata) and assesses whether it is complete. If the description is insufficient to make a
+  change safely, the agent <strong>ends the flow with a comment on the ticket</strong> naming what is
+  missing. No pull request is created.</li></ul>
+<ul><li><strong>Code location and solution design.</strong> A research agent queries the Context Fabric over
+  MCP: it identifies the repositories and modules related to the issue (topic index,
+  dependency graph, ownership), determines the blast radius of the planned change and
+  produces a fix plan consistent with the organisation&#x27;s conventions. The resulting design
+  document is written to the flow workspace.</li></ul>
+<h3>Implementation and validation</h3>
+<ul><li><strong>Implementation in the sandbox.</strong> A coding agent (Claude Code, Codex, IBM Bob or another driver, per
+  configuration) runs in an isolated pod: the repository is cloned onto the working volume,
+  egress is restricted to the allowlist, and secrets are substituted only in permitted calls.
+  The agent implements a <strong>minimal, targeted fix</strong>; guardrails – a limit on the number of
+  files changed, path protection, a prohibition on changing public interfaces – are enforced
+  by policy, not only by prompt instructions. Model calls go through your LLM gateway, and
+  every prompt, tool call and file edit is recorded in AI Tracing.</li></ul>
+<ul><li><strong>Local validation.</strong> The flow runs the tests: the repository&#x27;s existing suite plus the
+  Visdom Testing gates (architecture rules on changed modules, mutation tests on changed
+  classes). A failure routes into the fix loop, bounded by an iteration limit, or – once that
+  limit is exhausted – ends the flow with a comment on the ticket.</li></ul>
+<h3>Review and the human decision</h3>
+<ul><li><strong>Pull request.</strong> The agent publishes a branch under the configured convention, a commit
+  matching the organisation&#x27;s template, and a pull request containing a link to the ticket, a
+  summary of the change, the rationale, a <strong>confidence level</strong> and an &quot;AI-generated&quot; marker.
+  Reviewers are assigned from CODEOWNERS, team configuration or the ticket assignment.</li></ul>
+<ul><li><strong>Pre-review.</strong> The pull request webhook starts Code Review: deterministic gate → risk
+  classification → lens review for medium risk and above. Findings land on the pull request
+  as a structured comment and inline entries; events go to AI Tracing and the Control Plane.
+  Trivial fixes can return to the agent loop; risky ones wait for a human.</li></ul>
+<ul><li><strong>Feedback.</strong> The flow leaves a comment on the ticket with the status and a link to the
+  pull request, or the reason for failure. <strong>The merge decision belongs solely to a human</strong> –
+  the platform has no automatic merge path.</li></ul>
+<ul><li><strong>Closing the loop.</strong> The reviewer&#x27;s decision (accept, reject, modify) returns to the
+  Control Plane as a process metric, and repeated corrections feed the Context Fabric, so the
+  knowledge layer learns the conventions senior engineers keep restating in review.</li></ul>
+<h3>The rule that holds throughout</h3>
+<p>One data rule holds across the whole cycle: <strong>code and secrets do not leave your
+infrastructure</strong>. The only external traffic, if there is any at all, is model calls through a
+controlled gateway, and the audit record of every step is complete and immutable.</p>
+<p><em>Current material on the platform: <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>.</em></p>
+<h2 id="integrations">Integrations</h2>
+<h3>Source control and issue tracking</h3>
+<ul><li>Reading ticket content, comments, attachments, linked issues, change history and metadata
+  (priority, component, assignment, labels, custom fields) through the tracker&#x27;s REST API,
+  from a service account with minimal permissions.</li><li>Configurable triggers: ticket created, status changed, label applied, assigned to a queue.</li><li>Writing feedback comments: processing status, pull request link, failure reason.</li><li>Creating branches, commits and pull requests through the source control REST API; setting
+  title, description, reviewers and the link back to the ticket; marking the pull request as
+  AI-generated.</li><li>Pull request webhooks feeding Code Review and the metrics.</li><li>The source control permission model is respected: agents act through dedicated service
+  accounts with permissions narrowed per project and repository.</li></ul>
+<p>The platform has a production GitHub integration; adapters for other systems are delivered as
+part of a deployment. The adapter architecture is built for this: an adapter implements
+inbound events and outbound operations against a common contract.</p>
+<h3>Models (bring your own LLM)</h3>
+<ul><li>The driver layer separates the agent from the model vendor: a native Anthropic driver and
+  an <strong>OpenAI-compatible driver with a configurable endpoint</strong>, which means full
+  compatibility with LiteLLM-class proxies and any OpenAI-compatible gateway you operate.</li><li>Model choice and change without rebuilding anything: the model is an attribute of an agent
+  definition, and versions are pinned explicitly, never &quot;latest&quot;.</li><li>Model allowlists enforced by policy: using a model outside the list is blocked and logged.</li><li>A fully internet-isolated scenario: models hosted on your infrastructure (vLLM, Triton,
+  open-weight models) behind the same gateway. The platform is functional with no outbound
+  connectivity at all.</li><li>Full call telemetry: model, token counts, status, cost, duration – per call, per flow, per
+  team.</li></ul>
+<h3>Identity: OIDC, SSO, MFA, directory</h3>
+<ul><li>User authentication over <strong>OIDC</strong> (native, multi-IdP); OAuth2 authorisation; sessions in
+  secure cookies.</li><li>An identity broker for SSO, MFA enforcement and <strong>role and group synchronisation with
+  Active Directory or Entra ID</strong> (LDAP and SCIM federation). Direct integration with an
+  existing OIDC-compliant provider is equally possible; SAML is supported through a
+  SAML-to-OIDC bridge.</li><li>Unique user identifiers (no group accounts); unused accounts blocked rather than deleted.</li><li>RBAC with granular roles: global administrator, project owner, developer, read-only, plus
+  auditor roles, with permissions per project and repository in the Control Plane.</li></ul>
+<h3>Secrets</h3>
+<ul><li>Integration with your secret store as the source of truth: the platform pulls secrets just
+  in time and stores only references. Secrets at rest inside the platform are encrypted with
+  AES-256-GCM using a key ring, with KMS and BYOK support.</li><li>Secrets never reach the agent environment in clear text: substitution happens at the proxy
+  layer.</li></ul>
+<h3>SIEM and observability</h3>
+<ul><li>Audit event export to your SIEM: Syslog, structured JSON, Splunk HEC, Elastic Bulk, with
+  events signed and embedded in the chain.</li><li>Metrics with ready-made alerting rules, tracing and logs over OpenTelemetry (OTLP) into
+  your existing observability stack.</li><li>Structured platform logs (JSON) with configurable retention and RBAC-restricted access.</li></ul>
+<h3>API and extensibility</h3>
+<ul><li>A full <strong>REST API documented with OpenAPI</strong> for every platform operation, from flow
+  definitions to metric reads.</li><li><strong>MCP</strong> as the standard tool interface for agents: your internal tools can be exposed to
+  agents as MCP servers, with a per-agent method allowlist.</li><li>Outbound webhooks and notifications (Teams, Slack, email) and WebSocket for real-time
+  events.</li><li>JSON and CSV exports plus an API for programmatic retrieval of tracing and cost data.</li></ul>
+<p><em>Current material on the platform: <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>.</em></p>
+<h2 id="deployment-architecture">Deployment architecture</h2>
+<h3>Topology</h3>
+<p>The platform is installed on your <strong>Kubernetes</strong> cluster – any conformant distribution:
+vanilla Kubernetes, OpenShift, Rancher or RKE2 – using Helm charts, split across namespaces:</p>
+<div class="tablewrap"><table><thead><tr><th><strong>Namespace</strong></th><th><strong>Contents</strong></th></tr></thead><tbody><tr><td>visdom-orchestrator</td><td>Orchestrator controller (≥2 replicas, leader election), API and UI</td></tr><tr><td>visdom-runs</td><td>ephemeral agent pods (Kubernetes jobs), working volumes (PVC)</td></tr><tr><td>visdom-context</td><td>Context Fabric services (indexing, MCP endpoint)</td></tr><tr><td>visdom-tracing</td><td>AI Tracing: server, dashboard, SIEM exporter</td></tr><tr><td>visdom-vcr</td><td>Code Review: findings API</td></tr><tr><td>visdom-controlplane</td><td>Control Plane: API and UI</td></tr><tr><td>visdom-auth</td><td>identity broker, unless an existing instance is used</td></tr></tbody></table></div>
+<figure><img src="/technical-overview/deployment.png" alt="Deployment architecture, production environment."><figcaption>Deployment architecture, production environment.</figcaption></figure>
+<p>Properties:</p>
+<ul><li><strong>All state in PostgreSQL</strong> (version 17 or above, a separate database per component), with
+  an HA cluster recommended – an operator-managed cluster or your own database service. There
+  are no external message brokers and no specialist datastores, which keeps the operational
+  surface and maintenance requirements small.</li></ul>
+<ul><li>&lt;aside label=&quot;Default-deny&quot;&gt;Nothing talks to anything until a rule says it may. Agent pods reach only the hosts on the egress allowlist.&lt;/aside&gt;</li></ul>
+<p><strong>NetworkPolicy default-deny</strong> in every namespace; communication between components is
+  explicitly allowed; agent pods have no network access beyond the egress allowlist.</p>
+<ul><li><strong>Your image registry</strong> – all platform images are delivered into an internal registry.
+  Air-gapped environments are supported: installation and updates arrive as signed image
+  bundles with no internet connection. Images are scanned under your policies and versions
+  are pinned.</li></ul>
+<ul><li><strong>Single-tenant isolation</strong> – a dedicated instance: separate databases, separate
+  configuration, no data shared with any other installation.</li></ul>
+<h3>High availability</h3>
+<p>The platform is stateless at the service level and keeps all state in PostgreSQL, which keeps
+the HA model simple:</p>
+<ul><li>The Orchestrator controller runs in at least 2 replicas with leader election based on
+  PostgreSQL advisory locks (<code>pg_try_advisory_lock</code>). A replica failing does not interrupt
+  running flows; the reconciler rebuilds state from the database.</li><li>PostgreSQL: an HA cluster managed by an operator (CloudNativePG, for example) or your
+  existing database service. The platform requires no external message broker – asynchronous
+  work uses a transactional outbox plus LISTEN/NOTIFY in PostgreSQL – which eliminates a
+  whole class of components that would each need their own HA story.</li><li>Agents execute as ephemeral Kubernetes jobs. A node failing means the job restarts under
+  the on_failure policy defined in the flow; intermediate flow state is durable (database
+  plus the shared working volume).</li><li>User interfaces are static single-page applications behind Ingress, scaled horizontally.</li><li>Graceful degradation: platform unavailability does not affect the tracker or source
+  control. The integration is initiated one way, by webhooks with retries on the platform
+  side, so lost events are redelivered and the inbound queue has a dead-letter queue with
+  retries and a circuit breaker.</li></ul>
+<h3>Recovery objectives</h3>
+<p>Recovery objectives follow the class of database service in use. With a PostgreSQL cluster
+and a synchronous replica the platform achieves RPO=0 and an RTO in minutes, bounded by
+service restart. The nature of the process – asynchronous issue handling rather than a
+transaction path – means a short outage delays work without losing it: issues wait in the
+tracker and are processed once service returns.</p>
+<h3>Sizing</h3>
+<p>The load profile differs from classic transactional systems: the dominant cost is <strong>LLM
+inference</strong>, which sits outside the platform behind your gateway, while the platform itself
+has moderate requirements.</p>
+<div class="tablewrap"><table><thead><tr><th><strong>Element</strong></th><th><strong>Initial sizing</strong></th></tr></thead><tbody><tr><td>Platform services (controllers, API, UI)</td><td>8–12 vCPU, 16–24 GB RAM in total</td></tr><tr><td>Agent pods (visdom-runs)</td><td>1–2 vCPU, 2–4 GB RAM <strong>per concurrent flow</strong>; at 50 concurrent flows roughly 64–128 vCPU and 128–256 GB RAM, elastic – jobs release resources when they finish</td></tr><tr><td>PostgreSQL (3–4 HA instances)</td><td>4–8 vCPU, 16–32 GB RAM, 200–500 GB SSD per instance</td></tr><tr><td>Context Fabric indexes</td><td>depends on how many repositories are actively covered; volume is estimated on a representative sample</td></tr></tbody></table></div>
+<p>At the scale of thousands of repositories, the key design parameter is the <strong>incremental
+indexing strategy</strong>: active repositories first, with cost proportional to the delta rather
+than to the size of the estate.</p>
+<p><em>Current material on the platform: <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>.</em></p>
+<h2 id="security-summary">Security summary</h2>
+<div class="tablewrap"><table><thead><tr><th><strong>Requirement</strong></th><th><strong>How it is met</strong></th></tr></thead><tbody><tr><td>No outbound internet connections</td><td>Full on-premises operation; the only model traffic goes through your LLM gateway, and models can be served entirely on-premises. Updates arrive as signed bundles into your registry</td></tr><tr><td>No data passed to the vendor</td><td>Zero outbound telemetry. The platform does not call home; code, prompts and metrics stay in your infrastructure</td></tr><tr><td>Transport encryption</td><td>TLS 1.2+/1.3 on all interfaces; mTLS between the controller and agent pods</td></tr><tr><td>Authentication and authorisation</td><td>OIDC/SSO and OAuth2, MFA, granular RBAC with per-project and per-repository permissions, unique accounts, blocking rather than deletion</td></tr><tr><td>Secrets</td><td>Your secret store as the source of truth, AES-256-GCM at rest, KMS/BYOK, secret substitution (the agent never sees a value), rotation without restarts</td></tr><tr><td>Agent isolation</td><td>One pod per agent, NetworkPolicy default-deny, transparent egress proxy with an allowlist, no access to production</td></tr><tr><td>Protection against leaking to a model</td><td>A pre-LLM gate scanning for secrets and sensitive data, stopping with an alert; secrets redacted in the audit record</td></tr><tr><td>Audit</td><td>A complete, signed (Ed25519), chained (SHA-256), append-only record of all agent activity and configuration changes, with actor identity and timestamp; verifiable offline; exportable to SIEM; configurable retention</td></tr><tr><td>Attribution and traceability</td><td>Line-by-line attribution of AI-written code to model and prompt, linked to commits and pull requests – the evidence base for internal policy on generated code and for external frameworks that require traceability</td></tr><tr><td>Penetration testing</td><td>The architecture is built for it: the attack surface is limited to APIs behind OIDC, and findings are addressed as part of a deployment</td></tr></tbody></table></div>
+<p><em>Current material on the platform: <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>.</em></p>
+<h2 id="getting-there-from-here">Getting there from here</h2>
+<p>A deployment does not start with the whole platform. It starts with one capability against
+one repository, and grows as the evidence accumulates. Four phases, each of which leaves you
+with working capability you can see and use, and each of which you can stop at.</p>
+<section class="scenario"><p class="slabel">Phase 1 · fixed scope</p><h4>Assessment</h4><div class="steps"><div class="when">Input</div><div class="what">Your environment, on-site or remote, run through the Visdom Maturity Matrix.</div><div class="when">Output</div><div class="what">A prioritised roadmap, the pilot team named, and the next phase scoped.</div><div class="when">Your side</div><div class="what">A light touch. If you stop here, you keep the roadmap and nothing is locked in.</div></div><p class="kicker">A map before a purchase</p></section>
+<section class="scenario"><p class="slabel">Phase 2 · fixed scope</p><h4>Pilot implementation</h4><div class="steps"><div class="when">Scope</div><div class="what">One pilot team, and the components that matter to it.</div><div class="when">Where</div><div class="what">Deployed into your source control, CI, identity provider and observability stack.</div><div class="when">How</div><div class="what">A small team of our engineers alongside your platform team; runbooks, decision records and integration code co-authored from the start.</div></div><p class="kicker">Not as observers, as owners</p></section>
+<section class="scenario"><p class="slabel">Phase 3 · advisory</p><h4>Scale and improve</h4><div class="steps"><div class="when">Vertically</div><div class="what">More components come online as the footprint grows.</div><div class="when">Horizontally</div><div class="what">Adoption spreads to more teams and the wider organisation.</div><div class="when">Alongside</div><div class="what">Architecture reviews, hardening, and the edge cases that only appear at scale.</div></div><p class="kicker">The rollout, not the pilot</p></section>
+<section class="scenario"><p class="slabel">Phase 4 · ongoing</p><h4>Support</h4><div class="steps"><div class="when">Cadence</div><div class="what">Architecture reviews and the next maturity step, on predictable terms.</div><div class="when">Ownership</div><div class="what">Yours. The platform is self-hosted, single-tenant and operated by your platform team.</div><div class="when">Updates</div><div class="what">Signed images into your registry; nothing about the running system depends on reaching us.</div></div><p class="kicker">A partnership, not a dependency</p></section>
+<p>Exact scope, pace and team are agreed for every engagement rather than taken off a fixed
+list.</p>
+<h3>What a first conversation looks like</h3>
+<p>The useful next step is a <strong>technical working session</strong> with the engineers who would own
+this: an hour or two on your architecture, your delivery pipeline and the flows worth
+automating first, with the platform on screen rather than in slides.</p>
+<p>Get in touch at <a href="https://visdom.virtuslab.com">visdom.virtuslab.com</a>, or reply to whoever
+sent you this document.</p>
+<h2 id="built-by-virtuslab">Built by VirtusLab</h2>
+<p>VirtusLab&#x27;s engineers have spent over a decade helping organisations solve software delivery
+and developer productivity problems at scale. We maintain core open-source infrastructure –
+the Scala toolchain, Metals, Scala CLI – contribute to the JVM ecosystem, and build
+production-grade tooling for environments where the cost of getting it wrong is high.</p>
+<p>Visdom is designed by practitioners: it runs our own delivery before it runs anyone else&#x27;s,
+and every mechanism described in this document is one the team uses daily.</p>
+<ul class="facts"><li><span class="figure">15+</span><span class="flabel">years on market</span></li><li><span class="figure">500</span><span class="flabel">engineers</span></li><li><span class="figure">Open Source</span><span class="flabel">in our DNA</span></li><li><span class="figure">Scala &amp; JVM</span><span class="flabel">core contributors</span></li></ul>
+<h3>What that has produced elsewhere</h3>
+<div class="tablewrap"><table><thead><tr><th><strong>Result</strong></th><th><strong>Change</strong></th><th><strong>Where</strong></th></tr></thead><tbody><tr><td>Build time</td><td>−88%</td><td>Global logistics, Scala monorepo, sbt to Bazel: 40–60 minutes down to 5.</td></tr><tr><td>Pull request merge time</td><td>−43%</td><td>Investment bank, Scala monorepo, managed IntelliJ IDEA.</td></tr><tr><td>Agent iteration speed</td><td>~50/hr</td><td>The target cadence for coding agents, and the speed today&#x27;s pipelines have to keep up with.</td></tr></tbody></table></div>
+<p>Client names are under NDA; full write-ups are on the VirtusLab success stories page.</p>
+<h2 id="this-document-has-a-living-version">This document has a living version</h2>
+<p>The platform changes faster than a PDF can. The page below always carries the current
+edition of this document – the same text, the same diagrams, updated as components ship.</p>
+<section class="living"><p class="slabel">Living document</p><p>You are reading the web edition, which is updated as the platform evolves. The PDF is a snapshot, and carries a code that points back here.</p></section>
+    </main>
+  </div>
+
+  <Footer />
+</Layout>
+
+<style>
+  /* The page borrows the site's tokens and adds only what long-form reading needs:
+     a measure, a margin column for notes, and the two component shapes the print
+     edition uses (scenario cards, fact strips). */
+  .to-masthead {
+    border-bottom: 1px solid var(--color-border);
+    padding: 3.5rem 1.5rem 2.5rem;
+  }
+  .to-inner, .to-wrap { max-width: 78rem; margin: 0 auto; }
+  .to-eyebrow {
+    font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: .12em;
+    text-transform: uppercase; color: var(--color-text-secondary); margin: 0 0 .9rem;
+  }
+  .to-masthead h1 {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    font-size: clamp(2rem, 5vw, 3rem); line-height: 1.12; margin: 0 0 .8rem;
+    max-width: 22ch; text-wrap: balance;
+  }
+  .to-standfirst {
+    font-family: var(--font-body); color: var(--color-text-secondary);
+    max-width: 54ch; margin: 0; font-size: var(--fs-xl); line-height: 1.55;
+  }
+  .to-wrap {
+    padding: 0 1.5rem; display: grid; gap: 2.75rem; align-items: start;
+    grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+  }
+  .to-toc {
+    order: 2; position: sticky; top: 1.5rem; padding-top: 3rem;
+    font-family: var(--font-body); font-size: var(--fs-sm);
+  }
+  .to-toc ol { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+  .to-toc li { counter-increment: s; margin: 0 0 .45rem; line-height: 1.35; }
+  .to-toc li::before {
+    content: counter(s, decimal-leading-zero); font-family: var(--font-mono);
+    font-size: var(--fs-2xs); color: var(--color-text-muted); margin-right: .55rem;
+  }
+  .to-toc a { color: var(--color-text-secondary); text-decoration: none; border-bottom: 1px solid transparent; }
+  .to-toc a:hover, .to-toc a:focus-visible { color: var(--color-text); border-bottom-color: var(--color-emerald); }
+
+  .to-body { order: 1; min-width: 0; padding: 3rem 0 5rem; font-size: var(--fs-2xl); line-height: 1.7; }
+  .to-body :global(h2) {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    font-size: var(--fs-5xl); line-height: 1.2; margin: 3.4rem 0 1rem;
+    padding-top: 1.4rem; border-top: 1px solid var(--color-border); text-wrap: balance;
+  }
+  .to-body :global(h2:first-child) { margin-top: 0; border-top: 0; padding-top: 0; }
+  .to-body :global(h3) { font-family: var(--font-heading); font-weight: 600; font-size: var(--fs-3xl); margin: 2.2rem 0 .55rem; }
+  .to-body :global(h4) { font-family: var(--font-heading); font-weight: 600; font-size: var(--fs-xl); margin: .15rem 0 .8rem; }
+  .to-body :global(p) { margin: 0 0 1.05rem; }
+  .to-body :global(ul) { margin: 0 0 1.2rem; padding-left: 1.1rem; }
+  .to-body :global(li) { margin: 0 0 .6rem; }
+  .to-body :global(li::marker) { color: var(--color-emerald); }
+  .to-body :global(code) {
+    font-family: var(--font-mono); font-size: .86em; background: var(--color-surface);
+    padding: .08em .3em; border-radius: 3px;
+  }
+  .to-body :global(a) { color: var(--color-emerald-dark); text-underline-offset: 2px; }
+  .to-body :global(figure) {
+    margin: 2rem 0; background: #fff; border: 1px solid var(--color-border);
+    border-radius: 4px; padding: .9rem;
+  }
+  .to-body :global(figure img) { display: block; width: 100%; height: auto; }
+  .to-body :global(figcaption) {
+    font-family: var(--font-body); font-size: var(--fs-sm);
+    color: var(--color-text-muted); margin-top: .7rem; line-height: 1.5;
+  }
+  .to-body :global(aside) {
+    background: var(--color-surface); border-radius: 5px; padding: .9rem 1rem;
+    margin: 1.5rem 0; font-family: var(--font-body); font-size: var(--fs-md);
+    line-height: 1.55; color: var(--color-text-secondary);
+  }
+  .to-body :global(.notelabel) {
+    display: block; font-family: var(--font-mono); font-size: var(--fs-3xs);
+    letter-spacing: .12em; text-transform: uppercase; color: var(--color-text-muted);
+    margin-bottom: .35rem;
+  }
+  .to-body :global(blockquote) {
+    margin: 2rem 0; padding-top: .9rem; border-top: 2px solid var(--color-emerald);
+    font-family: var(--font-serif); font-style: italic; font-size: var(--fs-4xl);
+    line-height: 1.4; max-width: 32ch;
+  }
+  .to-body :global(.tablewrap) { overflow-x: auto; margin: 2rem 0; }
+  .to-body :global(table) { border-collapse: collapse; width: 100%; font-family: var(--font-body); font-size: var(--fs-md); line-height: 1.5; }
+  .to-body :global(th) {
+    font-family: var(--font-mono); font-size: var(--fs-3xs); letter-spacing: .1em;
+    text-transform: uppercase; color: var(--color-text-muted); text-align: left;
+    font-weight: 500; padding: 0 1rem .55rem 0; border-bottom: 1px solid var(--color-border);
+    vertical-align: bottom;
+  }
+  .to-body :global(td) { padding: .75rem 1rem .75rem 0; border-bottom: 1px solid var(--color-border); vertical-align: top; color: var(--color-text-secondary); }
+  .to-body :global(td:first-child) { color: var(--color-text); }
+
+  .to-body :global(.scenario) { background: var(--color-surface); border-radius: 5px; padding: 1.1rem 1.2rem; margin: 1.6rem 0; }
+  .to-body :global(.slabel) {
+    font-family: var(--font-mono); font-size: var(--fs-3xs); letter-spacing: .12em;
+    text-transform: uppercase; color: var(--color-emerald-dark); margin: 0 0 .1rem;
+  }
+  .to-body :global(.steps) { display: grid; grid-template-columns: auto 1fr; gap: .4rem .9rem; font-family: var(--font-body); font-size: var(--fs-md); }
+  .to-body :global(.steps .when) { font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--color-text-muted); white-space: nowrap; }
+  .to-body :global(.steps .what) { color: var(--color-text-secondary); }
+  .to-body :global(.kicker) { font-family: var(--font-body); font-size: var(--fs-sm); font-style: italic; color: var(--color-emerald-dark); margin: .9rem 0 0; }
+  .to-body :global(.facts) { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 1.2rem; padding: 0; margin: 2rem 0; }
+  .to-body :global(.facts li) { border-left: 2px solid var(--color-emerald); padding-left: .8rem; margin: 0; }
+  .to-body :global(.facts .figure) { display: block; font-family: var(--font-heading); font-weight: 600; font-size: var(--fs-4xl); line-height: 1.2; }
+  .to-body :global(.facts .flabel) { display: block; font-family: var(--font-body); font-size: var(--fs-sm); color: var(--color-text-muted); margin-top: .35rem; }
+  .to-body :global(.living) { background: var(--color-surface); border-radius: 5px; padding: 1.1rem 1.2rem; margin: 2rem 0; font-family: var(--font-body); font-size: var(--fs-md); color: var(--color-text-secondary); }
+  .to-body :global(.living p:last-child) { margin: 0; }
+
+  @media (max-width: 64rem) {
+    .to-wrap { grid-template-columns: minmax(0, 1fr); }
+    .to-toc { position: static; order: 0; padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--color-border); }
+    .to-body { order: 1; padding-top: 2rem; }
+    .to-body :global(blockquote) { max-width: none; }
+  }
+</style>
