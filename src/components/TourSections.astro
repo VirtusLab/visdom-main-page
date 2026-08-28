@@ -22,6 +22,7 @@ import {
 import { SPEAKERS } from '../data/webinar';
 import { useI18n, fill } from '../i18n';
 import fs from 'node:fs';
+import path from 'node:path';
 
 const { locale, t } = useI18n(Astro);
 const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
@@ -82,13 +83,21 @@ const EXPERTS = [
   { name: 'Artur Skowroński', role: 'Head of Application Development' },
   { name: 'Krzysztof Grajek', role: 'Principal Engineer' },
   { name: 'Adam Warski', role: 'Head of R&D' },
-  { name: 'Tomasz Orzechowski', role: 'Chief Operating Officer' },
-  { name: 'Paweł Urba', role: 'Business Development Manager' },
-].map((person) => {
+  {
+    name: 'Tomasz Orzechowski',
+    role: 'Chief Operating Officer',
+    photo: '/speakers/tomasz-orzechowski.jpg',
+  },
+  {
+    name: 'Paweł Urba',
+    role: 'Business Development Manager',
+    photo: '/speakers/pawel-urba.jpg',
+  },
+].map((person: { name: string; role: string; photo?: string }) => {
   const known = SPEAKERS.find((s) => s.name === person.name);
   return {
     ...person,
-    photo: known?.photo ?? '',
+    photo: person.photo ?? known?.photo ?? '',
     linkedin: known?.linkedin ?? '',
     initials: person.name
       .split(/\s+/)
@@ -102,15 +111,19 @@ const EXPERTS = [
 const photoAlt = c.gallery.alt as Record<string, string>;
 
 /**
- * The tour map marketing draws, dropped in at public/tour-map.png.
+ * The tour map marketing draws. They hand over a PNG; this is that file at
+ * quality 90 WebP, which is 42 KB against 944 KB and indistinguishable at the
+ * size it renders. Regenerate the same way when the artwork changes.
  *
  * Checked on disk rather than rendered blind: pages here are prerendered, so a
  * missing file would otherwise ship as a broken image on a live page. Absent,
  * the section is skipped and the build says so, which is the difference between
  * a page with one fewer section and a page with a hole in it.
  */
-const MAP_SRC = '/tour-map.png';
-const hasMap = fs.existsSync(new URL(`../../public${MAP_SRC}`, import.meta.url));
+const MAP_SRC = '/tour-map.webp';
+// Resolved from the project root, not from import.meta.url: this component is
+// bundled before it runs, and the bundle does not sit where the source does.
+const hasMap = fs.existsSync(path.join(process.cwd(), 'public', path.basename(MAP_SRC)));
 if (!hasMap) {
   console.warn(`[visdom-tour] public${MAP_SRC} is missing, the map section is not rendered.`);
 }
