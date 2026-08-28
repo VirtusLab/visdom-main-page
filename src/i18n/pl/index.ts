@@ -685,6 +685,8 @@ const pl = {
       errorRef: 'Numer zgłoszenia:',
       errorFallback: 'Napiszcie na visdom@virtuslab.com',
       errorCaptcha: 'Dokończcie weryfikację i spróbujcie ponownie.',
+      errorWorkEmail: 'Proszę użyć służbowego adresu e-mail',
+
     },
     alt: {
       lead: 'Jeszcze nie na rozmowę?',

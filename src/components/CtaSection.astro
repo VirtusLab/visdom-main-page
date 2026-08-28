@@ -1,5 +1,6 @@
 ---
 import { useI18n } from '../i18n';
+import { BLOCKED_EMAIL_DOMAINS } from '../lib/work-email';
 
 const { locale, t } = useI18n(Astro);
 const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
@@ -35,6 +36,8 @@ const formStrings = {
   errorRef: t.cta.form.errorRef,
   errorFallback: t.cta.form.errorFallback,
   errorCaptcha: t.cta.form.errorCaptcha,
+  errorWorkEmail: t.cta.form.errorWorkEmail,
+  blockedEmailDomains: BLOCKED_EMAIL_DOMAINS,
   turnstileSiteKey: TURNSTILE_SITE_KEY,
 };
 ---
@@ -79,7 +82,8 @@ const formStrings = {
 
           <div class="contact-field">
             <label for="cf-email">{t.cta.form.emailLabel}</label>
-            <input id="cf-email" name="email" type="email" autocomplete="email" required />
+            <input id="cf-email" name="email" type="email" autocomplete="email" required aria-describedby="cf-email-error" />
+            <p id="cf-email-error" class="contact-field-error" hidden></p>
           </div>
 
           <div class="contact-field">
@@ -164,12 +168,56 @@ const formStrings = {
 
     var button = form.querySelector('button[type="submit"]');
     var status = form.querySelector('.contact-form-status');
+    var emailInput = form.querySelector('#cf-email');
+    var emailError = form.querySelector('#cf-email-error');
     var success = document.getElementById('contact-success');
     var successTitle = success && success.querySelector('h3');
     var successAgain = success && success.querySelector('.contact-success-again');
     var submitted = false;
     // One conversion per page view, however many times the form is sent.
     var counted = false;
+    var blocked = {};
+    var domains = formStrings.blockedEmailDomains || [];
+    for (var i = 0; i < domains.length; i++) blocked[domains[i]] = true;
+
+    function isBlockedEmail(email) {
+      var at = email.lastIndexOf('@');
+      if (at === -1 || at === email.length - 1) return false;
+      var current = email.slice(at + 1).trim().toLowerCase();
+      while (current) {
+        if (blocked[current]) return true;
+        var dot = current.indexOf('.');
+        if (dot === -1) return false;
+        current = current.slice(dot + 1);
+      }
+      return false;
+    }
+
+    function setEmailError(message) {
+      if (emailError) {
+        emailError.hidden = false;
+        emailError.textContent = message;
+      }
+      if (emailInput) {
+        emailInput.classList.add('is-invalid');
+        emailInput.setAttribute('aria-invalid', 'true');
+      }
+    }
+
+    function clearEmailError() {
+      if (emailError) {
+        emailError.hidden = true;
+        emailError.textContent = '';
+      }
+      if (emailInput) {
+        emailInput.classList.remove('is-invalid');
+        emailInput.removeAttribute('aria-invalid');
+      }
+    }
+
+    if (emailInput) {
+      emailInput.addEventListener('input', clearEmailError);
+    }
 
     function show(message, tone) {
       if (!status) return;
@@ -211,6 +259,13 @@ const formStrings = {
 
       var data = new FormData(form);
       var val = function (k) { return (data.get(k) || '').toString().trim(); };
+      if (isBlockedEmail(val('email'))) {
+        setEmailError(formStrings.errorWorkEmail);
+        if (emailInput && typeof emailInput.focus === 'function') emailInput.focus();
+        if (status) { status.hidden = true; status.textContent = ''; }
+        return;
+      }
+      clearEmailError();
       var token = val('cf-turnstile-response');
       if (formStrings.turnstileSiteKey && !token) {
         show(formStrings.errorCaptcha, 'error');
@@ -284,6 +339,12 @@ const formStrings = {
           submitted = false;
           if (button) { button.disabled = false; button.textContent = formStrings.submit; }
           resetCaptcha();
+          if (body && body.workEmail) {
+            setEmailError(formStrings.errorWorkEmail);
+            if (emailInput && typeof emailInput.focus === 'function') emailInput.focus();
+            if (status) { status.hidden = true; status.textContent = ''; }
+            return;
+          }
           var captchaFailed = body && body.captcha;
           var ref = !captchaFailed && body && body.ref ? ' ' + formStrings.errorRef + ' ' + body.ref : '';
           show((captchaFailed ? formStrings.errorCaptcha : formStrings.error) + ref, 'error');
@@ -529,6 +590,16 @@ const formStrings = {
   .contact-form-status.is-ok { color: var(--color-emerald); }
   .contact-form-status.is-error { color: var(--color-amber); }
   .contact-form-status.is-error a { color: inherit; text-decoration: underline; }
+
+  .contact-field-error {
+    font-size: var(--fs-2xs);
+    color: var(--color-amber);
+    margin: 0;
+  }
+
+  .contact-field input.is-invalid {
+    border-color: var(--color-amber);
+  }
 
   .contact-form-status {
     font-size: var(--fs-sm);

@@ -39,6 +39,8 @@ import {
 } from '../../lib/hubspot';
 import { allowedOrigin, pageUriOf, resolveSource } from '../../lib/source';
 import { turnstileConfigured, verifyTurnstile } from '../../lib/turnstile';
+import { isBlockedEmail } from '../../lib/work-email';
+
 
 export const prerender = false;
 
@@ -240,6 +242,16 @@ const handlePost: APIRoute = async ({ request, clientAddress }) => {
       ? json({ ok: false, error: 'Valid work email required.' }, 400)
       : page('Email required', 'Please go back and add a valid work email.', 400);
   }
+  if (isBlockedEmail(email)) {
+    const error =
+      locale === 'pl'
+        ? 'Proszę użyć służbowego adresu e-mail'
+        : 'Please use your company email address';
+    return wantsJson
+      ? json({ ok: false, error, workEmail: true }, 400)
+      : page('Work email required', error, 400);
+  }
+
 
   const ip = clientAddress || 'unknown';
 
