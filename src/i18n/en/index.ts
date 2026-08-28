@@ -81,7 +81,6 @@ const en = {
       ogImageAlt: 'Visdom on Tour: where to meet the Visdom team in 2026',
     },
 
-    label: 'Visdom on Tour',
     headlineLead: 'Join the',
     headlineAccent: 'Visdom Tour',
     lede:

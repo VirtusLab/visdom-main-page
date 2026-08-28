@@ -66,7 +66,6 @@ const pl = {
       ogImageAlt: 'Visdom on Tour: gdzie spotkacie zespół Visdoma w 2026',
     },
 
-    label: 'Visdom on Tour',
     headlineLead: 'Spotkajmy się na',
     headlineAccent: 'Visdom Tour',
     lede:
