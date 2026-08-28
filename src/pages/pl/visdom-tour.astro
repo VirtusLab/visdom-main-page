@@ -1,0 +1,17 @@
+---
+// Polish tour page. Same sections as /visdom-tour, copy resolved from the
+// locale in the URL.
+import Layout from '../../layouts/Layout.astro';
+import TourSections from '../../components/TourSections.astro';
+import { useI18n } from '../../i18n';
+import '../../styles/global.css';
+
+const { t } = useI18n(Astro);
+---
+<Layout
+  title={t.visdomTour.meta.title}
+  description={t.visdomTour.meta.description}
+  ogImageAlt={t.visdomTour.meta.ogImageAlt}
+>
+  <TourSections />
+</Layout>

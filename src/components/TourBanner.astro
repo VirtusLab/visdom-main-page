@@ -1,20 +1,27 @@
 ---
-// Stops come from src/data/tour.ts so the banner and the webinar page cannot
-// drift apart. Rendered markup is unchanged.
-import { TOUR_STOPS, TOUR_HREF } from '../data/tour';
-import { useI18n } from '../i18n';
+// Stops come from src/data/tour.ts so the banner, the webinar page and
+// /visdom-tour cannot drift apart. The list there is the full schedule; this
+// banner shows the next four stops off it.
+import { TOUR_STOPS, TOUR_ROUTE } from '../data/tour';
+import { useI18n, localePath } from '../i18n';
 
-const { t } = useI18n(Astro);
+const { locale, t } = useI18n(Astro);
+
+// The tour page on this site, in the reader's locale. It used to be a campaign
+// landing page on virtuslab.com, which is now one destination among the stops
+// rather than the place the whole schedule lives.
+const href = localePath(locale, TOUR_ROUTE);
 
 // tour.ts stores month labels in English. Anything without a translation (a
 // full date, say) falls through as written rather than disappearing.
 const when = (label: string) => t.tour.months[label] ?? label;
+
+// Cities too: Zurich is Zurych in Polish, and the schedule stores one spelling.
+const city = (name: string) => t.tour.cities[name] ?? name;
 ---
 <a
   class="tour-banner"
-  href={TOUR_HREF}
-  target="_blank"
-  rel="noopener"
+  href={href}
   data-cta="cta_click"
   aria-label={t.tour.aria}
 >
@@ -25,12 +32,12 @@ const when = (label: string) => t.tour.months[label] ?? label;
         {i > 0 && <span class="tour-sep" aria-hidden="true">·</span>}
         {stop.status === 'next' ? (
           <span class="tour-stop tour-stop--next">
-            <span class="tour-flag">{stop.flag}</span><strong>{stop.city}</strong>
+            <span class="tour-flag">{stop.flag}</span><strong>{city(stop.city)}</strong>
             <span class="tour-next-badge">{t.tour.nextStop} {when(stop.when)}</span>
           </span>
         ) : (
           <span class="tour-stop tour-stop--upcoming">
-            <span class="tour-flag">{stop.flag}</span>{stop.city}
+            <span class="tour-flag">{stop.flag}</span>{city(stop.city)}
             <span class="tour-month">{when(stop.when)}</span>
           </span>
         )}

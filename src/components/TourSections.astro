@@ -1,0 +1,824 @@
+---
+/**
+ * /visdom-tour in both locales. The two page files are four lines each and this
+ * owns the section order, the same arrangement the home page uses.
+ *
+ * The schedule is data (src/data/tour.ts), the copy is dictionary
+ * (t.visdomTour). Nothing a translator can edit changes which stop is next or
+ * where a link goes.
+ */
+import Nav from './Nav.astro';
+import TourBanner from './TourBanner.astro';
+import Footer from './Footer.astro';
+import CtaSection from './CtaSection.astro';
+import {
+  TOUR_EVENTS,
+  PAST_APPEARANCES,
+  TOUR_PHOTOS,
+  byDate,
+  isPast,
+  type TourEvent,
+} from '../data/tour';
+import { SPEAKERS } from '../data/webinar';
+import { useI18n, fill } from '../i18n';
+import fs from 'node:fs';
+
+const { locale, t } = useI18n(Astro);
+const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+const c = t.visdomTour;
+
+// Lookups by data key. The `?? key` fallbacks mean a stop with a country or a
+// kind nobody has translated yet prints the raw key rather than nothing, which
+// is the difference between a rough row and a broken one.
+const countries = c.stops.countries as Record<string, string>;
+const city = (name: string) => t.tour.cities[name] ?? name;
+const kinds = c.stops.kinds as Record<string, string>;
+
+const schedule = byDate(TOUR_EVENTS);
+const ahead = schedule.filter((event) => !isPast(event));
+const next = ahead[0];
+
+// Dates are rendered here rather than stored as strings, so the Polish page
+// says "10-11 września 2026" without a second copy of the schedule. UTC on
+// purpose: the values are calendar days, and formatting them in a negative
+// offset would move a stop to the day before.
+const dateFmt = new Intl.DateTimeFormat(locale === 'pl' ? 'pl-PL' : 'en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+const dayFmt = new Intl.DateTimeFormat(locale === 'pl' ? 'pl-PL' : 'en-GB', {
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+
+/**
+ * A single day, or a range collapsed onto one month: "10-11 September 2026".
+ * Every stop on the 2026 schedule starts and ends inside one month; a range
+ * that ever crosses one falls back to printing both dates in full.
+ */
+function humanDate(event: TourEvent): string {
+  const start = new Date(`${event.date}T12:00:00Z`);
+  if (!event.endDate) return dateFmt.format(start);
+  const end = new Date(`${event.endDate}T12:00:00Z`);
+  const sameMonth = event.date.slice(0, 7) === event.endDate.slice(0, 7);
+  return sameMonth
+    ? `${dayFmt.format(start)}-${dateFmt.format(end)}`
+    : `${dateFmt.format(start)}, ${dateFmt.format(end)}`;
+}
+
+/** An internal route keeps the reader on the site; an event page does not. */
+const hrefOf = (event: TourEvent) =>
+  event.href?.startsWith('/') ? `${base}${event.href}` : event.href;
+
+/**
+ * The people a visitor meets at a stop, in the order marketing listed them.
+ * Roles come from src/data/webinar.ts where the person is already there, so a
+ * title is corrected in one place. The three without a headshot render the
+ * initials plate the webinar page uses.
+ */
+const EXPERTS = [
+  { name: 'Artur Skowroński', role: 'Head of Application Development' },
+  { name: 'Krzysztof Grajek', role: 'Principal Engineer' },
+  { name: 'Adam Warski', role: 'Head of R&D' },
+  { name: 'Tomasz Orzechowski', role: 'Chief Operating Officer' },
+  { name: 'Paweł Urba', role: 'Business Development Manager' },
+].map((person) => {
+  const known = SPEAKERS.find((s) => s.name === person.name);
+  return {
+    ...person,
+    photo: known?.photo ?? '',
+    linkedin: known?.linkedin ?? '',
+    initials: person.name
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((part) => part[0] ?? '')
+      .join('')
+      .toUpperCase(),
+  };
+});
+
+const photoAlt = c.gallery.alt as Record<string, string>;
+
+/**
+ * The tour map marketing draws, dropped in at public/tour-map.png.
+ *
+ * Checked on disk rather than rendered blind: pages here are prerendered, so a
+ * missing file would otherwise ship as a broken image on a live page. Absent,
+ * the section is skipped and the build says so, which is the difference between
+ * a page with one fewer section and a page with a hole in it.
+ */
+const MAP_SRC = '/tour-map.png';
+const hasMap = fs.existsSync(new URL(`../../public${MAP_SRC}`, import.meta.url));
+if (!hasMap) {
+  console.warn(`[visdom-tour] public${MAP_SRC} is missing, the map section is not rendered.`);
+}
+---
+
+<TourBanner />
+<Nav hasContact />
+
+<main class="tour">
+  {/* ── HERO ─────────────────────────────────────────────────────────────── */}
+  <section class="tr-hero">
+    <div class="aurora" aria-hidden="true"></div>
+    <div class="container tr-hero-inner">
+      <div class="fade-up">
+        <p class="section-label">{c.label}</p>
+        <h1 class="tr-headline">
+          {c.headlineLead} <span class="tr-headline-accent">{c.headlineAccent}</span>
+        </h1>
+        <p class="tr-lede">{c.lede}</p>
+        <p class="tr-lede tr-lede--sub">{c.ledeSecond}</p>
+
+        <div class="tr-actions">
+          <a class="btn-pill btn-primary" href="#stops" data-cta="tour_stops" data-location="tour_hero">
+            {c.actions.stops} -&gt;
+          </a>
+          <a class="btn-pill btn-outline" href="#contact" data-cta="tour_list" data-location="tour_hero">
+            {c.actions.contact}
+          </a>
+        </div>
+      </div>
+
+      {/* The band under the header answers the one question a visitor arrives
+          with: where are you next, and how many more are there. */}
+      <dl class="tr-hi fade-up">
+        {next && (
+          <div class="tr-hi-item tr-hi-item--next">
+            <dt class="tr-meta-label">{c.nextLabel}</dt>
+            <dd>
+              <span class="tr-hi-city">{next.flag} {city(next.city)}</span>
+              <span class="tr-hi-date">{humanDate(next)}</span>
+            </dd>
+          </div>
+        )}
+        <div class="tr-hi-item">
+          <dt class="tr-meta-label">{c.aheadLabel}</dt>
+          <dd><span class="tr-hi-city">{ahead.length}</span></dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  {/* ── MAP ──────────────────────────────────────────────────────────────── */}
+  {/* Marketing's own artwork, and it is drawn on a light ground, so it sits on
+      a white card in both themes rather than glowing against the dark one. */}
+  {hasMap && (
+    <section class="tr-map-section">
+      <div class="container">
+        <figure class="tr-map fade-up">
+          <img
+            src={`${base}${MAP_SRC}`}
+            loading="lazy"
+            decoding="async"
+            alt={c.map.alt}
+          />
+        </figure>
+      </div>
+    </section>
+  )}
+
+  {/* ── WHAT WE SHOW ─────────────────────────────────────────────────────── */}
+  <section class="tr-section section-alt">
+    <div class="container">
+      <h2 class="tr-h2 fade-up">{c.show.title}</h2>
+      <p class="tr-section-lead fade-up">{c.show.lead}</p>
+
+      <ul class="tr-show fade-up" role="list">
+        {c.show.items.map((item, i) => (
+          <li class="tr-show-item">
+            <span class="tr-show-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <p>{item}</p>
+          </li>
+        ))}
+      </ul>
+
+      <p class="tr-focus fade-up">
+        <span class="tr-focus-rule" aria-hidden="true"></span>
+        {c.show.focus}
+      </p>
+    </div>
+  </section>
+
+  {/* ── SCHEDULE ─────────────────────────────────────────────────────────── */}
+  {/* One list, in date order, past stops greyed rather than dropped: a schedule
+      that quietly loses its early stops looks thinner every month. Which rows
+      are past is decided when the page is built, so a deploy left untouched
+      through a stop keeps showing it as upcoming until the next one. */}
+  <section class="tr-section" id="stops">
+    <div class="container">
+      <h2 class="tr-h2 fade-up">{c.stops.title}</h2>
+      <p class="tr-section-lead fade-up">{c.stops.lead}</p>
+
+      <ol class="tr-stops fade-up" role="list" aria-label={c.stops.aria}>
+        {schedule.map((event) => {
+          const past = isPast(event);
+          const isNext = !past && event === next;
+          const href = hrefOf(event);
+          return (
+            <li class:list={['tr-stop', past && 'is-past', isNext && 'is-next']}>
+              <span class="tr-stop-date">
+                <time datetime={event.date}>{humanDate(event)}</time>
+                {event.time && <span class="tr-stop-time">{event.time}</span>}
+              </span>
+
+              <span class="tr-stop-main">
+                <span class="tr-stop-name">
+                  {href ? (
+                    <a
+                      href={href}
+                      target={href.startsWith('http') ? '_blank' : undefined}
+                      rel={href.startsWith('http') ? 'noopener' : undefined}
+                      data-cta="tour_stop"
+                    >{event.name}</a>
+                  ) : (
+                    event.name
+                  )}
+                </span>
+                <span class="tr-stop-where">
+                  <span aria-hidden="true">{event.flag}</span>
+                  {city(event.city)}
+                  <span class="tr-stop-country">{countries[event.country] ?? event.country}</span>
+                </span>
+              </span>
+
+              <span class="tr-stop-tags">
+                {isNext && <span class="tr-stop-badge">{c.nextLabel}</span>}
+                {past && <span class="tr-stop-past">{c.stops.past}</span>}
+                <span class="tr-stop-kind">{kinds[event.kind] ?? event.kind}</span>
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  </section>
+
+  {/* ── ON THE ROAD ──────────────────────────────────────────────────────── */}
+  <section class="tr-section section-alt">
+    <div class="container">
+      <h2 class="tr-h2 fade-up">{c.gallery.title}</h2>
+
+      <figure class="tr-gallery fade-up">
+        {TOUR_PHOTOS.map((photo, i) => (
+          <img
+            class:list={[i === 0 && 'tr-gallery-wide']}
+            src={`${base}${photo.src}`}
+            width={photo.width}
+            height={photo.height}
+            loading="lazy"
+            decoding="async"
+            alt={photoAlt[photo.alt] ?? ''}
+          />
+        ))}
+        <figcaption>{c.gallery.caption}</figcaption>
+      </figure>
+
+      <ul class="tr-past fade-up" role="list">
+        {PAST_APPEARANCES.map((item) => (
+          <li class="tr-past-item">
+            <span class="tr-past-where">
+              <span aria-hidden="true">{item.flag}</span> {city(item.city)}
+            </span>
+            <span class="tr-past-name">
+              {item.href ? (
+                <a href={item.href} target="_blank" rel="noopener" data-cta="tour_past">{item.name}</a>
+              ) : (
+                item.name
+              )}
+            </span>
+            {item.month && <span class="tr-past-month">{t.tour.months[item.month] ?? item.month}</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {/* ── EXPERTS ──────────────────────────────────────────────────────────── */}
+  <section class="tr-section">
+    <div class="container">
+      <h2 class="tr-h2 fade-up">{c.experts.title}</h2>
+      <p class="tr-section-lead fade-up">{c.experts.lead}</p>
+
+      <div class="tr-experts fade-up">
+        {EXPERTS.map((person) => (
+          <article class="tr-expert">
+            <span class="tr-portrait" aria-hidden="true">
+              {person.photo && (
+                <img src={`${base}${person.photo}`} alt="" loading="lazy" onerror="this.remove()" />
+              )}
+              <span>{person.initials}</span>
+            </span>
+            <h3 class="tr-expert-name">{person.name}</h3>
+            <p class="tr-expert-role">{person.role}</p>
+            {person.linkedin && (
+              <a
+                class="tr-expert-in"
+                href={person.linkedin}
+                target="_blank"
+                rel="noopener"
+                aria-label={fill(c.experts.linkedin, { name: person.name })}
+                data-cta="tour_expert_linkedin"
+              >in</a>
+            )}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* ── JOIN THE LIST ────────────────────────────────────────────────────── */}
+  {/* The site's contact form with the tour's copy, and its own source, so a
+      lead from here is separable from a lead off the home page in HubSpot and
+      in GA4. */}
+  <CtaSection copy={c.cta} source="visdom-tour" ctaId="join_tour_list" location="tour_cta" />
+</main>
+
+<Footer />
+
+<style>
+  /* ── Hero ── */
+  .tr-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 5.5rem 0 3.5rem;
+    background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-bg) 100%);
+  }
+
+  .tr-hero-inner {
+    position: relative;
+    max-width: 62rem;
+  }
+
+  .tr-headline {
+    margin: 0.75rem 0 0;
+    font-family: var(--font-heading);
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+  }
+
+  .tr-headline-accent {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--color-emerald);
+  }
+
+  .tr-lede {
+    max-width: 44rem;
+    margin: 1.5rem 0 0;
+    font-size: var(--fs-3xl);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  .tr-lede--sub {
+    font-size: var(--fs-xl);
+  }
+
+  .tr-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .tr-hi {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    margin: 3rem 0 0;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .tr-hi-item dd {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    margin: 0.4rem 0 0;
+  }
+
+  .tr-meta-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-3xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .tr-hi-city {
+    font-size: var(--fs-4xl);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-text);
+  }
+
+  .tr-hi-date {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    color: var(--color-emerald-dark, var(--color-emerald));
+  }
+
+  /* ── Map ── */
+  .tr-map-section {
+    padding: 0 0 1rem;
+  }
+
+  .tr-map {
+    margin: 0;
+    padding: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    background: #fff;
+  }
+
+  .tr-map img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+
+  /* ── Sections ── */
+  .tr-section {
+    padding: 5rem 0;
+  }
+
+  .tr-h2 {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--color-text);
+  }
+
+  .tr-section-lead {
+    max-width: 46rem;
+    margin: 1rem 0 0;
+    font-size: var(--fs-2xl);
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+  }
+
+  /* ── What we show ── */
+  .tr-show {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1.5rem;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tr-show-item {
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    background: var(--color-bg);
+  }
+
+  .tr-show-n {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-emerald);
+  }
+
+  .tr-show-item p {
+    margin: 0;
+    font-size: var(--fs-lg);
+    line-height: 1.6;
+    color: var(--color-text);
+  }
+
+  .tr-focus {
+    position: relative;
+    max-width: 46rem;
+    margin: 2.5rem 0 0;
+    padding-left: 1.5rem;
+    font-family: var(--font-serif);
+    font-size: var(--fs-4xl);
+    line-height: 1.45;
+    color: var(--color-text);
+  }
+
+  .tr-focus-rule {
+    position: absolute;
+    top: 0.35rem;
+    bottom: 0.35rem;
+    left: 0;
+    width: 3px;
+    border-radius: 3px;
+    background: var(--color-emerald);
+  }
+
+  /* ── Schedule ── */
+  .tr-stops {
+    margin: 2.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .tr-stop {
+    display: grid;
+    grid-template-columns: 13rem 1fr auto;
+    align-items: baseline;
+    gap: 1rem 1.5rem;
+    padding: 1.15rem 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.15s ease;
+  }
+
+  .tr-stop:hover {
+    background: color-mix(in oklab, var(--color-emerald) 5%, transparent);
+  }
+
+  .tr-stop.is-next {
+    background: color-mix(in oklab, var(--color-emerald) 8%, transparent);
+    box-shadow: inset 3px 0 0 var(--color-emerald);
+  }
+
+  .tr-stop.is-past {
+    opacity: 0.55;
+  }
+
+  .tr-stop-date {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .tr-stop-time {
+    font-size: var(--fs-2xs);
+    color: var(--color-text-muted);
+  }
+
+  .tr-stop-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .tr-stop-name {
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--color-text);
+  }
+
+  .tr-stop-name a {
+    color: inherit;
+    text-decoration: none;
+    background-image: linear-gradient(var(--color-emerald), var(--color-emerald));
+    background-size: 0% 1.5px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.25s ease, color 0.15s ease;
+  }
+
+  .tr-stop-name a:hover {
+    color: var(--color-emerald-dark, var(--color-emerald));
+    background-size: 100% 1.5px;
+  }
+
+  .tr-stop-where {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--fs-md);
+    color: var(--color-text-secondary);
+  }
+
+  .tr-stop-country {
+    color: var(--color-text-muted);
+  }
+
+  .tr-stop-country::before {
+    content: '·';
+    margin-right: 0.4rem;
+  }
+
+  .tr-stop-tags {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-self: end;
+  }
+
+  .tr-stop-kind,
+  .tr-stop-past,
+  .tr-stop-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-3xs);
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .tr-stop-kind {
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+  }
+
+  .tr-stop-badge {
+    background: var(--color-emerald);
+    color: #fff;
+  }
+
+  .tr-stop-past {
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+  }
+
+  /* ── On the road ── */
+  .tr-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin: 2.5rem 0 0;
+  }
+
+  .tr-gallery img {
+    width: 100%;
+    height: 100%;
+    max-height: 22rem;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 1px solid var(--color-border);
+  }
+
+  .tr-gallery-wide {
+    grid-column: 1 / -1;
+    max-height: 26rem;
+  }
+
+  .tr-gallery figcaption {
+    grid-column: 1 / -1;
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .tr-past {
+    margin: 2.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .tr-past-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    padding: 0.9rem 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+    font-size: var(--fs-lg);
+    color: var(--color-text-secondary);
+  }
+
+  .tr-past-where {
+    min-width: 10rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .tr-past-name a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .tr-past-month {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* ── Experts ── */
+  .tr-experts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 1.5rem;
+    margin: 2.5rem 0 0;
+  }
+
+  .tr-expert {
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    background: var(--color-surface);
+    text-align: center;
+  }
+
+  .tr-portrait {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 1rem;
+    border-radius: 9999px;
+    background: color-mix(in oklab, var(--color-emerald) 14%, transparent);
+    font-family: var(--font-mono);
+    font-size: var(--fs-3xl);
+    font-weight: 700;
+    color: var(--color-emerald-dark, var(--color-emerald));
+    overflow: hidden;
+  }
+
+  .tr-portrait img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tr-expert-name {
+    margin: 0;
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .tr-expert-role {
+    margin: 0.35rem 0 0;
+    font-size: var(--fs-md);
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+  }
+
+  .tr-expert-in {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    margin-top: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .tr-expert-in:hover {
+    color: var(--color-emerald-dark, var(--color-emerald));
+    border-color: var(--color-emerald);
+  }
+
+  @media (max-width: 760px) {
+    .tr-hero {
+      padding-top: 4rem;
+    }
+
+    .tr-stop {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .tr-stop-tags {
+      justify-self: start;
+    }
+
+    .tr-gallery {
+      grid-template-columns: 1fr;
+    }
+
+    .tr-past-month {
+      margin-left: 0;
+    }
+  }
+</style>

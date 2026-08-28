@@ -1,11 +1,49 @@
 ---
-import { useI18n } from '../i18n';
+import { useI18n, type Dictionary } from '../i18n';
 import { BLOCKED_EMAIL_DOMAINS } from '../lib/work-email';
 
 const { locale, t } = useI18n(Astro);
 const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 
+/**
+ * The copy this section renders. The home page passes nothing and gets t.cta;
+ * a campaign page passes its own node with the same shape.
+ *
+ * Three parts are optional because they are promises only the home page makes:
+ * the composability line, the two exits under the form, and, the other way
+ * round, the privacy line a page needs when its form is a mailing list rather
+ * than a request for a call.
+ */
+export type CtaCopy = Omit<Dictionary['cta'], 'alt' | 'subtitleComposable'> & {
+  subtitleComposable?: string;
+  alt?: Dictionary['cta']['alt'];
+  privacy?: { before: string; link: string; after: string };
+};
+
+interface Props {
+  /** Anchor the nav and in-page links point at. */
+  id?: string;
+  copy?: CtaCopy;
+  /**
+   * Which property the lead came from, for HubSpot and GA4. Overridden by a
+   * page that wants its leads separable from the site's general ones.
+   */
+  source?: string;
+  /** Analytics identity of the submit button. */
+  ctaId?: string;
+  location?: string;
+}
+
+const {
+  id = 'contact',
+  copy = t.cta,
+  source: sourceProp,
+  ctaId = 'book_working_session',
+  location = 'final_cta',
+} = Astro.props;
+
 const CONTACT_EMAIL = 'visdom@virtuslab.com';
+const PRIVACY_HREF = 'https://virtuslab.com/privacy-policy/';
 
 // Which property this form is sitting on. The same HubSpot form serves several
 // of them, so this is what separates a lead from here and a lead from the
@@ -17,7 +55,7 @@ const CONTACT_EMAIL = 'visdom@virtuslab.com';
 // under different names, which is worse than not splitting them at all. If it is
 // unset the endpoint still classifies by hostname, so the lead is attributed,
 // just less precisely.
-const SOURCE = import.meta.env.PUBLIC_SITE_SOURCE || 'visdom-site';
+const SOURCE = sourceProp || import.meta.env.PUBLIC_SITE_SOURCE || 'visdom-site';
 
 // Public site key only. The secret never leaves the server (TURNSTILE_SECRET_KEY).
 const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
@@ -30,27 +68,32 @@ const formStrings = {
   source: SOURCE,
   locale,
   mailto: `mailto:${CONTACT_EMAIL}`,
-  submit: t.cta.form.submit,
-  sending: t.cta.form.sending,
-  error: t.cta.form.error,
-  errorRef: t.cta.form.errorRef,
-  errorFallback: t.cta.form.errorFallback,
-  errorCaptcha: t.cta.form.errorCaptcha,
-  errorWorkEmail: t.cta.form.errorWorkEmail,
+  submit: copy.form.submit,
+  sending: copy.form.sending,
+  error: copy.form.error,
+  errorRef: copy.form.errorRef,
+  errorFallback: copy.form.errorFallback,
+  errorCaptcha: copy.form.errorCaptcha,
+  errorWorkEmail: copy.form.errorWorkEmail,
   blockedEmailDomains: BLOCKED_EMAIL_DOMAINS,
   turnstileSiteKey: TURNSTILE_SITE_KEY,
+  ctaId,
+  location,
 };
 ---
-<section id="contact" class="section final-cta-section">
+<section id={id} class="section final-cta-section">
   <div class="container">
     <div class="final-cta fade-up">
       <div class="final-cta-head">
-        <p class="section-label">{t.cta.label}</p>
-        <h2 class="final-cta-title">{t.cta.title}</h2>
-        <p class="final-cta-sub">{t.cta.subtitle}</p>
+        <p class="section-label">{copy.label}</p>
+        <h2 class="final-cta-title">{copy.title}</h2>
+        <p class="final-cta-sub">{copy.subtitle}</p>
         {/* Kept as its own paragraph rather than folded into the one above: the
-            composability point is a separate promise, not a trailing clause. */}
-        <p class="final-cta-sub final-cta-sub--note">{t.cta.subtitleComposable}</p>
+            composability point is a separate promise, not a trailing clause.
+            Absent on pages that do not make it. */}
+        {copy.subtitleComposable && (
+          <p class="final-cta-sub final-cta-sub--note">{copy.subtitleComposable}</p>
+        )}
       </div>
 
       {/* One column on purpose. The form used to sit in a grid beside two cards
@@ -66,28 +109,28 @@ const formStrings = {
           method="post"
           novalidate
         >
-          <h3>{t.cta.form.title}</h3>
-          <p>{t.cta.form.body}</p>
+          <h3>{copy.form.title}</h3>
+          <p>{copy.form.body}</p>
 
           <div class="contact-field-row">
             <div class="contact-field">
-              <label for="cf-name">{t.cta.form.nameLabel}</label>
+              <label for="cf-name">{copy.form.nameLabel}</label>
               <input id="cf-name" name="name" type="text" autocomplete="name" required />
             </div>
             <div class="contact-field">
-              <label for="cf-company">{t.cta.form.companyLabel} <span>{t.cta.form.optional}</span></label>
+              <label for="cf-company">{copy.form.companyLabel} <span>{copy.form.optional}</span></label>
               <input id="cf-company" name="company" type="text" autocomplete="organization" />
             </div>
           </div>
 
           <div class="contact-field">
-            <label for="cf-email">{t.cta.form.emailLabel}</label>
+            <label for="cf-email">{copy.form.emailLabel}</label>
             <input id="cf-email" name="email" type="email" autocomplete="email" required aria-describedby="cf-email-error" />
             <p id="cf-email-error" class="contact-field-error" hidden></p>
           </div>
 
           <div class="contact-field">
-            <label for="cf-message">{t.cta.form.messageLabel} <span>{t.cta.form.optional}</span></label>
+            <label for="cf-message">{copy.form.messageLabel} <span>{copy.form.optional}</span></label>
             <textarea id="cf-message" name="message" rows="3"></textarea>
           </div>
 
@@ -111,7 +154,7 @@ const formStrings = {
             ></div>
           )}
 
-          <button type="submit" class="btn-pill btn-primary" data-cta="book_working_session" data-location="final_cta">{t.cta.form.submit}</button>
+          <button type="submit" class="btn-pill btn-primary" data-cta={ctaId} data-location={location}>{copy.form.submit}</button>
           {/* In-flight and error states only. Success is the panel below, because
               a grey line under a still-filled form was easy to miss and left it
               unclear whether anything had been sent. */}
@@ -128,30 +171,40 @@ const formStrings = {
               <path d="M20 6 9 17l-5-5" />
             </svg>
           </span>
-          <h3 id="contact-success-title" tabindex="-1">{t.cta.form.successTitle}</h3>
-          <p>{t.cta.form.success}</p>
-          <button type="button" class="contact-success-again">{t.cta.form.successAgain}</button>
+          <h3 id="contact-success-title" tabindex="-1">{copy.form.successTitle}</h3>
+          <p>{copy.form.success}</p>
+          <button type="button" class="contact-success-again">{copy.form.successAgain}</button>
         </div>
 
       </div>
+
+      {/* Only where the form's promise needs it: a page that offers to email a
+          reader later has to say what it does with the address. */}
+      {copy.privacy && (
+        <p class="final-cta-privacy">
+          {copy.privacy.before} <a href={PRIVACY_HREF} target="_blank" rel="noopener">{copy.privacy.link}</a>{copy.privacy.after}
+        </p>
+      )}
 
       {/* Text links, not buttons: the section should offer one action and two
           exits, and an outline button reads as a third action. Both keep their
           tracking, so if demoting them costs clicks it will be visible rather
           than assumed. */}
-      <p class="final-cta-alt">
-        <span>{t.cta.alt.lead}</span>
-        <a
-          href="https://visdom-maturity-matrix.virtuslab.com/workshop"
-          data-location="final_cta"
-          target="_blank"
-          rel="noopener"
-        >{t.cta.alt.matrix}</a>
-        <a href="#insights" data-cta="read_writing" data-location="final_cta">{t.cta.alt.writing}</a>
-      </p>
+      {copy.alt && (
+        <p class="final-cta-alt">
+          <span>{copy.alt.lead}</span>
+          <a
+            href="https://visdom-maturity-matrix.virtuslab.com/workshop"
+            data-location="final_cta"
+            target="_blank"
+            rel="noopener"
+          >{copy.alt.matrix}</a>
+          <a href="#insights" data-cta="read_writing" data-location="final_cta">{copy.alt.writing}</a>
+        </p>
+      )}
 
       <p class="final-cta-footnote">
-        {t.cta.footnoteBefore} <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. {t.cta.footnoteAfter}
+        {copy.footnoteBefore} <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. {copy.footnoteAfter}
       </p>
     </div>
   </div>
@@ -325,8 +378,8 @@ const formStrings = {
             counted = true;
             window.gtag('event', 'generate_lead', {
               method: 'form',
-              cta_id: 'book_working_session',
-              location: 'final_cta',
+              cta_id: formStrings.ctaId,
+              location: formStrings.location,
               // Which property the lead came from, as resolved by the server, so
               // GA4 and HubSpot agree. Register it as a custom dimension in GA4
               // to segment by it in reports.
@@ -690,6 +743,23 @@ const formStrings = {
   .final-cta-footnote a {
     color: var(--color-emerald-dark, var(--color-emerald));
     font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Set below the card and quieter than the footnote: it is the terms of the
+     form, not another thing to read. */
+  .final-cta-privacy {
+    max-width: 34rem;
+    margin: 1.25rem auto 2rem;
+    text-align: center;
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  .final-cta-privacy a {
+    color: inherit;
     text-decoration: underline;
     text-underline-offset: 3px;
   }

@@ -47,7 +47,135 @@ const pl = {
       June: 'czerwiec',
       September: 'wrzesień',
       October: 'październik',
+      November: 'listopad',
+      December: 'grudzień',
     } as Record<string, string>,
+    cities: {
+      Zurich: 'Zurych',
+      'New York': 'Nowy Jork',
+      London: 'Londyn',
+      Stockholm: 'Sztokholm',
+    } as Record<string, string>,
+  },
+
+  visdomTour: {
+    meta: {
+      title: 'Visdom on Tour: gdzie nas spotkacie w 2026 | Visdom by VirtusLab',
+      description:
+        'Konferencje, roundtable i jedna sesja online. Gdzie w 2026 spotkacie inżynierów, którzy budują AI-Native SDLC z zespołami enterprise.',
+      ogImageAlt: 'Visdom on Tour: gdzie spotkacie zespół Visdoma w 2026',
+    },
+
+    label: 'Visdom on Tour',
+    headlineLead: 'Spotkajmy się na',
+    headlineAccent: 'Visdom Tour',
+    lede:
+      'Jeździmy po konferencjach technicznych na całym świecie. Przyjdźcie zobaczyć, czego naprawdę wymaga przestawienie waszego SDLC na AI-native.',
+    ledeSecond:
+      'Wpadnijcie na nasze stoisko, posłuchajcie prelekcji i porozmawiajcie z inżynierami i liderami technicznymi, którzy pomagają organizacjom enterprise poukładać pracę z kodem pisanym przez AI.',
+    actions: {
+      stops: 'Zobaczcie przystanki',
+      contact: 'Zapiszcie się',
+    },
+    nextLabel: 'Najbliższy przystanek',
+    aheadLabel: 'Przystanków przed nami',
+
+    map: {
+      alt:
+        'Visdom Tour 2026 na mapie świata: przystanki w Ameryce Północnej (San Francisco, San Jose, Chicago, Nowy Jork, Austin) i w Europie (Londyn, Amsterdam, Sztokholm, Berlin, Brugg-Windisch, Zurych).',
+    },
+
+    show: {
+      title: 'Co pokazujemy na Visdom Tour',
+      lead:
+        'Jak Visdom pomaga organizacjom enterprise przestawiać SDLC na erę AI: krok po kroku, bez wywracania pracy zespołów inżynierskich.',
+      items: [
+        'Jak Visdom dopasowuje się do istniejącej organizacji inżynierskiej.',
+        'Jak pracujemy bezpośrednio z waszymi developerami, waszymi workflowami i waszym stackiem.',
+        'Jak wprowadzać dostarczanie AI-native przyrostowo, wewnątrz istniejącego środowiska enterprise.',
+        'Jak rozwijać SDLC krok po kroku, zamiast zaczynać od transformacji całej organizacji.',
+      ],
+      focus:
+        'Skupiamy się na konkretnym wdrożeniu, gotowości operacyjnej i realnych środowiskach inżynierskich w enterprise.',
+    },
+
+    stops: {
+      title: 'Najbliższe przystanki',
+      lead: 'Gdzie spotkacie zespół Visdoma w 2026.',
+      aria: 'Terminarz Visdom Tour na 2026',
+      past: 'Za nami',
+      dateLabel: 'Termin',
+      kinds: {
+        conference: 'Konferencja',
+        roundtable: 'Roundtable',
+        webinar: 'Webinar',
+        hackathon: 'Hackathon',
+        meetup: 'Spotkanie',
+      },
+      countries: {
+        Switzerland: 'Szwajcaria',
+        USA: 'USA',
+        Germany: 'Niemcy',
+        Netherlands: 'Holandia',
+        Sweden: 'Szwecja',
+        'United Kingdom': 'Wielka Brytania',
+        Online: 'Online',
+      },
+    },
+
+    gallery: {
+      title: 'Mogliście nas już gdzieś spotkać',
+      caption: 'Zdjęcia z trasy.',
+      alt: {
+        team:
+          'Inżynierowie VirtusLab na konferencji o infrastrukturze dla AI, w koszulkach Can Your AI Agents Actually Ship.',
+        booth:
+          'Stoisko VirtusLab na AI World Congress w Londynie, zespół rozmawia z uczestnikami na expo.',
+        stage: 'Prelegent VirtusLab na głównej scenie AI World Congress w Londynie.',
+      },
+    },
+
+    experts: {
+      title: 'Poznajcie ludzi, którzy budują Visdom',
+      lead:
+        'Porozmawiajcie bezpośrednio z inżynierami, architektami i liderami technicznymi, którzy przestawiają SDLC organizacji enterprise na erę AI.',
+      linkedin: '{name} na LinkedInie',
+    },
+
+    cta: {
+      label: 'Zapisy',
+      title: 'Napiszcie, gdzie mamy się spotkać.',
+      subtitle:
+        'Damy znać o kolejnych przystankach, nowych sesjach i wystąpieniach Visdoma na świecie.',
+      form: {
+        title: 'Zapiszcie się na listę',
+        body: 'Napiszcie, który przystanek was interesuje albo do jakiego miasta mamy przyjechać.',
+        nameLabel: 'Imię i nazwisko',
+        companyLabel: 'Firma',
+        emailLabel: 'E-mail służbowy',
+        messageLabel: 'Który przystanek was interesuje?',
+        optional: 'opcjonalne',
+        submit: 'Zapiszcie mnie',
+        sending: 'Wysyłam...',
+        successTitle: 'Dzięki.',
+        success:
+          'Jesteście na liście. Jeśli o coś zapytaliście, inżynier odpowie w ciągu jednego dnia roboczego.',
+        successAgain: 'Wyślijcie kolejne zgłoszenie',
+        error: 'Nie udało się wysłać. Spróbujcie ponownie albo napiszcie na visdom@virtuslab.com.',
+        errorRef: 'Numer zgłoszenia:',
+        errorFallback: 'Napiszcie na visdom@virtuslab.com',
+        errorCaptcha: 'Dokończcie weryfikację i spróbujcie ponownie.',
+        errorWorkEmail: 'Proszę użyć służbowego adresu e-mail',
+      },
+      privacy: {
+        before:
+          'Waszych danych używamy, żeby odpowiedzieć i dać znać o kolejnych przystankach. Szczegóły w',
+        link: 'polityce prywatności VirtusLab',
+        after: '.',
+      },
+      footnoteBefore: 'Wolicie zwykłego maila?',
+      footnoteAfter: 'Odpowiada inżynier, w ciągu jednego dnia roboczego.',
+    },
   },
 
   hero: {

@@ -10,6 +10,17 @@ import {
 
 const { locale, t } = useI18n(Astro);
 
+interface Props {
+  /**
+   * True on a subpage that hosts its own contact form, so the header CTA
+   * scrolls to it instead of sending the reader to the home page and losing the
+   * attribution that page's form carries.
+   */
+  hasContact?: boolean;
+}
+
+const { hasContact = false } = Astro.props;
+
 // The nav points at sections of the home page for the current locale. On a
 // subpage a bare "#platform" scrolls nowhere, so prefix those anchors with the
 // localized home path when we are not on it.
@@ -38,7 +49,7 @@ const links = [
   { label: t.nav.maturityMatrix, href: 'https://visdom-maturity-matrix.virtuslab.com/', external: true },
 ];
 
-const contactHref = anchor('#contact');
+const contactHref = hasContact ? '#contact' : anchor('#contact');
 
 // Only rendered where the current page actually exists in the other locale.
 const languages = alternatesFor(Astro.url.pathname)

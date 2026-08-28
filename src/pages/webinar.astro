@@ -5,7 +5,7 @@ import TourBanner from '../components/TourBanner.astro';
 import Footer from '../components/Footer.astro';
 import { WEBINAR, SPEAKERS, registrationHref, initials } from '../data/webinar';
 import { SEQUEL, SEQUEL_TOOLKIT_SRC } from '../data/sequel';
-import { TOUR_STOPS, TOUR_HREF } from '../data/tour';
+import { TOUR_STOPS, TOUR_ROUTE } from '../data/tour';
 import '../styles/global.css';
 
 const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
@@ -364,9 +364,7 @@ const eventJsonLd = WEBINAR.startsAt
 
         <a
           class="wb-tour-link fade-up"
-          href={TOUR_HREF}
-          target="_blank"
-          rel="noopener"
+          href={`${base}${TOUR_ROUTE}`}
           data-cta="webinar_tour"
         >
           See the full tour -&gt;

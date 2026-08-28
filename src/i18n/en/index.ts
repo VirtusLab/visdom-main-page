@@ -58,7 +58,156 @@ const en = {
       June: 'June',
       September: 'September',
       October: 'October',
+      November: 'November',
+      December: 'December',
     } as Record<string, string>,
+    /**
+     * Cities as a reader of this locale writes them. Anything missing falls
+     * through as the schedule spells it, which is right for a city whose name
+     * does not change between languages.
+     */
+    cities: {} as Record<string, string>,
+  },
+
+  /**
+   * /visdom-tour. The schedule itself (event names, cities, dates, links) is
+   * data in src/data/tour.ts; what a reader hears is here.
+   */
+  visdomTour: {
+    meta: {
+      title: 'Visdom on Tour: where to meet us in 2026 | Visdom by VirtusLab',
+      description:
+        'Conferences, roundtables and one online session. Where to meet the engineers building the AI-native SDLC with enterprise teams in 2026.',
+      ogImageAlt: 'Visdom on Tour: where to meet the Visdom team in 2026',
+    },
+
+    label: 'Visdom on Tour',
+    headlineLead: 'Join the',
+    headlineAccent: 'Visdom Tour',
+    lede:
+      'Meet us at tech events around the world and explore what it really takes to make your SDLC AI-native.',
+    ledeSecond:
+      'Visit our booth, join our sessions, and talk directly with the engineers and technology leaders helping enterprise organizations adapt to AI-generated software development.',
+    actions: {
+      stops: 'See upcoming stops',
+      contact: 'Get on the list',
+    },
+    /** Above the nearest stop in the hero band, and on its row in the schedule. */
+    nextLabel: 'Next stop',
+    /** Counts the stops still ahead. {n} is the number. */
+    aheadLabel: 'Stops ahead',
+
+    /**
+     * Marketing's tour map, dropped in at public/tour-map.png. The alt text
+     * describes what that artwork shows, which is a wider set of cities than
+     * the 2026 schedule below it.
+     */
+    map: {
+      alt:
+        'Visdom Tour 2026 on a world map: stops in North America (San Francisco, San Jose, Chicago, New York, Austin) and in Europe (London, Amsterdam, Stockholm, Berlin, Brugg-Windisch, Zurich).',
+    },
+
+    show: {
+      title: "What we'll show during the Visdom Tour",
+      lead:
+        'How Visdom helps enterprise organizations evolve their SDLCs for the AI era, step by step, without disrupting existing engineering workflows.',
+      items: [
+        'How Visdom adapts to existing engineering organizations.',
+        'How we work directly with your developers, workflows, and technology stack.',
+        'How AI-native delivery can be introduced incrementally inside existing enterprise environments.',
+        'How organizations can evolve their SDLC step by step instead of forcing a large-scale transformation upfront.',
+      ] as T4<string>,
+      focus:
+        'The focus is on practical implementation, operational readiness, and real enterprise engineering environments.',
+    },
+
+    stops: {
+      title: 'Upcoming stops',
+      lead: 'Where to meet the Visdom team in 2026.',
+      /** Accessible name of the schedule list. */
+      aria: 'Visdom Tour schedule for 2026',
+      /** Marks a row whose date has passed. */
+      past: 'Done',
+      /** Screen-reader label before a date. */
+      dateLabel: 'Date',
+      /** The kinds of stop, keyed by TourEvent.kind. */
+      kinds: {
+        conference: 'Conference',
+        roundtable: 'Roundtable',
+        webinar: 'Webinar',
+        hackathon: 'Hackathon',
+        meetup: 'Meetup',
+      },
+      /** Country names, keyed by TourEvent.country. */
+      countries: {
+        Switzerland: 'Switzerland',
+        USA: 'USA',
+        Germany: 'Germany',
+        Netherlands: 'Netherlands',
+        Sweden: 'Sweden',
+        'United Kingdom': 'United Kingdom',
+        Online: 'Online',
+      },
+    },
+
+    gallery: {
+      title: 'You may have already seen us on the road',
+      caption: 'Out in the field on the Visdom Tour.',
+      alt: {
+        team:
+          'VirtusLab engineers at an AI infrastructure conference, in Can Your AI Agents Actually Ship shirts.',
+        booth:
+          'The VirtusLab booth at AI World Congress in London, with the team talking to attendees on the expo floor.',
+        stage: 'A VirtusLab speaker on the main stage at AI World Congress in London.',
+      },
+    },
+
+    experts: {
+      title: 'Meet the experts behind Visdom',
+      lead:
+        'Talk directly with engineers, architects, and technology leaders helping enterprise organizations evolve their SDLCs for the AI era.',
+      /** Accessible name on each LinkedIn link. {name} is the person. */
+      linkedin: '{name} on LinkedIn',
+    },
+
+    /**
+     * The form at the bottom. Same component and same endpoint as the home
+     * page, different promise: this one is a list of tour stops, so it says so
+     * and carries the privacy line that promise needs.
+     */
+    cta: {
+      label: 'Join the list',
+      title: 'Tell us where to meet you.',
+      subtitle:
+        'Hear about upcoming stops, new sessions, and future Visdom appearances around the world.',
+      form: {
+        title: 'Join the list',
+        body: 'Tell us which stop you are interested in, or which city we should visit next.',
+        nameLabel: 'Name',
+        companyLabel: 'Company',
+        emailLabel: 'Work email',
+        messageLabel: 'Which stop are you interested in?',
+        optional: 'optional',
+        submit: 'Join the list',
+        sending: 'Sending...',
+        successTitle: 'Thanks.',
+        success:
+          'You are on the list. If you asked us something, an engineer will reply within one business day.',
+        successAgain: 'Send another request',
+        error: 'We could not send that. Please try again, or write to visdom@virtuslab.com.',
+        errorRef: 'Reference:',
+        errorFallback: 'Write to visdom@virtuslab.com',
+        errorCaptcha: 'Please complete the verification and try again.',
+        errorWorkEmail: 'Please use your company email address',
+      },
+      privacy: {
+        before: 'We use what you send to reply and to tell you about upcoming stops. Details in the',
+        link: 'VirtusLab privacy policy',
+        after: '.',
+      },
+      footnoteBefore: 'Prefer plain email?',
+      footnoteAfter: 'Replies come from an engineer, within one business day.',
+    },
   },
 
   hero: {

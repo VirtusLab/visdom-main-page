@@ -52,7 +52,7 @@ export const LOCALE_META: Record<
  * switcher. Pointing hreflang at a URL that 404s is worse than shipping no
  * hreflang at all, so a page joins this list on the commit that translates it.
  */
-export const TRANSLATED_ROUTES = ['/'] as const;
+export const TRANSLATED_ROUTES = ['/', '/visdom-tour'] as const;
 
 /** The configured base, always with a leading and trailing slash. */
 export function base(): string {
