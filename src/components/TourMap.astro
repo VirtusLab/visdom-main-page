@@ -27,13 +27,13 @@ import { tourDates } from '../lib/tour-format';
 import { useI18n } from '../i18n';
 
 interface Props {
-  /** The schedule, in date order. Indexes match the ids on the table rows. */
+  /** Every stop, past and upcoming, in date order. */
   schedule: TourEvent[];
-  /** The row id a marker links to, by index into `schedule`. */
-  rowId: (index: number) => string;
+  /** Where a stop is written down on the page, as an element id. */
+  anchorOf: (event: TourEvent) => string;
 }
 
-const { schedule, rowId } = Astro.props;
+const { schedule, anchorOf } = Astro.props;
 const { locale, t } = useI18n(Astro);
 const c = t.visdomTour;
 const dates = tourDates(locale);
@@ -80,15 +80,19 @@ schedule.forEach((event, index) => {
       stops: [],
       past: true,
       next: false,
-      href: `#${rowId(index)}`,
+      href: `#${anchorOf(event)}`,
     } satisfies Marker);
 
   const past = isPast(event);
   marker.stops.push({ event, index, past });
+  if (past && marker.past) {
+    // Nothing ahead here yet: point at the most recent thing that happened.
+    marker.href = `#${anchorOf(event)}`;
+  }
   if (!past) {
-    // The link goes to the next thing happening here, not to whatever is
+    // The link goes to the next thing happening here, not to whatever came
     // first in the year.
-    if (marker.past) marker.href = `#${rowId(index)}`;
+    if (marker.past) marker.href = `#${anchorOf(event)}`;
     marker.past = false;
   }
   if (index === nextIndex) marker.next = true;

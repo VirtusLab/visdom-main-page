@@ -21,6 +21,11 @@ export function tourDates(locale: string): TourDates {
     timeZone: 'UTC',
   });
   const dayOnly = new Intl.DateTimeFormat(tag, { day: 'numeric', timeZone: 'UTC' });
+  const dayAndMonth = new Intl.DateTimeFormat(tag, {
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'UTC',
+  });
 
   return {
     human(stop) {
@@ -28,12 +33,12 @@ export function tourDates(locale: string): TourDates {
       const start = new Date(`${stop.date}T12:00:00Z`);
       if (!stop.endDate) return full.format(start);
       const end = new Date(`${stop.endDate}T12:00:00Z`);
-      // A range inside one month prints the month once. One that crosses a
-      // month prints both dates in full rather than inventing a shorthand.
+      // A range inside one month prints the month once: "10-11 September 2026".
+      // One that crosses a month prints both months but one year:
+      // "28 September - 1 October 2026".
       const sameMonth = stop.date.slice(0, 7) === stop.endDate.slice(0, 7);
-      return sameMonth
-        ? `${dayOnly.format(start)}-${full.format(end)}`
-        : `${full.format(start)}, ${full.format(end)}`;
+      if (sameMonth) return `${dayOnly.format(start)}-${full.format(end)}`;
+      return `${dayAndMonth.format(start)} - ${full.format(end)}`;
     },
   };
 }

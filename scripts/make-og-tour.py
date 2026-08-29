@@ -22,6 +22,7 @@ import re
 import subprocess
 import sys
 import tempfile
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -30,16 +31,23 @@ OUT = sys.argv[1] if len(sys.argv) > 1 else str(ROOT / 'public' / 'og-visdom-tou
 # Read the schedule the page renders from. Parsed rather than imported because
 # this is Python reading TypeScript; the pattern is narrow and fails loudly.
 TOUR = (ROOT / 'src' / 'data' / 'tour.ts').read_text()
-BLOCK = TOUR[TOUR.index('export const TOUR_EVENTS'):TOUR.index('export type PastAppearance')]
+BLOCK = TOUR[TOUR.index('export const TOUR_EVENTS'):TOUR.index('export const TOUR_PHOTOS')]
+
+# The card names the cities we are heading to, not the ones behind us: the
+# headline says where to meet us. The dots keep every stop of the year, which
+# is what shows the scale of the tour.
+TODAY = date.today().isoformat()
+STOPS = 0
 CITIES = []
-for m in re.finditer(r"city:\s*'([^']+)'", BLOCK):
-    city = m.group(1)
-    if city not in CITIES and city != 'Online':
+for m in re.finditer(r"city:\s*'([^']+)'[\s\S]{0,240}?date: '([\d-]+)'(?:,\s*\n\s*endDate: '([\d-]+)')?", BLOCK):
+    city, starts, ends = m.group(1), m.group(2), m.group(3)
+    STOPS += 1
+    if (ends or starts) < TODAY or city == 'Online':
+        continue
+    if city not in CITIES:
         CITIES.append(city)
 if len(CITIES) < 4:
-    raise SystemExit(f'make-og-tour: parsed only {len(CITIES)} cities from src/data/tour.ts')
-
-STOPS = len(re.findall(r"\bcity:\s*'", BLOCK))
+    raise SystemExit(f'make-og-tour: parsed only {len(CITIES)} upcoming cities from src/data/tour.ts')
 
 # Where each stop is, from the same placement table the page uses. Only the
 # coordinates: the label offsets are for a map with labels on it.
@@ -177,7 +185,7 @@ for line in wrap(title, tf, col):
     d.text((PAD, ty), line, font=tf, fill=TEXT)
     ty += round(size * 1.12)
 
-sub = f'{STOPS} stops: conferences, roundtables and one online session.'
+sub = f'{STOPS} stops in 2026: conferences, roundtables and one online session.'
 sf = sans('Medium', 25)
 ty += 10
 for line in wrap(sub, sf, col):

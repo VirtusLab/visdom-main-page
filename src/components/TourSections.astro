@@ -13,7 +13,6 @@ import Footer from './Footer.astro';
 import CtaSection from './CtaSection.astro';
 import {
   TOUR_EVENTS,
-  PAST_APPEARANCES,
   TOUR_PHOTOS,
   byDate,
   isPast,
@@ -38,6 +37,8 @@ const kinds = c.stops.kinds as Record<string, string>;
 const schedule = byDate(TOUR_EVENTS);
 const ahead = schedule.filter((event) => !isPast(event));
 const next = ahead[0];
+// Newest first: the last thing we did is the one worth reading.
+const behind = schedule.filter((event) => isPast(event)).reverse();
 
 // Dates come from src/lib/tour-format so the table and the map print the same
 // day in the same words.
@@ -45,10 +46,14 @@ const dates = tourDates(locale);
 const humanDate = (event: TourEvent) => dates.human(event);
 
 /**
- * The id of a stop's row, which is also where the map's markers link to. One
- * function, so a marker can never point at an anchor the table does not have.
+ * Where each stop is written down on this page, so a marker on the map can
+ * never point at an anchor that is not there. Upcoming stops are rows in the
+ * schedule; the ones behind us are entries under the photos.
  */
-const rowId = (index: number) => `stop-${index + 1}`;
+const anchors = new Map<TourEvent, string>();
+ahead.forEach((event, index) => anchors.set(event, `stop-${index + 1}`));
+behind.forEach((event, index) => anchors.set(event, `past-${index + 1}`));
+const anchorOf = (event: TourEvent) => anchors.get(event) ?? 'stops';
 
 /** An internal route keeps the reader on the site; an event page does not. */
 const hrefOf = (event: TourEvent) =>
@@ -145,7 +150,7 @@ const photoAlt = c.gallery.alt as Record<string, string>;
   <section class="tr-map-band">
     <div class="container">
       <div class="tr-map fade-up">
-        <TourMap schedule={schedule} rowId={rowId} />
+        <TourMap schedule={schedule} anchorOf={anchorOf} />
       </div>
     </div>
   </section>
@@ -183,14 +188,13 @@ const photoAlt = c.gallery.alt as Record<string, string>;
       <p class="tr-section-lead fade-up">{c.stops.lead}</p>
 
       <ol class="tr-stops fade-up" role="list" aria-label={c.stops.aria}>
-        {schedule.map((event, index) => {
-          const past = isPast(event);
-          const isNext = !past && event === next;
+        {ahead.map((event) => {
+          const isNext = event === next;
           const href = hrefOf(event);
           return (
             <li
-              id={rowId(index)}
-              class:list={['tr-stop', past && 'is-past', isNext && 'is-next']}
+              id={anchorOf(event)}
+              class:list={['tr-stop', isNext && 'is-next']}
             >
               <span class="tr-stop-date">
                 <time datetime={event.date}>{humanDate(event)}</time>
@@ -219,7 +223,6 @@ const photoAlt = c.gallery.alt as Record<string, string>;
 
               <span class="tr-stop-tags">
                 {isNext && <span class="tr-stop-badge">{c.nextLabel}</span>}
-                {past && <span class="tr-stop-past">{c.stops.past}</span>}
                 <span class="tr-stop-kind">{kinds[event.kind] ?? event.kind}</span>
               </span>
             </li>
@@ -249,22 +252,32 @@ const photoAlt = c.gallery.alt as Record<string, string>;
         <figcaption>{c.gallery.caption}</figcaption>
       </figure>
 
+      {/* The same shape as the schedule above, in reverse: these carry an id
+          too, because the map links to them. */}
       <ul class="tr-past fade-up" role="list">
-        {PAST_APPEARANCES.map((item) => (
-          <li class="tr-past-item">
-            <span class="tr-past-where">
-              <span aria-hidden="true">{item.flag}</span> {city(item.city)}
-            </span>
-            <span class="tr-past-name">
-              {item.href ? (
-                <a href={item.href} target="_blank" rel="noopener" data-cta="tour_past">{item.name}</a>
-              ) : (
-                item.name
-              )}
-            </span>
-            {item.month && <span class="tr-past-month">{t.tour.months[item.month] ?? item.month}</span>}
-          </li>
-        ))}
+        {behind.map((event) => {
+          const href = hrefOf(event);
+          return (
+            <li id={anchorOf(event)} class="tr-past-item">
+              <span class="tr-past-where">
+                <span aria-hidden="true">{event.flag}</span> {city(event.city)}
+              </span>
+              <span class="tr-past-name">
+                {href ? (
+                  <a
+                    href={href}
+                    target={href.startsWith('http') ? '_blank' : undefined}
+                    rel={href.startsWith('http') ? 'noopener' : undefined}
+                    data-cta="tour_past"
+                  >{event.name}</a>
+                ) : (
+                  event.name
+                )}
+              </span>
+              <span class="tr-past-month">{humanDate(event)}</span>
+            </li>
+          );
+        })}
       </ul>
     </div>
   </section>
@@ -660,6 +673,11 @@ const photoAlt = c.gallery.alt as Record<string, string>;
     padding: 0;
     list-style: none;
     border-top: 1px solid var(--color-border);
+  }
+
+  .tr-past-item:target {
+    background: color-mix(in oklab, var(--color-emerald) 14%, transparent);
+    box-shadow: inset 3px 0 0 var(--color-emerald);
   }
 
   .tr-past-item {

@@ -18,10 +18,14 @@ test('a range inside one month prints the month once', () => {
   );
 });
 
-test('a range across two months prints both dates', () => {
+test('a range across two months prints both months and one year', () => {
   assert.equal(
-    tourDates('en').human({ date: '2026-10-30', endDate: '2026-11-02' }),
-    '30 October 2026, 2 November 2026',
+    tourDates('en').human({ date: '2026-09-28', endDate: '2026-10-01' }),
+    '28 September - 1 October 2026',
+  );
+  assert.equal(
+    tourDates('pl').human({ date: '2026-09-28', endDate: '2026-10-01' }),
+    '28 września - 1 października 2026',
   );
 });
 

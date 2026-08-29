@@ -10,8 +10,11 @@
  * live here rather than in the dictionary. Country names and the kind badges
  * are keys the dictionary maps for display.
  *
- * The split between past and upcoming is computed from `date`, at build time.
- * Nothing has to be moved by hand when a stop is over.
+ * Past and upcoming stops live in the same list: the split is computed from
+ * `date` at build time, so nothing is moved by hand when a stop is over. They
+ * are all on the map, which is the point of a tour map. Marketing asked for it
+ * in as many words: by December, a map of only what is left would be a couple
+ * of lonely dots instead of a year of work.
  */
 
 export type TourEventKind =
@@ -57,6 +60,66 @@ export const TOUR_ROUTE = '/visdom-tour';
  */
 export const TOUR_EVENTS: TourEvent[] = [
   {
+    name: 'Roundtable AI in SDLC',
+    city: 'Zurich',
+    country: 'Switzerland',
+    flag: '🇨🇭',
+    date: '2026-03-26',
+    month: 'March',
+    kind: 'roundtable',
+  },
+  {
+    name: 'Code Remix',
+    city: 'Miami',
+    country: 'USA',
+    flag: '🇺🇸',
+    date: '2026-05-11',
+    endDate: '2026-05-13',
+    month: 'May',
+    href: 'https://coderemix.ai/',
+    kind: 'conference',
+  },
+  {
+    name: 'Roundtable AI in SDLC',
+    city: 'Zurich',
+    country: 'Switzerland',
+    flag: '🇨🇭',
+    date: '2026-05-29',
+    month: 'May',
+    kind: 'roundtable',
+  },
+  {
+    name: 'NY Tech Week: From Copilot to Control Plane',
+    city: 'New York',
+    country: 'USA',
+    flag: '🇺🇸',
+    date: '2026-06-02',
+    month: 'June',
+    href: 'https://partiful.com/e/bn5h1g13xzOV6R5XkLaE',
+    kind: 'meetup',
+  },
+  {
+    name: 'NY Tech Week: How to write a book on AI',
+    city: 'New York',
+    country: 'USA',
+    flag: '🇺🇸',
+    date: '2026-06-02',
+    month: 'June',
+    href: 'https://partiful.com/e/M7pXmV8sOXT11yHb9pKw',
+    kind: 'meetup',
+  },
+  {
+    name: 'AI World Congress',
+    city: 'London',
+    country: 'United Kingdom',
+    flag: '🇬🇧',
+    date: '2026-06-23',
+    endDate: '2026-06-24',
+    month: 'June',
+    href: 'https://aiconference.london/',
+    kind: 'conference',
+  },
+  {
     name: 'Energy Data Hackdays',
     city: 'Brugg-Windisch',
     country: 'Switzerland',
@@ -98,6 +161,17 @@ export const TOUR_EVENTS: TourEvent[] = [
     month: 'September',
     href: 'https://virtuslab.com/lp/roundtable-zurich-september-23',
     kind: 'roundtable',
+  },
+  {
+    name: 'GTM2026',
+    city: 'New York',
+    country: 'USA',
+    flag: '🇺🇸',
+    date: '2026-09-28',
+    endDate: '2026-10-01',
+    month: 'September',
+    href: 'https://attendgtm.com/',
+    kind: 'conference',
   },
   {
     name: 'Visdom Roundtable AI-native SDLC',
@@ -239,9 +313,10 @@ export type CityPlacement = {
 
 export const CITY_PLACEMENT: Record<string, CityPlacement> = {
   'Lone Tree': { lat: 39.55, lon: -104.87, dx: -5, dy: 0, anchor: 'end' },
+  Miami: { lat: 25.77, lon: -80.19, dx: 5, dy: 3, anchor: 'start' },
   Austin: { lat: 30.27, lon: -97.74, dx: -5, dy: 3.5, anchor: 'end' },
   'New York': { lat: 40.71, lon: -74.01, dx: 5, dy: 2, anchor: 'start' },
-  London: { lat: 51.51, lon: -0.13, dx: -6, dy: 1, anchor: 'end' },
+  London: { lat: 51.51, lon: -0.13, dx: -6, dy: 4, anchor: 'end' },
   Amsterdam: { lat: 52.37, lon: 4.9, dx: -8, dy: -4, anchor: 'end' },
   Stockholm: { lat: 59.33, lon: 18.06, dx: 6, dy: -3, anchor: 'start' },
   Berlin: { lat: 52.52, lon: 13.4, dx: 8, dy: -4, anchor: 'start' },
@@ -250,58 +325,7 @@ export const CITY_PLACEMENT: Record<string, CityPlacement> = {
 };
 
 /**
- * Where we have already been this year.
- *
- * Kept separate from TOUR_EVENTS because these entries carry a month rather
- * than a date: the tracker they come from records the period a stop ran in, not
- * the day, and inventing a day to make the shapes match would put a fact on the
- * page that nobody checked.
- */
-export type PastAppearance = {
-  name: string;
-  city: string;
-  country: string;
-  flag: string;
-  /** Month key from the dictionary's `tour.months` map. Empty when unrecorded. */
-  month: string;
-  href?: string;
-};
-
-export const PAST_APPEARANCES: PastAppearance[] = [
-  {
-    name: 'Roundtable AI in SDLC',
-    city: 'Zurich',
-    country: 'Switzerland',
-    flag: '🇨🇭',
-    month: 'May',
-  },
-  {
-    name: 'Techweek NYC: From Copilot to Control Plane',
-    city: 'New York',
-    country: 'USA',
-    flag: '🇺🇸',
-    month: 'June',
-    href: 'https://partiful.com/e/bn5h1g13xzOV6R5XkLaE',
-  },
-  {
-    name: 'Techweek NYC: How to write a book on AI',
-    city: 'New York',
-    country: 'USA',
-    flag: '🇺🇸',
-    month: 'June',
-    href: 'https://partiful.com/e/M7pXmV8sOXT11yHb9pKw',
-  },
-  {
-    name: 'AI World Congress',
-    city: 'London',
-    country: 'United Kingdom',
-    flag: '🇬🇧',
-    month: '',
-  },
-];
-
-/**
- * Photos from the road, shown above the past appearances.
+ * Photos from the road, shown above the stops that have already happened.
  *
  * `alt` is a key into t.visdomTour.gallery.alt: the file name is layout, the
  * description is copy a reader hears.
