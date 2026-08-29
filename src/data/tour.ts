@@ -289,6 +289,19 @@ export const TOUR_EVENTS: TourEvent[] = [
     kind: 'roundtable',
   },
   {
+    // The second edition of the one we spoke at in June, which is why the name
+    // appears twice in this list.
+    name: 'AI World Congress',
+    city: 'London',
+    country: 'United Kingdom',
+    flag: '🇬🇧',
+    date: '2026-11-25',
+    endDate: '2026-11-26',
+    month: 'November',
+    href: 'https://aiconference.london/',
+    kind: 'conference',
+  },
+  {
     name: 'Roundtable AI in SDLC',
     city: 'Zurich',
     country: 'Switzerland',
