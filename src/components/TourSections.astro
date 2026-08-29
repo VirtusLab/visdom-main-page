@@ -21,8 +21,8 @@ import {
 } from '../data/tour';
 import { SPEAKERS } from '../data/webinar';
 import { useI18n, fill } from '../i18n';
-import fs from 'node:fs';
-import path from 'node:path';
+import TourMap from './TourMap.astro';
+import { tourDates } from '../lib/tour-format';
 
 const { locale, t } = useI18n(Astro);
 const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
@@ -39,35 +39,16 @@ const schedule = byDate(TOUR_EVENTS);
 const ahead = schedule.filter((event) => !isPast(event));
 const next = ahead[0];
 
-// Dates are rendered here rather than stored as strings, so the Polish page
-// says "10-11 września 2026" without a second copy of the schedule. UTC on
-// purpose: the values are calendar days, and formatting them in a negative
-// offset would move a stop to the day before.
-const dateFmt = new Intl.DateTimeFormat(locale === 'pl' ? 'pl-PL' : 'en-GB', {
-  day: 'numeric',
-  month: 'long',
-  year: 'numeric',
-  timeZone: 'UTC',
-});
-const dayFmt = new Intl.DateTimeFormat(locale === 'pl' ? 'pl-PL' : 'en-GB', {
-  day: 'numeric',
-  timeZone: 'UTC',
-});
+// Dates come from src/lib/tour-format so the table and the map print the same
+// day in the same words.
+const dates = tourDates(locale);
+const humanDate = (event: TourEvent) => dates.human(event);
 
 /**
- * A single day, or a range collapsed onto one month: "10-11 September 2026".
- * Every stop on the 2026 schedule starts and ends inside one month; a range
- * that ever crosses one falls back to printing both dates in full.
+ * The id of a stop's row, which is also where the map's markers link to. One
+ * function, so a marker can never point at an anchor the table does not have.
  */
-function humanDate(event: TourEvent): string {
-  const start = new Date(`${event.date}T12:00:00Z`);
-  if (!event.endDate) return dateFmt.format(start);
-  const end = new Date(`${event.endDate}T12:00:00Z`);
-  const sameMonth = event.date.slice(0, 7) === event.endDate.slice(0, 7);
-  return sameMonth
-    ? `${dayFmt.format(start)}-${dateFmt.format(end)}`
-    : `${dateFmt.format(start)}, ${dateFmt.format(end)}`;
-}
+const rowId = (index: number) => `stop-${index + 1}`;
 
 /** An internal route keeps the reader on the site; an event page does not. */
 const hrefOf = (event: TourEvent) =>
@@ -110,23 +91,6 @@ const EXPERTS = [
 
 const photoAlt = c.gallery.alt as Record<string, string>;
 
-/**
- * The tour map marketing draws. They hand over a PNG; this is that file at
- * quality 90 WebP, which is 42 KB against 944 KB and indistinguishable at the
- * size it renders. Regenerate the same way when the artwork changes.
- *
- * Checked on disk rather than rendered blind: pages here are prerendered, so a
- * missing file would otherwise ship as a broken image on a live page. Absent,
- * the band is skipped and the build says so, which is the difference between a
- * page with one fewer section and a page with a hole in it.
- */
-const MAP_SRC = '/tour-map.webp';
-// Resolved from the project root, not from import.meta.url: this component is
-// bundled before it runs, and the bundle does not sit where the source does.
-const hasMap = fs.existsSync(path.join(process.cwd(), 'public', path.basename(MAP_SRC)));
-if (!hasMap) {
-  console.warn(`[visdom-tour] public${MAP_SRC} is missing, the map band is not rendered.`);
-}
 ---
 
 <TourBanner />
@@ -175,26 +139,16 @@ if (!hasMap) {
   </section>
 
   {/* ── MAP ──────────────────────────────────────────────────────────────── */}
-  {/* A white band across the page rather than a card: the artwork is drawn on a
+  {/* A white band across the page rather than a card: the map is drawn on a
       light ground, and a framed rectangle floating on the dark theme read as a
-      pasted-in screenshot. It carries its own title, which is why the hero
-      above it has no eyebrow. */}
-  {hasMap && (
-    <section class="tr-map-band">
-      <div class="container">
-        <figure class="tr-map fade-up">
-          <img
-            src={`${base}${MAP_SRC}`}
-            width="1308"
-            height="724"
-            loading="lazy"
-            decoding="async"
-            alt={c.map.alt}
-          />
-        </figure>
+      pasted-in screenshot. */}
+  <section class="tr-map-band">
+    <div class="container">
+      <div class="tr-map fade-up">
+        <TourMap schedule={schedule} rowId={rowId} />
       </div>
-    </section>
-  )}
+    </div>
+  </section>
 
   {/* ── WHAT WE SHOW ─────────────────────────────────────────────────────── */}
   <section class="tr-section section-alt">
@@ -229,12 +183,15 @@ if (!hasMap) {
       <p class="tr-section-lead fade-up">{c.stops.lead}</p>
 
       <ol class="tr-stops fade-up" role="list" aria-label={c.stops.aria}>
-        {schedule.map((event) => {
+        {schedule.map((event, index) => {
           const past = isPast(event);
           const isNext = !past && event === next;
           const href = hrefOf(event);
           return (
-            <li class:list={['tr-stop', past && 'is-past', isNext && 'is-next']}>
+            <li
+              id={rowId(index)}
+              class:list={['tr-stop', past && 'is-past', isNext && 'is-next']}
+            >
               <span class="tr-stop-date">
                 <time datetime={event.date}>{humanDate(event)}</time>
                 {event.time && <span class="tr-stop-time">{event.time}</span>}
@@ -456,12 +413,6 @@ if (!hasMap) {
     margin: 0 auto;
   }
 
-  .tr-map img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
   /* ── Sections ── */
   .tr-section {
     padding: 5rem 0;
@@ -569,6 +520,13 @@ if (!hasMap) {
 
   .tr-stop.is-past {
     opacity: 0.55;
+  }
+
+  /* Arrived from the map. Without this the page jumps and nothing says which
+     of fourteen rows was the one being asked about. */
+  .tr-stop:target {
+    background: color-mix(in oklab, var(--color-emerald) 14%, transparent);
+    box-shadow: inset 3px 0 0 var(--color-emerald);
   }
 
   .tr-stop-date {

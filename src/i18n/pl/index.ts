@@ -81,8 +81,7 @@ const pl = {
     aheadLabel: 'Przystanków przed nami',
 
     map: {
-      alt:
-        'Visdom Tour 2026 na mapie świata: przystanki w Ameryce Północnej (San Francisco, San Jose, Chicago, Nowy Jork, Austin) i w Europie (Londyn, Amsterdam, Sztokholm, Berlin, Brugg-Windisch, Zurych).',
+      alt: 'Mapa świata z trasą Visdom Tour 2026, ze znacznikiem na każdym przystanku z listy poniżej.',
     },
 
     show: {

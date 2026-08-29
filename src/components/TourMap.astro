@@ -1,0 +1,400 @@
+---
+/**
+ * The tour map, drawn from the schedule rather than pasted in as artwork.
+ *
+ * Every dot on it is a row of the table below: same data, same dates, same
+ * split between what is done and what is ahead. A stop added to
+ * src/data/tour.ts appears here without anyone opening a drawing tool, and the
+ * map cannot advertise a city the schedule no longer has.
+ *
+ * Interaction, in the order the reader meets it:
+ *   * At rest it is a picture, the way the drawn map was.
+ *   * With a pointer, hovering a stop opens what is happening there.
+ *   * Without one, the hover panels never render and a tap follows the link to
+ *     that stop's row in the table, which is where the detail lives anyway.
+ *
+ * The hit targets and the panels are HTML positioned over the SVG, not SVG
+ * elements: it keeps hover, focus and links behaving the way they do everywhere
+ * else on the site, and it needs no script at all.
+ */
+import { WORLD_PATH, WORLD_VIEWBOX, project } from '../data/world';
+import {
+  CITY_PLACEMENT,
+  isPast,
+  type TourEvent,
+} from '../data/tour';
+import { tourDates } from '../lib/tour-format';
+import { useI18n } from '../i18n';
+
+interface Props {
+  /** The schedule, in date order. Indexes match the ids on the table rows. */
+  schedule: TourEvent[];
+  /** The row id a marker links to, by index into `schedule`. */
+  rowId: (index: number) => string;
+}
+
+const { schedule, rowId } = Astro.props;
+const { locale, t } = useI18n(Astro);
+const c = t.visdomTour;
+const dates = tourDates(locale);
+
+const kinds = c.stops.kinds as Record<string, string>;
+const cityName = (name: string) => t.tour.cities[name] ?? name;
+
+const [VB_X, VB_Y, VB_W, VB_H] = WORLD_VIEWBOX.split(' ').map(Number);
+
+/**
+ * One marker per city, carrying every stop we have there.
+ *
+ * Zurich hosts four events across three months; four dots stacked on one point
+ * would be a smudge, so the city is the unit and the panel lists its stops.
+ */
+type Marker = {
+  city: string;
+  x: number;
+  y: number;
+  placement: (typeof CITY_PLACEMENT)[string];
+  stops: { event: TourEvent; index: number; past: boolean }[];
+  past: boolean;
+  next: boolean;
+  href: string;
+};
+
+const nextIndex = schedule.findIndex((event) => !isPast(event));
+
+const byCity = new Map<string, Marker>();
+schedule.forEach((event, index) => {
+  const placement = CITY_PLACEMENT[event.city];
+  // An online stop has no place on a map, and a city nobody has given
+  // coordinates to is left off rather than dropped at 0,0 in the Atlantic.
+  if (!placement) return;
+
+  const point = project(placement.lat, placement.lon);
+  const marker =
+    byCity.get(event.city) ??
+    ({
+      city: event.city,
+      x: point.x + (placement.nudge?.[0] ?? 0),
+      y: point.y + (placement.nudge?.[1] ?? 0),
+      placement,
+      stops: [],
+      past: true,
+      next: false,
+      href: `#${rowId(index)}`,
+    } satisfies Marker);
+
+  const past = isPast(event);
+  marker.stops.push({ event, index, past });
+  if (!past) {
+    // The link goes to the next thing happening here, not to whatever is
+    // first in the year.
+    if (marker.past) marker.href = `#${rowId(index)}`;
+    marker.past = false;
+  }
+  if (index === nextIndex) marker.next = true;
+  byCity.set(event.city, marker);
+});
+
+const markers = [...byCity.values()];
+
+/**
+ * The route: an arc between stops that follow each other in the schedule and
+ * sit on the same side of the ocean. A line drawn across the Atlantic every
+ * time the tour crosses it would say true things in an unreadable way.
+ */
+const placed = schedule
+  .map((event, index) => ({ event, index, placement: CITY_PLACEMENT[event.city] }))
+  .filter((entry) => entry.placement);
+
+const arcs: string[] = [];
+for (let i = 1; i < placed.length; i += 1) {
+  const from = placed[i - 1];
+  const to = placed[i];
+  if (from.event.city === to.event.city) continue;
+  const a = project(from.placement.lat, from.placement.lon);
+  const b = project(to.placement.lat, to.placement.lon);
+  if (Math.abs(a.x - b.x) > 60) continue;
+  // Bowed towards the top of the map, by a fifth of the span, which is the
+  // curve the drawn map used.
+  const mx = (a.x + b.x) / 2;
+  const my = (a.y + b.y) / 2 - Math.hypot(b.x - a.x, b.y - a.y) * 0.22;
+  arcs.push(`M${a.x},${a.y}Q${mx},${my} ${b.x},${b.y}`);
+}
+
+/** Geist runs about 0.55em wide per character at these sizes. */
+const LABEL_SIZE = 3.4;
+const labelWidth = (text: string) => text.length * LABEL_SIZE * 0.55 + 2.6;
+
+const labels = markers.map((marker) => {
+  const text = cityName(marker.city);
+  const width = labelWidth(text);
+  const height = LABEL_SIZE + 2.6;
+  const { dx, dy, anchor } = marker.placement;
+  const x = marker.x + dx - (anchor === 'end' ? width : 0);
+  const y = marker.y + dy - height / 2;
+  return {
+    marker,
+    text,
+    x,
+    y,
+    width,
+    height,
+    textX: x + width / 2,
+    textY: y + height / 2,
+    // The connector meets the pill on the side the dot is on.
+    lineX: anchor === 'end' ? x + width : x,
+    lineY: y + height / 2,
+  };
+});
+
+const percent = (value: number, from: number, size: number) =>
+  `${(((value - from) / size) * 100).toFixed(3)}%`;
+---
+
+<div class="tm">
+  <svg
+    class="tm-svg"
+    viewBox={WORLD_VIEWBOX}
+    role="img"
+    aria-label={c.map.alt}
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <path class="tm-land" d={WORLD_PATH} />
+
+    {arcs.map((d) => <path class="tm-arc" d={d} />)}
+
+    {labels.map(({ marker, text, x, y, width, height, textX, textY, lineX, lineY }) => (
+      <g class:list={['tm-stop', marker.past && 'is-past', marker.next && 'is-next']}>
+        <line class="tm-line" x1={marker.x} y1={marker.y} x2={lineX} y2={lineY} />
+        <rect class="tm-pill" x={x} y={y} width={width} height={height} rx={height / 2} />
+        <text class="tm-label" x={textX} y={textY} font-size={LABEL_SIZE}>{text}</text>
+        <circle class="tm-dot" cx={marker.x} cy={marker.y} r="1.6" />
+      </g>
+    ))}
+  </svg>
+
+  {/* The interactive layer. Anchors rather than buttons: the destination is a
+      real place on the page, so it works with a middle click, on a keyboard,
+      and with JavaScript off. */}
+  <div class="tm-hits">
+    {markers.map((marker) => (
+      <a
+        class:list={['tm-hit', marker.past && 'is-past', marker.next && 'is-next']}
+        href={marker.href}
+        style={`left:${percent(marker.x, VB_X, VB_W)};top:${percent(marker.y, VB_Y, VB_H)}`}
+        data-flip={marker.y < 40 ? 'down' : undefined}
+        data-cta="tour_map_stop"
+      >
+        <span class="sr-only">{cityName(marker.city)}</span>
+        <span class="tm-panel" aria-hidden="true">
+          <span class="tm-panel-city">{cityName(marker.city)}</span>
+          {marker.stops.map(({ event, past }) => (
+            <span class:list={['tm-panel-stop', past && 'is-past']}>
+              <span class="tm-panel-date">{dates.human(event)}</span>
+              <span class="tm-panel-name">{event.name}</span>
+              <span class="tm-panel-kind">{kinds[event.kind] ?? event.kind}</span>
+            </span>
+          ))}
+        </span>
+      </a>
+    ))}
+  </div>
+</div>
+
+<style>
+  .tm {
+    position: relative;
+    max-width: 60rem;
+    margin: 0 auto;
+  }
+
+  .tm-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* The palette of the drawn map it replaces: pale green land on white, one
+     brighter green for everything that is us. */
+  .tm-land {
+    fill: #d9f3e1;
+  }
+
+  .tm-arc {
+    fill: none;
+    stroke: #8fc85f;
+    stroke-width: 0.35;
+    opacity: 0.85;
+  }
+
+  .tm-line {
+    stroke: #b9c7bd;
+    stroke-width: 0.28;
+  }
+
+  .tm-pill {
+    fill: #fff;
+    stroke: #d5ded8;
+    stroke-width: 0.28;
+  }
+
+  .tm-label {
+    fill: #1f2937;
+    font-family: var(--font-body);
+    font-weight: 600;
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+
+  .tm-dot {
+    fill: #fff;
+    stroke: #7ebf2e;
+    stroke-width: 1;
+  }
+
+  .tm-stop.is-next .tm-dot {
+    fill: #7ebf2e;
+    stroke: #4d7c15;
+  }
+
+  .tm-stop.is-next .tm-pill {
+    stroke: #7ebf2e;
+  }
+
+  .tm-stop.is-past .tm-dot {
+    stroke: #c3cdc6;
+  }
+
+  .tm-stop.is-past .tm-label {
+    fill: #94a3a0;
+  }
+
+  .tm-stop.is-past .tm-pill {
+    stroke: #e2e8e4;
+  }
+
+  /* ── The interactive layer ── */
+  .tm-hits {
+    position: absolute;
+    inset: 0;
+  }
+
+  .tm-hit {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    margin: -13px 0 0 -13px;
+    border-radius: 9999px;
+    /* Sits over its dot and shows nothing of its own until it is used. */
+    text-decoration: none;
+  }
+
+  .tm-hit:focus-visible {
+    outline: 2px solid #4d7c15;
+    outline-offset: 2px;
+  }
+
+  .tm-panel {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    z-index: 2;
+    display: none;
+    width: max-content;
+    max-width: 17rem;
+    transform: translateX(-50%);
+    padding: 0.7rem 0.85rem;
+    border-radius: 12px;
+    background: #0d1013;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+    color: #e5e8eb;
+    text-align: left;
+  }
+
+  .tm-panel-city {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: var(--fs-md);
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .tm-panel-stop {
+    display: block;
+    padding-top: 0.4rem;
+  }
+
+  .tm-panel-stop + .tm-panel-stop {
+    margin-top: 0.4rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .tm-panel-stop.is-past {
+    opacity: 0.55;
+  }
+
+  .tm-panel-date {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--fs-3xs);
+    letter-spacing: 0.05em;
+    color: #7ee2b8;
+  }
+
+  .tm-panel-name {
+    display: block;
+    font-size: var(--fs-sm);
+    line-height: 1.35;
+  }
+
+  .tm-panel-kind {
+    display: block;
+    margin-top: 0.15rem;
+    font-family: var(--font-mono);
+    font-size: var(--fs-4xs);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: #9aa5a1;
+  }
+
+  /* Only where there is a pointer to hover with. On a touch screen the map is
+     the picture it looks like, and a tap goes to the row in the table. */
+  @media (hover: hover) and (pointer: fine) {
+    .tm-hit:hover .tm-panel,
+    .tm-hit:focus-visible .tm-panel {
+      display: block;
+    }
+
+    .tm-hit:hover::after {
+      content: '';
+      position: absolute;
+      inset: 5px;
+      border-radius: 9999px;
+      border: 1.5px solid #4d7c15;
+    }
+  }
+
+  /* On a narrow screen the labels are three pixels tall and read as grey mush,
+     so the map keeps its dots and drops the pills. The names are in the table
+     directly below, which is where a tap sends the reader anyway. */
+  @media (max-width: 700px) {
+    .tm-pill,
+    .tm-label,
+    .tm-line {
+      display: none;
+    }
+
+    .tm-dot {
+      r: 2.6;
+      stroke-width: 1.4;
+    }
+  }
+
+  /* Near the top of the map the panel would open off the card, so those stops
+     open downwards instead. */
+  .tm-hit[data-flip='down'] .tm-panel {
+    top: calc(100% + 6px);
+    bottom: auto;
+  }
+</style>

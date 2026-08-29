@@ -98,13 +98,12 @@ const en = {
     aheadLabel: 'Stops ahead',
 
     /**
-     * Marketing's tour map, dropped in at public/tour-map.png. The alt text
-     * describes what that artwork shows, which is a wider set of cities than
-     * the 2026 schedule below it.
+     * The map is drawn from the schedule, so its alt text says what it is
+     * rather than listing cities that would then have to be kept in sync with
+     * the table underneath it.
      */
     map: {
-      alt:
-        'Visdom Tour 2026 on a world map: stops in North America (San Francisco, San Jose, Chicago, New York, Austin) and in Europe (London, Amsterdam, Stockholm, Berlin, Brugg-Windisch, Zurich).',
+      alt: 'A world map of the 2026 Visdom Tour, with a marker on every stop listed below.',
     },
 
     show: {

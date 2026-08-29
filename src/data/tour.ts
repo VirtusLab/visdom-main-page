@@ -204,6 +204,41 @@ export const TOUR_EVENTS: TourEvent[] = [
 ];
 
 /**
+ * Where each city sits, and where its label sits next to it.
+ *
+ * Latitude and longitude are the real ones. `dx` and `dy` place the label
+ * relative to the dot, in map units (one unit is one degree), because at world
+ * scale Europe puts six stops inside a thumbnail and no automatic placement
+ * beats reading the render.
+ *
+ * `nudge` moves the DOT itself, and only where two stops are closer together
+ * than the dot is wide: Brugg-Windisch and Zurich are 25 km apart and would
+ * otherwise print as one circle. Nothing else may use it.
+ */
+export type CityPlacement = {
+  lat: number;
+  lon: number;
+  /** Label offset from the dot, in map units. */
+  dx: number;
+  dy: number;
+  /** Which end of the label sits at dx. */
+  anchor: 'start' | 'end';
+  nudge?: [number, number];
+};
+
+export const CITY_PLACEMENT: Record<string, CityPlacement> = {
+  'Lone Tree': { lat: 39.55, lon: -104.87, dx: -4, dy: -1, anchor: 'end' },
+  Austin: { lat: 30.27, lon: -97.74, dx: -4, dy: 3.5, anchor: 'end' },
+  'New York': { lat: 40.71, lon: -74.01, dx: 4, dy: 1.5, anchor: 'start' },
+  London: { lat: 51.51, lon: -0.13, dx: -4, dy: 0.5, anchor: 'end' },
+  Amsterdam: { lat: 52.37, lon: 4.9, dx: -4, dy: -4.5, anchor: 'end' },
+  Stockholm: { lat: 59.33, lon: 18.06, dx: 4, dy: -2, anchor: 'start' },
+  Berlin: { lat: 52.52, lon: 13.4, dx: 5, dy: -1.5, anchor: 'start' },
+  Zurich: { lat: 47.37, lon: 8.54, dx: 5, dy: 3.5, anchor: 'start' },
+  'Brugg-Windisch': { lat: 47.48, lon: 8.21, dx: -4, dy: 5, anchor: 'end', nudge: [-1.6, 1.4] },
+};
+
+/**
  * Where we have already been this year.
  *
  * Kept separate from TOUR_EVENTS because these entries carry a month rather

@@ -5,9 +5,13 @@ The page used to unfurl the generic platform card: right brand, nothing about
 the tour. What a reader wants from a shared tour link is where we will be, so
 the card leads with that and carries the map itself as the thumbnail.
 
-Cities come from src/data/tour.ts, so the card cannot advertise a stop the
-schedule no longer has. Brand assets are the real ones: the crest from
-src/icons/visdom-crest.svg, Geist for the type, and the site's dark palette.
+The map is drawn here from the same two files the page draws it from,
+src/data/world.ts and src/data/tour.ts, so the card cannot show a city the
+schedule no longer has. Labels are left off: at thumbnail size they are grey
+mush, and the cities are spelled out in the text column anyway.
+
+Brand assets are the real ones: the crest from src/icons/visdom-crest.svg,
+Geist for the type, and the site's dark palette.
 
     python3 scripts/make-og-tour.py
 
@@ -22,7 +26,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = sys.argv[1] if len(sys.argv) > 1 else str(ROOT / 'public' / 'og-visdom-tour.png')
-MAP = ROOT / 'public' / 'tour-map.webp'
 
 # Read the schedule the page renders from. Parsed rather than imported because
 # this is Python reading TypeScript; the pattern is narrow and fails loudly.
@@ -36,8 +39,30 @@ for m in re.finditer(r"city:\s*'([^']+)'", BLOCK):
 if len(CITIES) < 4:
     raise SystemExit(f'make-og-tour: parsed only {len(CITIES)} cities from src/data/tour.ts')
 
-KINDS = set(re.findall(r"kind:\s*'(\w+)'", BLOCK))
 STOPS = len(re.findall(r"\bcity:\s*'", BLOCK))
+
+# Where each stop is, from the same placement table the page uses. Only the
+# coordinates: the label offsets are for a map with labels on it.
+PLACEMENT = {
+    m.group(1).strip("'"): (float(m.group(2)), float(m.group(3)))
+    for m in re.finditer(
+        r"^  ('?[\w\- ]+'?):\s*\{\s*lat:\s*(-?[\d.]+),\s*lon:\s*(-?[\d.]+)",
+        TOUR[TOUR.index('export const CITY_PLACEMENT'):],
+        re.M,
+    )
+}
+if not PLACEMENT:
+    raise SystemExit('make-og-tour: could not read CITY_PLACEMENT from src/data/tour.ts')
+
+# The world, as the page draws it: one path of closed polylines in degrees.
+WORLD = (ROOT / 'src' / 'data' / 'world.ts').read_text()
+WORLD_PATH = WORLD[WORLD.index("export const WORLD_PATH"):]
+WORLD_PATH = WORLD_PATH[WORLD_PATH.index("'") + 1:WORLD_PATH.index("';")]
+RINGS = [
+    [tuple(float(v) for v in point.split(',')) for point in ring.rstrip('Z').split()]
+    for ring in WORLD_PATH.split('M')
+    if ring
+]
 
 W, H = 1200, 630
 BG = (6, 7, 9)
@@ -90,24 +115,36 @@ d.rounded_rectangle((wend + 16, PAD + 16, wend + 16 + bw, PAD + 48), 8,
 d.text((wend + 27, PAD + 21), '2.0', font=bf, fill=EMERALD)
 
 # ── The map, as the thumbnail ───────────────────────────────────────────────
-# Right half, on white, because the artwork is drawn on a white ground. Placed
-# first so the text column knows how much room it has left.
+# Right half, on a white card, the way the page puts it on a white band. Drawn
+# at 3x and downsampled, because a 1px coastline aliases badly otherwise.
 MAP_X, MAP_W = 636, W - 636 - PAD
-card_top, card_bottom = 214, 470
-if MAP.exists():
-    m = Image.open(MAP).convert('RGB')
-    inner = MAP_W - 28
-    m = m.resize((inner, round(m.height * inner / m.width)), Image.LANCZOS)
-    card_h = m.height + 28
-    card_top = round((H - card_h) / 2) + 46
-    card = Image.new('RGB', (MAP_W, card_h), (255, 255, 255))
-    card.paste(m, (14, 14))
-    rounded = Image.new('L', card.size, 0)
-    ImageDraw.Draw(rounded).rounded_rectangle((0, 0, card.width - 1, card.height - 1), 18, fill=255)
-    img.paste(card, (MAP_X, card_top), rounded)
-    card_bottom = card_top + card_h
-else:
-    print('make-og-tour: public/tour-map.webp is missing, the card ships without it')
+LAND = (217, 243, 225)
+DOT = (126, 191, 46)
+inner = MAP_W - 28
+SS = 3
+scale = inner * SS / 360.0
+map_h = round(144 * scale)
+plate = Image.new('RGB', (inner * SS, map_h), (255, 255, 255))
+pd = ImageDraw.Draw(plate)
+for ring_points in RINGS:
+    if len(ring_points) < 3:
+        continue
+    pd.polygon([(x * scale, y * scale) for x, y in ring_points], fill=LAND)
+
+for city, (lat, lon) in PLACEMENT.items():
+    cx, cy = (lon + 180) * scale, (84 - lat) * scale
+    r = 5 * SS
+    pd.ellipse((cx - r, cy - r, cx + r, cy + r), fill=(255, 255, 255), outline=DOT, width=2 * SS)
+
+plate = plate.resize((inner, round(map_h / SS)), Image.LANCZOS)
+card_h = plate.height + 28
+card_top = round((H - card_h) / 2) + 46
+card = Image.new('RGB', (MAP_W, card_h), (255, 255, 255))
+card.paste(plate, (14, 14))
+rounded = Image.new('L', card.size, 0)
+ImageDraw.Draw(rounded).rounded_rectangle((0, 0, card.width - 1, card.height - 1), 18, fill=255)
+img.paste(card, (MAP_X, card_top), rounded)
+card_bottom = card_top + card_h
 
 # ── Eyebrow, title, stops ───────────────────────────────────────────────────
 col = MAP_X - PAD - 40
