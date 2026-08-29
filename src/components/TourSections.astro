@@ -117,15 +117,15 @@ const photoAlt = c.gallery.alt as Record<string, string>;
  *
  * Checked on disk rather than rendered blind: pages here are prerendered, so a
  * missing file would otherwise ship as a broken image on a live page. Absent,
- * the hero renders as one column and the build says so, which is the difference
- * between a page with one fewer element and a page with a hole in it.
+ * the band is skipped and the build says so, which is the difference between a
+ * page with one fewer section and a page with a hole in it.
  */
 const MAP_SRC = '/tour-map.webp';
 // Resolved from the project root, not from import.meta.url: this component is
 // bundled before it runs, and the bundle does not sit where the source does.
 const hasMap = fs.existsSync(path.join(process.cwd(), 'public', path.basename(MAP_SRC)));
 if (!hasMap) {
-  console.warn(`[visdom-tour] public${MAP_SRC} is missing, the hero renders without the map.`);
+  console.warn(`[visdom-tour] public${MAP_SRC} is missing, the map band is not rendered.`);
 }
 ---
 
@@ -137,7 +137,6 @@ if (!hasMap) {
   <section class="tr-hero">
     <div class="aurora" aria-hidden="true"></div>
     <div class="container tr-hero-inner">
-      <div class:list={['tr-hero-grid', hasMap && 'has-map']}>
       <div class="fade-up">
         <h1 class="tr-headline">
           {c.headlineLead} <span class="tr-headline-accent">{c.headlineAccent}</span>
@@ -153,23 +152,6 @@ if (!hasMap) {
             {c.actions.contact}
           </a>
         </div>
-      </div>
-
-      {/* Marketing's artwork, and it is drawn on a light ground, so it sits on
-          a white card rather than glowing against the dark theme. It carries
-          its own title, which is why the section above it has no eyebrow. */}
-      {hasMap && (
-        <figure class="tr-map fade-up">
-          <img
-            src={`${base}${MAP_SRC}`}
-            width="1308"
-            height="724"
-            loading="eager"
-            decoding="async"
-            alt={c.map.alt}
-          />
-        </figure>
-      )}
       </div>
 
       {/* The band under the header answers the one question a visitor arrives
@@ -191,6 +173,28 @@ if (!hasMap) {
       </dl>
     </div>
   </section>
+
+  {/* ── MAP ──────────────────────────────────────────────────────────────── */}
+  {/* A white band across the page rather than a card: the artwork is drawn on a
+      light ground, and a framed rectangle floating on the dark theme read as a
+      pasted-in screenshot. It carries its own title, which is why the hero
+      above it has no eyebrow. */}
+  {hasMap && (
+    <section class="tr-map-band">
+      <div class="container">
+        <figure class="tr-map fade-up">
+          <img
+            src={`${base}${MAP_SRC}`}
+            width="1308"
+            height="724"
+            loading="lazy"
+            decoding="async"
+            alt={c.map.alt}
+          />
+        </figure>
+      </div>
+    </section>
+  )}
 
   {/* ── WHAT WE SHOW ─────────────────────────────────────────────────────── */}
   <section class="tr-section section-alt">
@@ -361,24 +365,9 @@ if (!hasMap) {
 
   .tr-hero-inner {
     position: relative;
-  }
-
-  /* One column until there is a map to put beside the copy. */
-  .tr-hero-grid.has-map {
-    display: grid;
-    grid-template-columns: minmax(20rem, 1fr) minmax(0, 1.05fr);
-    align-items: start;
-    gap: 3rem;
-  }
-
-  .tr-hero-grid:not(.has-map) {
     max-width: 62rem;
   }
 
-  /* The headline shares the row with the map, so it stops growing earlier. */
-  .tr-hero-grid.has-map .tr-headline {
-    font-size: clamp(2.2rem, 4.4vw, 3.5rem);
-  }
 
   .tr-headline {
     margin: 0.75rem 0 0;
@@ -456,20 +445,21 @@ if (!hasMap) {
   }
 
   /* ── Map ── */
-  .tr-map {
-    margin: 0;
-    align-self: center;
-    padding: 1rem;
-    border: 1px solid var(--color-border);
-    border-radius: 18px;
+  .tr-map-band {
+    /* White in both themes: the artwork is drawn on a light ground. */
     background: #fff;
+    padding: 3.5rem 0;
+  }
+
+  .tr-map {
+    max-width: 60rem;
+    margin: 0 auto;
   }
 
   .tr-map img {
     display: block;
     width: 100%;
     height: auto;
-    border-radius: 10px;
   }
 
   /* ── Sections ── */
@@ -824,16 +814,13 @@ if (!hasMap) {
     border-color: var(--color-emerald);
   }
 
-  @media (max-width: 980px) {
-    .tr-hero-grid.has-map {
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
-    }
-  }
-
   @media (max-width: 760px) {
     .tr-hero {
       padding-top: 4rem;
+    }
+
+    .tr-map-band {
+      padding: 2.25rem 0;
     }
 
     .tr-stop {
