@@ -227,15 +227,15 @@ export type CityPlacement = {
 };
 
 export const CITY_PLACEMENT: Record<string, CityPlacement> = {
-  'Lone Tree': { lat: 39.55, lon: -104.87, dx: -4, dy: -1, anchor: 'end' },
-  Austin: { lat: 30.27, lon: -97.74, dx: -4, dy: 3.5, anchor: 'end' },
-  'New York': { lat: 40.71, lon: -74.01, dx: 4, dy: 1.5, anchor: 'start' },
-  London: { lat: 51.51, lon: -0.13, dx: -4, dy: 0.5, anchor: 'end' },
-  Amsterdam: { lat: 52.37, lon: 4.9, dx: -4, dy: -4.5, anchor: 'end' },
-  Stockholm: { lat: 59.33, lon: 18.06, dx: 4, dy: -2, anchor: 'start' },
-  Berlin: { lat: 52.52, lon: 13.4, dx: 5, dy: -1.5, anchor: 'start' },
-  Zurich: { lat: 47.37, lon: 8.54, dx: 5, dy: 3.5, anchor: 'start' },
-  'Brugg-Windisch': { lat: 47.48, lon: 8.21, dx: -4, dy: 5, anchor: 'end', nudge: [-1.6, 1.4] },
+  'Lone Tree': { lat: 39.55, lon: -104.87, dx: -5, dy: 0, anchor: 'end' },
+  Austin: { lat: 30.27, lon: -97.74, dx: -5, dy: 3.5, anchor: 'end' },
+  'New York': { lat: 40.71, lon: -74.01, dx: 5, dy: 2, anchor: 'start' },
+  London: { lat: 51.51, lon: -0.13, dx: -6, dy: 1, anchor: 'end' },
+  Amsterdam: { lat: 52.37, lon: 4.9, dx: -8, dy: -4, anchor: 'end' },
+  Stockholm: { lat: 59.33, lon: 18.06, dx: 6, dy: -3, anchor: 'start' },
+  Berlin: { lat: 52.52, lon: 13.4, dx: 8, dy: -4, anchor: 'start' },
+  Zurich: { lat: 47.37, lon: 8.54, dx: 8, dy: 9, anchor: 'start' },
+  'Brugg-Windisch': { lat: 47.48, lon: 8.21, dx: 10, dy: 2.5, anchor: 'start', nudge: [-1.2, 1.2] },
 };
 
 /**

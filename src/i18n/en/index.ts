@@ -104,6 +104,10 @@ const en = {
      */
     map: {
       alt: 'A world map of the 2026 Visdom Tour, with a marker on every stop listed below.',
+      /** The map's own title, as the drawn version carried it. */
+      title: 'Visdom Tour 2026',
+      taglineLead: 'See you',
+      taglineAccent: 'on the road',
     },
 
     show: {

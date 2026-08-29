@@ -56,6 +56,9 @@ if not PLACEMENT:
 
 # The world, as the page draws it: one path of closed polylines in degrees.
 WORLD = (ROOT / 'src' / 'data' / 'world.ts').read_text()
+VIEWBOX = re.search(r"WORLD_VIEWBOX = '0 0 ([\d.]+) ([\d.]+)'", WORLD)
+LON_SCALE = float(re.search(r'WORLD_LON_SCALE = ([\d.]+)', WORLD).group(1))
+MAP_UNITS_W, MAP_UNITS_H = float(VIEWBOX.group(1)), float(VIEWBOX.group(2))
 WORLD_PATH = WORLD[WORLD.index("export const WORLD_PATH"):]
 WORLD_PATH = WORLD_PATH[WORLD_PATH.index("'") + 1:WORLD_PATH.index("';")]
 RINGS = [
@@ -122,8 +125,8 @@ LAND = (217, 243, 225)
 DOT = (126, 191, 46)
 inner = MAP_W - 28
 SS = 3
-scale = inner * SS / 360.0
-map_h = round(144 * scale)
+scale = inner * SS / MAP_UNITS_W
+map_h = round(MAP_UNITS_H * scale)
 plate = Image.new('RGB', (inner * SS, map_h), (255, 255, 255))
 pd = ImageDraw.Draw(plate)
 for ring_points in RINGS:
@@ -132,7 +135,7 @@ for ring_points in RINGS:
     pd.polygon([(x * scale, y * scale) for x, y in ring_points], fill=LAND)
 
 for city, (lat, lon) in PLACEMENT.items():
-    cx, cy = (lon + 180) * scale, (84 - lat) * scale
+    cx, cy = (lon + 180) * LON_SCALE * scale, (84 - lat) * scale
     r = 5 * SS
     pd.ellipse((cx - r, cy - r, cx + r, cy + r), fill=(255, 255, 255), outline=DOT, width=2 * SS)
 

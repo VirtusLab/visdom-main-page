@@ -111,9 +111,10 @@ for (let i = 1; i < placed.length; i += 1) {
   const from = placed[i - 1];
   const to = placed[i];
   if (from.event.city === to.event.city) continue;
+  // Same side of the ocean, in degrees rather than in projected units.
+  if (Math.abs(from.placement.lon - to.placement.lon) > 60) continue;
   const a = project(from.placement.lat, from.placement.lon);
   const b = project(to.placement.lat, to.placement.lon);
-  if (Math.abs(a.x - b.x) > 60) continue;
   // Bowed towards the top of the map, by a fifth of the span, which is the
   // curve the drawn map used.
   const mx = (a.x + b.x) / 2;
@@ -152,6 +153,14 @@ const percent = (value: number, from: number, size: number) =>
 ---
 
 <div class="tm">
+  {/* The title the drawn map carried in its own artwork. It belongs to the map
+      rather than to the section, so it travels with it. */}
+  <p class="tm-title">
+    <strong>{c.map.title}</strong>
+    <span>{c.map.taglineLead} <em>{c.map.taglineAccent}</em></span>
+  </p>
+
+  <div class="tm-plot">
   <svg
     class="tm-svg"
     viewBox={WORLD_VIEWBOX}
@@ -168,7 +177,7 @@ const percent = (value: number, from: number, size: number) =>
         <line class="tm-line" x1={marker.x} y1={marker.y} x2={lineX} y2={lineY} />
         <rect class="tm-pill" x={x} y={y} width={width} height={height} rx={height / 2} />
         <text class="tm-label" x={textX} y={textY} font-size={LABEL_SIZE}>{text}</text>
-        <circle class="tm-dot" cx={marker.x} cy={marker.y} r="1.6" />
+        <circle class="tm-dot" cx={marker.x} cy={marker.y} r="1.9" />
       </g>
     ))}
   </svg>
@@ -199,13 +208,42 @@ const percent = (value: number, from: number, size: number) =>
       </a>
     ))}
   </div>
+  </div>
 </div>
 
 <style>
   .tm {
     position: relative;
-    max-width: 60rem;
     margin: 0 auto;
+  }
+
+  /* Fixed colours, not theme tokens: this sits on the white band in both
+     themes, so it is dark type on white either way. */
+  .tm-title {
+    margin: 0 0 1.5rem;
+    text-align: center;
+    color: #111827;
+  }
+
+  .tm-title strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .tm-title span {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: var(--fs-2xl);
+    color: #334155;
+  }
+
+  .tm-title em {
+    font-style: normal;
+    color: #16a34a;
   }
 
   .tm-svg {
@@ -224,8 +262,9 @@ const percent = (value: number, from: number, size: number) =>
   .tm-arc {
     fill: none;
     stroke: #8fc85f;
-    stroke-width: 0.35;
-    opacity: 0.85;
+    stroke-width: 0.4;
+    stroke-linecap: round;
+    opacity: 0.9;
   }
 
   .tm-line {
@@ -235,8 +274,9 @@ const percent = (value: number, from: number, size: number) =>
 
   .tm-pill {
     fill: #fff;
-    stroke: #d5ded8;
-    stroke-width: 0.28;
+    stroke: #dfe6e1;
+    stroke-width: 0.3;
+    filter: drop-shadow(0 0.3px 0.6px rgba(15, 23, 42, 0.12));
   }
 
   .tm-label {
@@ -250,7 +290,7 @@ const percent = (value: number, from: number, size: number) =>
   .tm-dot {
     fill: #fff;
     stroke: #7ebf2e;
-    stroke-width: 1;
+    stroke-width: 1.3;
   }
 
   .tm-stop.is-next .tm-dot {
@@ -278,6 +318,10 @@ const percent = (value: number, from: number, size: number) =>
   .tm-hits {
     position: absolute;
     inset: 0;
+  }
+
+  .tm-plot {
+    position: relative;
   }
 
   .tm-hit {
@@ -386,7 +430,7 @@ const percent = (value: number, from: number, size: number) =>
     }
 
     .tm-dot {
-      r: 2.6;
+      r: 3;
       stroke-width: 1.4;
     }
   }

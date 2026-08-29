@@ -82,6 +82,9 @@ const pl = {
 
     map: {
       alt: 'Mapa świata z trasą Visdom Tour 2026, ze znacznikiem na każdym przystanku z listy poniżej.',
+      title: 'Visdom Tour 2026',
+      taglineLead: 'Do zobaczenia',
+      taglineAccent: 'w trasie',
     },
 
     show: {
