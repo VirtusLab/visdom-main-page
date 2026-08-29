@@ -257,6 +257,18 @@ export const TOUR_EVENTS: TourEvent[] = [
     kind: 'conference',
   },
   {
+    // Title and clock time are not settled yet. Marketing put the date in the
+    // brief so it shows on the schedule; both fill in when the session does.
+    name: 'Online webinar',
+    city: 'Online',
+    country: 'Online',
+    flag: '🌐',
+    date: '2026-11-05',
+    month: 'November',
+    href: '/webinar',
+    kind: 'webinar',
+  },
+  {
     name: 'Swiss AI Summit',
     city: 'Zurich',
     country: 'Switzerland',
