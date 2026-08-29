@@ -68,6 +68,17 @@ export const TOUR_EVENTS: TourEvent[] = [
     kind: 'hackathon',
   },
   {
+    name: 'AGNTCon + MCPCon Europe',
+    city: 'Amsterdam',
+    country: 'Netherlands',
+    flag: '🇳🇱',
+    date: '2026-09-17',
+    endDate: '2026-09-18',
+    month: 'September',
+    href: 'https://events.linuxfoundation.org/agntcon-mcpcon-europe/',
+    kind: 'conference',
+  },
+  {
     name: 'Can your agents actually ship?',
     city: 'Online',
     country: 'Online',
