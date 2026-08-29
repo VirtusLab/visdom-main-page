@@ -8,9 +8,13 @@ import '../styles/global.css';
 
 const { t } = useI18n(Astro);
 ---
+{/* Its own card, not the platform one: a shared tour link should unfurl with
+    the map and the cities on it. Regenerate with scripts/make-og-tour.py after
+    changing the schedule or the artwork. */}
 <Layout
   title={t.visdomTour.meta.title}
   description={t.visdomTour.meta.description}
+  ogImage={`${Astro.site ?? 'https://visdom.virtuslab.com'}og-visdom-tour.png`.replace(/([^:]\/)\/+/g, '$1')}
   ogImageAlt={t.visdomTour.meta.ogImageAlt}
 >
   <TourSections />

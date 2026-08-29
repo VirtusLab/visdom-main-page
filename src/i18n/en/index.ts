@@ -77,8 +77,9 @@ const en = {
     meta: {
       title: 'Visdom on Tour: where to meet us in 2026 | Visdom by VirtusLab',
       description:
-        'Conferences, roundtables and one online session. Where to meet the engineers building the AI-native SDLC with enterprise teams in 2026.',
-      ogImageAlt: 'Visdom on Tour: where to meet the Visdom team in 2026',
+        'Conferences, roundtables and one online session, from Zurich and Berlin to New York and Austin. Meet the engineers building the AI-native SDLC with enterprise teams.',
+      ogImageAlt:
+        'Visdom on Tour 2026: a world map of the stops, from Brugg-Windisch and Zurich to New York and Austin',
     },
 
     headlineLead: 'Join the',
