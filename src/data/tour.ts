@@ -184,6 +184,21 @@ export const TOUR_EVENTS: TourEvent[] = [
     kind: 'roundtable',
   },
   {
+    // The week the US leg is built around: the team is in San Francisco for it
+    // regardless of what else lands that month. Our own evening inside the week
+    // (AI/Data Readiness and Visdom, back to back) has no settled title or day
+    // yet, so the stop is the week, the way the event doc carries it.
+    name: 'SF Tech Week',
+    city: 'San Francisco',
+    country: 'USA',
+    flag: '🇺🇸',
+    date: '2026-10-05',
+    endDate: '2026-10-11',
+    month: 'October',
+    href: 'https://www.tech-week.com/',
+    kind: 'meetup',
+  },
+  {
     name: 'Scala Days 2026',
     city: 'Berlin',
     country: 'Germany',
@@ -337,7 +352,12 @@ export type CityPlacement = {
 };
 
 export const CITY_PLACEMENT: Record<string, CityPlacement> = {
-  'Lone Tree': { lat: 39.55, lon: -104.87, dx: -5, dy: 0, anchor: 'end' },
+  // Left and low: the label is the widest on the map, and the two things it
+  // could collide with sit above it (Lone Tree) and to its right (Austin).
+  'San Francisco': { lat: 37.77, lon: -122.42, dx: -5, dy: 5, anchor: 'end' },
+  // Lifted off the level of its own dot: pointing left at that height, the
+  // label reached far enough across the continent to cover San Francisco.
+  'Lone Tree': { lat: 39.55, lon: -104.87, dx: -5, dy: -4, anchor: 'end' },
   Miami: { lat: 25.77, lon: -80.19, dx: 5, dy: 3, anchor: 'start' },
   Austin: { lat: 30.27, lon: -97.74, dx: -5, dy: 3.5, anchor: 'end' },
   'New York': { lat: 40.71, lon: -74.01, dx: 5, dy: 2, anchor: 'start' },
