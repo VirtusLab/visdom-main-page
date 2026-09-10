@@ -98,37 +98,6 @@ const languages = alternatesFor(Astro.url.pathname)
 
 <div class="site-header-right">
   <a href={contactHref} class="site-header-cta">{t.nav.contact}</a>
-
-  <button
-    type="button"
-    class="site-header-mobile-toggle"
-    aria-label={t.nav.openMenu}
-    aria-expanded="false"
-    aria-controls="site-header-mobile-menu"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"
-      ></path>
-    </svg>
-  </button>
-</div>
-
-<div class="site-header-mobile-menu" id="site-header-mobile-menu" hidden>
-  <a
-    href={contactHref}
-    class="site-header-mobile-link site-header-mobile-link--cta"
-    >{t.nav.contact}</a
-  >
 </div>
 
 <style>
