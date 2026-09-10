@@ -1,12 +1,7 @@
 ---
-import visdomCrestSvg from '../icons/visdom-crest.svg?raw';
-import { PLATFORM_COMPONENTS, shortName } from '../data/platform';
-import {
-  useI18n,
-  alternatesFor,
-  localePath,
-  LOCALE_META,
-} from '../i18n';
+import visdomCrestSvg from "../icons/visdom-crest.svg?raw";
+import { PLATFORM_COMPONENTS, shortName } from "../data/platform";
+import { useI18n, alternatesFor, localePath, LOCALE_META } from "../i18n";
 
 const { locale, t } = useI18n(Astro);
 
@@ -24,8 +19,9 @@ const { hasContact = false } = Astro.props;
 // The nav points at sections of the home page for the current locale. On a
 // subpage a bare "#platform" scrolls nowhere, so prefix those anchors with the
 // localized home path when we are not on it.
-const home = localePath(locale, '/');
-const onHome = Astro.url.pathname.replace(/\/$/, '') === home.replace(/\/$/, '');
+const home = "https://visdom.virtuslab.com/";
+const onHome =
+  Astro.url.pathname.replace(/\/$/, "") === home.replace(/\/$/, "");
 const anchor = (hash: string) => (onHome ? hash : `${home}${hash}`);
 
 // The Platform entry opens onto the six components. Before this, a reader who
@@ -36,7 +32,7 @@ const anchor = (hash: string) => (onHome ? hash : `${home}${hash}`);
 // to the page appears here, and a menu item can never point at an anchor that
 // does not exist.
 const platformItems = [
-  { label: t.nav.platformOverview, href: anchor('#platform') },
+  { label: t.nav.platformOverview, href: anchor("#platform") },
   ...PLATFORM_COMPONENTS.map((component) => ({
     label: shortName(t.solutions[component.key].title),
     href: anchor(`#${component.id}`),
@@ -44,16 +40,20 @@ const platformItems = [
 ];
 
 const links = [
-  { label: t.nav.platform, href: anchor('#platform'), items: platformItems },
-  { label: t.nav.insights, href: anchor('#thesis') },
-  { label: t.nav.maturityMatrix, href: 'https://visdom-maturity-matrix.virtuslab.com/', external: true },
+  { label: t.nav.platform, href: anchor("#platform"), items: platformItems },
+  { label: t.nav.insights, href: anchor("#thesis") },
+  {
+    label: t.nav.maturityMatrix,
+    href: "https://visdom-maturity-matrix.virtuslab.com/",
+    external: true,
+  },
 ];
 
-const contactHref = hasContact ? '#contact' : anchor('#contact');
+const contactHref = "https://visdom.virtuslab.com/demo";
 
 // Only rendered where the current page actually exists in the other locale.
 const languages = alternatesFor(Astro.url.pathname)
-  .filter((alt) => alt.hreflang !== 'x-default')
+  .filter((alt) => alt.hreflang !== "x-default")
   .map((alt) => ({
     ...alt,
     meta: LOCALE_META[alt.locale],
@@ -63,144 +63,42 @@ const languages = alternatesFor(Astro.url.pathname)
 
 <header class="site-header" id="site-header">
   <a class="site-header-brand" href={home}>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 125 50" fill="none" class="site-header-vl" aria-label="VirtusLab">
-      <path d="M65.377 8.966a1.07 1.07 0 0 0-.82-.387h-4.077c-.213 0-.42.066-.592.189l-5.682 4.084-6.559-12.078a1.074 1.074 0 0 0-1.708-.726L33.113 3.354c-1.577.407-2.859 1.52-3.447 2.995L15.699 41.356l-5.055-10.867a1.072 1.072 0 0 0-.783-.56L1.118 28.862a1.074 1.074 0 0 0-.965.44 1.074 1.074 0 0 0 .004.593v.04l12.41 18.772c.367.556 1.002.89 1.684.89h3.176c.352 0 .678-.181.857-.476L40.606 12.652l7.624 5.236c.533.366 1.158.586 1.81.637l5.778.45h.08c.264 0 .517-.102.706-.285l8.68-8.473c.339-.33.392-.858.093-1.253zM13.479 46.919 2.975 31.03l6.085.742 5.632 12.107-1.213 3.04zm1.67 1.156L31.54 6.99c.346-.867 1.099-1.52 2.026-1.76l10.935-2.818L17.092 47.687a.715.715 0 0 1-.698.387h-1.245zm26.467-37.09 4.919-8.124 6.055 11.153-3.209 2.307-7.765-5.335zm13.902 5.079-3.405-.264 8.696-6.25h1.384l-6.675 6.514z" fill="currentColor"/>
-      <path d="M37.73 29.961l2.88 7.618 2.746-7.618h2.314l-3.8 10.388h-2.521l-3.932-10.388h2.314zM47.541 29.961h2.182v10.388h-2.182V29.961zM52.293 29.961h5.08c1.505 0 3.198.565 3.198 3.135 0 1.767-.509 3.007-1.75 3.244l2.258 4.009h-2.37l-1.995-3.81c-.357-.035-2.22-.2-2.238-.218v4.028h-2.183V29.961zm4.929 4.902c.583 0 1.166-.237 1.166-1.658 0-1.295-.884-1.385-1.166-1.385h-2.747v3.043h2.747zM62.404 29.961h8.654v1.987h-3.236v8.401h-2.182v-8.401h-3.236v-1.987zM73.017 29.961h2.202v5.65c0 2.423.77 2.843 2.426 2.843 1.487 0 2.333-.437 2.333-2.843v-5.65h2.201v5.65c0 4.245-2.257 4.83-4.534 4.83-2.558 0-4.647-.474-4.628-4.83v-5.65zM84.352 32.658c0-1.53.64-2.752 2.784-2.752.979 0 3.8.146 5.21.401v1.55s-2.934-.11-4.872-.11c-.752 0-.94.455-.94.948v.766c0 .801.357.82.94.82h2.803c1.9 0 2.578 1.184 2.578 2.643v1.02c0 2.096-1.298 2.588-2.578 2.588-.903 0-4.797-.11-5.513-.42v-1.513s3.18.073 5.042.073c.658 0 .865-.766.865-.766v-.911c0-.529-.226-.783-.865-.783h-2.728c-1.976 0-2.728-.856-2.728-2.606v-.948zM95.29 29.961h2.182v7.654c-.019.747.377.747.979.747h4.421v1.987h-5.568c-1.166 0-2.013-.638-2.013-1.95v-8.438zM108.602 29.961h2.502l3.706 10.388h-2.314l-.884-2.35h-3.744l-.94 2.35h-2.314l3.989-10.388zm2.464 6.233-1.222-3.536-1.354 3.536h2.577zM116.684 29.942h5.023c2.333 0 3.237 1.222 3.237 2.789 0 1.403-.565 2.059-1.374 2.314.715.201 1.43.93 1.43 2.351 0 1.877-.922 2.953-3.293 2.953h-5.023V29.942zm4.892 4.192c.94 0 1.185-.347 1.185-1.222 0-.947-.659-1.111-1.185-1.111h-2.709v2.333h2.709zm0 4.338c.545 0 1.222-.128 1.222-1.295 0-.82-.282-1.366-1.222-1.366h-2.709v2.661h2.709z" fill="currentColor"/>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 125 50"
+      fill="none"
+      class="site-header-vl"
+      aria-label="VirtusLab"
+    >
+      <path
+        d="M65.377 8.966a1.07 1.07 0 0 0-.82-.387h-4.077c-.213 0-.42.066-.592.189l-5.682 4.084-6.559-12.078a1.074 1.074 0 0 0-1.708-.726L33.113 3.354c-1.577.407-2.859 1.52-3.447 2.995L15.699 41.356l-5.055-10.867a1.072 1.072 0 0 0-.783-.56L1.118 28.862a1.074 1.074 0 0 0-.965.44 1.074 1.074 0 0 0 .004.593v.04l12.41 18.772c.367.556 1.002.89 1.684.89h3.176c.352 0 .678-.181.857-.476L40.606 12.652l7.624 5.236c.533.366 1.158.586 1.81.637l5.778.45h.08c.264 0 .517-.102.706-.285l8.68-8.473c.339-.33.392-.858.093-1.253zM13.479 46.919 2.975 31.03l6.085.742 5.632 12.107-1.213 3.04zm1.67 1.156L31.54 6.99c.346-.867 1.099-1.52 2.026-1.76l10.935-2.818L17.092 47.687a.715.715 0 0 1-.698.387h-1.245zm26.467-37.09 4.919-8.124 6.055 11.153-3.209 2.307-7.765-5.335zm13.902 5.079-3.405-.264 8.696-6.25h1.384l-6.675 6.514z"
+        fill="currentColor"></path>
+      <path
+        d="M37.73 29.961l2.88 7.618 2.746-7.618h2.314l-3.8 10.388h-2.521l-3.932-10.388h2.314zM47.541 29.961h2.182v10.388h-2.182V29.961zM52.293 29.961h5.08c1.505 0 3.198.565 3.198 3.135 0 1.767-.509 3.007-1.75 3.244l2.258 4.009h-2.37l-1.995-3.81c-.357-.035-2.22-.2-2.238-.218v4.028h-2.183V29.961zm4.929 4.902c.583 0 1.166-.237 1.166-1.658 0-1.295-.884-1.385-1.166-1.385h-2.747v3.043h2.747zM62.404 29.961h8.654v1.987h-3.236v8.401h-2.182v-8.401h-3.236v-1.987zM73.017 29.961h2.202v5.65c0 2.423.77 2.843 2.426 2.843 1.487 0 2.333-.437 2.333-2.843v-5.65h2.201v5.65c0 4.245-2.257 4.83-4.534 4.83-2.558 0-4.647-.474-4.628-4.83v-5.65zM84.352 32.658c0-1.53.64-2.752 2.784-2.752.979 0 3.8.146 5.21.401v1.55s-2.934-.11-4.872-.11c-.752 0-.94.455-.94.948v.766c0 .801.357.82.94.82h2.803c1.9 0 2.578 1.184 2.578 2.643v1.02c0 2.096-1.298 2.588-2.578 2.588-.903 0-4.797-.11-5.513-.42v-1.513s3.18.073 5.042.073c.658 0 .865-.766.865-.766v-.911c0-.529-.226-.783-.865-.783h-2.728c-1.976 0-2.728-.856-2.728-2.606v-.948zM95.29 29.961h2.182v7.654c-.019.747.377.747.979.747h4.421v1.987h-5.568c-1.166 0-2.013-.638-2.013-1.95v-8.438zM108.602 29.961h2.502l3.706 10.388h-2.314l-.884-2.35h-3.744l-.94 2.35h-2.314l3.989-10.388zm2.464 6.233-1.222-3.536-1.354 3.536h2.577zM116.684 29.942h5.023c2.333 0 3.237 1.222 3.237 2.789 0 1.403-.565 2.059-1.374 2.314.715.201 1.43.93 1.43 2.351 0 1.877-.922 2.953-3.293 2.953h-5.023V29.942zm4.892 4.192c.94 0 1.185-.347 1.185-1.222 0-.947-.659-1.111-1.185-1.111h-2.709v2.333h2.709zm0 4.338c.545 0 1.222-.128 1.222-1.295 0-.82-.282-1.366-1.222-1.366h-2.709v2.661h2.709z"
+        fill="currentColor"></path>
     </svg>
     <span class="site-header-divider" aria-hidden="true"></span>
     <span class="site-header-lockup">
-      {/* The lockup is the crest plus the wordmark, but the wordmark is set in
+      {
+        /* The lockup is the crest plus the wordmark, but the wordmark is set in
           our own Geist rather than taken from the logo file's outlines. The crest
           is extracted from that file and inlined so its path can take
-          currentColor and follow the theme. */}
-      <span class="site-header-crest" set:html={visdomCrestSvg} aria-hidden="true"></span>
+          currentColor and follow the theme. */
+      }
+      <span
+        class="site-header-crest"
+        set:html={visdomCrestSvg}
+        aria-hidden="true"
+      />
       <span class="site-header-product">Visdom</span>
       <span class="site-header-version">2.0</span>
     </span>
   </a>
-
-  <nav class="site-header-nav" aria-label={t.nav.ariaPrimary}>
-    {links.map((link) => (
-      link.items ? (
-        /* The trigger stays a real link, so clicking Platform still goes to the
-           section. The menu opens on hover and on focus-within, which is why the
-           trigger must live inside the group: focusing it is what reveals the
-           items and makes them tabbable. */
-        <div class="site-header-nav-group">
-          <a href={link.href} class="site-header-nav-link site-header-nav-trigger">
-            {link.label}
-            <svg class="site-header-nav-chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-          </a>
-          <div class="site-header-dropdown">
-            {link.items.map((item) => (
-              <a href={item.href} class="site-header-dropdown-link">{item.label}</a>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <a
-          href={link.href}
-          class="site-header-nav-link"
-          target={link.external ? '_blank' : undefined}
-          rel={link.external ? 'noopener' : undefined}
-        >
-          {link.label}
-        </a>
-      )
-    ))}
-  </nav>
-
-  <div class="site-header-right">
-    <a href={contactHref} class="site-header-cta">{t.nav.contact}</a>
-
-    {languages.length > 1 && (
-      <nav class="site-header-lang" aria-label={t.nav.languageLabel}>
-        {languages.map((lang) => (
-          <a
-            href={lang.path}
-            hreflang={lang.hreflang}
-            lang={lang.meta.lang}
-            class="site-header-lang-link"
-            aria-current={lang.current ? 'true' : undefined}
-          >
-            <span aria-hidden="true">{lang.meta.label}</span>
-            <span class="sr-only">{lang.meta.name}</span>
-          </a>
-        ))}
-      </nav>
-    )}
-
-    <button
-      type="button"
-      class="site-header-theme-toggle"
-      aria-label={t.nav.themeToggle}
-    >
-      <svg class="theme-icon theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
-      </svg>
-      <svg class="theme-icon theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-      </svg>
-    </button>
-
-    <button
-      type="button"
-      class="site-header-mobile-toggle"
-      aria-label={t.nav.openMenu}
-      aria-expanded="false"
-      aria-controls="site-header-mobile-menu"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/>
-      </svg>
-    </button>
-  </div>
-
-  <div class="site-header-mobile-menu" id="site-header-mobile-menu" hidden>
-    {links.map((link) => (
-      <>
-        <a
-          href={link.href}
-          class="site-header-mobile-link"
-          target={link.external ? '_blank' : undefined}
-          rel={link.external ? 'noopener' : undefined}
-        >
-          {link.label}
-          {link.external && <span aria-hidden="true"> &#8599;</span>}
-        </a>
-        {/* Laid out flat rather than behind another tap. The menu is already
-            open, so hiding six links behind an accordion would add a step to
-            reach exactly what someone opened the menu for. The overview is
-            skipped here because the parent link above already is it. */}
-        {link.items && (
-          <div class="site-header-mobile-sub">
-            {link.items.slice(1).map((item) => (
-              <a href={item.href} class="site-header-mobile-link site-header-mobile-sublink">{item.label}</a>
-            ))}
-          </div>
-        )}
-      </>
-    ))}
-    <a href={contactHref} class="site-header-mobile-link site-header-mobile-link--cta">{t.nav.contact}</a>
-    {languages.length > 1 && (
-      <div class="site-header-mobile-lang" role="group" aria-label={t.nav.languageLabel}>
-        {languages.map((lang) => (
-          <a
-            href={lang.path}
-            hreflang={lang.hreflang}
-            lang={lang.meta.lang}
-            class="site-header-mobile-lang-link"
-            aria-current={lang.current ? 'true' : undefined}
-          >
-            {lang.meta.name}
-          </a>
-        ))}
-      </div>
-    )}
-  </div>
 </header>
+
+<div class="site-header-right">
+  <a href={contactHref} class="site-header-cta">{t.nav.contact}</a>
+</div>
 
 <style>
   .site-header {
@@ -241,7 +139,9 @@ const languages = alternatesFor(Astro.url.pathname)
   }
 
   @media (min-width: 640px) {
-    .site-header-vl { display: block; }
+    .site-header-vl {
+      display: block;
+    }
   }
 
   .site-header-divider {
@@ -252,7 +152,9 @@ const languages = alternatesFor(Astro.url.pathname)
   }
 
   @media (min-width: 640px) {
-    .site-header-divider { display: block; }
+    .site-header-divider {
+      display: block;
+    }
   }
 
   /* The wordmark is type again, Geist at --fs-3xl/800, as it was before the logo
@@ -316,7 +218,9 @@ const languages = alternatesFor(Astro.url.pathname)
   }
 
   @media (min-width: 900px) {
-    .site-header-nav { display: inline-flex; }
+    .site-header-nav {
+      display: inline-flex;
+    }
   }
 
   /* ── Platform dropdown ── */
@@ -359,7 +263,10 @@ const languages = alternatesFor(Astro.url.pathname)
        opens it, since the trigger sits inside the group. */
     visibility: hidden;
     opacity: 0;
-    transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s;
+    transition:
+      opacity 0.16s ease,
+      transform 0.16s ease,
+      visibility 0.16s;
   }
 
   .site-header-nav-group:hover .site-header-dropdown,
@@ -372,7 +279,7 @@ const languages = alternatesFor(Astro.url.pathname)
   /* Bridges the gap between trigger and menu, so the pointer crossing it does
      not close the menu mid-travel. */
   .site-header-nav-group::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 100%;
     left: 0;
@@ -386,7 +293,9 @@ const languages = alternatesFor(Astro.url.pathname)
     text-decoration: none;
     white-space: nowrap;
     color: var(--color-text-secondary);
-    transition: background-color 0.15s ease, color 0.15s ease;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
   }
 
   .site-header-dropdown-link:hover,
@@ -422,7 +331,9 @@ const languages = alternatesFor(Astro.url.pathname)
     text-decoration: none;
     white-space: nowrap;
     color: var(--color-text-secondary);
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
   }
 
   .site-header-nav-link:hover {
@@ -466,7 +377,9 @@ const languages = alternatesFor(Astro.url.pathname)
   }
 
   @media (min-width: 640px) {
-    .site-header-lang { display: inline-flex; }
+    .site-header-lang {
+      display: inline-flex;
+    }
   }
 
   .site-header-lang-link {
@@ -479,14 +392,16 @@ const languages = alternatesFor(Astro.url.pathname)
     line-height: 1.4;
     letter-spacing: 0.04em;
     color: var(--color-text-muted);
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
   }
 
   .site-header-lang-link:hover {
     color: var(--color-text);
   }
 
-  .site-header-lang-link[aria-current='true'] {
+  .site-header-lang-link[aria-current="true"] {
     background: var(--color-bg);
     color: var(--color-text);
   }
@@ -509,7 +424,7 @@ const languages = alternatesFor(Astro.url.pathname)
     color: var(--color-text-secondary);
   }
 
-  .site-header-mobile-lang-link[aria-current='true'] {
+  .site-header-mobile-lang-link[aria-current="true"] {
     border-color: var(--color-emerald);
     color: var(--color-text);
   }
@@ -526,7 +441,9 @@ const languages = alternatesFor(Astro.url.pathname)
     color: var(--color-text-secondary);
     cursor: pointer;
     padding: 0;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease;
   }
 
   .site-header-theme-toggle:hover {
@@ -534,12 +451,20 @@ const languages = alternatesFor(Astro.url.pathname)
     border-color: var(--color-emerald);
   }
 
-  .theme-icon-moon { display: none; }
-  :global(.dark) .site-header-theme-toggle .theme-icon-sun { display: none; }
-  :global(.dark) .site-header-theme-toggle .theme-icon-moon { display: block; }
+  .theme-icon-moon {
+    display: none;
+  }
+  :global(.dark) .site-header-theme-toggle .theme-icon-sun {
+    display: none;
+  }
+  :global(.dark) .site-header-theme-toggle .theme-icon-moon {
+    display: block;
+  }
 
   @media (min-width: 900px) {
-    .site-header-cta { display: inline-block; }
+    .site-header-cta {
+      display: inline-block;
+    }
   }
 
   .site-header-mobile-toggle {
@@ -557,7 +482,9 @@ const languages = alternatesFor(Astro.url.pathname)
   }
 
   @media (min-width: 900px) {
-    .site-header-mobile-toggle { display: none; }
+    .site-header-mobile-toggle {
+      display: none;
+    }
   }
 
   .site-header-mobile-menu {
@@ -603,12 +530,12 @@ const languages = alternatesFor(Astro.url.pathname)
 </style>
 
 <script>
-  const themeToggle = document.querySelector('.site-header-theme-toggle');
+  const themeToggle = document.querySelector(".site-header-theme-toggle");
   if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.toggle('dark');
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.toggle("dark");
       try {
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        localStorage.setItem("theme", isDark ? "dark" : "light");
       } catch (e) {}
     });
   }
@@ -616,37 +543,40 @@ const languages = alternatesFor(Astro.url.pathname)
   // Escape closes the Platform dropdown. It opens on hover and focus-within, so
   // there is no state to clear: dropping focus out of the group is enough, and
   // this is the one thing CSS cannot do on its own.
-  document.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape') return;
-    const open = document.activeElement?.closest('.site-header-nav-group');
-    if (open) (open.querySelector('.site-header-nav-trigger') as HTMLElement | null)?.blur();
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    const open = document.activeElement?.closest(".site-header-nav-group");
+    if (open)
+      (
+        open.querySelector(".site-header-nav-trigger") as HTMLElement | null
+      )?.blur();
   });
 
-  const header = document.getElementById('site-header');
+  const header = document.getElementById("site-header");
   if (header) {
     const setScrolled = () => {
-      header.classList.toggle('is-scrolled', window.scrollY > 4);
+      header.classList.toggle("is-scrolled", window.scrollY > 4);
     };
     setScrolled();
-    window.addEventListener('scroll', setScrolled, { passive: true });
+    window.addEventListener("scroll", setScrolled, { passive: true });
 
-    const toggle = header.querySelector('.site-header-mobile-toggle');
-    const menu = header.querySelector('.site-header-mobile-menu');
+    const toggle = header.querySelector(".site-header-mobile-toggle");
+    const menu = header.querySelector(".site-header-mobile-menu");
     if (toggle && menu) {
-      toggle.addEventListener('click', () => {
-        const open = header.classList.toggle('is-open');
-        toggle.setAttribute('aria-expanded', String(open));
+      toggle.addEventListener("click", () => {
+        const open = header.classList.toggle("is-open");
+        toggle.setAttribute("aria-expanded", String(open));
         if (open) {
-          menu.removeAttribute('hidden');
+          menu.removeAttribute("hidden");
         } else {
-          menu.setAttribute('hidden', '');
+          menu.setAttribute("hidden", "");
         }
       });
-      menu.querySelectorAll('a').forEach((link) => {
-        link.addEventListener('click', () => {
-          header.classList.remove('is-open');
-          toggle.setAttribute('aria-expanded', 'false');
-          menu.setAttribute('hidden', '');
+      menu.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          header.classList.remove("is-open");
+          toggle.setAttribute("aria-expanded", "false");
+          menu.setAttribute("hidden", "");
         });
       });
     }
