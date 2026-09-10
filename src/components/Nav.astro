@@ -24,7 +24,7 @@ const { hasContact = false } = Astro.props;
 // The nav points at sections of the home page for the current locale. On a
 // subpage a bare "#platform" scrolls nowhere, so prefix those anchors with the
 // localized home path when we are not on it.
-const home = localePath(locale, '/');
+const home = 'https://visdom.virtuslab.com/';
 const onHome = Astro.url.pathname.replace(/\/$/, '') === home.replace(/\/$/, '');
 const anchor = (hash: string) => (onHome ? hash : `${home}${hash}`);
 
@@ -49,7 +49,7 @@ const links = [
   { label: t.nav.maturityMatrix, href: 'https://visdom-maturity-matrix.virtuslab.com/', external: true },
 ];
 
-const contactHref = hasContact ? '#contact' : anchor('#contact');
+const contactHref = 'https://visdom.virtuslab.com/demo';
 
 // Only rendered where the current page actually exists in the other locale.
 const languages = alternatesFor(Astro.url.pathname)
@@ -78,8 +78,6 @@ const languages = alternatesFor(Astro.url.pathname)
       <span class="site-header-version">2.0</span>
     </span>
   </a>
-
-  <nav class="site-header-nav" aria-label={t.nav.ariaPrimary}>
     {links.map((link) => (
       link.items ? (
         /* The trigger stays a real link, so clicking Platform still goes to the
@@ -110,7 +108,7 @@ const languages = alternatesFor(Astro.url.pathname)
         </a>
       )
     ))}
-  </nav>
+  </nav> -->
 
   <div class="site-header-right">
     <a href={contactHref} class="site-header-cta">{t.nav.contact}</a>
@@ -134,19 +132,6 @@ const languages = alternatesFor(Astro.url.pathname)
 
     <button
       type="button"
-      class="site-header-theme-toggle"
-      aria-label={t.nav.themeToggle}
-    >
-      <svg class="theme-icon theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
-      </svg>
-      <svg class="theme-icon theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-      </svg>
-    </button>
-
-    <button
-      type="button"
       class="site-header-mobile-toggle"
       aria-label={t.nav.openMenu}
       aria-expanded="false"
@@ -159,30 +144,6 @@ const languages = alternatesFor(Astro.url.pathname)
   </div>
 
   <div class="site-header-mobile-menu" id="site-header-mobile-menu" hidden>
-    {links.map((link) => (
-      <>
-        <a
-          href={link.href}
-          class="site-header-mobile-link"
-          target={link.external ? '_blank' : undefined}
-          rel={link.external ? 'noopener' : undefined}
-        >
-          {link.label}
-          {link.external && <span aria-hidden="true"> &#8599;</span>}
-        </a>
-        {/* Laid out flat rather than behind another tap. The menu is already
-            open, so hiding six links behind an accordion would add a step to
-            reach exactly what someone opened the menu for. The overview is
-            skipped here because the parent link above already is it. */}
-        {link.items && (
-          <div class="site-header-mobile-sub">
-            {link.items.slice(1).map((item) => (
-              <a href={item.href} class="site-header-mobile-link site-header-mobile-sublink">{item.label}</a>
-            ))}
-          </div>
-        )}
-      </>
-    ))}
     <a href={contactHref} class="site-header-mobile-link site-header-mobile-link--cta">{t.nav.contact}</a>
     {languages.length > 1 && (
       <div class="site-header-mobile-lang" role="group" aria-label={t.nav.languageLabel}>
