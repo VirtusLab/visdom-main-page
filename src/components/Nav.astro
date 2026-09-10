@@ -78,57 +78,10 @@ const languages = alternatesFor(Astro.url.pathname)
       <span class="site-header-version">2.0</span>
     </span>
   </a>
-    {links.map((link) => (
-      link.items ? (
-        /* The trigger stays a real link, so clicking Platform still goes to the
-           section. The menu opens on hover and on focus-within, which is why the
-           trigger must live inside the group: focusing it is what reveals the
-           items and makes them tabbable. */
-        <div class="site-header-nav-group">
-          <a href={link.href} class="site-header-nav-link site-header-nav-trigger">
-            {link.label}
-            <svg class="site-header-nav-chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-          </a>
-          <div class="site-header-dropdown">
-            {link.items.map((item) => (
-              <a href={item.href} class="site-header-dropdown-link">{item.label}</a>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <a
-          href={link.href}
-          class="site-header-nav-link"
-          target={link.external ? '_blank' : undefined}
-          rel={link.external ? 'noopener' : undefined}
-        >
-          {link.label}
-        </a>
-      )
-    ))}
-  </nav> -->
+  </nav>
 
   <div class="site-header-right">
     <a href={contactHref} class="site-header-cta">{t.nav.contact}</a>
-
-    {languages.length > 1 && (
-      <nav class="site-header-lang" aria-label={t.nav.languageLabel}>
-        {languages.map((lang) => (
-          <a
-            href={lang.path}
-            hreflang={lang.hreflang}
-            lang={lang.meta.lang}
-            class="site-header-lang-link"
-            aria-current={lang.current ? 'true' : undefined}
-          >
-            <span aria-hidden="true">{lang.meta.label}</span>
-            <span class="sr-only">{lang.meta.name}</span>
-          </a>
-        ))}
-      </nav>
-    )}
 
     <button
       type="button"
